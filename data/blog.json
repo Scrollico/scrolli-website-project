@@ -1,0 +1,756 @@
+{
+    "featured": {
+        "title": "Editor's Picks",
+        "mainArticle": {
+            "id": "home-internet-is-becoming-a-luxury-for-the-wealthy-1",
+            "image": "/assets/images/thumb/thumb-1240x700.jpg",
+            "title": "Home Internet Is Becoming a Luxury for the Wealthy",
+            "excerpt": "And black on meretriciously regardless well fearless irksomely as about hideous wistful bat less oh much and occasional useful rat darn jeepers far.",
+            "author": "Dave Gershgorn",
+            "category": "OneZero",
+            "date": "Jun 14",
+            "readTime": "3 min read"
+        },
+        "sideArticles": [
+            {
+                "id": "the-night-my-doorbell-camera-captured-a-shooting",
+                "image": "/assets/images/thumb/thumb-700x512.jpg",
+                "title": "The Night My Doorbell Camera Captured a Shooting",
+                "author": "Alentica",
+                "category": "Police",
+                "date": "Jun 16",
+                "readTime": "7 min read"
+            },
+            {
+                "id": "privacy-is-just-the-beginning-of-the-debate-over-tech",
+                "image": "/assets/images/thumb/thumb-700x512-2.jpg",
+                "title": "Privacy Is Just the Beginning of the Debate Over Tech",
+                "author": "Otimus",
+                "category": "Startup",
+                "date": "May 15",
+                "readTime": "6 min read"
+            },
+            {
+                "id": "want-to-make-millions-then-act-like-a-millionaire",
+                "image": "/assets/images/thumb/thumb-700x512-3.jpg",
+                "title": "Want To Make Millions? Then Act Like a Millionaire",
+                "author": "Mark Harris",
+                "category": "Heated",
+                "date": "May 13",
+                "readTime": "12 min read",
+                "tag": "based on your reading history"
+            }
+        ]
+    },
+    "trending": {
+        "title": "Trending",
+        "articles": [
+            {
+                "id": "president-and-the-emails-who-will-guard-the-guards-2",
+                "number": "01",
+                "title": "President and the emails. Who will guard the guards?",
+                "author": "Adam Philip",
+                "category": "Elemental",
+                "date": "Jan 12",
+                "readTime": "7 min read"
+            },
+            {
+                "id": "how-to-silence-the-persistent-ding-of-modern-life-2",
+                "number": "02",
+                "title": "How to Silence the Persistent Ding of Modern Life",
+                "author": "Aaron Gell",
+                "category": "Design",
+                "date": "Feb 18",
+                "readTime": "9 min read"
+            },
+            {
+                "id": "why-we-love-to-watch-2",
+                "number": "03",
+                "title": "Why We Love to Watch",
+                "author": "Atlantic",
+                "category": "Zora",
+                "date": "March 17",
+                "readTime": "6 min read"
+            },
+            {
+                "id": "how-health-apps-let-2",
+                "number": "04",
+                "title": "How Health Apps Let",
+                "author": "Alentica",
+                "category": "Police",
+                "date": "Jun 14",
+                "readTime": "3 min read"
+            }
+        ]
+    },
+    "featuredSlider": {
+        "title": "Readers vote",
+        "articles": [
+            {
+                "id": "what-i-wish-id-known-when-i-made-a-drastic-career-change",
+                "title": "What I Wish I'd Known When I Made a Drastic Career Change",
+                "excerpt": "Eight people who took the plunge share the biggest challenges and surprises of starting over. We spend a considerable portion of our time using a web browser and may sometimes need to get a screenshot of a full page in your browser.",
+                "author": "Steven Job",
+                "category": "OneZero",
+                "date": "July 15",
+                "readTime": "5 min read",
+                "image": "/assets/images/thumb/thumb-800x495.jpg"
+            },
+            {
+                "id": "why-i-stopped-chasing-success-and-started-living-intentionally",
+                "title": "Why I Stopped Chasing 'Success' and Started Living Intentionally",
+                "excerpt": "For years, I climbed ladders I never questioned. I had the job title, the income, the approval—but I felt lost. It wasn't until I paused and asked myself what success truly meant that everything began to shift.",
+                "author": "Jordan Ellis",
+                "category": "Career",
+                "date": "July 25",
+                "readTime": "6 min read",
+                "image": "/assets/images/thumb/thumb-800x495-2.png"
+            },
+            {
+                "id": "what-no-one-tells-you-about-leaving-a-job-you-were-good-at",
+                "title": "What No One Tells You About Leaving a Job You Were 'Good At'",
+                "excerpt": "I was competent, praised, and promoted—but I wasn't happy. Walking away from something you're good at is terrifying, especially when people don't understand why. This is what I wish someone had told me before I made that leap.",
+                "author": "Jordan Ellis",
+                "category": "Life Transitions",
+                "date": "April 15",
+                "readTime": "6 min read",
+                "image": "/assets/images/thumb/thumb-800x495-3.png"
+            }
+        ]
+    },
+    "todayHighlights": {
+        "articles": [
+            {
+                "id": "i-learned-how-to-die-before-i-knew-how-to-live-2",
+                "image": "/assets/images/thumb/thumb-512x512.jpg",
+                "title": "I Learned How to Die Before I Knew How to Live",
+                "excerpt": "Tech companies need more than advisory boards if they want.",
+                "author": "Anna Goldfarb",
+                "category": "Fashion",
+                "date": "March 12",
+                "readTime": "4 min read"
+            },
+            {
+                "id": "is-interactive-storytelling-the-future-of-media-2",
+                "image": "/assets/images/thumb/thumb-512x512-2.jpg",
+                "title": "Is 'Interactive Storytelling' the Future of Media?",
+                "excerpt": "Or does passive and active content serve different purposes?.",
+                "author": "Furukawa",
+                "category": "Programing",
+                "date": "March 14",
+                "readTime": "6 min read"
+            },
+            {
+                "id": "how-not-to-get-a-30k-bill-from-firebase-2",
+                "image": "/assets/images/thumb/thumb-512x512-3.jpg",
+                "title": "How NOT to get a $30k bill from Firebase",
+                "excerpt": "Why the dark forests of the internet'''podcasts, newsletters.",
+                "author": "Glorida",
+                "category": "Living",
+                "date": "April 14",
+                "readTime": "7 min read"
+            },
+            {
+                "id": "google-cant-figure-out-what-youtube-is-2",
+                "image": "/assets/images/thumb/thumb-512x512-4.jpg",
+                "title": "Google Can't Figure Out What YouTube Is",
+                "excerpt": "But Apple still has some A.I. tricks up its sleeve.",
+                "author": "Rayan Mark",
+                "category": "GEN",
+                "date": "Jun 14",
+                "readTime": "8 min read"
+            }
+        ],
+        "ad": {
+            "image": "/assets/images/ads/ads-1.png",
+            "link": "#"
+        }
+    },
+    "mostRecent": {
+        "title": "Most Recent",
+        "mainArticles": [
+            {
+                "id": "home-internet-is-becoming-a-luxury-for-the-wealthy-2",
+                "tag": "Editors' Pick",
+                "title": "Home Internet Is Becoming a Luxury for the Wealthy",
+                "excerpt": "And black on meretriciously regardless well fearless irksomely as about hideous wistful bat less oh much and occasional useful rat darn jeepers far.",
+                "author": "Dave Gershgorn",
+                "category": "OneZero",
+                "date": "May 21",
+                "readTime": "5 min read",
+                "image": "/assets/images/thumb/thumb-800x495.jpg"
+            },
+            {
+                "id": "why-lack-of-sleep-is-so-bad-for-you-1",
+                "tag": "based on your reading history",
+                "title": "Why Lack of Sleep is So Bad For You",
+                "excerpt": "A lack of sleep is linked to an incredibly wide range of ailments, from heart disease and Type 2 diabetes to obesity, depression, poor cognitive function, and even Alzheimer's disease..",
+                "author": "Darcy Reeder",
+                "category": "OneZero",
+                "date": "Jun 17",
+                "readTime": "3 min read",
+                "image": "/assets/images/thumb/thumb-512x512.jpg"
+            },
+            {
+                "id": "regulators-just-put-a-target-on-apples-back-1",
+                "tag": "Culture",
+                "title": "Regulators Just Put a Target on Apple's Back",
+                "excerpt": "Excellence is the most important habit you can curate in life because it requires doing things you don't want to do and getting uncomfortable on a daily basis.",
+                "author": "Azimi ??kalo",
+                "category": "Freedom",
+                "date": "May 12",
+                "readTime": "8 min read",
+                "image": "/assets/images/thumb/thumb-512x512-2.jpg"
+            },
+            {
+                "id": "apple-is-designing-for-a-post-facebook-world-1",
+                "tag": "Technology",
+                "title": "Apple Is Designing for a Post-Facebook World",
+                "excerpt": "And black on meretriciously regardless well fearless irksomely as about hideous wistful bat less oh much and occasional useful rat darn jeepers far.",
+                "author": "Dave Gershgorn",
+                "category": "OneZero",
+                "date": "Jun 12",
+                "readTime": "7 min read",
+                "image": "/assets/images/thumb/thumb-512x512-3.jpg"
+            },
+            {
+                "id": "what-really-happens-to-airpods-when-they-die-1",
+                "tag": "based on your reading history",
+                "title": "What Really Happens to AirPods When They Die",
+                "excerpt": "At WWDC, Apple debuted a slew of new features that let users connect with their families and friends right inside Apple's apps'''no social.",
+                "author": "Johan Doan",
+                "category": "Lifestyle",
+                "date": "May 15",
+                "readTime": "5 min read",
+                "image": "/assets/images/thumb/thumb-512x512-4.jpg"
+            }
+        ],
+        "sideArticles": [
+            {
+                "id": "i-learned-how-to-die-before-i-knew-how-to-live-1",
+                "title": "I Learned How to Die Before I Knew How to Live",
+                "author": "Anna Goldfarb",
+                "category": "Fashion",
+                "date": "March 12",
+                "readTime": "4 min read",
+                "image": "/assets/images/thumb/thumb-700x512.jpg"
+            },
+            {
+                "id": "is-interactive-storytelling-the-future-of-media-1",
+                "title": "Is 'Interactive Storytelling' the Future of Media?",
+                "author": "Furukawa",
+                "category": "Programing",
+                "date": "March 14",
+                "readTime": "6 min read",
+                "image": "/assets/images/thumb/thumb-700x512-2.jpg"
+            },
+            {
+                "id": "how-not-to-get-a-30k-bill-from-firebase-1",
+                "title": "How NOT to get a $30k bill from Firebase",
+                "author": "Glorida",
+                "category": "Living",
+                "date": "April 14",
+                "readTime": "7 min read",
+                "image": "/assets/images/thumb/thumb-700x512-3.jpg"
+            },
+            {
+                "id": "google-cant-figure-out-what-youtube-is-1",
+                "title": "Google Can't Figure Out What YouTube Is",
+                "author": "Rayan Mark",
+                "category": "GEN",
+                "date": "Jun 14",
+                "readTime": "8 min read",
+                "image": "/assets/images/thumb/thumb-700x512-4.jpg"
+            },
+            {
+                "id": "the-rise-of-slow-fashion-1",
+                "title": "The Rise of Slow Fashion in a Fast-Paced World",
+                "author": "Mila Thompson",
+                "category": "Fashion",
+                "date": "May 5",
+                "readTime": "5 min read",
+                "image": "/assets/images/thumb/thumb-512x512-5.png"
+            },
+            {
+                "id": "the-future-of-javascript-frameworks-1",
+                "title": "The Future of JavaScript Frameworks: What's Next?",
+                "author": "Kenji Yamamoto",
+                "category": "Programming",
+                "date": "May 10",
+                "readTime": "6 min read",
+                "image": "/assets/images/thumb/thumb-512x512-6.png"
+            },
+            {
+                "id": "why-we-crave-digital-detox-1",
+                "title": "Why We Crave Digital Detox More Than Ever",
+                "author": "Sophia Tran",
+                "category": "Living",
+                "date": "May 12",
+                "readTime": "4 min read",
+                "image": "/assets/images/thumb/thumb-512x512-7.png"
+            },
+            {
+                "id": "can-ai-make-art-1",
+                "title": "Can AI Really Make Art?",
+                "author": "Derek Lin",
+                "category": "GEN",
+                "date": "May 14",
+                "readTime": "7 min read",
+                "image": "/assets/images/thumb/thumb-512x512-8.png"
+            }
+        ],
+        "popular": {
+            "title": "Popular",
+            "articles": [
+                {
+                    "id": "president-and-the-emails-who-will-guard-the-guards-1",
+                    "number": "01",
+                    "title": "President and the emails. Who will guard the guards?",
+                    "author": "Alentica",
+                    "category": "Police",
+                    "date": "May 14",
+                    "readTime": "3 min read"
+                },
+                {
+                    "id": "how-to-silence-the-persistent-ding-of-modern-life-1",
+                    "number": "02",
+                    "title": "How to Silence the Persistent Ding of Modern Life",
+                    "author": "Alentica",
+                    "category": "Police",
+                    "date": "Jun 12",
+                    "readTime": "4 min read"
+                },
+                {
+                    "id": "why-we-love-to-watch-1",
+                    "number": "03",
+                    "title": "Why We Love to Watch",
+                    "author": "Alentica",
+                    "category": "Police",
+                    "date": "May 15",
+                    "readTime": "5 min read"
+                },
+                {
+                    "id": "how-health-apps-let-1",
+                    "number": "04",
+                    "title": "How Health Apps Let",
+                    "author": "Alentica",
+                    "category": "Police",
+                    "date": "April 27",
+                    "readTime": "6 min read"
+                }
+            ]
+        },
+        "ad": {
+            "image": "/assets/images/ads/ads-2.png",
+            "link": "#"
+        }
+    },
+    "Culture": {
+        "title": "Culture",
+        "mainArticle": {
+            "id": "home-internet-is-becoming-a-luxury-for-the-wealthy-3",
+            "image": "/assets/images/thumb/thumb-1400x992.jpg",
+            "title": "Home Internet Is Becoming a Luxury for the Wealthy",
+            "excerpt": "And black on meretriciously regardless well fearless irksomely as about hideous wistful bat less oh much and occasional useful rat darn jeepers far.",
+            "author": "Dave Gershgorn",
+            "category": "OneZero",
+            "date": "Jun 14",
+            "readTime": "3 min read"
+        },
+        "articles": [
+            {
+                "id": "home-internet-is-becoming-a-luxury-for-the-wealthy-4",
+                "tag": "Editors' Pick",
+                "title": "Home Internet Is Becoming a Luxury for the Wealthy",
+                "excerpt": "And black on meretriciously regardless well fearless irksomely as about hideous wistful bat less oh much and occasional useful rat darn jeepers far.",
+                "author": "Dave Gershgorn",
+                "category": "OneZero",
+                "date": "May 21",
+                "readTime": "5 min read",
+                "image": "/assets/images/thumb/thumb-800x495.jpg"
+            },
+            {
+                "id": "why-lack-of-sleep-is-so-bad-for-you-1",
+                "tag": "based on your reading history",
+                "title": "Why Lack of Sleep is So Bad For You",
+                "excerpt": "A lack of sleep is linked to an incredibly wide range of ailments, from heart disease and Type 2 diabetes to obesity, depression, poor cognitive function, and even Alzheimer's disease..",
+                "author": "Darcy Reeder",
+                "category": "OneZero",
+                "date": "Jun 17",
+                "readTime": "3 min read",
+                "image": "/assets/images/thumb/thumb-512x512.jpg"
+            },
+            {
+                "id": "regulators-just-put-a-target-on-apples-back-1",
+                "tag": "Culture",
+                "title": "Regulators Just Put a Target on Apple's Back",
+                "excerpt": "Excellence is the most important habit you can curate in life because it requires doing things you don't want to do and getting uncomfortable on a daily basis.",
+                "author": "Azimi ??kalo",
+                "category": "Freedom",
+                "date": "May 12",
+                "readTime": "8 min read",
+                "image": "/assets/images/thumb/thumb-512x512-2.jpg"
+            },
+            {
+                "id": "apple-is-designing-for-a-post-facebook-world-1",
+                "tag": "Technology",
+                "title": "Apple Is Designing for a Post-Facebook World",
+                "excerpt": "And black on meretriciously regardless well fearless irksomely as about hideous wistful bat less oh much and occasional useful rat darn jeepers far.",
+                "author": "Dave Gershgorn",
+                "category": "OneZero",
+                "date": "Jun 12",
+                "readTime": "7 min read",
+                "image": "/assets/images/thumb/thumb-512x512-3.jpg"
+            },
+            {
+                "id": "what-really-happens-to-airpods-when-they-die-1",
+                "tag": "based on your reading history",
+                "title": "What Really Happens to AirPods When They Die",
+                "excerpt": "At WWDC, Apple debuted a slew of new features that let users connect with their families and friends right inside Apple's apps'''no social.",
+                "author": "Johan Doan",
+                "category": "Lifestyle",
+                "date": "May 15",
+                "readTime": "5 min read",
+                "image": "/assets/images/thumb/thumb-512x512-4.jpg"
+            },
+            {
+                "id": "why-lack-of-sleep-is-so-bad-for-you-2",
+                "tag": "based on your reading history",
+                "title": "Why Lack of Sleep is So Bad For You",
+                "excerpt": "A lack of sleep is linked to an incredibly wide range of ailments, from heart disease and Type 2 diabetes to obesity, depression, poor cognitive function, and even Alzheimer's disease..",
+                "author": "Darcy Reeder",
+                "category": "OneZero",
+                "date": "Jun 17",
+                "readTime": "3 min read",
+                "image": "/assets/images/thumb/thumb-512x512.jpg"
+            },
+            {
+                "id": "regulators-just-put-a-target-on-apples-back-2",
+                "tag": "Culture",
+                "title": "Regulators Just Put a Target on Apple's Back",
+                "excerpt": "Excellence is the most important habit you can curate in life because it requires doing things you don't want to do and getting uncomfortable on a daily basis.",
+                "author": "Azimi ??kalo",
+                "category": "Freedom",
+                "date": "May 12",
+                "readTime": "8 min read",
+                "image": "/assets/images/thumb/thumb-512x512-2.jpg"
+            }
+        ],
+        "sideArticles": [
+            {
+                "id": "i-learned-how-to-die-before-i-knew-how-to-live-1",
+                "title": "I Learned How to Die Before I Knew How to Live",
+                "author": "Anna Goldfarb",
+                "category": "Fashion",
+                "date": "March 12",
+                "readTime": "4 min read",
+                "image": "/assets/images/thumb/thumb-512x512.jpg"
+            },
+            {
+                "id": "is-interactive-storytelling-the-future-of-media-1",
+                "title": "Is 'Interactive Storytelling' the Future of Media?",
+                "author": "Furukawa",
+                "category": "Programing",
+                "date": "March 14",
+                "readTime": "6 min read",
+                "image": "/assets/images/thumb/thumb-512x512-2.jpg"
+            },
+            {
+                "id": "how-not-to-get-a-30k-bill-from-firebase-1",
+                "title": "How NOT to get a $30k bill from Firebase",
+                "author": "Glorida",
+                "category": "Living",
+                "date": "April 14",
+                "readTime": "7 min read",
+                "image": "/assets/images/thumb/thumb-512x512-3.jpg"
+            },
+            {
+                "id": "google-cant-figure-out-what-youtube-is-1",
+                "title": "Google Can't Figure Out What YouTube Is",
+                "author": "Rayan Mark",
+                "category": "GEN",
+                "date": "Jun 14",
+                "readTime": "8 min read",
+                "image": "/assets/images/thumb/thumb-512x512-4.jpg"
+            }
+        ]
+    },
+    "theStartup": {
+        "title": "The Startup",
+        "description": "The Startup provides a scientific approach to creating and managing startups and get a desired product to customers' hands faste",
+        "mainArticle": {
+            "id": "what-i-wish-id-known-when-i-made-a-drastic-career-change",
+            "image": "/assets/images/thumb/thumb-1400x778.jpg",
+            "tag": "Editors' Pick",
+            "title": "What I Wish I'd Known When I Made a Drastic Career Change",
+            "excerpt": "Eight people who took the plunge share the biggest challenges and surprises of starting over. We spend a considerable portion of our time using a web browser and may sometimes need to get a screenshot of a full page in your browser.",
+            "author": "Steven Job",
+            "category": "OneZero",
+            "date": "July 15",
+            "readTime": "5 min read"
+        },
+        "articles": [
+            {
+                "id": "can-resolving-emotional-trauma-ease-chronic-pain",
+                "image": "/assets/images/thumb/thumb-512x512.jpg",
+                "title": "Can Resolving Emotional Trauma Ease Chronic Pain?",
+                "excerpt": "A new therapy teaches people to process their trauma as a way to treat chronic pain. Does it work?",
+                "author": "Oliver",
+                "category": "OneZero",
+                "date": "Jun 14",
+                "readTime": "3 min read"
+            },
+            {
+                "id": "amanda-knox-your-content-my-life",
+                "image": "/assets/images/thumb/thumb-512x512-2.jpg",
+                "title": "Amanda Knox: Your Content, My Life",
+                "excerpt": "And up that bee one sexually sheared and by goodness vindictive conscientiously politely less rabbit concise staid along far yellow piteous.",
+                "author": "George",
+                "category": "OneZero",
+                "date": "Jun 14",
+                "readTime": "3 min read"
+            },
+            {
+                "id": "congress-must-act-on-regulating-deepfakes",
+                "image": "/assets/images/thumb/thumb-512x512-3.jpg",
+                "title": "Congress Must Act on Regulating Deepfakes",
+                "excerpt": "Far innocent jay elephant far that rebound less ouch a much the the where pologetic.",
+                "author": "Harry",
+                "category": "OneZero",
+                "date": "Jun 14",
+                "readTime": "3 min read"
+            },
+            {
+                "id": "crab-oblique-in-meadowlark-lorikeet-far-giraffe",
+                "image": "/assets/images/thumb/thumb-512x512-4.jpg",
+                "title": "Crab oblique in meadowlark lorikeet far giraffe",
+                "excerpt": "That less and up awesomely and since far goodness fluidly lame and more youthful hence won witlessly re-laid sold close far hello thus less crud that slew.",
+                "author": "Muhammad",
+                "category": "OneZero",
+                "date": "Jun 14",
+                "readTime": "3 min read"
+            },
+            {
+                "id": "then-slapped-laughed-pithy-gorilla-woodpecker-cuffed",
+                "image": "/assets/images/thumb/thumb-700x512.jpg",
+                "title": "Then slapped laughed pithy gorilla woodpecker cuffed",
+                "excerpt": "Much quail after thanks as some panthe jeepers across other goodness along goodness criminal some and crab clapped spoke.",
+                "author": "William",
+                "category": "OneZero",
+                "date": "Jun 14",
+                "readTime": "3 min read"
+            },
+            {
+                "id": "fondly-much-baboon-much-a-a-towards-at-a-over-filled-astride",
+                "image": "/assets/images/thumb/thumb-700x512-2.jpg",
+                "title": "Fondly much baboon much a a towards at a over filled astride",
+                "excerpt": "Far under wiped played crassly deceptive shark healthy far the considering trout much mallard crud rolled brusque depending.",
+                "author": "Henry",
+                "category": "OneZero",
+                "date": "Jun 14",
+                "readTime": "3 min read"
+            },
+            {
+                "id": "gnu-aurally-past-much-after-bland-therefore-locked",
+                "image": "/assets/images/thumb/thumb-800x495.jpg",
+                "title": "Gnu aurally past much after bland therefore locked",
+                "excerpt": "Spluttered much jeez one from liberally therefore more circa arousingly vengefully preparatory rat shrugged rat wrote robin vividly roadrunne.",
+                "author": "Edward",
+                "category": "OneZero",
+                "date": "Jun 14",
+                "readTime": "3 min read"
+            },
+            {
+                "id": "interbred-where-over-stank-because-a-impassive-fa",
+                "image": "/assets/images/thumb/thumb-1400x992.jpg",
+                "title": "Interbred where over stank because a impassive fa",
+                "excerpt": "Much concentric and affluent in notwithstanding lanteous interbred quaint this nightingale hey dear square shut wildebeest.",
+                "author": "Isaac",
+                "category": "OneZero",
+                "date": "Jun 14",
+                "readTime": "3 min read"
+            },
+            {
+                "id": "played-healthy-opposite-this-as-inside-belligerent-far-habitual",
+                "image": "/assets/images/thumb/thumb-1240x700.jpg",
+                "title": "Played healthy opposite this as inside belligerent far habitual",
+                "excerpt": "Played healthy opposite this as inside belligerent far habitual drank past buffalo flamingo esoteric badger and and one lied opened and wow.",
+                "author": "David Toby",
+                "category": "OneZero",
+                "date": "Jun 14",
+                "readTime": "3 min read"
+            }
+        ]
+    },
+    "RyanMarkPosts": {
+        "articles": [
+            {
+                "id": "how-to-build-a-personal-brand-as-a-developer",
+                "title": "How to Build a Personal Brand as a Developer",
+                "excerpt": "Tips and strategies for developers to stand out in the tech industry and grow their personal brand.",
+                "author": "Ryan Mark",
+                "category": "Career",
+                "date": "May 10",
+                "readTime": "6 min read",
+                "image": "/assets/images/thumb/thumb-800x495.jpg",
+                "tag": "Editors' Pick"
+            },
+            {
+                "id": "why-side-projects-are-essential-for-growth",
+                "title": "Why Side Projects Are Essential for Growth",
+                "excerpt": "Discover how side projects can accelerate your learning and open new career opportunities.",
+                "author": "Ryan Mark",
+                "category": "Growth",
+                "date": "May 18",
+                "readTime": "5 min read",
+                "image": "/assets/images/thumb/thumb-512x512.jpg"
+            },
+            {
+                "id": "mastering-remote-work-tools-and-mindset",
+                "title": "Mastering Remote Work: Tools and Mindset",
+                "excerpt": "A guide to staying productive and connected while working remotely as a developer.",
+                "author": "Ryan Mark",
+                "category": "Remote Work",
+                "date": "June 2",
+                "readTime": "7 min read",
+                "image": "/assets/images/thumb/thumb-512x512-2.jpg"
+            },
+            {
+                "id": "the-power-of-networking-in-tech",
+                "title": "The Power of Networking in Tech",
+                "excerpt": "How building relationships in the tech community can help you land your dream job.",
+                "author": "Ryan Mark",
+                "category": "Networking",
+                "date": "June 10",
+                "readTime": "4 min read",
+                "image": "/assets/images/thumb/thumb-512x512-3.jpg"
+            },
+            {
+                "id": "balancing-learning-and-delivering-at-work",
+                "title": "Balancing Learning and Delivering at Work",
+                "excerpt": "Practical advice for developers to keep learning while meeting deadlines at work.",
+                "author": "Ryan Mark",
+                "category": "Productivity",
+                "date": "June 15",
+                "readTime": "5 min read",
+                "image": "/assets/images/thumb/thumb-512x512-4.jpg"
+            },
+            {
+                "id": "how-to-get-started-with-open-source",
+                "title": "How to Get Started with Open Source",
+                "excerpt": "A beginner's guide to contributing to open source projects and why it matters.",
+                "author": "Ryan Mark",
+                "category": "Open Source",
+                "date": "June 20",
+                "readTime": "6 min read",
+                "image": "/assets/images/thumb/thumb-700x512.jpg"
+            },
+            {
+                "id": "from-junior-to-senior-skills-that-matter",
+                "title": "From Junior to Senior: Skills That Matter",
+                "excerpt": "Key skills and mindset shifts that help developers move from junior to senior roles.",
+                "author": "Ryan Mark",
+                "category": "Career",
+                "date": "June 25",
+                "readTime": "8 min read",
+                "image": "/assets/images/thumb/thumb-700x512-2.jpg"
+            }
+        ]
+    },
+    "hightlightPosts": {
+        "title": "Hightlight posts",
+        "articles": [
+            {
+                "id": "president-and-the-emails-who-will-guard-the-guards",
+                "title": "President and the emails. Who will guard the guards?",
+                "author": "Alentica",
+                "category": "Police",
+                "date": "May 14",
+                "readTime": "3 min read"
+            },
+            {
+                "id": "how-to-silence-the-persistent-ding-of-modern-life",
+                "title": "How to Silence the Persistent Ding of Modern Life",
+                "author": "Alentica",
+                "category": "Police",
+                "date": "Jun 12",
+                "readTime": "4 min read"
+            },
+            {
+                "id": "why-we-love-to-watch",
+                "title": "Why We Love to Watch",
+                "author": "Alentica",
+                "category": "Police",
+                "date": "May 15",
+                "readTime": "5 min read"
+            },
+            {
+                "id": "how-health-apps-let",
+                "title": "How Health Apps Let",
+                "author": "Alentica",
+                "category": "Police",
+                "date": "April 27",
+                "readTime": "6 min read"
+            }
+        ]
+    },
+    "relatedPosts": {
+        "title": "Related Posts",
+        "articles": [
+            {
+                "id": "interactive-storytelling-future-of-media",
+                "title": "Is 'Interactive Storytelling' the Future of Media?",
+                "author": "Furukawa",
+                "category": "Programing",
+                "date": "March 14",
+                "readTime": "6 min read",
+                "image": "/assets/images/thumb/thumb-700x512.jpg"
+            },
+            {
+                "id": "how-one-developer-got-a-30k-firebase-bill-overnight",
+                "title": "How One Developer Got a $30K Firebase Bill Overnight",
+                "author": "Furukawa",
+                "category": "Programing",
+                "date": "March 14",
+                "readTime": "6 min read",
+                "image": "/assets/images/thumb/thumb-700x512-2.jpg"
+            },
+            {
+                "id": "why-youtube-might-be-googles-most-valuable-product",
+                "title": "Why YouTube Might Be Google's Most Valuable Product",
+                "author": "Furukawa",
+                "category": "Programing",
+                "date": "March 14",
+                "readTime": "6 min read",
+                "image": "/assets/images/thumb/thumb-700x512-3.jpg"
+            },
+            {
+                "id": "ai-coding-assistants-are-they-replacing-developers",
+                "title": "AI Coding Assistants: Are They Replacing Developers?",
+                "author": "Furukawa",
+                "category": "Programing",
+                "date": "March 14",
+                "readTime": "6 min read",
+                "image": "/assets/images/thumb/thumb-700x512-4.jpg"
+            },
+            {
+                "id": "will-webassembly-replace-javascript",
+                "title": "Will WebAssembly Replace JavaScript?",
+                "author": "Furukawa",
+                "category": "Programing",
+                "date": "March 14",
+                "readTime": "6 min read",
+                "image": "/assets/images/thumb/thumb-700x512-5.jpg"
+            },
+            {
+                "id": "react-vs-qwik-which-one-is-the-future-of-frontend",
+                "title": "React vs Qwik: Which One Is the Future of Frontend?",
+                "author": "Furukawa",
+                "category": "Programing",
+                "date": "March 14",
+                "readTime": "6 min read",
+                "image": "/assets/images/thumb/thumb-700x512-6.jpg"
+            }
+        ]
+    }
+}

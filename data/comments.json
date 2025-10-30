@@ -1,0 +1,244 @@
+[
+    {
+        "id": 1,
+        "author": "Rosie",
+        "avatar": "/assets/images/author-avata-1.jpg",
+        "content": "Vestibulum euismod, leo eget varius gravida, eros enim interdum urna, non rutrum enim ante quis metus. Duis porta ornare nulla ut bibendum",
+        "date": "7 August 2025 at 3:12 PM"
+    },
+    {
+        "id": 2,
+        "author": "Agatha Christie",
+        "avatar": "/assets/images/author-avata-2.jpg",
+        "content": "Vestibulum euismod, leo eget varius gravida, eros enim interdum urna, non rutrum enim ante quis metus. Duis porta ornare nulla ut bibendum",
+        "date": "7 August 2025 at 3:12 PM"
+    },
+    {
+        "id": 3,
+        "author": "Steven",
+        "avatar": "/assets/images/author-avata-3.jpg",
+        "content": "Vestibulum euismod, leo eget varius gravida, eros enim interdum urna, non rutrum enim ante quis metus. Duis porta ornare nulla ut bibendum",
+        "date": "7 August 2025 at 3:12 PM",
+        "parentId": 2
+    },
+    {
+        "id": 4,
+        "author": "Danielle Steel",
+        "avatar": "/assets/images/author-avata-4.jpg",
+        "content": "Vestibulum euismod, leo eget varius gravida, eros enim interdum urna, non rutrum enim ante quis metus. Duis porta ornare nulla ut bibendum",
+        "date": "7 August 2025 at 3:12 PM"
+    },
+    {
+        "id": 5,
+        "author": "Julian Barnes",
+        "avatar": "/assets/images/author-avata-1.jpg",
+        "content": "Duis egestas, odio in accumsan suscipit, erat ante vestibulum eros, nec tincidunt arcu justo id odio.",
+        "date": "7 August 2025 at 4:01 PM"
+    },
+    {
+        "id": 6,
+        "author": "Emily Brontë",
+        "avatar": "/assets/images/author-avata-3.jpg",
+        "content": "Mauris cursus nisi at lacus blandit, et lacinia nulla volutpat.",
+        "date": "7 August 2025 at 4:05 PM"
+    },
+    {
+        "id": 7,
+        "author": "Leo Tolstoy",
+        "avatar": "/assets/images/author-avata-4.jpg",
+        "content": "Phasellus nec velit quis lorem sodales tincidunt.",
+        "date": "7 August 2025 at 4:10 PM"
+    },
+    {
+        "id": 8,
+        "author": "Charlotte Perkins",
+        "avatar": "/assets/images/author-avata-2.jpg",
+        "content": "Donec sed magna bibendum, sagittis lorem sed, euismod metus.",
+        "date": "7 August 2025 at 4:15 PM"
+    },
+    {
+        "id": 9,
+        "author": "Kazuo Ishiguro",
+        "avatar": "/assets/images/author-avata-1.jpg",
+        "content": "Cras ultricies nulla ac turpis feugiat, a imperdiet libero tristique.",
+        "date": "7 August 2025 at 4:18 PM",
+        "parentId": 6
+    },
+    {
+        "id": 10,
+        "author": "Sylvia Plath",
+        "avatar": "/assets/images/author-avata-3.jpg",
+        "content": "Integer feugiat, sapien et pulvinar tincidunt, magna augue ultrices orci, et feugiat nulla justo in metus.",
+        "date": "7 August 2025 at 4:21 PM"
+    },
+    {
+        "id": 11,
+        "author": "John Steinbeck",
+        "avatar": "/assets/images/author-avata-2.jpg",
+        "content": "Praesent porttitor nisi sit amet magna hendrerit, non placerat nunc malesuada.",
+        "date": "7 August 2025 at 4:25 PM"
+    },
+    {
+        "id": 12,
+        "author": "Virginia Woolf",
+        "avatar": "/assets/images/author-avata-4.jpg",
+        "content": "Suspendisse eu velit at leo tristique suscipit.",
+        "date": "7 August 2025 at 4:27 PM"
+    },
+    {
+        "id": 13,
+        "author": "George Orwell",
+        "avatar": "/assets/images/author-avata-1.jpg",
+        "content": "Sed in massa sed leo pharetra varius.",
+        "date": "7 August 2025 at 4:30 PM"
+    },
+    {
+        "id": 14,
+        "author": "Jane Austen",
+        "avatar": "/assets/images/author-avata-3.jpg",
+        "content": "Etiam nec orci placerat, tristique augue sed, aliquam ipsum.",
+        "date": "7 August 2025 at 4:33 PM"
+    },
+    {
+        "id": 15,
+        "author": "Oscar Wilde",
+        "avatar": "/assets/images/author-avata-2.jpg",
+        "content": "Nulla malesuada, justo sed rutrum hendrerit, libero ex pharetra tellus, vitae gravida justo libero et erat.",
+        "date": "7 August 2025 at 4:35 PM"
+    },
+    {
+        "id": 16,
+        "author": "Mary Shelley",
+        "avatar": "/assets/images/author-avata-4.jpg",
+        "content": "Nam lacinia quam sed felis facilisis volutpat.",
+        "date": "7 August 2025 at 4:38 PM"
+    },
+    {
+        "id": 17,
+        "author": "Haruki Murakami",
+        "avatar": "/assets/images/author-avata-1.jpg",
+        "content": "Fusce vel lectus vitae nunc posuere luctus.",
+        "date": "7 August 2025 at 4:42 PM"
+    },
+    {
+        "id": 18,
+        "author": "Toni Morrison",
+        "avatar": "/assets/images/author-avata-2.jpg",
+        "content": "Duis sed lorem sed velit fringilla dapibus.",
+        "date": "7 August 2025 at 4:45 PM"
+    },
+    {
+        "id": 19,
+        "author": "Franz Kafka",
+        "avatar": "/assets/images/author-avata-3.jpg",
+        "content": "Ut faucibus, tellus sed facilisis pretium, est justo tempor magna, in lacinia erat orci in purus.",
+        "date": "7 August 2025 at 4:49 PM",
+        "parentId": 11
+    },
+    {
+        "id": 20,
+        "author": "Herman Melville",
+        "avatar": "/assets/images/author-avata-4.jpg",
+        "content": "Curabitur posuere velit nec odio imperdiet, ut euismod diam porttitor.",
+        "date": "7 August 2025 at 4:50 PM"
+    },
+    {
+        "id": 21,
+        "author": "Margaret Atwood",
+        "avatar": "/assets/images/author-avata-1.jpg",
+        "content": "Morbi facilisis justo id suscipit gravida.",
+        "date": "7 August 2025 at 4:55 PM"
+    },
+    {
+        "id": 22,
+        "author": "Albert Camus",
+        "avatar": "/assets/images/author-avata-2.jpg",
+        "content": "Sed gravida sem vitae quam bibendum, in sollicitudin neque dictum.",
+        "date": "7 August 2025 at 4:58 PM"
+    },
+    {
+        "id": 23,
+        "author": "Chimamanda Ngozi",
+        "avatar": "/assets/images/author-avata-3.jpg",
+        "content": "Nunc vel lacus vel sapien scelerisque finibus.",
+        "date": "7 August 2025 at 5:00 PM"
+    },
+    {
+        "id": 24,
+        "author": "J.K. Rowling",
+        "avatar": "/assets/images/author-avata-4.jpg",
+        "content": "Quisque non diam nec nulla lobortis laoreet.",
+        "date": "7 August 2025 at 5:03 PM"
+    },
+    {
+        "id": 25,
+        "author": "C.S. Lewis",
+        "avatar": "/assets/images/author-avata-1.jpg",
+        "content": "Donec tincidunt libero non augue finibus, at faucibus orci tincidunt.",
+        "date": "7 August 2025 at 5:06 PM"
+    },
+    {
+        "id": 26,
+        "author": "Jhumpa Lahiri",
+        "avatar": "/assets/images/author-avata-2.jpg",
+        "content": "Aenean ac sem non nulla fringilla dictum.",
+        "date": "7 August 2025 at 5:09 PM"
+    },
+    {
+        "id": 27,
+        "author": "Neil Gaiman",
+        "avatar": "/assets/images/author-avata-3.jpg",
+        "content": "Integer id ex nec nulla pretium porttitor.",
+        "date": "7 August 2025 at 5:12 PM"
+    },
+    {
+        "id": 28,
+        "author": "Zadie Smith",
+        "avatar": "/assets/images/author-avata-4.jpg",
+        "content": "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.",
+        "date": "7 August 2025 at 5:14 PM"
+    },
+    {
+        "id": 29,
+        "author": "Philip Roth",
+        "avatar": "/assets/images/author-avata-1.jpg",
+        "content": "Vivamus finibus tellus at diam lacinia suscipit.",
+        "date": "7 August 2025 at 5:16 PM"
+    },
+    {
+        "id": 30,
+        "author": "Kurt Vonnegut",
+        "avatar": "/assets/images/author-avata-2.jpg",
+        "content": "Aenean convallis justo at metus elementum, nec sagittis nulla tristique.",
+        "date": "7 August 2025 at 5:20 PM"
+    },
+    {
+        "id": 31,
+        "author": "Maya Angelou",
+        "avatar": "/assets/images/author-avata-3.jpg",
+        "content": "Nunc ut sapien ac erat gravida luctus.",
+        "date": "7 August 2025 at 5:22 PM",
+        "parentId": 18
+    },
+    {
+        "id": 32,
+        "author": "Ray Bradbury",
+        "avatar": "/assets/images/author-avata-4.jpg",
+        "content": "Maecenas quis purus eu sapien varius tempor.",
+        "date": "7 August 2025 at 5:24 PM"
+    },
+    {
+        "id": 33,
+        "author": "J.R.R. Tolkien",
+        "avatar": "/assets/images/author-avata-1.jpg",
+        "content": "Fusce dignissim libero nec porttitor sodales.",
+        "date": "7 August 2025 at 5:27 PM"
+    },
+    {
+        "id": 34,
+        "author": "Ernest Hemingway",
+        "avatar": "/assets/images/author-avata-3.jpg",
+        "content": "Vivamus porta nisi sit amet sapien fringilla, nec tristique urna iaculis.",
+        "date": "7 August 2025 at 5:30 PM"
+    }
+]
