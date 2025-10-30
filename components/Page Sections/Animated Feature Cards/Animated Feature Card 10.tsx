@@ -6,7 +6,7 @@ import {
   motion,
   useAnimation,
   useInView,
-} from "motion/react";
+} from "framer-motion";
 import { useEffect, useRef } from "react";
 
 const cardImage = [

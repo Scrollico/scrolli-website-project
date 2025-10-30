@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { motion, useInView, useSpring, useTransform } from "motion/react";
+import { motion, useInView, useSpring, useTransform } from "framer-motion";
 
 import { Card, CardContent } from "@/components/ui/card";
 

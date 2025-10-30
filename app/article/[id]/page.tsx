@@ -106,7 +106,7 @@ export default function ArticlePage() {
     }
 
     return (
-        <Layout classLisst="single">
+        <Layout classList="single">
             <Section1 article={article} />
         </Layout>
     );

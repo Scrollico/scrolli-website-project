@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion, MotionConfig } from "motion/react";
+import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef, useState } from "react";
 

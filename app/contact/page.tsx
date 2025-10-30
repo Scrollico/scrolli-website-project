@@ -4,7 +4,7 @@ export default function Contact() {
 
 	return (
     <>
-      <Layout classLisst="single page-contact">
+      <Layout classList="single page-contact">
         <Section1 />
       </Layout>
     </>

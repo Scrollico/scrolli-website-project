@@ -4,7 +4,7 @@ export default function Archive() {
 
 	return (
     <>
-      <Layout classLisst="archive">
+      <Layout classList="archive">
         <Section1 />
       </Layout>
     </>

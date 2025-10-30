@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 
 export function FeatureCard1() {
   const variant1 = {
@@ -9,7 +9,6 @@ export function FeatureCard1() {
       transition: {
         delay: 0.05,
         duration: 0.2,
-        ease: "linear",
       },
     },
     whileHover: {
@@ -19,7 +18,6 @@ export function FeatureCard1() {
       transition: {
         delay: 0.05,
         duration: 0.2,
-        ease: "linear",
       },
     },
   };
@@ -30,7 +28,6 @@ export function FeatureCard1() {
       transition: {
         delay: 0,
         duration: 0.2,
-        ease: "linear",
       },
     },
     whileHover: {
@@ -41,7 +38,6 @@ export function FeatureCard1() {
       transition: {
         delay: 0,
         duration: 0.2,
-        ease: "linear",
       },
     },
   };
@@ -53,7 +49,6 @@ export function FeatureCard1() {
       transition: {
         delay: 0.05,
         duration: 0.2,
-        ease: "linear",
       },
     },
     whileHover: {
@@ -65,7 +60,6 @@ export function FeatureCard1() {
       transition: {
         delay: 0.05,
         duration: 0.2,
-        ease: "easeInOut",
       },
     },
   };

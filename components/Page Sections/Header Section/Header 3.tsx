@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { useState } from "react";
 
 interface NavItem {
@@ -25,6 +25,7 @@ export function Header() {
         <div className="relative flex w-fit items-center rounded-full border p-1.5">
           {navs.map((option) => (
             <button
+              key={option.name}
               onClick={() => setActiveTab(option.name)}
               className={cn("relative z-[1] px-4 py-2", {
                 "z-0": activeTab === option.name,

@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 import * as Accordion from "@radix-ui/react-accordion";
-import { motion, useInView } from "motion/react";
+import { motion, useInView } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -31,6 +31,7 @@ const AccordionItem = forwardRef<HTMLDivElement, AccordionItemProps>(
     </Accordion.Item>
   ),
 );
+AccordionItem.displayName = "AccordionItem";
 
 type AccordionTriggerProps = {
   children: React.ReactNode;
@@ -53,6 +54,7 @@ const AccordionTrigger = forwardRef<HTMLButtonElement, AccordionTriggerProps>(
     </Accordion.Header>
   ),
 );
+AccordionTrigger.displayName = "AccordionTrigger";
 
 type AccordionContentProps = {
   children: ReactNode;
@@ -73,6 +75,7 @@ const AccordionContent = forwardRef<HTMLDivElement, AccordionContentProps>(
     </Accordion.Content>
   ),
 );
+AccordionContent.displayName = "AccordionContent";
 
 type CardDataProps = {
   id: number;

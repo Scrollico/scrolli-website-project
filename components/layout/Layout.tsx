@@ -8,11 +8,11 @@ import MobileMenu from "./MobileMenu";
 
 interface LayoutProps {
   children?: React.ReactNode;
-  classLisst?: string;
+  classList?: string;
   onNewsletterClick?: () => void;
 }
 
-export default function Layout({ classLisst, children, onNewsletterClick }: LayoutProps) {
+export default function Layout({ classList, children, onNewsletterClick }: LayoutProps) {
   const [scroll, setScroll] = useState<boolean>(false);
   // Mobile Menu
   const [isMobileMenu, setMobileMenu] = useState<boolean>(false);
@@ -36,11 +36,11 @@ export default function Layout({ classLisst, children, onNewsletterClick }: Layo
     return () => {
       document.removeEventListener("scroll", handleScroll);
     };
-  }, [scroll, classLisst]);
+  }, [scroll, classList]);
 
   return (
     <>
-      <div className={classLisst}>
+      <div className={classList}>
         {/* Skip to main content link for accessibility */}
         <a
           href="#main-content"
@@ -54,7 +54,7 @@ export default function Layout({ classLisst, children, onNewsletterClick }: Layo
         <div id="wrapper">
           {/* Site Header with navigation */}
           <header role="banner">
-            <Header scroll={scroll} onNewsletterClick={onNewsletterClick} />
+            <Header onNewsletterClick={onNewsletterClick} />
           </header>
 
           {/* Main content area */}

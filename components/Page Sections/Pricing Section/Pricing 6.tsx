@@ -53,6 +53,7 @@ const CheckIcon = React.memo((props: React.SVGProps<SVGSVGElement>) => (
     <path d="M20 6 9 17l-5-5" />
   </svg>
 ));
+CheckIcon.displayName = "CheckIcon";
 
 const XIcon = React.memo((props: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -71,6 +72,7 @@ const XIcon = React.memo((props: React.SVGProps<SVGSVGElement>) => (
     <path d="m6 6 12 12" />
   </svg>
 ));
+XIcon.displayName = "XIcon";
 
 const FeatureList = React.memo(({ features }: { features: Feature[] }) => (
   <div className="mt-2">
@@ -97,6 +99,7 @@ const FeatureList = React.memo(({ features }: { features: Feature[] }) => (
     </ul>
   </div>
 ));
+FeatureList.displayName = "FeatureList";
 
 const PlanCard = React.memo(({ plan }: { plan: Plan }) => (
   <div className="flex flex-col gap-y-5 rounded-lg border p-5">
@@ -110,6 +113,7 @@ const PlanCard = React.memo(({ plan }: { plan: Plan }) => (
     <FeatureList features={plan.features} />
   </div>
 ));
+PlanCard.displayName = "PlanCard";
 
 export function Pricing() {
   return (

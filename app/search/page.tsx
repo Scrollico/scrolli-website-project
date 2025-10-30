@@ -16,7 +16,7 @@ export default async function Search({
 
 	return (
 		<>
-			<Layout classLisst="search">
+			<Layout classList="search">
 				<Section1 searchQuery={query} />
 			</Layout>
 		</>

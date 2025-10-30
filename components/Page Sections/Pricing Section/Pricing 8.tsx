@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { useState } from "react";
 

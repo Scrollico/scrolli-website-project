@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { CheckIcon } from "@radix-ui/react-icons";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { Loader } from "lucide-react";
 import { useState } from "react";
 

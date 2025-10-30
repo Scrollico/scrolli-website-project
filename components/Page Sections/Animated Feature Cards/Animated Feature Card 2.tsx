@@ -1,6 +1,6 @@
 "use client";
 
-import { cubicBezier, motion } from "motion/react";
+import { cubicBezier, motion } from "framer-motion";
 import { Clock, Download, MessageCircle, Star } from "lucide-react";
 
 const texts = [

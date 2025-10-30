@@ -4,7 +4,7 @@ export default function Categories() {
 
 	return (
 		<>
-			<Layout classLisst="categories">
+			<Layout classList="categories">
 				<Section1 />
 			</Layout>
 		</>

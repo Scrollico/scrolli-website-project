@@ -51,7 +51,7 @@ export function AnimatedListItem({ children }: { children: React.ReactNode }) {
     initial: { scale: 0, opacity: 0 },
     animate: { scale: 1, opacity: 1, originY: 0 },
     exit: { scale: 0, opacity: 0 },
-    transition: { duration: 0.3 },
+    transition: { type: "spring", stiffness: 350, damping: 40 },
   };
 
   return (
@@ -128,34 +128,3 @@ const Notification = ({ name, description, icon, color, time }: Item) => {
         <div className="flex flex-col overflow-hidden">
           <figcaption className="flex flex-row items-center whitespace-pre text-lg font-medium dark:text-white ">
             <span className="text-sm sm:text-lg">{name}</span>
-            <span className="mx-1">�</span>
-            <span className="text-xs text-gray-500">{time}</span>
-          </figcaption>
-          <p className="text-sm font-normal dark:text-white/60">
-            {description}
-          </p>
-        </div>
-      </div>
-    </figure>
-  );
-};
-
-export function FeatureCard9() {
-  return (
-    <div className="relative flex h-full max-h-[500px] mx-auto min-h-[500px] w-full max-w-[32rem] transform-gpu flex-col justify-between overflow-hidden rounded-lg border bg-white [box-shadow:0_0_0_1px_rgba(0,0,0,.03),0_2px_4px_rgba(0,0,0,.05),0_12px_24px_rgba(0,0,0,.05)] dark:bg-black dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]">
-      <div className="flex items-center justify-center overflow-hidden">
-        <AnimatedList>
-          {notifications.map((item, idx) => (
-            <Notification {...item} key={idx} />
-          ))}
-        </AnimatedList>
-      </div>
-      <div className="flex flex-col items-start gap-y-1 border-t p-4 dark:border-neutral-800">
-        <h2 className="text-xl font-semibold">Notifications</h2>
-        <p className="text-base font-normal text-neutral-500 dark:text-neutral-400">
-          Get realtime notifications for events you subscribe too
-        </p>
-      </div>
-    </div>
-  );
-}

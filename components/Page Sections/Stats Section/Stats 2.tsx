@@ -8,7 +8,7 @@ import {
   useMotionValue,
   useSpring,
   Variant,
-} from "motion/react";
+} from "framer-motion";
 
 const stats = [
   { value: 50000, label: "Active Users" },

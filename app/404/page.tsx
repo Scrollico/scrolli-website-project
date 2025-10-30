@@ -3,7 +3,7 @@ export default function NotFound() {
 
 	return (
     <>
-      <Layout classLisst="single page-404">
+      <Layout classList="single page-404">
         <div className="container">
           <article className="entry-wraper mb-5">
             <h1 className="text-center mb-3 mt-5">404</h1>

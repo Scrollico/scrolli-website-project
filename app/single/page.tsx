@@ -8,7 +8,7 @@ export default function Home() {
 
 	return (
 		<>
-			<Layout classLisst="single">
+			<Layout classList="single">
 				<Section1 article={article} />
 			</Layout>
 		</>

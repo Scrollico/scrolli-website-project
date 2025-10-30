@@ -4,7 +4,7 @@ export default function Typography() {
 
 	return (
     <>
-      <Layout classLisst="single">
+      <Layout classList="single">
         <Section1 />
       </Layout>
     </>

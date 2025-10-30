@@ -4,7 +4,7 @@ export default function Author() {
 
 	return (
 		<>
-			<Layout classLisst="archive">
+			<Layout classList="archive">
 				<Section1 />
 			</Layout>
 		</>

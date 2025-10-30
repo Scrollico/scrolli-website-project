@@ -1,6 +1,6 @@
 "use client";
 
-import { cubicBezier, motion } from "motion/react";
+import { cubicBezier, motion } from "framer-motion";
 
 export function FeatureCard4() {
   const variant1 = {

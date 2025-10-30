@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import { BorderBeam } from "@/components/magicui/border-beam";
 import RetroGrid from "@/components/magicui/retro-grid";
-import { motion, useInView } from "motion/react";
+import { motion, useInView } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import { useRef } from "react";
 

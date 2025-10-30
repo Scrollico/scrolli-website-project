@@ -1,11 +1,8 @@
 "use client";
-import Link from "next/link";
 import { useState } from "react";
-import Image from 'next/image';
-import CityClockRow from "./CityClockRow";
 import CardNav from "./CardNav";
 
-export default function Header({ scroll, onNewsletterClick }: any) {
+export default function Header({ onNewsletterClick }: any) {
   const [isSearch, setIsSearch] = useState<number | null>(null);
 
   const handleSearch = (key: number) => {
@@ -76,9 +73,6 @@ export default function Header({ scroll, onNewsletterClick }: any) {
                   logo="/assets/images/Standart/Primary-alternative.png"
                   logoAlt="Merinda Logo"
                   items={cardNavItems}
-                  buttonBgColor="#231F20"
-                  buttonTextColor="#F7F4E1"
-                  ease="power3.out"
                   {...headerProps}
                 />
       </header>
