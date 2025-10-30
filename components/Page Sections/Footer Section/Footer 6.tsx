@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 const footerLinks: { id: number; title: string; url: string }[][] = [
@@ -36,7 +37,7 @@ export function Footer() {
     <footer className="px-7 py-10 md:px-10">
       <div className=" mx-auto flex max-w-6xl flex-col gap-x-5 gap-y-10 md:items-start md:justify-between lg:flex-row lg:px-10 xl:px-0">
         <div className="flex w-full flex-col items-start justify-start gap-y-5 md:w-1/2 lg:w-1/3">
-          <a href="/" className="flex items-center gap-x-2">
+          <Link href="/" className="flex items-center gap-x-2">
             <img
               className="h-8 w-8 rounded-md"
               src="https://magicui.design/icon.png"
@@ -45,7 +46,7 @@ export function Footer() {
             <h2 className="font-bold text-neutral-900 dark:text-white">
               Magic UI
             </h2>
-          </a>
+          </Link>
           <p className="tracking-tight text-neutral-900 dark:text-white">
             UI library for Design Engineers
           </p>

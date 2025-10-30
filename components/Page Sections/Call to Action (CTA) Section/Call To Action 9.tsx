@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -18,7 +19,7 @@ export function CallToAction() {
                 </p>
               </div>
               <Button asChild className="w-48">
-                <a href="/">Buy now</a>
+                <Link href="/">Buy now</Link>
               </Button>
             </div>
           </CardContent>

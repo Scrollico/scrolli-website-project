@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -100,7 +101,7 @@ export function Footer() {
       <div className="mx-auto w-full max-w-screen-xl px-4">
         <div className="gap-4 p-4 py-16 sm:pb-16 md:flex md:justify-between">
           <div className="mb-12 flex flex-col gap-4">
-            <a href="/" className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2">
               <img
                 className="h-7 w-7"
                 src="https://magicui.design/icon.png"
@@ -109,7 +110,7 @@ export function Footer() {
               <span className="self-center whitespace-nowrap text-2xl font-semibold text-neutral-900 dark:text-white">
                 Magic UI
               </span>
-            </a>
+            </Link>
             <div className="max-w-sm">
               <div className="z-10 mt-4 flex w-full flex-col items-start text-left">
                 <h1 className="text-3xl font-bold lg:text-2xl">
@@ -172,10 +173,10 @@ export function Footer() {
             ))}
           </div>
           <span className="text-sm tracking-tight text-neutral-500 dark:text-neutral-400 sm:text-center">
-            Copyright © {new Date().getFullYear()}{" "}
-            <a href="/" className="cursor-pointer">
+            Copyright ï¿½ {new Date().getFullYear()}{" "}
+            <Link href="/" className="cursor-pointer">
               Magic UI
-            </a>
+            </Link>
             . All Rights Reserved.
           </span>
         </div>

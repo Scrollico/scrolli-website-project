@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Marquee from "@/components/magicui/marquee";
@@ -166,7 +167,7 @@ export function CallToAction() {
                 <p className="mt-2">
                   Start your 7-day free trial. No credit card required.
                 </p>
-                <a
+                <Link
                   href="/"
                   className={cn(
                     buttonVariants({
@@ -178,7 +179,7 @@ export function CallToAction() {
                 >
                   Get Started
                   <ChevronRight className="ml-1 size-4 transition-all duration-300 ease-out group-hover:translate-x-1" />
-                </a>
+                </Link>
               </div>
               <div className="absolute inset-0 -z-10 rounded-full  bg-white opacity-40 blur-xl dark:bg-black" />
             </div>
