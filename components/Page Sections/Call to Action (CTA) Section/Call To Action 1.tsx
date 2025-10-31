@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Marquee from "@/components/magicui/marquee";
@@ -68,7 +69,7 @@ const ReviewCard = ({
       )}
     >
       <div className="flex flex-row items-center gap-2">
-        <img className="rounded-full" width="32" height="32" alt="" src={img} />
+        <Image className="rounded-full" width={32} height={32} alt="" src={img} />
         <div className="flex flex-col">
           <figcaption className="text-sm font-medium dark:text-white">
             {name}
@@ -151,7 +152,7 @@ export function CallToAction() {
                     size: "lg",
                     variant: "outline",
                   }),
-                  "group mt-4 rounded-[2rem] px-6",
+                  "group mt-4 rounded-[2rem] px-6 w-full sm:w-auto min-h-[44px] flex items-center justify-center",
                 )}
               >
                 Get Started

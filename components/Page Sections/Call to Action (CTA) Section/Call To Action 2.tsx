@@ -170,11 +170,11 @@ export function CallToAction() {
                 <Link
                   href="/"
                   className={cn(
-                    buttonVariants({
-                      size: "lg",
-                      variant: "outline",
-                    }),
-                    "group mt-4 rounded-[2rem] px-6",
+                  buttonVariants({
+                    size: "lg",
+                    variant: "outline",
+                  }),
+                  "group mt-4 rounded-[2rem] px-6 w-full sm:w-auto min-h-[44px] flex items-center justify-center",
                   )}
                 >
                   Get Started

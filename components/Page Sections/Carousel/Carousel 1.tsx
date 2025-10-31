@@ -252,9 +252,9 @@ export function Emblacarousel1() {
         <EmblaCarousel
           slides={slides}
           options={OPTIONS}
-          maxTranslateY={250}
-          tweenFactorBase={0.2}
-          className="w-full min-h-[25rem] h-full"
+          maxTranslateY={120}
+          tweenFactorBase={0.1}
+          className="w-full min-h-[16rem] md:min-h-[25rem] h-full"
         />
         <div className="pointer-events-none absolute inset-y-0 left-0 hidden h-full w-1/5 bg-gradient-to-r from-white dark:from-black md:block"></div>
         <div className="pointer-events-none absolute inset-y-0 right-0 hidden h-full w-1/5 bg-gradient-to-l from-white dark:from-black md:block"></div>

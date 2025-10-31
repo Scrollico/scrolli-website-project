@@ -1,9 +1,13 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
+import NextImage from "next/image";
+import { Menu, X, Search, Sun, Moon } from "lucide-react";
 import CardNav from "./CardNav";
 
 export default function Header({ onNewsletterClick }: any) {
   const [isSearch, setIsSearch] = useState<number | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleSearch = (key: number) => {
     setIsSearch((prevState) => (prevState === key ? null : key));
@@ -59,23 +63,85 @@ export default function Header({ onNewsletterClick }: any) {
   ];
 
   return (
-    <>
-      <header id="header" className="d-lg-block d-none">
-        <div className="container">
-          <div className="header-inner d-flex align-items-center justify-content-between w-100">
-            <div className="logo-stack d-flex align-items-center">
-            </div>
-          </div>
-          <div className="clearfix" />
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      {/* Skip to main content link for accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 bg-primary text-primary-foreground px-4 py-2 rounded-br z-50"
+      >
+        Skip to main content
+      </a>
+
+      {/* Mobile Header */}
+      <div className="flex items-center justify-between px-4 py-3 md:hidden">
+        {/* Mobile Logo */}
+        <Link href="/" className="flex items-center space-x-2">
+          <NextImage
+            src="/assets/images/Standart/Primary-alternative.png"
+            alt="Merinda Logo"
+            width={32}
+            height={32}
+            className="h-8 w-8"
+          />
+          <span className="text-lg font-bold">Merinda</span>
+        </Link>
+
+        {/* Mobile Actions */}
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => handleDark()}
+            className="p-2 rounded-md hover:bg-accent"
+            aria-label="Toggle theme"
+          >
+            {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </button>
+
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-2 rounded-md hover:bg-accent"
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
-        {/* CardNav Menu */}
-                <CardNav
-                  logo="/assets/images/Standart/Primary-alternative.png"
-                  logoAlt="Merinda Logo"
-                  items={cardNavItems}
-                  {...headerProps}
-                />
-      </header>
-    </>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden border-t bg-background">
+          <nav className="px-4 py-4 space-y-4">
+            {cardNavItems.map((item) => (
+              <div key={item.label} className="space-y-2">
+                <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
+                  {item.label}
+                </h3>
+                <div className="space-y-1 pl-4">
+                  {item.links.map((link, index) => (
+                    <a
+                      key={index}
+                      href="#"
+                      className="block py-2 text-sm hover:text-primary transition-colors"
+                      aria-label={link.ariaLabel}
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </nav>
+        </div>
+      )}
+
+      {/* Desktop Header */}
+      <div className="hidden md:block">
+        <CardNav
+          logo="/assets/images/Standart/Primary-alternative.png"
+          logoAlt="Merinda Logo"
+          items={cardNavItems}
+          {...headerProps}
+        />
+      </div>
+    </header>
   );
 }

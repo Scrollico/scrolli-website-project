@@ -1,168 +1,65 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { Container } from "@/components/responsive";
 
 export default function HeroSection() {
   return (
-    <section style={{
-      position: 'relative',
-      width: '100%',
-      height: '100vh',
-      margin: 0,
-      padding: 0,
-      top: 0,
-      display: 'flex',
-      alignItems: 'center',
-      overflow: 'hidden'
-    }}>
+    <section className="relative w-full min-h-screen md:h-screen flex items-center overflow-hidden">
       {/* Background Image */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: 1
-      }}>
+      <div className="absolute inset-0 z-10">
         <Image
           src="/assets/images/thumb/thumb-1400x778.jpg"
           alt="Featured article background"
           fill
-          style={{ objectFit: 'cover' }}
+          className="object-cover"
           priority
+          sizes="100vw"
         />
         {/* Overlay gradient */}
-        <div
-          className="hero-gradient-overlay"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            background: 'linear-gradient(135deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.4) 100%)',
-            zIndex: 2
-          }}
-        />
-         {/* Bottom gradient transition - MUHTEŞEM kaybolma efekti - Tamamen beyaza geçiş */}
-         <div
-           className="hero-bottom-gradient"
-           style={{
-             position: 'absolute',
-             bottom: 0,
-             left: 0,
-             width: '100%',
-             height: '90%',
-             background: 'linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 10%, rgba(255,255,255,0.15) 25%, rgba(255,255,255,0.35) 40%, rgba(255,255,255,0.6) 55%, rgba(255,255,255,0.8) 70%, rgba(255,255,255,0.95) 80%, rgba(255,255,255,1) 85%, rgba(255,255,255,1) 100%)',
-             zIndex: 2
-           }}
-         />
+        <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-black/10 to-black/40 z-20" />
+        {/* Bottom gradient transition */}
+        <div className="absolute bottom-0 left-0 w-full h-[90%] bg-gradient-to-t from-white via-white/80 to-transparent z-20" />
       </div>
 
       {/* Content */}
-      <div style={{
-        position: 'relative',
-        zIndex: 3,
-        maxWidth: '1600px',
-        margin: '0 auto',
-        padding: '0 3rem',
-        width: '100%'
-      }}>
-        <div style={{
-          maxWidth: '800px',
-          margin: '0',
-          textAlign: 'left'
-        }}>
+      <Container className="relative z-30">
+        <div className="max-w-2xl">
           {/* Featured Label */}
-          <div style={{ marginBottom: '2rem' }}>
-            <span
-              style={{
-                display: 'inline-block',
-                padding: '0.5rem 1rem',
-                fontSize: '0.85rem',
-                fontWeight: 400,
-                color: '#ffffff',
-                backgroundColor: 'rgba(0,0,0,0.3)',
-                backdropFilter: 'blur(5px)',
-                borderRadius: '4px',
-                border: '1px solid rgba(255,255,255,0.2)',
-                textShadow: '0 1px 2px rgba(0,0,0,0.5)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-                cursor: 'default',
-                opacity: '0.9'
-              }}
-            >
+          <div className="mb-4 md:mb-8">
+            <span className="inline-block px-3 py-2 text-xs md:text-sm font-normal text-white bg-black/30 backdrop-blur-sm rounded border border-white/20 uppercase tracking-wide cursor-default opacity-90 shadow-sm">
               Featured
             </span>
           </div>
 
           {/* Headline */}
-          <h1
-            style={{
-              marginBottom: '2rem',
-              fontSize: '3rem',
-              fontFamily: '"Cabin", sans-serif',
-              fontWeight: 700,
-              lineHeight: '1.15',
-              color: '#ffffff',
-              textShadow: '0 3px 6px rgba(0,0,0,0.4)',
-              maxWidth: '100%'
-            }}
-          >
+          <h1 className="mb-6 md:mb-8 text-2xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight text-white drop-shadow-lg max-w-full font-cabin">
             Marco Grassi: 'A painting's months-long journey can't keep up with the pace of the digital world'
           </h1>
 
           {/* Read More Link */}
-          <div>
-            <a
-              href="#"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.75rem',
-                fontSize: '1.2rem',
-                fontWeight: 500,
-                color: '#ffffff',
-                textDecoration: 'none',
-                padding: '1rem 2rem',
-                backgroundColor: 'rgba(255,255,255,0.2)',
-                backdropFilter: 'blur(10px)',
-                borderRadius: '30px',
-                border: '1px solid rgba(255,255,255,0.3)',
-                transition: 'all 0.3s ease',
-                textShadow: '0 1px 2px rgba(0,0,0,0.3)',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.3)';
-                e.currentTarget.style.transform = 'translateY(-3px)';
-                e.currentTarget.style.boxShadow = '0 8px 25px rgba(0,0,0,0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.2)';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
-              }}
+          <Link
+            href="#"
+            className="inline-flex items-center gap-3 px-6 py-4 md:px-8 md:py-5 text-base md:text-lg font-medium text-white no-underline bg-white/20 backdrop-blur-md rounded-full border border-white/30 hover:bg-white/30 hover:-translate-y-1 transition-all duration-300 shadow-lg hover:shadow-xl"
+          >
+            Read in-depth
+            <svg
+              className="h-5 w-5 md:h-6 md:w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              Read in-depth
-              <svg
-                style={{ height: '1.2rem', width: '1.2rem' }}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </a>
-          </div>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </Link>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

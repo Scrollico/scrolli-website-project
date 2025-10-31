@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { BorderBeam } from "@/components/magicui/border-beam";
 import { motion, useInView } from "framer-motion";
@@ -117,13 +118,21 @@ export function Hero() {
               )}
             />
 
-            <img
+            <Image
               src="/dashboard-light.png"
+              alt="Dashboard light mode"
+              width={800}
+              height={600}
               className="relative block h-full w-full rounded-xl border dark:hidden"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
-            <img
+            <Image
               src="/dashboard-dark.png"
+              alt="Dashboard dark mode"
+              width={800}
+              height={600}
               className="relative hidden h-full w-full rounded-xl border dark:block"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
             {/* <video
               autoPlay
