@@ -34,7 +34,7 @@ export default function HeroSection() {
           </div>
 
           {/* Headline */}
-          <h1 className="mb-6 md:mb-8 text-2xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight text-white drop-shadow-lg max-w-full font-cabin">
+          <h1 className="mb-6 md:mb-8 text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold leading-tight text-white max-w-full font-cabin">
             Marco Grassi: 'A painting's months-long journey can't keep up with the pace of the digital world'
           </h1>
 

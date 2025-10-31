@@ -6,7 +6,6 @@ import Section1 from '@/components/sections/home/Section1'
 import ArticlesSection from '@/components/sections/home/ArticlesSection'
 import Section2 from '@/components/sections/home/Section2'
 import Section3 from '@/components/sections/home/Section3'
-import Section4 from '@/components/sections/home/Section4'
 import NewsletterModal from '@/components/NewsletterModal'
 
 export default function Home() {
@@ -37,7 +36,6 @@ export default function Home() {
 				<ArticlesSection />
 				<Section2 />
 				<Section3 />
-				<Section4 />
 			</Layout>
 
 			<NewsletterModal
