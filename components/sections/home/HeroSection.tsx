@@ -41,7 +41,7 @@ export default function HeroSection() {
           {/* Read More Link */}
           <Link
             href="#"
-            className="inline-flex items-center gap-3 px-6 py-4 md:px-8 md:py-5 text-base md:text-lg font-medium text-white no-underline bg-white/20 backdrop-blur-md rounded-full border border-white/30 hover:bg-white/30 hover:-translate-y-1 transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="inline-flex items-center gap-3 px-6 py-4 md:px-8 md:py-5 text-base md:text-lg font-medium text-foreground no-underline bg-white/20 backdrop-blur-md rounded-full border border-white/30 hover:bg-white/30 hover:-translate-y-1 transition-all duration-300"
           >
             Read in-depth
             <svg

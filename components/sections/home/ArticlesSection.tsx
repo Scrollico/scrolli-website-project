@@ -119,10 +119,6 @@ export default function ArticlesSection() {
                         {article.title}
                       </Link>
                     </h3>
-
-                    <div className="text-sm text-muted-foreground leading-relaxed">
-                      <span>{article.caption}</span>
-                    </div>
                   </div>
                 </article>
               </SwiperSlide>
