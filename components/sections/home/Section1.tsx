@@ -19,7 +19,7 @@ export default function Section1() {
         {/* Featured Articles Grid */}
         <ResponsiveGrid columns={{ default: 1, md: 3 }} gap="lg" className="mb-8 md:mb-12">
           {[featured.mainArticle, ...featured.sideArticles.slice(0, 2)].map((article, index) => (
-            <article className="group bg-card rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
+            <article key={article.id} className="group bg-card rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
               {/* Article Image */}
               <figure className="relative overflow-hidden">
                 <Link href={`/article/${article.id}`}>
