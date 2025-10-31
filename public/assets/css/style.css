@@ -778,14 +778,6 @@ header .logo-wrapper {
   margin: 0 !important;
   padding: 0 !important;
   display: none !important;
-}
-
-/* Show CardNav on desktop */
-@media (min-width: 768px) {
-  .card-nav {
-    display: block !important;
-  }
-}
   background: linear-gradient(
     135deg,
     rgba(247, 244, 225, 0.95) 0%,
@@ -796,6 +788,13 @@ header .logo-wrapper {
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+}
+
+/* Show CardNav on desktop */
+@media (min-width: 768px) {
+  .card-nav {
+    display: block !important;
+  }
 }
 
 /* Dark mode navbar - fully transparent */
