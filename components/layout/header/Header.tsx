@@ -134,14 +134,12 @@ export default function Header({ onNewsletterClick }: any) {
       )}
 
       {/* Desktop Header */}
-      <div className="hidden md:block">
-        <CardNav
-          logo="/assets/images/Standart/Primary-alternative.png"
-          logoAlt="Merinda Logo"
-          items={cardNavItems}
-          {...headerProps}
-        />
-      </div>
+      <CardNav
+        logo="/assets/images/Standart/Primary-alternative.png"
+        logoAlt="Merinda Logo"
+        items={cardNavItems}
+        {...headerProps}
+      />
     </header>
   );
 }
