@@ -3,9 +3,31 @@ import Link from "next/link";
 import Image from 'next/image';
 import blogData from "@/data/blog.json";
 import { Container, ResponsiveGrid } from "@/components/responsive";
+import { News, type NewsArticle } from "@/components/ui/sidebar-news";
 
 export default function Section1() {
   const { featured } = blogData;
+
+  const newsArticles: NewsArticle[] = [
+    {
+      href: "https://alara.scrolli.co",
+      title: "AI-powered content generation",
+      summary: "Create high-quality content in seconds with our advanced AI model.",
+      image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=300&fit=crop",
+    },
+    {
+      href: "https://alara.scrolli.co",
+      title: "Smart workflow automation",
+      summary: "Streamline your processes with intelligent automation features.",
+      image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=300&fit=crop",
+    },
+    {
+      href: "https://alara.scrolli.co",
+      title: "Real-time collaboration",
+      summary: "Work together seamlessly with instant updates and notifications.",
+      image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&h=300&fit=crop",
+    },
+  ];
 
   return (
     <section className="py-12 md:py-16 lg:py-20">
@@ -66,9 +88,8 @@ export default function Section1() {
             <div className="flex flex-col md:flex-row items-center gap-8">
               {/* Animation section - 30% */}
               <div className="w-full md:w-[30%]">
-                {/* Animation placeholder - user will provide code */}
-                <div className="w-full aspect-square bg-gray-100 rounded-xl flex items-center justify-center">
-                  <span className="text-gray-400 text-sm">Animation</span>
+                <div className="relative h-[300px]">
+                  <News articles={newsArticles} />
                 </div>
               </div>
 

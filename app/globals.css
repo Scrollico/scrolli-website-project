@@ -2,4 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --offset: 10px;
+  }
+
+  .dark {
+    --offset: 10px;
+  }
+}
+
+@keyframes slide-up-fade {
+  from {
+    opacity: 0;
+    transform: translateY(var(--offset, 10px));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-slide-up-fade {
+  animation: slide-up-fade 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-in-out forwards;
+}
+
 /* Your custom css here */

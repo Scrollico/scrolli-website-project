@@ -6,7 +6,12 @@ module.exports = {
     './pages/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      transitionProperty: {
+        'height': 'height',
+        'spacing': 'margin, padding',
+      }
+    },
   },
   plugins: [],
 }
