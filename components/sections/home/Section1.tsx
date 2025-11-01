@@ -62,26 +62,26 @@ export default function Section1() {
       {/* Alara AI CTA Banner */}
       <div className="mt-12 md:mt-16">
         <Container>
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-600 to-blue-600 p-8 md:p-12">
-            <div className="relative z-10 max-w-4xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                Discover Alara AI
-              </h2>
-              <p className="text-lg md:text-xl text-white/90 mb-8">
-                Experience the future of artificial intelligence. Transform your workflow with our cutting-edge AI platform.
-              </p>
-              <a
-                href="https://alara.scrolli.co/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block bg-white text-purple-600 font-semibold px-8 py-4 rounded-full hover:bg-gray-100 transition-colors duration-300 shadow-lg"
-              >
-                Get Started Free →
-              </a>
+          <div className="relative overflow-hidden rounded-2xl p-8 md:p-12">
+            <div className="flex flex-col md:flex-row items-center gap-8">
+              {/* Animation section - 30% */}
+              <div className="w-full md:w-[30%]">
+                {/* Animation placeholder - user will provide code */}
+                <div className="w-full aspect-square bg-gray-100 rounded-xl flex items-center justify-center">
+                  <span className="text-gray-400 text-sm">Animation</span>
+                </div>
+              </div>
+
+              {/* Text section - 70% */}
+              <div className="w-full md:w-[70%] text-left">
+                <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                  Discover Alara AI
+                </h2>
+                <p className="text-lg md:text-xl text-muted-foreground">
+                  Experience the future of artificial intelligence. Transform your workflow with our cutting-edge AI platform.
+                </p>
+              </div>
             </div>
-            {/* Decorative background elements */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
           </div>
         </Container>
       </div>
