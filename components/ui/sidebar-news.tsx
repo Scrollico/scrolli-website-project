@@ -42,19 +42,14 @@ export function News({ articles }: { articles: NewsArticle[] }) {
             key={`${idx}-${href}`}
             className={cn(
               "absolute left-0 top-0 size-full scale-[var(--scale)] transition-[opacity,transform] duration-200",
-              cardCount - idx > 3
-                ? [
-                    "opacity-0 sm:group-hover:translate-y-[var(--y)] sm:group-hover:opacity-[var(--opacity)]",
-                    "sm:group-has-[*[data-dragging=true]]:translate-y-[var(--y)] sm:group-has-[*[data-dragging=true]]:opacity-[var(--opacity)]",
-                  ]
-                : "translate-y-[var(--y)] opacity-[var(--opacity)]"
+              "translate-y-[var(--y)] opacity-[var(--opacity)]"
             )}
             style={
               {
                 "--y": `-${(cardCount - (idx + 1)) * OFFSET_FACTOR}%`,
                 "--scale": 1 - (cardCount - (idx + 1)) * SCALE_FACTOR,
                 "--opacity":
-                  cardCount - (idx + 1) >= 6
+                  cardCount - (idx + 1) >= 3
                     ? 0
                     : 1 - (cardCount - (idx + 1)) * OPACITY_FACTOR,
               } as React.CSSProperties
