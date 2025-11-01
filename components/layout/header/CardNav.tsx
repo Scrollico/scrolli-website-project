@@ -65,35 +65,58 @@ export default function CardNav({
 
         {/* Menu Items */}
         <div className="card-nav-menu">
-          {items.map((item) => (
-            <div key={item.label} className="card-nav-link-container">
-              <Link
-                href={`/${item.label.toLowerCase().replace(' ', '-')}`}
-                className="card-nav-link"
-                onMouseEnter={() => setHoveredItem(item.label)}
-                onMouseLeave={() => setHoveredItem(null)}
-              >
-                {item.label}
-              </Link>
-              {/* Hover Image for Alara AI */}
-              {item.label === 'Alara AI' && hoveredItem === 'Alara AI' && (
-                <div className="alara-hover-image">
-                  <Image
-                    src="/assets/images/ads/625shots_so.webp"
-                    alt="Alara AI Preview"
-                    width={320}
-                    height={180}
-                    style={{ 
-                      objectFit: 'cover',
-                      width: '100%',
-                      height: '100%',
-                      borderRadius: '8px'
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-          ))}
+          {items.map((item) => {
+            // Custom URLs for specific items
+            let href = `/${item.label.toLowerCase().replace(' ', '-')}`;
+            if (item.label === 'Business') {
+              href = 'https://business.scrolli.co/';
+            } else if (item.label === 'Alara AI') {
+              href = 'https://alara.scrolli.co/';
+            }
+            
+            return (
+              <div key={item.label} className="card-nav-link-container">
+                {href.startsWith('http') ? (
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="card-nav-link"
+                    onMouseEnter={() => setHoveredItem(item.label)}
+                    onMouseLeave={() => setHoveredItem(null)}
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <Link
+                    href={href}
+                    className="card-nav-link"
+                    onMouseEnter={() => setHoveredItem(item.label)}
+                    onMouseLeave={() => setHoveredItem(null)}
+                  >
+                    {item.label}
+                  </Link>
+                )}
+                {/* Hover Image for Alara AI */}
+                {item.label === 'Alara AI' && hoveredItem === 'Alara AI' && (
+                  <div className="alara-hover-image">
+                    <Image
+                      src="/assets/images/ads/625shots_so.webp"
+                      alt="Alara AI Preview"
+                      width={320}
+                      height={180}
+                      style={{ 
+                        objectFit: 'cover',
+                        width: '100%',
+                        height: '100%',
+                        borderRadius: '8px'
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         {/* City Clocks */}
