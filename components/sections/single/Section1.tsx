@@ -5,6 +5,7 @@ import Image from 'next/image';
 import blogData from '@/data/blog.json';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import { useState, useEffect } from 'react';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -29,6 +30,21 @@ interface Section1Props {
 }
 
 export default function Section1({ article }: Section1Props) {
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollPercentage = (scrollTop / (documentHeight - windowHeight)) * 100;
+      setScrollProgress(scrollPercentage);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <>
       <article className="container" itemScope itemType="https://schema.org/Article">
@@ -81,28 +97,21 @@ export default function Section1({ article }: Section1Props) {
           <div className="entry-left-col">
             <div className="social-sticky">
               <Link href="#">
-                <i className="icon-facebook" />
-              </Link>
-              <Link href="#">
                 <svg
-                  style={{
-                    width: 10,
-                    height: 10,
-                    marginTop: "-3px",
-                  }}
-                  id="fi_5968958"
-                  enableBackground="new 0 0 1226.37 1226.37"
-                  viewBox="0 0 1226.37 1226.37"
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path d="m727.348 519.284 446.727-519.284h-105.86l-387.893 450.887-309.809-450.887h-357.328l468.492 681.821-468.492 544.549h105.866l409.625-476.152 327.181 476.152h357.328l-485.863-707.086zm-144.998 168.544-47.468-67.894-377.686-540.24h162.604l304.797 435.991 47.468 67.894 396.2 566.721h-162.604l-323.311-462.446z" />
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                 </svg>
               </Link>
               <Link href="#">
-                <i className="icon-heart" />
+                <i className="icon-linkedin" />
               </Link>
-              <Link href="#">
-                <i className="icon-paper-plane" />
+              <Link href="#" className="social-heart">
+                <i className={`icon-heart ${scrollProgress > 20 ? 'pulse-animation' : ''}`} />
               </Link>
             </div>
           </div>
@@ -344,6 +353,43 @@ export default function Section1({ article }: Section1Props) {
         :global(.swiper-button-prev),
         :global(.swiper-button-next) {
           color: var(--primary);
+        }
+
+        /* Social heart pulse animation on scroll */
+        .social-heart {
+          opacity: 1;
+          transition: opacity 0.3s ease;
+        }
+
+        .social-heart i {
+          animation: none;
+        }
+
+        .social-heart i.pulse-animation {
+          animation: heartPulse 2s ease-in-out infinite;
+        }
+      `}</style>
+
+      <style jsx global>{`
+        @keyframes heartPulse {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 1;
+          }
+          50% {
+            transform: scale(1.1);
+            opacity: 0.8;
+          }
+        }
+
+        /* Fix social sticky icons alignment */
+        .social-sticky svg {
+          vertical-align: middle;
+        }
+
+        .social-sticky i {
+          vertical-align: middle;
+          font-size: 13px;
         }
       `}</style>
     </>
