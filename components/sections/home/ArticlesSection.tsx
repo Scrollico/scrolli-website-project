@@ -78,15 +78,15 @@ export default function ArticlesSection() {
           breakpoints={{
             640: {
               slidesPerView: 2,
-              spaceBetween: 24,
+              spaceBetween: 32,
             },
             768: {
-              slidesPerView: 3,
-              spaceBetween: 28,
+              slidesPerView: 2,
+              spaceBetween: 40,
             },
             1024: {
-              slidesPerView: 4,
-              spaceBetween: 32,
+              slidesPerView: 3,
+              spaceBetween: 48,
             },
           }}
           className="pb-12"
@@ -102,7 +102,7 @@ export default function ArticlesSection() {
                         alt={article.title}
                         width={400}
                         height={250}
-                        className="w-full h-56 md:h-64 lg:h-72 object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                        className="w-full h-64 md:h-96 lg:h-[500px] object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
                         quality={95}
                       />
@@ -110,8 +110,8 @@ export default function ArticlesSection() {
                   </figure>
 
                   {/* Article Content */}
-                  <div className="p-5 md:p-6">
-                    <h3 className="text-lg md:text-xl font-semibold mb-2 leading-tight line-clamp-2 text-foreground">
+                  <div className="p-4 md:p-5">
+                    <h3 className="text-xl md:text-2xl font-semibold leading-tight line-clamp-2 text-foreground">
                       <Link
                         href={`/article/${article.id}`}
                         className="hover:text-primary transition-colors duration-200 focus:outline-none focus:text-primary"
