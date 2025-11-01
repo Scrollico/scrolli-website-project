@@ -61,13 +61,16 @@ export default function Section1({ article }: Section1Props) {
                   height={50}
                 />
               </Link>
-              <Link href="/author">{article.author}</Link> in <Link href="/archive">{article.category}</Link>
-              <br />
-              <span>{article.date}</span>
-              <span className="middotDivider" />
-              <span className="readingTime" title={article.readTime}>
-                {article.readTime}
-              </span>
+              <div className="entry-meta-line">
+                <Link href="/author">{article.author}</Link> in <Link href="/archive">{article.category}</Link>
+              </div>
+              <div className="entry-meta-line">
+                <span>{article.date}</span>
+                <span className="middotDivider" />
+                <span className="readingTime" title={article.readTime}>
+                  {article.readTime}
+                </span>
+              </div>
             </div>
           </div>
         </header>
