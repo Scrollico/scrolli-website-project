@@ -291,9 +291,21 @@ hr.section-divider::before {
 }
 
 .btn-success {
-  color: #fff;
-  background-color: #3500fd;
-  border-color: #3500fd;
+  color: #231f20;
+  background: linear-gradient(
+    135deg,
+    rgba(247, 244, 225, 0.95) 0%,
+    rgba(247, 244, 225, 0.9) 50%,
+    rgba(247, 244, 225, 0.95) 100%
+  );
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+  background: rgba(247, 244, 225, 1);
+  border-color: rgba(0, 0, 0, 0.2);
+  color: #231f20;
 }
 
 .small-text {

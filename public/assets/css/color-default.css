@@ -31,7 +31,7 @@ a:focus {
   color: #535353;
 }
 
-/*MAIN COLOR #03a87c, #1a1a1a*/
+/*MAIN COLOR #3500fd (light mode), #8b5cf6 (dark mode), #1a1a1a*/
 
 /*Color*/
 a:hover,
@@ -47,8 +47,26 @@ button.owl-next:hover i,
 .copyright a,
 .entry-main-content a
  {
-  color: #03a87c !important;
-  fill: #03a87c !important;
+  color: #3500fd !important;
+  fill: #3500fd !important;
+}
+
+.dark-mode a:hover,
+.dark-mode a:active,
+.dark-mode a:focus,
+.dark-mode .mobi-menu .current-menu-item a,
+.dark-mode .mobi-menu.act ul li.open-submenu > a,
+.dark-mode .widget-about i,
+.dark-mode .page-404 h1,
+.dark-mode button.owl-prev:hover i,
+.dark-mode button.owl-next:hover i,
+.dark-mode .link-green,
+.dark-mode .btn-green,
+.dark-mode .copyright a,
+.dark-mode .entry-main-content a
+ {
+  color: #8b5cf6 !important;
+  fill: #8b5cf6 !important;
 }
 
 /*Background*/
@@ -62,7 +80,20 @@ input[type="button"]:hover,
 input[type="reset"]:hover,
 input[type="submit"],
 .blue {
-  background-color: #03a87c !important;
+  background-color: #3500fd !important;
+}
+
+.dark-mode .top-scroll-bar,
+.dark-mode .read-more:hover,
+.dark-mode .submit-btn:hover,
+.dark-mode .menu-toggle-icon.act:hover > span::after,
+.dark-mode .menu-toggle-icon.act:hover > span::before,
+.dark-mode button:hover,
+.dark-mode input[type="button"]:hover,
+.dark-mode input[type="reset"]:hover,
+.dark-mode input[type="submit"],
+.dark-mode .blue {
+  background-color: #8b5cf6 !important;
 }
 
 .popup-close:hover {
@@ -94,7 +125,14 @@ input[type="submit"],
 .form-control:focus,
 .btn-green
  {
-  border-color: #03a87c;
+  border-color: #3500fd;
+}
+
+.dark-mode .content-widget .readme:hover,
+.dark-mode .form-control:focus,
+.dark-mode .btn-green
+ {
+  border-color: #8b5cf6;
 }
 
 /*footer*/
