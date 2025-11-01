@@ -26,8 +26,15 @@ export function News({ articles }: { articles: NewsArticle[] }) {
 
   React.useEffect(() => {
     let timeout: NodeJS.Timeout | undefined = undefined;
-    if (cardCount === 0)
-      timeout = setTimeout(() => setShowCompleted(false), 2700);
+    if (cardCount === 0) {
+      timeout = setTimeout(() => {
+        setShowCompleted(false);
+        // Reset dismissed news after showing completion message
+        setTimeout(() => {
+          setDismissedNews([]);
+        }, 500);
+      }, 2700);
+    }
     return () => clearTimeout(timeout);
   }, [cardCount]);
 
@@ -213,8 +220,12 @@ function NewsCard({
       className={cn(
         "relative select-none gap-2 p-3 text-[0.8125rem] bg-white",
         "translate-x-[calc(var(--dx)*1px)] rotate-[calc(var(--dx)*0.05deg)] opacity-[calc(1-max(var(--dx),-1*var(--dx))/var(--w)/2)]",
-        "transition-shadow data-[dragging=true]:shadow-md"
+        "transition-shadow data-[dragging=true]:shadow-md",
+        "border border-neutral-200"
       )}
+      style={{
+        background: "linear-gradient(to top, rgba(156, 163, 175, 0.08) 0%, rgba(156, 163, 175, 0.04) 40%, rgba(255, 255, 255, 1) 100%)",
+      }}
       data-dragging={dragging}
       onPointerDown={onPointerDown}
       onClick={onClick}
@@ -268,7 +279,7 @@ function NewsCard({
 function AnimatedLogo(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
-      viewBox="0 0 80 21"
+      viewBox="0 0 140 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className="text-muted-foreground"
@@ -276,106 +287,113 @@ function AnimatedLogo(props: React.SVGProps<SVGSVGElement>) {
     >
       {/* S */}
       <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M12 1H15V12.9332C15.0001 12.9465 15.0002 12.9598 15.0003 12.9731C15.0003 12.982 15.0003 12.991 15.0003 13C15.0003 13.0223 15.0002 13.0445 15 13.0668V20H12V18.7455C10.8662 19.5362 9.48733 20 8.00016 20C4.13408 20 1 16.866 1 13C1 9.13401 4.13408 6 8.00016 6C9.48733 6 10.8662 6.46375 12 7.25452V1ZM8 16.9998C10.2091 16.9998 12 15.209 12 12.9999C12 10.7908 10.2091 9 8 9C5.79086 9 4 10.7908 4 12.9999C4 15.209 5.79086 16.9998 8 16.9998Z"
+        d="M2 3C2 5.20914 3.79086 7 6 7C8.20914 7 10 5.20914 10 3C10 0.790861 8.20914 -1 6 -1C3.79086 -1 2 0.790861 2 3ZM2 12C2 14.2091 3.79086 16 6 16H10V21H2V12ZM6 13C7.65685 13 9 14.3431 9 16C9 17.6569 7.65685 19 6 19C4.34315 19 3 17.6569 3 16C3 14.3431 4.34315 13 6 13Z"
         stroke="currentColor"
-        strokeDasharray="63"
-        strokeLinecap="round"
-      >
-        <animate
-          attributeName="strokeDashoffset"
-          dur="2500ms"
-          values="63;0;0;0;63"
-          fill="freeze"
-        />
-      </path>
-      {/* C */}
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M17 6H20V13V13C20 14.0608 20.4215 15.0782 21.1716 15.8283C21.9217 16.5784 22.9391 16.9998 24 16.9998C25.0609 16.9998 26.0783 16.5784 26.8284 15.8283C27.5785 15.0782 28 14.0608 28 13C28 13 28 13 28 13V6H31V13H31.0003C31.0003 13.9192 30.8192 14.8295 30.4675 15.6788C30.1157 16.5281 29.6 17.2997 28.95 17.9497C28.3 18.5997 27.5283 19.1154 26.679 19.4671C25.8297 19.8189 24.9194 20 24.0002 20C23.0809 20 22.1706 19.8189 21.3213 19.4671C20.472 19.1154 19.7003 18.5997 19.0503 17.9497C18.4003 17.2997 17.8846 16.5281 17.5329 15.6788C17.1811 14.8295 17 13.9192 17 13V13V6Z"
-        stroke="currentColor"
-        strokeDasharray="69"
-        strokeLinecap="round"
-      >
-        <animate
-          attributeName="strokeDashoffset"
-          dur="2500ms"
-          values="69;0;0;0;69"
-          fill="freeze"
-        />
-      </path>
-      {/* R */}
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M33 1H36V7.25474C37.1339 6.46383 38.5128 6 40.0002 6C43.8662 6 47.0003 9.13401 47.0003 13C47.0003 16.866 43.8662 20 40.0002 20C36.1341 20 33 16.866 33 13V1ZM40 16.9998C42.2091 16.9998 44 15.209 44 12.9999C44 10.7908 42.2091 9 40 9C37.7909 9 36 10.7908 36 12.9999C36 15.209 37.7909 16.9998 40 16.9998Z"
-        stroke="currentColor"
-        strokeDasharray="60"
-        strokeLinecap="round"
-      >
-        <animate
-          attributeName="strokeDashoffset"
-          dur="2500ms"
-          values="-60;0;0;0;-60"
-          fill="freeze"
-        />
-      </path>
-      {/* O (for Rolli) */}
-      <path
-        d="M50 1H57C63.0751 1 68 5.92487 68 12C68 18.0751 63.0751 23 57 23H50V1ZM57 19C60.3137 19 63 16.3137 63 13C63 9.68629 60.3137 7 57 7H53V19H57Z"
-        stroke="currentColor"
-        strokeDasharray="80"
+        strokeWidth="1.5"
+        strokeDasharray="65"
         strokeLinecap="round"
         fill="none"
       >
         <animate
           attributeName="strokeDashoffset"
           dur="2500ms"
-          values="80;0;0;0;80"
+          values="65;0;0;0;65"
+          fill="freeze"
+        />
+      </path>
+      {/* C */}
+      <path
+        d="M16 3C16 6.31371 18.6863 9 22 9H26V21H22C18.6863 21 16 18.3137 16 15V3Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeDasharray="55"
+        strokeLinecap="round"
+        fill="none"
+      >
+        <animate
+          attributeName="strokeDashoffset"
+          dur="2500ms"
+          values="55;0;0;0;55"
+          fill="freeze"
+        />
+      </path>
+      {/* R */}
+      <path
+        d="M32 3H40C43.3137 3 46 5.68629 46 9C46 12.3137 43.3137 15 40 15H36V21H32V3ZM40 12C41.6569 12 43 10.6569 43 9C43 7.34315 41.6569 6 40 6H36V12H40Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeDasharray="60"
+        strokeLinecap="round"
+        fill="none"
+      >
+        <animate
+          attributeName="strokeDashoffset"
+          dur="2500ms"
+          values="60;0;0;0;60"
+          fill="freeze"
+        />
+      </path>
+      {/* O */}
+      <path
+        d="M50 3H58C61.3137 3 64 5.68629 64 9C64 12.3137 61.3137 15 58 15H50V3ZM58 13C59.6569 13 61 11.6569 61 10C61 8.34315 59.6569 7 58 7H52V13H58Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeDasharray="55"
+        strokeLinecap="round"
+        fill="none"
+      >
+        <animate
+          attributeName="strokeDashoffset"
+          dur="2500ms"
+          values="55;0;0;0;55"
           fill="freeze"
         />
       </path>
       {/* L */}
       <path
-        d="M70 1H73V20H73C73 18.3431 74.3431 17 76 17C77.6569 17 79 18.3431 79 20H70V1Z"
+        d="M68 3H71V15H75C78.3137 15 81 17.6863 81 21H68V3Z"
         stroke="currentColor"
-        strokeDasharray="70"
+        strokeWidth="1.5"
+        strokeDasharray="45"
         strokeLinecap="round"
+        fill="none"
       >
         <animate
           attributeName="strokeDashoffset"
           dur="2500ms"
-          values="70;0;0;0;70"
+          values="45;0;0;0;45"
           fill="freeze"
         />
       </path>
       {/* L */}
       <path
-        d="M82 1H85V20H85C85 18.3431 86.3431 17 88 17C89.6569 17 91 18.3431 91 20H82V1Z"
+        d="M85 3H88V15H92C95.3137 15 98 17.6863 98 21H85V3Z"
         stroke="currentColor"
-        strokeDasharray="70"
+        strokeWidth="1.5"
+        strokeDasharray="45"
         strokeLinecap="round"
+        fill="none"
       >
         <animate
           attributeName="strokeDashoffset"
           dur="2500ms"
-          values="70;0;0;0;70"
+          values="45;0;0;0;45"
           fill="freeze"
         />
       </path>
       {/* I */}
       <path
-        d="M95 1H98V20H95V1Z"
+        d="M102 3H105V21H102V3Z"
         stroke="currentColor"
-        strokeDasharray="40"
+        strokeWidth="1.5"
+        strokeDasharray="20"
         strokeLinecap="round"
+        fill="none"
       >
         <animate
           attributeName="strokeDashoffset"
           dur="2500ms"
-          values="40;0;0;0;40"
+          values="20;0;0;0;20"
           fill="freeze"
         />
       </path>
