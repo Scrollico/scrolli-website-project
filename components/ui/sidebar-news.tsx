@@ -39,7 +39,7 @@ export function News({ articles }: { articles: NewsArticle[] }) {
       <div className="relative size-full">
         {cards.toReversed().map(({ href, title, summary, image }, idx) => (
           <div
-            key={href}
+            key={`${idx}-${href}`}
             className={cn(
               "absolute left-0 top-0 size-full scale-[var(--scale)] transition-[opacity,transform] duration-200",
               cardCount - idx > 3
