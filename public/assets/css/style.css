@@ -1126,7 +1126,7 @@ section[style*="height: 100vh"] > div:first-child {
 
 /* Add proper spacing for single/detail pages to account for fixed navbar */
 .single .container {
-  padding-top: 0 !important;
+  padding-top: 80px !important;
 }
 
 .single .entry-header {
