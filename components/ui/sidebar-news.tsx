@@ -57,6 +57,7 @@ export function News({ articles }: { articles: NewsArticle[] }) {
                   cardCount - (idx + 1) >= 6
                     ? 0
                     : 1 - (cardCount - (idx + 1)) * OPACITY_FACTOR,
+                zIndex: cardCount - idx,
               } as React.CSSProperties
             }
             aria-hidden={idx !== cardCount - 1}
