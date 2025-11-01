@@ -602,7 +602,20 @@ input.search_field:active,
 
 .entry-meta .author-avatar {
   float: left;
-  margin: -3px 15px 0 0;
+  margin: 0 15px 0 0;
+  display: inline-block;
+}
+
+.entry-meta.align-items-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.entry-meta.align-items-center .author-avatar {
+  float: none;
+  margin: 0 15px 0 0;
 }
 
 .entry-meta .author-avatar img {
@@ -2222,7 +2235,7 @@ blockquote ol:last-child {
 /*Social share icons*/
 .entry-left-col {
   position: absolute;
-  left: -20%;
+  left: -80px;
   height: 200vh;
   z-index: 2;
   top: 3rem;
