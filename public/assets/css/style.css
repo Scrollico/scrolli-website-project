@@ -2236,21 +2236,24 @@ blockquote ol:last-child {
 }
 
 .social-sticky a {
-  display: block;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
   color: rgba(0, 0, 0, 0.54);
   border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, 0.34);
   width: 30px;
   height: 30px;
-  text-align: center;
-  line-height: 30px;
   margin-bottom: 0.5rem;
   font-size: 13px;
 }
 
 .social-sticky a svg {
   color: rgba(0, 0, 0, 0.54) !important;
-  fill: rgba(0, 0, 0, 1) !important;
+  fill: rgba(0, 0, 0, 0.54) !important;
+  width: 13px !important;
+  height: 13px !important;
+  vertical-align: middle;
 }
 
 .dropcap p:first-child:first-letter {
