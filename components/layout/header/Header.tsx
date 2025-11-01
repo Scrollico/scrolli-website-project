@@ -16,8 +16,17 @@ export default function Header({ onNewsletterClick }: any) {
   // Dark/Light
   const [isDark, setDark] = useState<boolean>(false);
   const handleDark = (): void => {
-    setDark(!isDark);
-    !isDark ? document.body.classList.add("dark-mode") : document.body.classList.remove("dark-mode");
+    try {
+      const newDarkState = !isDark;
+      setDark(newDarkState);
+      if (newDarkState) {
+        document.body.classList.add("dark-mode");
+      } else {
+        document.body.classList.remove("dark-mode");
+      }
+    } catch (error) {
+      console.warn('Dark mode toggle error:', error);
+    }
   };
 
   // Pass these to CardNav

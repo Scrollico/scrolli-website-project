@@ -483,10 +483,22 @@ input.search_field {
   box-shadow: none;
 }
 
-.search_field:focus {
+input.search_field:focus,
+input.search_field:focus-visible,
+input.search_field:active,
+.search_field:focus,
+.search_field:focus-visible,
+.search_field:active {
   outline: none !important;
   box-shadow: none !important;
+  border: none !important;
   border-color: transparent !important;
+}
+
+.search_field {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
 }
 
 .header-right .search-form {
@@ -570,7 +582,7 @@ input.search_field {
 #wrapper {
   min-height: 100%;
   position: relative;
-  padding-top: 50px;
+  padding-top: 0;
 }
 
 .boxed #wrapper {
