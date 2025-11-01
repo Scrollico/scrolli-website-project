@@ -639,12 +639,12 @@ input.search_field:active,
   margin: 0 0.5rem 0 0;
 }
 
-/* Single article page - vertical layout with avatar */
+/* Single article page - vertical layout with avatar, left-aligned */
 .single article .entry-header .entry-meta.align-items-center {
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: left;
   gap: 0.5rem;
 }
 
@@ -656,8 +656,9 @@ input.search_field:active,
 .entry-meta-line {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .entry-meta-line .middotDivider {

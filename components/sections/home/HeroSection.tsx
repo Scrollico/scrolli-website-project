@@ -34,7 +34,7 @@ export default function HeroSection() {
           </div>
 
           {/* Headline */}
-          <h1 className="mb-6 md:mb-8 text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold leading-tight text-white max-w-full font-cabin">
+          <h1 className="mb-6 md:mb-8 text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold leading-tight text-white max-w-full font-cabin" style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 0, 0, 0.3)' }}>
             Marco Grassi: 'A painting's months-long journey can't keep up with the pace of the digital world'
           </h1>
 
