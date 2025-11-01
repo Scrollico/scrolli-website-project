@@ -17,31 +17,31 @@ interface ArticleCard {
 
 const articleData: ArticleCard[] = [
   {
-    id: 'home-internet-luxury',
+    id: 'home-internet-is-becoming-a-luxury-for-the-wealthy-1',
     title: 'Home Internet Is Becoming a Luxury for the Wealthy',
     caption: 'Dave Gershgorn in OneZero • Jun 14 • 3 min read',
     thumbnail: '/assets/images/thumb/thumb-1240x700.jpg'
   },
   {
-    id: 'doorbell-camera-shooting',
+    id: 'the-night-my-doorbell-camera-captured-a-shooting',
     title: 'The Night My Doorbell Camera Captured a Shooting',
     caption: 'Alentica in Police • Jun 16 • 7 min read',
     thumbnail: '/assets/images/thumb/thumb-700x512.jpg'
   },
   {
-    id: 'privacy-tech-debate',
+    id: 'privacy-is-just-the-beginning-of-the-debate-over-tech',
     title: 'Privacy Is Just the Beginning of the Debate Over Tech',
     caption: 'Otimus in Startup • May 15 • 6 min read',
     thumbnail: '/assets/images/thumb/thumb-700x512-2.jpg'
   },
   {
-    id: 'millionaire-mindset',
+    id: 'want-to-make-millions-then-act-like-a-millionaire',
     title: 'Want To Make Millions? Then Act Like a Millionaire',
     caption: 'Mark Harris in Heated • May 13 • 12 min read',
     thumbnail: '/assets/images/thumb/thumb-700x512-3.jpg'
   },
   {
-    id: 'career-change-advice',
+    id: 'what-i-wish-id-known-when-i-made-a-drastic-career-change',
     title: 'What I Wish I\'d Known When I Made a Drastic Career Change',
     caption: 'Steven Job in The Startup • 2 days ago • 8 min read',
     thumbnail: '/assets/images/thumb/thumb-1400x778.jpg'
