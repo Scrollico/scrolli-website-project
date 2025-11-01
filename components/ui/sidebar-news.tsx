@@ -14,9 +14,9 @@ export interface NewsArticle {
   image: string;
 }
 
-const OFFSET_FACTOR = 4;
-const SCALE_FACTOR = 0.03;
-const OPACITY_FACTOR = 0.1;
+const OFFSET_FACTOR = 8;
+const SCALE_FACTOR = 0.05;
+const OPACITY_FACTOR = 0.15;
 
 export function News({ articles }: { articles: NewsArticle[] }) {
   const [dismissedNews, setDismissedNews] = React.useState<string[]>([]);
@@ -51,7 +51,7 @@ export function News({ articles }: { articles: NewsArticle[] }) {
             )}
             style={
               {
-                "--y": `-${(cardCount - (idx + 1)) * OFFSET_FACTOR}%`,
+                "--y": `${(cardCount - (idx + 1)) * OFFSET_FACTOR}%`,
                 "--scale": 1 - (cardCount - (idx + 1)) * SCALE_FACTOR,
                 "--opacity":
                   cardCount - (idx + 1) >= 6
@@ -216,7 +216,7 @@ function NewsCard({
     <Card
       ref={ref}
       className={cn(
-        "relative select-none gap-2 p-3 text-[0.8125rem]",
+        "relative select-none gap-2 p-3 text-[0.8125rem] bg-white",
         "translate-x-[calc(var(--dx)*1px)] rotate-[calc(var(--dx)*0.05deg)] opacity-[calc(1-max(var(--dx),-1*var(--dx))/var(--w)/2)]",
         "transition-shadow data-[dragging=true]:shadow-md"
       )}
