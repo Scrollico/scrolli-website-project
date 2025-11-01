@@ -216,7 +216,7 @@ function NewsCard({
     <Card
       ref={ref}
       className={cn(
-        "relative select-none gap-2 p-3 text-[0.8125rem]",
+        "relative select-none gap-2 p-3 text-[0.8125rem] bg-white",
         "translate-x-[calc(var(--dx)*1px)] rotate-[calc(var(--dx)*0.05deg)] opacity-[calc(1-max(var(--dx),-1*var(--dx))/var(--w)/2)]",
         "transition-shadow data-[dragging=true]:shadow-md"
       )}
@@ -247,26 +247,23 @@ function NewsCard({
         </div>
         <div
           className={cn(
-            "h-0 overflow-hidden opacity-0 transition-[height,opacity] duration-200",
-            "sm:group-has-[*[data-dragging=true]]:h-7 sm:group-has-[*[data-dragging=true]]:opacity-100 sm:group-hover:group-data-[active=true]:h-7 sm:group-hover:group-data-[active=true]:opacity-100"
+            "h-7 pt-3 flex items-center justify-between text-xs"
           )}
         >
-          <div className="flex items-center justify-between pt-3 text-xs">
-            <Link
-              href={href || "https://alara.scrolli.co"}
-              target="_blank"
-              className="font-medium text-muted-foreground hover:text-foreground transition-colors duration-75"
-            >
-              Read more
-            </Link>
-            <button
-              type="button"
-              onClick={dismiss}
-              className="text-muted-foreground hover:text-foreground transition-colors duration-75"
-            >
-              Dismiss
-            </button>
-          </div>
+          <Link
+            href={href || "https://alara.scrolli.co"}
+            target="_blank"
+            className="font-medium text-muted-foreground hover:text-foreground transition-colors duration-75"
+          >
+            Read more
+          </Link>
+          <button
+            type="button"
+            onClick={dismiss}
+            className="text-muted-foreground hover:text-foreground transition-colors duration-75"
+          >
+            Dismiss
+          </button>
         </div>
       </div>
     </Card>
