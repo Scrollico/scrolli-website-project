@@ -268,12 +268,13 @@ function NewsCard({
 function AnimatedLogo(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
-      viewBox="0 0 48 21"
+      viewBox="0 0 80 21"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className="text-muted-foreground"
       {...props}
     >
+      {/* S */}
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -289,6 +290,7 @@ function AnimatedLogo(props: React.SVGProps<SVGSVGElement>) {
           fill="freeze"
         />
       </path>
+      {/* C */}
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -304,6 +306,7 @@ function AnimatedLogo(props: React.SVGProps<SVGSVGElement>) {
           fill="freeze"
         />
       </path>
+      {/* R */}
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -316,6 +319,63 @@ function AnimatedLogo(props: React.SVGProps<SVGSVGElement>) {
           attributeName="strokeDashoffset"
           dur="2500ms"
           values="-60;0;0;0;-60"
+          fill="freeze"
+        />
+      </path>
+      {/* O (for Rolli) */}
+      <path
+        d="M50 1H57C63.0751 1 68 5.92487 68 12C68 18.0751 63.0751 23 57 23H50V1ZM57 19C60.3137 19 63 16.3137 63 13C63 9.68629 60.3137 7 57 7H53V19H57Z"
+        stroke="currentColor"
+        strokeDasharray="80"
+        strokeLinecap="round"
+        fill="none"
+      >
+        <animate
+          attributeName="strokeDashoffset"
+          dur="2500ms"
+          values="80;0;0;0;80"
+          fill="freeze"
+        />
+      </path>
+      {/* L */}
+      <path
+        d="M70 1H73V20H73C73 18.3431 74.3431 17 76 17C77.6569 17 79 18.3431 79 20H70V1Z"
+        stroke="currentColor"
+        strokeDasharray="70"
+        strokeLinecap="round"
+      >
+        <animate
+          attributeName="strokeDashoffset"
+          dur="2500ms"
+          values="70;0;0;0;70"
+          fill="freeze"
+        />
+      </path>
+      {/* L */}
+      <path
+        d="M82 1H85V20H85C85 18.3431 86.3431 17 88 17C89.6569 17 91 18.3431 91 20H82V1Z"
+        stroke="currentColor"
+        strokeDasharray="70"
+        strokeLinecap="round"
+      >
+        <animate
+          attributeName="strokeDashoffset"
+          dur="2500ms"
+          values="70;0;0;0;70"
+          fill="freeze"
+        />
+      </path>
+      {/* I */}
+      <path
+        d="M95 1H98V20H95V1Z"
+        stroke="currentColor"
+        strokeDasharray="40"
+        strokeLinecap="round"
+      >
+        <animate
+          attributeName="strokeDashoffset"
+          dur="2500ms"
+          values="40;0;0;0;40"
           fill="freeze"
         />
       </path>
