@@ -292,8 +292,8 @@ hr.section-divider::before {
 
 .btn-success {
   color: #fff;
-  background-color: #03a87c;
-  border-color: #03a87c;
+  background-color: #3500fd;
+  border-color: #3500fd;
 }
 
 .small-text {
@@ -1837,8 +1837,8 @@ header a.logo {
 }
 
 #main-menu .menu-primary li ul.sub-menu a:hover {
-  color: #03a87c;
-  background: rgba(3, 168, 124, 0.05);
+  color: #3500fd;
+  background: rgba(53, 0, 253, 0.05);
   padding-left: 30px;
 }
 
@@ -1853,8 +1853,8 @@ header a.logo {
 }
 
 .dark-mode #main-menu .menu-primary li ul.sub-menu a:hover {
-  color: #03a87c;
-  background: rgba(3, 168, 124, 0.1);
+  color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.1);
 }
 
 #main-menu.scroll-to-fixed-fixed {
@@ -2081,8 +2081,8 @@ ul.page-numbers li a {
 }
 
 ul.page-numbers li span.current {
-  color: #03a87c !important;
-  fill: #03a87c !important;
+  color: #3500fd !important;
+  fill: #3500fd !important;
   display: block;
   text-align: center;
   font-weight: bold;
@@ -2650,8 +2650,8 @@ body {
 }
 
 .dark-light-toggle:hover {
-  color: #03a87c !important;
-  fill: #03a87c !important;
+  color: #3500fd !important;
+  fill: #3500fd !important;
 }
 
 /* Sidebar and widget styles */
