@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/responsive";
+import { gradientVariants } from "@/lib/utils";
 
 export default function HeroSection() {
   return (
@@ -17,10 +18,16 @@ export default function HeroSection() {
           priority
           sizes="100vw"
         />
-        {/* Overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-black/10 to-black/40 z-20" />
-        {/* Bottom gradient transition */}
-        <div className="absolute bottom-0 left-0 w-full h-[90%] bg-gradient-to-t from-white via-white/80 to-transparent z-20" />
+        {/* Overlay gradient - Responsive with varying opacity */}
+        <div className={`absolute inset-0 z-20 ${gradientVariants.heroOverlay}`} />
+        {/* Bottom gradient transition - Responsive height */}
+        <div className={`absolute bottom-0 left-0 w-full z-20
+          h-[85%]
+          md:h-[90%]
+          lg:h-[95%]
+          xl:h-[100%]
+          ${gradientVariants.bottomTransition}
+        `} />
       </div>
 
       {/* Content */}

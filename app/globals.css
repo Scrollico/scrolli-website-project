@@ -41,3 +41,53 @@
 }
 
 /* Your custom css here */
+
+/* Keep news card action buttons color consistent (no color change on hover) */
+.news-card-actions a:hover,
+.news-card-actions button:hover {
+  color: rgb(113, 113, 122) !important; /* Keep same color on hover */
+  text-decoration: none !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+/* Ensure Next.js images display properly */
+figure img,
+article img,
+.next-image-wrapper img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+}
+
+figure {
+  display: block;
+}
+
+/* Fix image loading issues */
+img[data-nimg] {
+  display: block !important;
+}
+
+/* Podcast section pagination styles */
+.podcast-pagination .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background: #d1d5db;
+  opacity: 1;
+  transition: all 0.3s;
+}
+
+.podcast-pagination .swiper-pagination-bullet-active {
+  width: 10px;
+  height: 10px;
+  background: #1f2937;
+}
+
+.dark .podcast-pagination .swiper-pagination-bullet {
+  background: #6b7280;
+}
+
+.dark .podcast-pagination .swiper-pagination-bullet-active {
+  background: #f9fafb;
+}

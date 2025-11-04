@@ -62,14 +62,14 @@ export default function Section1({ article }: Section1Props) {
                 />
               </Link>
               <div className="entry-meta-line">
-                <Link href="/author">{article.author}</Link> in <Link href="/archive">{article.category}</Link>
+              <Link href="/author">{article.author}</Link> in <Link href="/archive">{article.category}</Link>
               </div>
               <div className="entry-meta-line">
-                <span>{article.date}</span>
-                <span className="middotDivider" />
-                <span className="readingTime" title={article.readTime}>
-                  {article.readTime}
-                </span>
+              <span>{article.date}</span>
+              <span className="middotDivider" />
+              <span className="readingTime" title={article.readTime}>
+                {article.readTime}
+              </span>
               </div>
             </div>
           </div>
@@ -282,14 +282,14 @@ export default function Section1({ article }: Section1Props) {
                         </h5>
                         <div className="entry-meta align-items-center">
                           <div className="entry-meta-line">
-                            <Link href="/author">{post.author}</Link> in <Link href="/archive">{post.category}</Link>
+                          <Link href="/author">{post.author}</Link> in <Link href="/archive">{post.category}</Link>
                           </div>
                           <div className="entry-meta-line">
-                            <span>{post.date}</span>
-                            <span className="middotDivider" />
-                            <span className="readingTime" title={post.readTime}>
-                              {post.readTime}
-                            </span>
+                          <span>{post.date}</span>
+                          <span className="middotDivider" />
+                          <span className="readingTime" title={post.readTime}>
+                            {post.readTime}
+                          </span>
                           </div>
                         </div>
                       </div>

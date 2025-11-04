@@ -4,7 +4,7 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useIsMobile } from "@/hooks/use-media-query";
-import { cn } from "@/lib/utils";
+import { cn, gradientVariants } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 
 export interface NewsArticle {
@@ -14,68 +14,91 @@ export interface NewsArticle {
   image: string;
 }
 
-const OFFSET_FACTOR = 4;
+const OFFSET_FACTOR = 5;
 const SCALE_FACTOR = 0.03;
-const OPACITY_FACTOR = 0.1;
+const OPACITY_FACTOR = 0.02;
 
 export function News({ articles }: { articles: NewsArticle[] }) {
+  // Create unique IDs for each article using index
+  const articlesWithId = articles.map((article, idx) => ({ ...article, id: `${article.title}-${idx}` }));
   const [dismissedNews, setDismissedNews] = React.useState<string[]>([]);
-  const cards = articles.filter(({ href }) => !dismissedNews.includes(href));
+  const cards = articlesWithId.filter(({ id }) => !dismissedNews.includes(id));
   const cardCount = cards.length;
   const [showCompleted, setShowCompleted] = React.useState(cardCount > 0);
 
   React.useEffect(() => {
     let timeout: NodeJS.Timeout | undefined = undefined;
+    let resetTimeout: NodeJS.Timeout | undefined = undefined;
     if (cardCount === 0) {
       timeout = setTimeout(() => {
         setShowCompleted(false);
         // Reset dismissed news after showing completion message
-        setTimeout(() => {
+        resetTimeout = setTimeout(() => {
           setDismissedNews([]);
+          setShowCompleted(true);
         }, 500);
-      }, 2700);
+      }, 3000); // Increased timeout to 3 seconds
     }
-    return () => clearTimeout(timeout);
+    return () => {
+      clearTimeout(timeout);
+      clearTimeout(resetTimeout);
+    };
   }, [cardCount]);
 
   return cards.length || showCompleted ? (
     <div
-      className="group overflow-hidden px-3 pb-3 pt-8"
+      className="group overflow-hidden px-3 pb-3 pt-8
+        sm:px-4 sm:pb-4 sm:pt-10
+        md:px-6 md:pb-6 md:pt-12
+        lg:px-8 lg:pb-8 lg:pt-16
+        max-w-sm mx-auto"
       data-active={cardCount !== 0}
     >
-      <div className="relative size-full">
-        {cards.toReversed().map(({ href, title, summary, image }, idx) => (
-          <div
-            key={`${idx}-${href}`}
-            className={cn(
-              "absolute left-0 top-0 size-full scale-[var(--scale)] transition-[opacity,transform] duration-200",
-              "translate-y-[var(--y)] opacity-[var(--opacity)]"
-            )}
-            style={
-              {
-                "--y": `-${(cardCount - (idx + 1)) * OFFSET_FACTOR}%`,
-                "--scale": 1 - (cardCount - (idx + 1)) * SCALE_FACTOR,
-                "--opacity":
-                  cardCount - (idx + 1) >= 3
-                    ? 0
-                    : 1 - (cardCount - (idx + 1)) * OPACITY_FACTOR,
-              } as React.CSSProperties
-            }
-            aria-hidden={idx !== cardCount - 1}
-          >
-            <NewsCard
-              title={title}
-              description={summary}
-              image={image}
-              href={href}
-              hideContent={cardCount - idx > 2}
-              active={idx === cardCount - 1}
-              onDismiss={() =>
-                setDismissedNews([href, ...dismissedNews.slice(0, 50)])
+      <div className="relative w-full h-full min-h-[400px] sm:min-h-[450px] md:min-h-[500px]">
+        {cards.map(({ id, href, title, summary, image }, idx) => {
+          const position = idx;
+          const isTopCard = idx === 0;
+          const isVisible = position < 3;
+          // Make cards behind more visible so they smoothly transition when one is dismissed
+          const opacity = !isVisible ? 0 : isTopCard ? 1 : Math.max(0.95, 1 - position * OPACITY_FACTOR);
+
+          // Responsive positioning adjustments (using CSS classes instead)
+
+          return (
+            <div
+              key={id}
+              className={cn(
+                "absolute left-0 top-0 w-full max-w-full",
+                "transition-all duration-300 ease-out",
+                !isVisible && "pointer-events-none",
+                // Responsive constraints
+                "sm:scale-95 md:scale-100"
+              )}
+              style={
+                {
+                  zIndex: cardCount - idx,
+                  transform: `translateY(${position * OFFSET_FACTOR}%) scale(${1 - position * SCALE_FACTOR})`,
+                  opacity: opacity,
+                  transition: "transform 400ms cubic-bezier(0.4, 0, 0.2, 1), opacity 400ms cubic-bezier(0.4, 0, 0.2, 1), z-index 0s",
+                  willChange: isTopCard ? "transform, opacity" : "transform, opacity",
+                } as React.CSSProperties
               }
-            />
-          </div>
-        ))}
+              aria-hidden={!isTopCard}
+            >
+              <NewsCard
+                title={title}
+                description={summary}
+                image={image}
+                href={href}
+                hideContent={!isVisible}
+                active={isTopCard}
+                onDismiss={() =>
+                  setDismissedNews([id, ...dismissedNews.slice(0, 50)])
+                }
+              />
+            </div>
+          );
+        })}
         <div className="pointer-events-none invisible" aria-hidden>
           <NewsCard title="Title" description="Description" />
         </div>
@@ -84,8 +107,6 @@ export function News({ articles }: { articles: NewsArticle[] }) {
             className="animate-slide-up-fade absolute inset-0 flex size-full flex-col items-center justify-center gap-3 [animation-duration:1s]"
             style={{ "--offset": "10px" } as React.CSSProperties}
           >
-            <div className="animate-fade-in absolute inset-0 rounded-lg border border-neutral-300 [animation-delay:2.3s] [animation-direction:reverse] [animation-duration:0.2s]" />
-            <AnimatedLogo className="w-1/3" />
             <span className="animate-fade-in text-xs font-medium text-muted-foreground [animation-delay:2.3s] [animation-direction:reverse] [animation-duration:0.2s]">
               You're all caught up!
             </span>
@@ -179,7 +200,7 @@ function NewsCard({
   const onDragCancel = () => stopDragging(true);
 
   const onPointerDown = (e: React.PointerEvent) => {
-    if (!active || !ref.current || animation.current?.playState === "running")
+    if (!ref.current || animation.current?.playState === "running")
       return;
 
     bindListeners();
@@ -220,183 +241,78 @@ function NewsCard({
       className={cn(
         "relative select-none gap-2 p-3 text-[0.8125rem] bg-white",
         "translate-x-[calc(var(--dx)*1px)] rotate-[calc(var(--dx)*0.05deg)] opacity-[calc(1-max(var(--dx),-1*var(--dx))/var(--w)/2)]",
-        "transition-shadow data-[dragging=true]:shadow-md",
-        "border border-neutral-200"
+        "border border-neutral-200",
+        // Responsive sizing to prevent overflow
+        "w-full max-w-full h-auto",
+        "sm:p-4 sm:text-sm",
+        "md:p-5 md:text-base"
       )}
-      style={{
-        background: "linear-gradient(to top, rgba(156, 163, 175, 0.08) 0%, rgba(156, 163, 175, 0.04) 40%, rgba(255, 255, 255, 1) 100%)",
-      }}
       data-dragging={dragging}
+      data-active={active}
       onPointerDown={onPointerDown}
       onClick={onClick}
     >
-      <div className={cn(hideContent && "invisible")}>
-        <div className="flex flex-col gap-1">
-          <span className="line-clamp-1 font-medium text-foreground">
-            {title}
-          </span>
-          <p className="line-clamp-2 h-10 leading-5 text-muted-foreground">
-            {description}
-          </p>
-        </div>
-        <div className="relative mt-3 aspect-[16/9] w-full shrink-0 overflow-hidden rounded border bg-muted">
+      {/* Subtle gradient overlay for visual depth */}
+      <div className={`absolute inset-0 ${gradientVariants.textOverlay} opacity-20 pointer-events-none rounded`} />
+      <div className={cn("relative flex flex-col h-full z-10", hideContent && "opacity-0")}>
+        {/* 1. Title */}
+        <h3 className="line-clamp-1 font-medium text-foreground mb-1 text-sm sm:text-sm md:text-base">
+          {title}
+        </h3>
+
+        {/* 2. Subtitle */}
+        <p className="line-clamp-2 text-xs leading-4 text-muted-foreground mb-2 sm:mb-3 flex-shrink-0
+          sm:text-xs md:text-sm">
+          {description}
+        </p>
+        
+        {/* 3. Image */}
+        <div className="relative mt-auto aspect-[16/9] w-full shrink-0 overflow-hidden rounded border bg-muted
+          max-h-[120px] sm:max-h-[140px] md:max-h-[160px] lg:max-h-[180px]">
           {image && (
-            <Image
-              src={image}
-              alt=""
-              fill
-              sizes="10vw"
-              className="rounded object-cover object-center"
-              draggable={false}
-            />
+            <>
+              <Image
+                src={image}
+                alt=""
+                fill
+                sizes="10vw"
+                className="rounded object-cover object-center"
+                draggable={false}
+              />
+              {/* Responsive gradient overlay for better visual hierarchy */}
+              <div className={`absolute inset-0 ${gradientVariants.contentOverlay} opacity-50`} />
+            </>
           )}
         </div>
+        
+        {/* 4. Read more + Dismiss (appear on hover) */}
         <div
           className={cn(
-            "h-7 pt-3 flex items-center justify-between text-xs"
+            "absolute bottom-0 left-0 right-0 overflow-hidden transition-[height,opacity] duration-200 z-20 bg-white",
+            "h-0 opacity-0",
+            active && "group-hover:h-8 group-hover:opacity-100 group-hover:pt-2",
+            "group-has-[*[data-dragging=true]]:h-8 group-has-[*[data-dragging=true]]:opacity-100 group-has-[*[data-dragging=true]]:pt-2"
           )}
         >
-          <Link
-            href={href || "https://alara.scrolli.co"}
-            target="_blank"
-            className="font-medium text-muted-foreground hover:text-foreground transition-colors duration-75"
-          >
-            Read more
-          </Link>
-          <button
-            type="button"
-            onClick={dismiss}
-            className="text-muted-foreground hover:text-foreground transition-colors duration-75"
-          >
-            Dismiss
-          </button>
+          <div className="flex items-center justify-between text-xs news-card-actions px-3 pb-2">
+            <Link
+              href={href || "https://alara.scrolli.co"}
+              target="_blank"
+              className="font-medium text-gray-700 hover:!text-gray-700 hover:!no-underline"
+            >
+              Read more
+            </Link>
+            <button
+              type="button"
+              onClick={dismiss}
+              className="text-gray-700 hover:!text-gray-700 cursor-pointer"
+            >
+              Dismiss
+            </button>
+          </div>
         </div>
       </div>
     </Card>
   );
 }
 
-function AnimatedLogo(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      viewBox="0 0 140 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="text-muted-foreground"
-      {...props}
-    >
-      {/* S */}
-      <path
-        d="M2 3C2 5.20914 3.79086 7 6 7C8.20914 7 10 5.20914 10 3C10 0.790861 8.20914 -1 6 -1C3.79086 -1 2 0.790861 2 3ZM2 12C2 14.2091 3.79086 16 6 16H10V21H2V12ZM6 13C7.65685 13 9 14.3431 9 16C9 17.6569 7.65685 19 6 19C4.34315 19 3 17.6569 3 16C3 14.3431 4.34315 13 6 13Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeDasharray="65"
-        strokeLinecap="round"
-        fill="none"
-      >
-        <animate
-          attributeName="strokeDashoffset"
-          dur="2500ms"
-          values="65;0;0;0;65"
-          fill="freeze"
-        />
-      </path>
-      {/* C */}
-      <path
-        d="M16 3C16 6.31371 18.6863 9 22 9H26V21H22C18.6863 21 16 18.3137 16 15V3Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeDasharray="55"
-        strokeLinecap="round"
-        fill="none"
-      >
-        <animate
-          attributeName="strokeDashoffset"
-          dur="2500ms"
-          values="55;0;0;0;55"
-          fill="freeze"
-        />
-      </path>
-      {/* R */}
-      <path
-        d="M32 3H40C43.3137 3 46 5.68629 46 9C46 12.3137 43.3137 15 40 15H36V21H32V3ZM40 12C41.6569 12 43 10.6569 43 9C43 7.34315 41.6569 6 40 6H36V12H40Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeDasharray="60"
-        strokeLinecap="round"
-        fill="none"
-      >
-        <animate
-          attributeName="strokeDashoffset"
-          dur="2500ms"
-          values="60;0;0;0;60"
-          fill="freeze"
-        />
-      </path>
-      {/* O */}
-      <path
-        d="M50 3H58C61.3137 3 64 5.68629 64 9C64 12.3137 61.3137 15 58 15H50V3ZM58 13C59.6569 13 61 11.6569 61 10C61 8.34315 59.6569 7 58 7H52V13H58Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeDasharray="55"
-        strokeLinecap="round"
-        fill="none"
-      >
-        <animate
-          attributeName="strokeDashoffset"
-          dur="2500ms"
-          values="55;0;0;0;55"
-          fill="freeze"
-        />
-      </path>
-      {/* L */}
-      <path
-        d="M68 3H71V15H75C78.3137 15 81 17.6863 81 21H68V3Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeDasharray="45"
-        strokeLinecap="round"
-        fill="none"
-      >
-        <animate
-          attributeName="strokeDashoffset"
-          dur="2500ms"
-          values="45;0;0;0;45"
-          fill="freeze"
-        />
-      </path>
-      {/* L */}
-      <path
-        d="M85 3H88V15H92C95.3137 15 98 17.6863 98 21H85V3Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeDasharray="45"
-        strokeLinecap="round"
-        fill="none"
-      >
-        <animate
-          attributeName="strokeDashoffset"
-          dur="2500ms"
-          values="45;0;0;0;45"
-          fill="freeze"
-        />
-      </path>
-      {/* I */}
-      <path
-        d="M102 3H105V21H102V3Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeDasharray="20"
-        strokeLinecap="round"
-        fill="none"
-      >
-        <animate
-          attributeName="strokeDashoffset"
-          dur="2500ms"
-          values="20;0;0;0;20"
-          fill="freeze"
-        />
-      </path>
-    </svg>
-  );
-}

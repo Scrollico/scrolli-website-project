@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay, A11y } from 'swiper/modules';
+import { Autoplay, Pagination } from 'swiper/modules';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -15,7 +15,7 @@ interface ArticleCard {
   thumbnail: string;
 }
 
-const articleData: ArticleCard[] = [
+const articlesData: ArticleCard[] = [
   {
     id: 'home-internet-is-becoming-a-luxury-for-the-wealthy-1',
     title: 'Home Internet Is Becoming a Luxury for the Wealthy',
@@ -49,84 +49,85 @@ const articleData: ArticleCard[] = [
 ];
 
 export default function ArticlesSection() {
+  // Helper function to render Swiper content
+  const renderSwiper = (articles: ArticleCard[], category: string) => (
+    <div className="w-full">
+      <Swiper
+        modules={[Autoplay, Pagination]}
+        spaceBetween={20}
+        slidesPerView={1.2}
+        loop={false}
+        autoplay={{
+          delay: 4000,
+          disableOnInteraction: false,
+        }}
+        pagination={{
+          clickable: true,
+          el: `.articles-pagination-${category}`,
+        }}
+        navigation={false}
+        breakpoints={{
+          480: {
+            slidesPerView: 1.5,
+            spaceBetween: 20,
+          },
+          640: {
+            slidesPerView: 2,
+            spaceBetween: 24,
+          },
+          768: {
+            slidesPerView: 2.5,
+            spaceBetween: 24,
+          },
+          1024: {
+            slidesPerView: 3,
+            spaceBetween: 32,
+          },
+          1280: {
+            slidesPerView: 3.5,
+            spaceBetween: 40,
+          },
+        }}
+        className="articles-swiper pb-12"
+      >
+        {articles.map((article) => (
+          <SwiperSlide key={article.id} className="article-slide-wrapper">
+            <article className="group bg-card rounded-lg border border-border/50 hover:border-border transition-all duration-200 flex flex-col relative">
+              <figure className="relative bg-muted flex-shrink-0 w-full aspect-[3/4] overflow-hidden rounded-t-lg">
+                <Link href={`/article/${article.id}`} className="absolute inset-0 block w-full h-full">
+                  <Image
+                    src={article.thumbnail}
+                    alt={article.title}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    sizes="(max-width: 640px) 280px, (max-width: 1024px) 350px, 400px"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-60 pointer-events-none" />
+                </Link>
+              </figure>
+
+              {/* Title underneath the image */}
+              <div className="article-title-container py-4 pr-4 md:py-5 md:pr-5 bg-white dark:bg-card rounded-b-lg flex-shrink-0 min-h-[60px]">
+                <h3 className="text-sm md:text-base lg:text-lg font-semibold leading-tight line-clamp-2">
+                  <Link href={`/article/${article.id}`} className="hover:text-primary transition-colors text-black dark:text-white">
+                    {article.title}
+                  </Link>
+                </h3>
+              </div>
+            </article>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+      <div className={`articles-pagination-${category} flex justify-center mt-4`}></div>
+    </div>
+  );
+
   return (
-    <section className="py-12 md:py-16 lg:py-20 w-full">
-      {/* Section Header - Full Width */}
-      <div className="w-full px-4 md:px-8 lg:px-12 mb-10 md:mb-12">
+    <section className="mt-16 md:mt-24 lg:mt-32 py-8 md:py-12 lg:py-16">
+      <div className="px-4 sm:px-6 lg:px-8 xl:px-12 mb-8 md:mb-12">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight text-foreground mb-4">Latest Articles</h2>
-          <div className="w-12 h-0.5 bg-primary"></div>
+          {renderSwiper(articlesData, 'all')}
         </div>
-      </div>
-
-      {/* Articles Swiper - Full Width */}
-      <div className="w-full px-4 md:px-8 lg:px-12">
-        <Swiper
-          modules={[Pagination, Autoplay, A11y]}
-          spaceBetween={20}
-          slidesPerView={1}
-          pagination={{
-            el: '.swiper-pagination',
-            clickable: true,
-            bulletClass: 'swiper-pagination-bullet !bg-muted-foreground/30 !opacity-100',
-            bulletActiveClass: '!bg-primary',
-          }}
-          autoplay={{
-            delay: 6000,
-            disableOnInteraction: false,
-          }}
-          breakpoints={{
-            640: {
-              slidesPerView: 2,
-              spaceBetween: 32,
-            },
-            768: {
-              slidesPerView: 2,
-              spaceBetween: 40,
-            },
-            1024: {
-              slidesPerView: 3,
-              spaceBetween: 48,
-            },
-          }}
-          className="pb-12"
-        >
-          {articleData.map((article) => (
-              <SwiperSlide key={article.id}>
-                <article className="group bg-card rounded-lg overflow-hidden border border-border/50 hover:border-border transition-all duration-200 h-full">
-                  {/* Article Image */}
-                  <figure className="relative overflow-hidden bg-muted">
-                    <Link href={`/article/${article.id}`}>
-                      <Image
-                        src={article.thumbnail}
-                        alt={article.title}
-                        width={400}
-                        height={250}
-                        className="w-full h-64 md:h-96 lg:h-[500px] object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                        quality={95}
-                      />
-                    </Link>
-                  </figure>
-
-                  {/* Article Content */}
-                  <div className="p-4 md:p-5">
-                    <h3 className="text-xl md:text-2xl font-semibold leading-tight line-clamp-2 text-foreground">
-                      <Link
-                        href={`/article/${article.id}`}
-                        className="hover:text-primary transition-colors duration-200 focus:outline-none focus:text-primary"
-                      >
-                        {article.title}
-                      </Link>
-                    </h3>
-                  </div>
-                </article>
-              </SwiperSlide>
-          ))}
-        </Swiper>
-
-        {/* Pagination */}
-        <div className="swiper-pagination mt-6 flex justify-center"></div>
       </div>
     </section>
   );

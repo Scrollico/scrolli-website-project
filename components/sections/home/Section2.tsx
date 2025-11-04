@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
+import { gridVariants, textVariants, spacingVariants } from '@/lib/utils';
 import blogData from "@/data/blog.json";
 
 // Import Swiper styles
@@ -18,8 +19,22 @@ export default function Section2() {
         <div className="container">
           <Swiper
             modules={[Autoplay, Pagination, Navigation]}
-            spaceBetween={30}
+            spaceBetween={20}
             slidesPerView={1}
+            breakpoints={{
+              640: {
+                slidesPerView: 1,
+                spaceBetween: 20,
+              },
+              768: {
+                slidesPerView: 1,
+                spaceBetween: 30,
+              },
+              1024: {
+                slidesPerView: 1,
+                spaceBetween: 40,
+              },
+            }}
             loop={true}
             autoplay={{
               delay: 5000,
@@ -34,38 +49,31 @@ export default function Section2() {
             {featuredSlider.articles.map((article, index) => (
               <SwiperSlide key={index}>
                 <div className="blog-slider-card">
-                  <div className="row justify-content-between post-has-bg ml-0 mr-0">
-                    <div className="col-lg-6 col-md-8">
-                      <div className="pt-5 pb-5 ps-md-5 pe-5 align-self-center">
-                        <div className="capsSubtle mb-2">{featuredSlider.title}</div>
-                        <h2 className="entry-title mb-3">
-                          <Link href={`/article/${article.id}`}>{article.title}</Link>
-                        </h2>
-                        <div className="entry-excerpt">
-                          <p>{article.excerpt}</p>
+                  <div className={gridVariants.heroGrid + " min-h-[400px] md:min-h-[500px] items-center"}>
+                    <div className="order-2 md:order-1">
+                      <div className={spacingVariants.card}>
+                        <div className={textVariants.caption + " mb-3 uppercase tracking-wide"}>
+                          {featuredSlider.title}
                         </div>
-                        <div className="entry-meta align-items-center">
-                          <Link href="/author">{article.author}</Link> in <Link href="/archive">{article.category}</Link>
-                          <br />
-                          <span>{article.date}</span>
-                          <span className="middotDivider" />
-                          <span className="readingTime" title={article.readTime}>
-                            {article.readTime}
-                          </span>
-                          <span className="svgIcon svgIcon--star">
-                            <svg className="svgIcon-use" width={15} height={15}>
-                              <path d="M7.438 2.324c.034-.099.09-.099.123 0l1.2 3.53a.29.29 0 0 0 .26.19h3.884c.11 0 .127.049.038.111L9.8 8.327a.271.271 0 0 0-.099.291l1.2 3.53c.034.1-.011.131-.098.069l-3.142-2.18a.303.303 0 0 0-.32 0l-3.145 2.182c-.087.06-.132.03-.099-.068l1.2-3.53a.271.271 0 0 0-.098-.292L2.056 6.146c-.087-.06-.071-.112.038-.112h3.884a.29.29 0 0 0 .26-.19l1.2-3.52z" />
-                            </svg>
-                          </span>
+                        <h2 className={textVariants.heading2 + " mb-4 leading-tight"}>
+                          <Link href={`/article/${article.id}`} className="hover:text-primary transition-colors">
+                            {article.title}
+                          </Link>
+                        </h2>
+                        <div className={textVariants.body + " text-muted-foreground"}>
+                          <p className="line-clamp-3">{article.excerpt}</p>
                         </div>
                       </div>
                     </div>
                     <div
-                      className="col-lg-6 col-md-4 bgcover d-none d-md-block pl-md-0 ml-0"
+                      className="order-1 md:order-2 bg-cover bg-center bg-no-repeat rounded-lg relative"
                       style={{
                         backgroundImage: `url(${article.image})`,
+                        minHeight: '250px',
                       }}
-                    />
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent md:from-black/50 md:via-black/15 lg:from-black/40 lg:via-black/10 opacity-50"></div>
+                    </div>
                   </div>
                 </div>
               </SwiperSlide>

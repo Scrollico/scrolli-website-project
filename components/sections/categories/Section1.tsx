@@ -101,6 +101,8 @@ export default function Section1() {
                             alt={article.title}
                             width={190}
                             height={165}
+                            className="w-full h-auto object-cover"
+                            sizes="(max-width: 768px) 100vw, 190px"
                           />
                         </Link>
                       </figure>

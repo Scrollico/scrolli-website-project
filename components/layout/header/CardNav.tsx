@@ -75,7 +75,7 @@ export default function CardNav({
             }
             
             return (
-              <div key={item.label} className="card-nav-link-container">
+            <div key={item.label} className="card-nav-link-container">
                 {href.startsWith('http') ? (
                   <a
                     href={href}
@@ -88,33 +88,33 @@ export default function CardNav({
                     {item.label}
                   </a>
                 ) : (
-                  <Link
+              <Link
                     href={href}
-                    className="card-nav-link"
-                    onMouseEnter={() => setHoveredItem(item.label)}
-                    onMouseLeave={() => setHoveredItem(null)}
-                  >
-                    {item.label}
-                  </Link>
+                className="card-nav-link"
+                onMouseEnter={() => setHoveredItem(item.label)}
+                onMouseLeave={() => setHoveredItem(null)}
+              >
+                {item.label}
+              </Link>
                 )}
-                {/* Hover Image for Alara AI */}
-                {item.label === 'Alara AI' && hoveredItem === 'Alara AI' && (
-                  <div className="alara-hover-image">
-                    <Image
-                      src="/assets/images/ads/625shots_so.webp"
-                      alt="Alara AI Preview"
-                      width={320}
-                      height={180}
-                      style={{ 
-                        objectFit: 'cover',
-                        width: '100%',
-                        height: '100%',
-                        borderRadius: '8px'
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
+              {/* Hover Image for Alara AI */}
+              {item.label === 'Alara AI' && hoveredItem === 'Alara AI' && (
+                <div className="alara-hover-image">
+                  <Image
+                    src="/assets/images/ads/625shots_so.webp"
+                    alt="Alara AI Preview"
+                    width={320}
+                    height={180}
+                    style={{ 
+                      objectFit: 'cover',
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: '8px'
+                    }}
+                  />
+                </div>
+              )}
+            </div>
             );
           })}
         </div>

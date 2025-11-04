@@ -4,6 +4,7 @@ import BackToTop from "../elements/BackToTop";
 import Footer from "./footer/Footer";
 import Header from "./header/Header";
 import MobileMenu from "./MobileMenu";
+import StickyNav from "./header/StickyNav";
 
 
 interface LayoutProps {
@@ -48,6 +49,9 @@ export default function Layout({ classList, children, onNewsletterClick }: Layou
           <header role="banner">
             <Header onNewsletterClick={onNewsletterClick} />
           </header>
+
+          {/* Sticky Navbar */}
+          <StickyNav />
 
           {/* Main content area */}
           <main id="main-content" role="main" tabIndex={-1}>
