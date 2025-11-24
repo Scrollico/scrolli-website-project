@@ -5,6 +5,7 @@ import Pagination from '@/components/elements/Pagination'
 import Image from 'next/image'
 import { useState } from 'react'
 import { gradientVariants } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
 
 export default function Section4() {
   const { mostRecent } = blogData;
@@ -34,7 +35,32 @@ export default function Section4() {
                 <article key={index} className="row justify-content-between mb-5 mr-0">
                   <div className="col-md-9">
                     <div className="align-self-center">
-                      <div className="capsSubtle mb-2">{article.tag}</div>
+                      {/* Tag Badge */}
+                      {article.tag && (
+                        <div className="mb-2 flex justify-start">
+                          <Badge
+                            variant={article.tag === "Editors' Pick" ? "primary" : "secondary"}
+                            appearance={article.tag === "Editors' Pick" ? "default" : "outline"}
+                            size="sm"
+                            className="uppercase tracking-wide"
+                          >
+                            {article.tag}
+                          </Badge>
+                        </div>
+                      )}
+                      {/* Category Badge */}
+                      {article.category && (
+                        <div className="mb-2 flex justify-start">
+                          <Badge
+                            variant="secondary"
+                            appearance="outline"
+                            size="sm"
+                            className="uppercase tracking-wide"
+                          >
+                            {article.category}
+                          </Badge>
+                        </div>
+                      )}
                       <h3 className="entry-title mb-3">
                         <Link href={`/article/${article.id}`}>{article.title}</Link>
                       </h3>

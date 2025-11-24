@@ -1,0 +1,48 @@
+---
+alwaysApply: false
+---
+
+# Always Check Existing Working Code First
+
+## CRITICAL RULE
+
+**NEVER rewrite code from scratch without first checking if a working version exists.**
+
+## When Fixing or Rebuilding Components
+
+1. **First Step**: Check GitHub repository, previous commits, or any reference implementation
+2. **Second Step**: Understand what was working before
+3. **Third Step**: Identify the EXACT problem (not assumptions)
+4. **Fourth Step**: Make minimal, targeted fixes
+5. **Last Resort**: Only rewrite if absolutely necessary AND after understanding the working version
+
+## Why This Matters
+
+- Saves tokens
+- Saves time
+- Prevents introducing new bugs
+- Maintains working functionality
+- Shows respect for existing code
+
+## Example of What NOT to Do
+
+❌ **WRONG**: User says "fix VideoSection.tsx" → Immediately rewrite from scratch
+✅ **RIGHT**: User says "fix VideoSection.tsx" → Check GitHub for working version → Compare → Identify issue → Fix minimally
+
+## Commands to Check Existing Code
+
+```bash
+# Check GitHub repository
+curl -s https://raw.githubusercontent.com/[org]/[repo]/[branch]/[path]
+
+# Check git history
+git log --oneline [file]
+git show [commit]:[file]
+
+# Check for similar files
+find . -name "*[similar-name]*"
+```
+
+## Remember
+
+**Working code > Perfect code. Always preserve what works.**

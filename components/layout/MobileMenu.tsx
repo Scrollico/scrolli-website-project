@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Image from 'next/image';
+import CinematicThemeSwitcher from '@/components/ui/cinematic-theme-switcher';
 
 interface MobileMenuProps {
   isMobileMenu: boolean;
@@ -14,12 +15,6 @@ export default function MobileMenu({ isMobileMenu, handleMobileMenu }: MobileMen
   const [isAccordion, setIsAccordion] = useState<number | null>(null);
   const pathname = usePathname();
 
-  // Dark/Light
-  const [isDark, setDark] = useState<boolean>(false);
-  const handleDark = (): void => {
-    setDark(!isDark);
-    !isDark ? document.body.classList.add("dark-mode") : document.body.classList.remove("dark-mode");
-  };
 
   const handleAccordion = (key: number) => {
     setIsAccordion((prevState) => (prevState === key ? null : key));
@@ -50,9 +45,9 @@ export default function MobileMenu({ isMobileMenu, handleMobileMenu }: MobileMen
                 height={50}
               />
             </Link>
-            <Link href="#" className="dark-light-toggle mt-05" onClick={handleDark}>
-              <i className="icon-adjust" />
-            </Link>
+            <div className="mt-05">
+              <CinematicThemeSwitcher />
+            </div>
             <ul className="social-network heading navbar-nav d-lg-flex align-items-center">
               <li>
                 <Link href="#">
@@ -92,7 +87,7 @@ export default function MobileMenu({ isMobileMenu, handleMobileMenu }: MobileMen
           <div className="mobi-menu__logo">
             <h1 className="logo navbar-brand">
               <Link href="/" className="logo">
-                Merinda
+                Scrolli
               </Link>
             </h1>
           </div>

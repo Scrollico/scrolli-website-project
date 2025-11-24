@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { Text } from "@/components/ui/typography";
 
 // Essential menu items for sticky navbar (3 items)
 const STICKY_MENU_ITEMS = [
@@ -56,7 +57,7 @@ export default function StickyNav() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-[60] bg-[#f5f5dc]/95 dark:bg-[#f5f5dc]/95 backdrop-blur-md border-b border-border/50 transition-all duration-300 ease-in-out ${
+      className={`fixed top-[80px] md:top-[100px] left-0 right-0 z-[60] bg-[#f5f5dc]/95 dark:bg-[#f5f5dc]/95 backdrop-blur-md border-b border-border/50 transition-all duration-300 ease-in-out ${
         isVisible && isScrolled
           ? 'translate-y-0 opacity-100 shadow-md'
           : '-translate-y-full opacity-0 pointer-events-none'
@@ -64,21 +65,23 @@ export default function StickyNav() {
       aria-label="Sticky navigation"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-center h-14 md:h-16">
+        <div className="flex items-center justify-center h-10 md:h-11">
           {/* Three essential menu items */}
-          <div className="flex items-center gap-6 md:gap-8 lg:gap-10">
+          <div className="flex items-center gap-4 md:gap-6 lg:gap-8">
             {STICKY_MENU_ITEMS.map((item, index) => (
-              <Link
+              <Text
                 key={item.href}
+                as={Link}
                 href={item.href}
-                className="text-sm md:text-base font-medium text-foreground hover:text-primary transition-colors duration-200 relative group"
+                variant="bodySmall"
+                className="font-medium hover:text-primary transition-colors duration-200 relative group"
               >
                 <span className="relative z-10">{item.label}</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />
                 {index !== STICKY_MENU_ITEMS.length - 1 && (
-                  <span className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-3 w-px h-4 bg-border" />
+                  <span className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-2 w-px h-3 bg-border" />
                 )}
-              </Link>
+              </Text>
             ))}
           </div>
         </div>

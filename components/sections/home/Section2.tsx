@@ -2,7 +2,9 @@
 import Link from "next/link";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
-import { gridVariants, textVariants, spacingVariants } from '@/lib/utils';
+import { gridVariants, spacingVariants } from '@/lib/utils';
+import { Heading, Text, Caption } from "@/components/ui/typography";
+import { Badge } from "@/components/ui/badge";
 import blogData from "@/data/blog.json";
 
 // Import Swiper styles
@@ -15,8 +17,9 @@ export default function Section2() {
 
   return (
     <>
-      <div className="content-widget">
-        <div className="container">
+      <div className="content-widget relative pb-8 md:pb-10 lg:pb-12">
+        <div className="absolute inset-0 pointer-events-none readers-vote-gradient" />
+        <div className="container relative z-10">
           <Swiper
             modules={[Autoplay, Pagination, Navigation]}
             spaceBetween={20}
@@ -52,17 +55,40 @@ export default function Section2() {
                   <div className={gridVariants.heroGrid + " min-h-[400px] md:min-h-[500px] items-center"}>
                     <div className="order-2 md:order-1">
                       <div className={spacingVariants.card}>
-                        <div className={textVariants.caption + " mb-3 uppercase tracking-wide"}>
+                        <Caption
+                          as="div"
+                          className="mb-3 uppercase tracking-wide"
+                          color="secondary"
+                        >
                           {featuredSlider.title}
+                        </Caption>
+                        {/* Category Badge */}
+                        {article.category && (
+                          <div className="mb-3 flex justify-start">
+                            <Badge
+                              variant="secondary"
+                              appearance="outline"
+                              size="sm"
+                              className="uppercase tracking-wide"
+                            >
+                              {article.category}
+                            </Badge>
                         </div>
-                        <h2 className={textVariants.heading2 + " mb-4 leading-tight"}>
+                        )}
+                        <Heading
+                          level={2}
+                          variant="h2"
+                          className="mb-4 leading-tight"
+                        >
                           <Link href={`/article/${article.id}`} className="hover:text-primary transition-colors">
                             {article.title}
                           </Link>
-                        </h2>
-                        <div className={textVariants.body + " text-muted-foreground"}>
-                          <p className="line-clamp-3">{article.excerpt}</p>
-                        </div>
+                        </Heading>
+                        {article.excerpt && (
+                          <Text variant="body" color="secondary" className="line-clamp-3">
+                            {article.excerpt}
+                          </Text>
+                        )}
                       </div>
                     </div>
                     <div
@@ -79,7 +105,6 @@ export default function Section2() {
               </SwiperSlide>
             ))}
           </Swiper>
-          <div className="divider" />
         </div>
       </div>
       {/*content-widget*/}

@@ -1,0 +1,223 @@
+
+---
+alwaysApply: true
+---
+
+# Scrolli Design System Rules
+
+## Core Principles
+
+1. **Always use design tokens** - Never use hardcoded Tailwind classes for spacing, typography, colors, borders, or shadows
+2. **Semantic naming** - Use semantic names (primary, secondary) not visual names (blue, gray)
+3. **Responsive by default** - All tokens handle responsive breakpoints automatically
+4. **Dark mode support** - All tokens support dark mode automatically
+5. **Consistency** - Use the same token for the same purpose across components
+
+## Design Token Usage
+
+### Import Pattern
+
+```typescript
+import { 
+  sectionPadding, 
+  containerPadding, 
+  typography, 
+  colors, 
+  borderRadius, 
+  elevation,
+  gap 
+} from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
+```
+
+### Spacing
+
+**Always use tokens:**
+- `sectionPadding` for section vertical padding
+- `containerPadding` for container horizontal padding
+- `gap` for spacing between flex/grid items
+- `componentPadding` for internal component padding
+
+**Never use:**
+- Hardcoded `py-*`, `px-*`, `gap-*` classes
+- Manual responsive spacing (`py-8 md:py-12`)
+
+### Typography
+
+**Always use:**
+- `typography` variants (`h1`, `h2`, `body`, etc.)
+- Typography components (`Heading`, `Text`, `Label`, `Caption`)
+
+**Never use:**
+- Hardcoded font sizes (`text-2xl`, `text-lg`)
+- Hardcoded font weights (`font-bold`, `font-semibold`)
+
+### Colors
+
+**Always use:**
+- `colors` tokens with semantic names
+- `colors.foreground.*` for text colors
+- `colors.background.*` for background colors
+- `colors.border.*` for border colors
+
+**Never use:**
+- Raw Tailwind colors (`text-gray-900`, `bg-blue-600`)
+- Manual dark mode classes (`dark:text-white`)
+
+### Borders
+
+**Always use:**
+- `borderRadius` tokens
+- `border` tokens or `borderWidth` + `colors.border`
+
+**Never use:**
+- Hardcoded `rounded-*` classes
+- Hardcoded border widths
+
+### Shadows/Elevation
+
+**Always use:**
+- `elevation` tokens
+- `surface` tokens for pre-composed surfaces
+
+**Never use:**
+- Hardcoded `shadow-*` classes
+
+## Component Patterns
+
+### Section Component Template
+
+```typescript
+"use client";
+
+import { sectionPadding, containerPadding, typography, colors, gap } from "@/lib/design-tokens";
+import { Container } from "@/components/responsive";
+import { Heading, Text } from "@/components/ui/typography";
+import { cn } from "@/lib/utils";
+
+export default function SectionName() {
+  return (
+    <section className={cn(sectionPadding.md, colors.background.base)}>
+      <Container padding="lg">
+        <div className={cn("flex flex-col", gap.lg)}>
+          <Heading level={2} variant="h2">Title</Heading>
+          <Text variant="body">Content</Text>
+        </div>
+      </Container>
+    </section>
+  );
+}
+```
+
+### Card Component Pattern
+
+```typescript
+import { borderRadius, border, elevation, componentPadding, colors } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
+
+<div className={cn(
+  borderRadius.lg,
+  border.thin,
+  colors.background.elevated,
+  elevation[1],
+  componentPadding.md
+)}>
+  {/* Card content */}
+</div>
+```
+
+## Common Mistakes to Avoid
+
+### ❌ Wrong: Hardcoded Classes
+```typescript
+<div className="py-8 md:py-12 text-2xl font-bold text-gray-900 dark:text-white rounded-lg shadow-md">
+```
+
+### ✅ Correct: Design Tokens
+```typescript
+import { sectionPadding, typography, colors, borderRadius, elevation } from "@/lib/design-tokens";
+
+<div className={cn(
+  sectionPadding.md,
+  typography.h3,
+  colors.foreground.primary,
+  borderRadius.lg,
+  elevation[2]
+)}>
+```
+
+## Cursor Commands
+
+Use these commands for quick reference:
+- `/sc/spacing` - Spacing token reference
+- `/sc/typography` - Typography token reference
+- `/sc/colors` - Color token reference
+- `/sc/borders` - Border token reference
+- `/sc/shadows` - Shadow/elevation reference
+- `/sc/component` - Component template generator
+- `/sc/audit` - Design system audit checklist
+
+## Dark Mode Requirements
+
+### Mandatory Dark Mode Verification
+
+**EVERY component must be tested in both light and dark modes before completion.**
+
+### Dark Mode Checklist (MANDATORY)
+
+When implementing or updating ANY component, you MUST verify:
+
+1. ✅ **Background colors**: Use `colors.background.*` tokens (NEVER hardcode `bg-white`)
+2. ✅ **Text colors**: Use `colors.foreground.*` tokens (NEVER hardcode `text-black`)
+3. ✅ **Border colors**: Use `colors.border.*` tokens (NEVER hardcode `border-gray-200`)
+4. ✅ **Button colors**: Verify all button variants work in dark mode
+5. ✅ **Component adaptation**: Test all interactive states (hover, focus, active) in dark mode
+6. ✅ **Visual testing**: Manually verify NO white backgrounds "shine" in dark mode
+7. ✅ **Contrast**: Ensure all text is readable with proper contrast in both modes
+
+### Dark Mode Rules
+
+1. **Consistency**: All components must work identically in light and dark modes
+2. **No White Leftovers**: NEVER use `bg-white` without `dark:bg-*` equivalent
+3. **Always Use Tokens**: Use design tokens instead of hardcoded colors
+4. **Verify Everything**: Test all components in both modes before completion
+5. **Font Adaptation**: All text colors must adapt properly
+6. **Button Adaptation**: All button variants must work in dark mode
+7. **Component Adaptation**: All interactive states must work in dark mode
+
+### Dark Mode Color Mapping
+
+- Light backgrounds → Dark backgrounds: `white` → `gray-900`, `gray-50` → `gray-800`
+- Dark text → Light text: `gray-900` → `white`, `gray-700` → `gray-300`
+- Borders: `gray-200` → `gray-700`, `gray-300` → `gray-600`
+
+### Common Dark Mode Mistakes
+
+❌ **WRONG:**
+```typescript
+<div className="bg-white text-black">
+```
+
+✅ **CORRECT:**
+```typescript
+import { colors } from "@/lib/design-tokens";
+<div className={cn(colors.background.base, colors.foreground.primary)}>
+```
+
+## Migration Guidelines
+
+When updating existing components:
+
+1. **Identify hardcoded values** - Look for direct Tailwind classes
+2. **Replace with tokens** - Use appropriate design tokens
+3. **Use `cn()` utility** - Always use `cn()` for combining classes
+4. **Test responsive** - Verify breakpoints work correctly
+5. **Test dark mode** - Ensure dark mode renders properly (MANDATORY)
+6. **Verify no white leftovers** - Check for any `bg-white` without dark mode variants
+7. **Test all interactive states** - Hover, focus, active in both modes
+
+## Documentation
+
+- Main documentation: `docs/design-system.md`
+- Token definitions: `lib/design-tokens.ts`
+- Component examples: `components/ui/`

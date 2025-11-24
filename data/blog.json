@@ -9,7 +9,8 @@
             "author": "Dave Gershgorn",
             "category": "OneZero",
             "date": "Jun 14",
-            "readTime": "3 min read"
+            "readTime": "3 min read",
+            "isPremium": true
         },
         "sideArticles": [
             {
@@ -19,7 +20,8 @@
                 "author": "Alentica",
                 "category": "Police",
                 "date": "Jun 16",
-                "readTime": "7 min read"
+                "readTime": "7 min read",
+                "isPremium": false
             },
             {
                 "id": "privacy-is-just-the-beginning-of-the-debate-over-tech",
@@ -28,7 +30,8 @@
                 "author": "Otimus",
                 "category": "Startup",
                 "date": "May 15",
-                "readTime": "6 min read"
+                "readTime": "6 min read",
+                "isPremium": true
             },
             {
                 "id": "want-to-make-millions-then-act-like-a-millionaire",
@@ -38,7 +41,8 @@
                 "category": "Heated",
                 "date": "May 13",
                 "readTime": "12 min read",
-                "tag": "based on your reading history"
+                "tag": "based on your reading history",
+                "isPremium": false
             }
         ]
     },
@@ -52,7 +56,8 @@
                 "author": "Adam Philip",
                 "category": "Elemental",
                 "date": "Jan 12",
-                "readTime": "7 min read"
+                "readTime": "7 min read",
+                "isPremium": false
             },
             {
                 "id": "how-to-silence-the-persistent-ding-of-modern-life-2",
@@ -61,7 +66,8 @@
                 "author": "Aaron Gell",
                 "category": "Design",
                 "date": "Feb 18",
-                "readTime": "9 min read"
+                "readTime": "9 min read",
+                "isPremium": false
             },
             {
                 "id": "why-we-love-to-watch-2",
@@ -70,7 +76,8 @@
                 "author": "Atlantic",
                 "category": "Zora",
                 "date": "March 17",
-                "readTime": "6 min read"
+                "readTime": "6 min read",
+                "isPremium": false
             },
             {
                 "id": "how-health-apps-let-2",
@@ -79,7 +86,8 @@
                 "author": "Alentica",
                 "category": "Police",
                 "date": "Jun 14",
-                "readTime": "3 min read"
+                "readTime": "3 min read",
+                "isPremium": false
             }
         ]
     },
@@ -94,7 +102,8 @@
                 "category": "OneZero",
                 "date": "July 15",
                 "readTime": "5 min read",
-                "image": "/assets/images/thumb/thumb-800x495.jpg"
+                "image": "/assets/images/thumb/thumb-800x495.jpg",
+                "isPremium": false
             },
             {
                 "id": "why-i-stopped-chasing-success-and-started-living-intentionally",
@@ -104,7 +113,8 @@
                 "category": "Career",
                 "date": "July 25",
                 "readTime": "6 min read",
-                "image": "/assets/images/thumb/thumb-800x495-2.png"
+                "image": "/assets/images/thumb/thumb-800x495-2.png",
+                "isPremium": true
             },
             {
                 "id": "what-no-one-tells-you-about-leaving-a-job-you-were-good-at",
@@ -114,7 +124,8 @@
                 "category": "Life Transitions",
                 "date": "April 15",
                 "readTime": "6 min read",
-                "image": "/assets/images/thumb/thumb-800x495-3.png"
+                "image": "/assets/images/thumb/thumb-800x495-3.png",
+                "isPremium": false
             }
         ]
     },
@@ -128,7 +139,8 @@
                 "author": "Anna Goldfarb",
                 "category": "Fashion",
                 "date": "March 12",
-                "readTime": "4 min read"
+                "readTime": "4 min read",
+                "isPremium": false
             },
             {
                 "id": "is-interactive-storytelling-the-future-of-media-2",
@@ -138,7 +150,8 @@
                 "author": "Furukawa",
                 "category": "Programing",
                 "date": "March 14",
-                "readTime": "6 min read"
+                "readTime": "6 min read",
+                "isPremium": false
             },
             {
                 "id": "how-not-to-get-a-30k-bill-from-firebase-2",
@@ -148,7 +161,8 @@
                 "author": "Glorida",
                 "category": "Living",
                 "date": "April 14",
-                "readTime": "7 min read"
+                "readTime": "7 min read",
+                "isPremium": false
             },
             {
                 "id": "google-cant-figure-out-what-youtube-is-2",
@@ -158,7 +172,8 @@
                 "author": "Rayan Mark",
                 "category": "GEN",
                 "date": "Jun 14",
-                "readTime": "8 min read"
+                "readTime": "8 min read",
+                "isPremium": false
             }
         ],
         "ad": {
@@ -178,7 +193,8 @@
                 "category": "OneZero",
                 "date": "May 21",
                 "readTime": "5 min read",
-                "image": "/assets/images/thumb/thumb-800x495.jpg"
+                "image": "/assets/images/thumb/thumb-800x495.jpg",
+                "isPremium": true
             },
             {
                 "id": "why-lack-of-sleep-is-so-bad-for-you-1",
@@ -189,7 +205,8 @@
                 "category": "OneZero",
                 "date": "Jun 17",
                 "readTime": "3 min read",
-                "image": "/assets/images/thumb/thumb-512x512.jpg"
+                "image": "/assets/images/thumb/thumb-512x512.jpg",
+                "isPremium": false
             },
             {
                 "id": "regulators-just-put-a-target-on-apples-back-1",
@@ -200,7 +217,8 @@
                 "category": "Freedom",
                 "date": "May 12",
                 "readTime": "8 min read",
-                "image": "/assets/images/thumb/thumb-512x512-2.jpg"
+                "image": "/assets/images/thumb/thumb-512x512-2.jpg",
+                "isPremium": false
             },
             {
                 "id": "apple-is-designing-for-a-post-facebook-world-1",
@@ -211,7 +229,8 @@
                 "category": "OneZero",
                 "date": "Jun 12",
                 "readTime": "7 min read",
-                "image": "/assets/images/thumb/thumb-512x512-3.jpg"
+                "image": "/assets/images/thumb/thumb-512x512-3.jpg",
+                "isPremium": false
             },
             {
                 "id": "what-really-happens-to-airpods-when-they-die-1",
@@ -222,7 +241,8 @@
                 "category": "Lifestyle",
                 "date": "May 15",
                 "readTime": "5 min read",
-                "image": "/assets/images/thumb/thumb-512x512-4.jpg"
+                "image": "/assets/images/thumb/thumb-512x512-4.jpg",
+                "isPremium": true
             }
         ],
         "sideArticles": [
@@ -233,7 +253,8 @@
                 "category": "Fashion",
                 "date": "March 12",
                 "readTime": "4 min read",
-                "image": "/assets/images/thumb/thumb-700x512.jpg"
+                "image": "/assets/images/thumb/thumb-700x512.jpg",
+                "isPremium": false
             },
             {
                 "id": "is-interactive-storytelling-the-future-of-media-1",
@@ -242,7 +263,8 @@
                 "category": "Programing",
                 "date": "March 14",
                 "readTime": "6 min read",
-                "image": "/assets/images/thumb/thumb-700x512-2.jpg"
+                "image": "/assets/images/thumb/thumb-700x512-2.jpg",
+                "isPremium": true
             },
             {
                 "id": "how-not-to-get-a-30k-bill-from-firebase-1",
@@ -251,7 +273,8 @@
                 "category": "Living",
                 "date": "April 14",
                 "readTime": "7 min read",
-                "image": "/assets/images/thumb/thumb-700x512-3.jpg"
+                "image": "/assets/images/thumb/thumb-700x512-3.jpg",
+                "isPremium": false
             },
             {
                 "id": "google-cant-figure-out-what-youtube-is-1",
@@ -260,7 +283,8 @@
                 "category": "GEN",
                 "date": "Jun 14",
                 "readTime": "8 min read",
-                "image": "/assets/images/thumb/thumb-700x512-4.jpg"
+                "image": "/assets/images/thumb/thumb-700x512-4.jpg",
+                "isPremium": false
             },
             {
                 "id": "the-rise-of-slow-fashion-1",
@@ -269,7 +293,8 @@
                 "category": "Fashion",
                 "date": "May 5",
                 "readTime": "5 min read",
-                "image": "/assets/images/thumb/thumb-512x512-5.png"
+                "image": "/assets/images/thumb/thumb-512x512-5.png",
+                "isPremium": false
             },
             {
                 "id": "the-future-of-javascript-frameworks-1",
@@ -278,7 +303,8 @@
                 "category": "Programming",
                 "date": "May 10",
                 "readTime": "6 min read",
-                "image": "/assets/images/thumb/thumb-512x512-6.png"
+                "image": "/assets/images/thumb/thumb-512x512-6.png",
+                "isPremium": true
             },
             {
                 "id": "why-we-crave-digital-detox-1",
@@ -287,7 +313,8 @@
                 "category": "Living",
                 "date": "May 12",
                 "readTime": "4 min read",
-                "image": "/assets/images/thumb/thumb-512x512-7.png"
+                "image": "/assets/images/thumb/thumb-512x512-7.png",
+                "isPremium": true
             },
             {
                 "id": "can-ai-make-art-1",
@@ -296,7 +323,8 @@
                 "category": "GEN",
                 "date": "May 14",
                 "readTime": "7 min read",
-                "image": "/assets/images/thumb/thumb-512x512-8.png"
+                "image": "/assets/images/thumb/thumb-512x512-8.png",
+                "isPremium": false
             }
         ],
         "popular": {
@@ -309,7 +337,8 @@
                     "author": "Alentica",
                     "category": "Police",
                     "date": "May 14",
-                    "readTime": "3 min read"
+                    "readTime": "3 min read",
+                    "isPremium": false
                 },
                 {
                     "id": "how-to-silence-the-persistent-ding-of-modern-life-1",
@@ -318,7 +347,8 @@
                     "author": "Alentica",
                     "category": "Police",
                     "date": "Jun 12",
-                    "readTime": "4 min read"
+                    "readTime": "4 min read",
+                    "isPremium": false
                 },
                 {
                     "id": "why-we-love-to-watch-1",
@@ -327,7 +357,8 @@
                     "author": "Alentica",
                     "category": "Police",
                     "date": "May 15",
-                    "readTime": "5 min read"
+                    "readTime": "5 min read",
+                    "isPremium": false
                 },
                 {
                     "id": "how-health-apps-let-1",
@@ -336,7 +367,8 @@
                     "author": "Alentica",
                     "category": "Police",
                     "date": "April 27",
-                    "readTime": "6 min read"
+                    "readTime": "6 min read",
+                    "isPremium": false
                 }
             ]
         },
@@ -355,7 +387,8 @@
             "author": "Dave Gershgorn",
             "category": "OneZero",
             "date": "Jun 14",
-            "readTime": "3 min read"
+            "readTime": "3 min read",
+            "isPremium": true
         },
         "articles": [
             {
@@ -367,7 +400,8 @@
                 "category": "OneZero",
                 "date": "May 21",
                 "readTime": "5 min read",
-                "image": "/assets/images/thumb/thumb-800x495.jpg"
+                "image": "/assets/images/thumb/thumb-800x495.jpg",
+                "isPremium": true
             },
             {
                 "id": "why-lack-of-sleep-is-so-bad-for-you-1",
@@ -378,7 +412,8 @@
                 "category": "OneZero",
                 "date": "Jun 17",
                 "readTime": "3 min read",
-                "image": "/assets/images/thumb/thumb-512x512.jpg"
+                "image": "/assets/images/thumb/thumb-512x512.jpg",
+                "isPremium": false
             },
             {
                 "id": "regulators-just-put-a-target-on-apples-back-1",
@@ -389,7 +424,8 @@
                 "category": "Freedom",
                 "date": "May 12",
                 "readTime": "8 min read",
-                "image": "/assets/images/thumb/thumb-512x512-2.jpg"
+                "image": "/assets/images/thumb/thumb-512x512-2.jpg",
+                "isPremium": false
             },
             {
                 "id": "apple-is-designing-for-a-post-facebook-world-1",
@@ -400,7 +436,8 @@
                 "category": "OneZero",
                 "date": "Jun 12",
                 "readTime": "7 min read",
-                "image": "/assets/images/thumb/thumb-512x512-3.jpg"
+                "image": "/assets/images/thumb/thumb-512x512-3.jpg",
+                "isPremium": false
             },
             {
                 "id": "what-really-happens-to-airpods-when-they-die-1",
@@ -411,7 +448,8 @@
                 "category": "Lifestyle",
                 "date": "May 15",
                 "readTime": "5 min read",
-                "image": "/assets/images/thumb/thumb-512x512-4.jpg"
+                "image": "/assets/images/thumb/thumb-512x512-4.jpg",
+                "isPremium": true
             },
             {
                 "id": "why-lack-of-sleep-is-so-bad-for-you-2",
@@ -422,7 +460,8 @@
                 "category": "OneZero",
                 "date": "Jun 17",
                 "readTime": "3 min read",
-                "image": "/assets/images/thumb/thumb-512x512.jpg"
+                "image": "/assets/images/thumb/thumb-512x512.jpg",
+                "isPremium": false
             },
             {
                 "id": "regulators-just-put-a-target-on-apples-back-2",
@@ -433,7 +472,8 @@
                 "category": "Freedom",
                 "date": "May 12",
                 "readTime": "8 min read",
-                "image": "/assets/images/thumb/thumb-512x512-2.jpg"
+                "image": "/assets/images/thumb/thumb-512x512-2.jpg",
+                "isPremium": false
             }
         ],
         "sideArticles": [
@@ -444,7 +484,8 @@
                 "category": "Fashion",
                 "date": "March 12",
                 "readTime": "4 min read",
-                "image": "/assets/images/thumb/thumb-512x512.jpg"
+                "image": "/assets/images/thumb/thumb-512x512.jpg",
+                "isPremium": false
             },
             {
                 "id": "is-interactive-storytelling-the-future-of-media-1",
@@ -453,7 +494,8 @@
                 "category": "Programing",
                 "date": "March 14",
                 "readTime": "6 min read",
-                "image": "/assets/images/thumb/thumb-512x512-2.jpg"
+                "image": "/assets/images/thumb/thumb-512x512-2.jpg",
+                "isPremium": true
             },
             {
                 "id": "how-not-to-get-a-30k-bill-from-firebase-1",
@@ -462,7 +504,8 @@
                 "category": "Living",
                 "date": "April 14",
                 "readTime": "7 min read",
-                "image": "/assets/images/thumb/thumb-512x512-3.jpg"
+                "image": "/assets/images/thumb/thumb-512x512-3.jpg",
+                "isPremium": false
             },
             {
                 "id": "google-cant-figure-out-what-youtube-is-1",
@@ -471,7 +514,8 @@
                 "category": "GEN",
                 "date": "Jun 14",
                 "readTime": "8 min read",
-                "image": "/assets/images/thumb/thumb-512x512-4.jpg"
+                "image": "/assets/images/thumb/thumb-512x512-4.jpg",
+                "isPremium": false
             }
         ]
     },
@@ -487,7 +531,8 @@
             "author": "Steven Job",
             "category": "OneZero",
             "date": "July 15",
-            "readTime": "5 min read"
+            "readTime": "5 min read",
+            "isPremium": false
         },
         "articles": [
             {
@@ -498,7 +543,8 @@
                 "author": "Oliver",
                 "category": "OneZero",
                 "date": "Jun 14",
-                "readTime": "3 min read"
+                "readTime": "3 min read",
+                "isPremium": false
             },
             {
                 "id": "amanda-knox-your-content-my-life",
@@ -508,7 +554,8 @@
                 "author": "George",
                 "category": "OneZero",
                 "date": "Jun 14",
-                "readTime": "3 min read"
+                "readTime": "3 min read",
+                "isPremium": false
             },
             {
                 "id": "congress-must-act-on-regulating-deepfakes",
@@ -518,7 +565,8 @@
                 "author": "Harry",
                 "category": "OneZero",
                 "date": "Jun 14",
-                "readTime": "3 min read"
+                "readTime": "3 min read",
+                "isPremium": false
             },
             {
                 "id": "crab-oblique-in-meadowlark-lorikeet-far-giraffe",
@@ -528,7 +576,8 @@
                 "author": "Muhammad",
                 "category": "OneZero",
                 "date": "Jun 14",
-                "readTime": "3 min read"
+                "readTime": "3 min read",
+                "isPremium": false
             },
             {
                 "id": "then-slapped-laughed-pithy-gorilla-woodpecker-cuffed",
@@ -538,7 +587,8 @@
                 "author": "William",
                 "category": "OneZero",
                 "date": "Jun 14",
-                "readTime": "3 min read"
+                "readTime": "3 min read",
+                "isPremium": false
             },
             {
                 "id": "fondly-much-baboon-much-a-a-towards-at-a-over-filled-astride",
@@ -548,7 +598,8 @@
                 "author": "Henry",
                 "category": "OneZero",
                 "date": "Jun 14",
-                "readTime": "3 min read"
+                "readTime": "3 min read",
+                "isPremium": false
             },
             {
                 "id": "gnu-aurally-past-much-after-bland-therefore-locked",
@@ -558,7 +609,8 @@
                 "author": "Edward",
                 "category": "OneZero",
                 "date": "Jun 14",
-                "readTime": "3 min read"
+                "readTime": "3 min read",
+                "isPremium": false
             },
             {
                 "id": "interbred-where-over-stank-because-a-impassive-fa",
@@ -568,7 +620,8 @@
                 "author": "Isaac",
                 "category": "OneZero",
                 "date": "Jun 14",
-                "readTime": "3 min read"
+                "readTime": "3 min read",
+                "isPremium": true
             },
             {
                 "id": "played-healthy-opposite-this-as-inside-belligerent-far-habitual",
@@ -578,7 +631,8 @@
                 "author": "David Toby",
                 "category": "OneZero",
                 "date": "Jun 14",
-                "readTime": "3 min read"
+                "readTime": "3 min read",
+                "isPremium": true
             }
         ]
     },
@@ -593,7 +647,8 @@
                 "date": "May 10",
                 "readTime": "6 min read",
                 "image": "/assets/images/thumb/thumb-800x495.jpg",
-                "tag": "Editors' Pick"
+                "tag": "Editors' Pick",
+                "isPremium": true
             },
             {
                 "id": "why-side-projects-are-essential-for-growth",
@@ -603,7 +658,8 @@
                 "category": "Growth",
                 "date": "May 18",
                 "readTime": "5 min read",
-                "image": "/assets/images/thumb/thumb-512x512.jpg"
+                "image": "/assets/images/thumb/thumb-512x512.jpg",
+                "isPremium": false
             },
             {
                 "id": "mastering-remote-work-tools-and-mindset",
@@ -613,7 +669,8 @@
                 "category": "Remote Work",
                 "date": "June 2",
                 "readTime": "7 min read",
-                "image": "/assets/images/thumb/thumb-512x512-2.jpg"
+                "image": "/assets/images/thumb/thumb-512x512-2.jpg",
+                "isPremium": false
             },
             {
                 "id": "the-power-of-networking-in-tech",
@@ -623,7 +680,8 @@
                 "category": "Networking",
                 "date": "June 10",
                 "readTime": "4 min read",
-                "image": "/assets/images/thumb/thumb-512x512-3.jpg"
+                "image": "/assets/images/thumb/thumb-512x512-3.jpg",
+                "isPremium": true
             },
             {
                 "id": "balancing-learning-and-delivering-at-work",
@@ -633,7 +691,8 @@
                 "category": "Productivity",
                 "date": "June 15",
                 "readTime": "5 min read",
-                "image": "/assets/images/thumb/thumb-512x512-4.jpg"
+                "image": "/assets/images/thumb/thumb-512x512-4.jpg",
+                "isPremium": false
             },
             {
                 "id": "how-to-get-started-with-open-source",
@@ -643,7 +702,8 @@
                 "category": "Open Source",
                 "date": "June 20",
                 "readTime": "6 min read",
-                "image": "/assets/images/thumb/thumb-700x512.jpg"
+                "image": "/assets/images/thumb/thumb-700x512.jpg",
+                "isPremium": false
             },
             {
                 "id": "from-junior-to-senior-skills-that-matter",
@@ -653,7 +713,8 @@
                 "category": "Career",
                 "date": "June 25",
                 "readTime": "8 min read",
-                "image": "/assets/images/thumb/thumb-700x512-2.jpg"
+                "image": "/assets/images/thumb/thumb-700x512-2.jpg",
+                "isPremium": false
             }
         ]
     },
@@ -666,7 +727,8 @@
                 "author": "Alentica",
                 "category": "Police",
                 "date": "May 14",
-                "readTime": "3 min read"
+                "readTime": "3 min read",
+                "isPremium": false
             },
             {
                 "id": "how-to-silence-the-persistent-ding-of-modern-life",
@@ -674,7 +736,8 @@
                 "author": "Alentica",
                 "category": "Police",
                 "date": "Jun 12",
-                "readTime": "4 min read"
+                "readTime": "4 min read",
+                "isPremium": false
             },
             {
                 "id": "why-we-love-to-watch",
@@ -682,7 +745,8 @@
                 "author": "Alentica",
                 "category": "Police",
                 "date": "May 15",
-                "readTime": "5 min read"
+                "readTime": "5 min read",
+                "isPremium": false
             },
             {
                 "id": "how-health-apps-let",
@@ -690,7 +754,8 @@
                 "author": "Alentica",
                 "category": "Police",
                 "date": "April 27",
-                "readTime": "6 min read"
+                "readTime": "6 min read",
+                "isPremium": true
             }
         ]
     },
@@ -704,7 +769,8 @@
                 "category": "Programing",
                 "date": "March 14",
                 "readTime": "6 min read",
-                "image": "/assets/images/thumb/thumb-700x512.jpg"
+                "image": "/assets/images/thumb/thumb-700x512.jpg",
+                "isPremium": false
             },
             {
                 "id": "how-one-developer-got-a-30k-firebase-bill-overnight",
@@ -713,7 +779,8 @@
                 "category": "Programing",
                 "date": "March 14",
                 "readTime": "6 min read",
-                "image": "/assets/images/thumb/thumb-700x512-2.jpg"
+                "image": "/assets/images/thumb/thumb-700x512-2.jpg",
+                "isPremium": false
             },
             {
                 "id": "why-youtube-might-be-googles-most-valuable-product",
@@ -722,7 +789,8 @@
                 "category": "Programing",
                 "date": "March 14",
                 "readTime": "6 min read",
-                "image": "/assets/images/thumb/thumb-700x512-3.jpg"
+                "image": "/assets/images/thumb/thumb-700x512-3.jpg",
+                "isPremium": true
             },
             {
                 "id": "ai-coding-assistants-are-they-replacing-developers",
@@ -731,7 +799,8 @@
                 "category": "Programing",
                 "date": "March 14",
                 "readTime": "6 min read",
-                "image": "/assets/images/thumb/thumb-700x512-4.jpg"
+                "image": "/assets/images/thumb/thumb-700x512-4.jpg",
+                "isPremium": false
             },
             {
                 "id": "will-webassembly-replace-javascript",
@@ -740,7 +809,8 @@
                 "category": "Programing",
                 "date": "March 14",
                 "readTime": "6 min read",
-                "image": "/assets/images/thumb/thumb-700x512-5.jpg"
+                "image": "/assets/images/thumb/thumb-700x512-5.jpg",
+                "isPremium": false
             },
             {
                 "id": "react-vs-qwik-which-one-is-the-future-of-frontend",
@@ -749,7 +819,48 @@
                 "category": "Programing",
                 "date": "March 14",
                 "readTime": "6 min read",
-                "image": "/assets/images/thumb/thumb-700x512-6.jpg"
+                "image": "/assets/images/thumb/thumb-700x512-6.jpg",
+                "isPremium": true
+            }
+        ]
+    },
+    "podcast_section": {
+        "title": "Podcast",
+        "subtitle": "Özgün multimedya konseptleri",
+        "description": "Sesli içerik platformlarında yer alan podcast serilerimizi keşfedin",
+        "podcasts": [
+            {
+                "id": 1,
+                "title": "Modern Dünyada Hayatta Kalma Rehberi",
+                "host": {
+                    "name": "Ayhan Asar",
+                    "title": "Uzman Psikolog"
+                },
+                "platform": "Spotify",
+                "spotify_url": "https://open.spotify.com/show/2o6iDq6CsV0j3f9wESZxLN",
+                "image_url": "https://cdn.prod.website-files.com/63b053ef35937392bd426a55/67a8f0ebf06313e8cb839546_Image%206%20(2)-p-1600.webp"
+            },
+            {
+                "id": 2,
+                "title": "The Orient Brief",
+                "host": {
+                    "name": "Ahmetcan Uzlaşık",
+                    "title": "Gazeteci"
+                },
+                "platform": "Spotify",
+                "spotify_url": "https://open.spotify.com/show/3b7rzqJvPw6pqk9V8Y1ODj",
+                "image_url": "https://cdn.prod.website-files.com/63b053ef35937392bd426a55/67a8f33fdf038bad96bfebe0_Image%208-p-1600.webp"
+            },
+            {
+                "id": 3,
+                "title": "Sadece Yarın",
+                "host": {
+                    "name": "Alara Al",
+                    "title": "Yapay zekâ asistanı"
+                },
+                "platform": "Spotify",
+                "spotify_url": "https://open.spotify.com/show/320ZEvNZwCxSlFyBLWhFtw",
+                "image_url": "https://cdn.prod.website-files.com/63b053ef35937392bd426a55/67a8f399b5f5590dfe43a348_Image%207%20(1)-p-1600.webp"
             }
         ]
     }

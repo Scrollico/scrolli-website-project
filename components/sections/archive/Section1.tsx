@@ -4,6 +4,21 @@ import blogData from '@/data/blog.json';
 import Pagination from '@/components/elements/Pagination';
 import { useState } from 'react';
 import Image from 'next/image';
+import { 
+  sectionPadding, 
+  componentPadding,
+  gap,
+  colors,
+  borderRadius,
+  elevationHover,
+  surface,
+  transition
+} from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
+import { Heading, Text } from "@/components/ui/typography";
+import { Container } from "@/components/responsive";
+import ArticleMeta from './ArticleMeta';
+import ArticleCard from './ArticleCard';
 
 export default function Section1() {
   const { theStartup } = blogData;
@@ -13,6 +28,8 @@ export default function Section1() {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
+    // Optional: smooth scroll to top of section
+    // window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const startIdx = (currentPage - 1) * articlesPerPage;
@@ -21,113 +38,116 @@ export default function Section1() {
 
   return (
     <>
-      <div className="content-widget">
-        <div className="container">
-          {/*Begin Archive Header*/}
-          <div className="row">
-            <div className="col-12 archive-header text-center pt-3 pb-3">
-              <h1 className="mb-3">{theStartup.title}</h1>
-              <p className="archive-intro">{theStartup.description}</p>
+      {/* Main Archive Section */}
+      <section className={cn(sectionPadding.md, colors.background.base)}>
+        <Container>
+          {/* Archive Header */}
+          <header className={cn("text-center max-w-4xl mx-auto mb-12 flex flex-col", gap.sm)}>
+              <Heading level={1} variant="h1">
+                {theStartup.title}
+              </Heading>
+              <Text variant="body" color="secondary" className="max-w-2xl mx-auto">
+                {theStartup.description}
+              </Text>
+          </header>
+
+          <div className={cn("w-full h-px my-12 bg-gray-200 dark:bg-gray-700")} />
+
+          {/* Featured Post */}
+          <div className={cn(
+            "grid grid-cols-1 md:grid-cols-2 overflow-hidden mb-16", 
+            surface.raised,
+            borderRadius.lg,
+            transition.normal,
+            elevationHover[2],
+            "border border-transparent hover:border-gray-200 dark:hover:border-gray-700 group"
+          )}>
+            <Link href={`/article/${theStartup.mainArticle.id}`} className="relative w-full min-h-[300px] md:min-h-[400px] overflow-hidden">
+               <Image 
+                 src={theStartup.mainArticle.image}
+                 alt={theStartup.mainArticle.title}
+                 fill
+                 className="object-cover transition-transform duration-500 group-hover:scale-105"
+                 priority
+                 sizes="(max-width: 768px) 100vw, 50vw"
+               />
+            </Link>
+            <div className={cn("flex flex-col justify-center", componentPadding.lg, gap.md)}>
+                <Text variant="caption" color="muted" className="uppercase tracking-wider font-medium">
+                  {theStartup.mainArticle.tag}
+                </Text>
+                <Heading level={2} variant="h2">
+                  <Link href={`/article/${theStartup.mainArticle.id}`} className={cn(colors.foreground.interactive, "hover:underline")}>
+                    {theStartup.mainArticle.title}
+                  </Link>
+                </Heading>
+                <Text variant="body" color="secondary" className="line-clamp-3">
+                    {theStartup.mainArticle.excerpt}
+                </Text>
+                
+                <div className="pt-6 mt-2 border-t border-gray-100 dark:border-gray-700">
+                    <ArticleMeta 
+                        author={theStartup.mainArticle.author}
+                        category={theStartup.mainArticle.category}
+                        date={theStartup.mainArticle.date}
+                        readTime={theStartup.mainArticle.readTime}
+                    />
+                </div>
             </div>
           </div>
-          <div className="divider" />
-          {/*End Archive Header*/}
-          {/*Begin Featured Post*/}
-          <div className="row justify-content-between post-has-bg ml-0 mr-0">
-            <div
-              className="col-lg-6 col-md-4 bgcover d-none d-md-block pl-md-0 ml-0"
-              style={{
-                backgroundImage: `url(${theStartup.mainArticle.image})`,
-                minHeight: 400,
-              }}
-            />
-            <div className="col-lg-6 col-md-8">
-              <div className="pt-5 pb-5 ps-md-5 pe-5 align-self-center">
-                <div className="capsSubtle mb-2">{theStartup.mainArticle.tag}</div>
-                <h2 className="entry-title mb-3">
-                  <Link href={`/article/${theStartup.mainArticle.id}`}>{theStartup.mainArticle.title}</Link>
-                </h2>
-                <div className="entry-excerpt">
-                  <p>{theStartup.mainArticle.excerpt}</p>
-                </div>
-                <div className="entry-meta align-items-center">
-                  <Link href="/author">{theStartup.mainArticle.author}</Link> in <Link href="/archive">{theStartup.mainArticle.category}</Link>
-                  <br />
-                  <span>{theStartup.mainArticle.date}</span>
-                  <span className="middotDivider" />
-                  <span className="readingTime" title={theStartup.mainArticle.readTime}>
-                    {theStartup.mainArticle.readTime}
-                  </span>
-                  <span className="svgIcon svgIcon--star">
-                    <svg className="svgIcon-use" width={15} height={15}>
-                      <path d="M7.438 2.324c.034-.099.09-.099.123 0l1.2 3.53a.29.29 0 0 0 .26.19h3.884c.11 0 .127.049.038.111L9.8 8.327a.271.271 0 0 0-.099.291l1.2 3.53c.034.1-.011.131-.098.069l-3.142-2.18a.303.303 0 0 0-.32 0l-3.145 2.182c-.087.06-.132.03-.099-.068l1.2-3.53a.271.271 0 0 0-.098-.292L2.056 6.146c-.087-.06-.071-.112.038-.112h3.884a.29.29 0 0 0 .26-.19l1.2-3.52z" />
-                    </svg>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="divider" />
-          {/*End Featured Post*/}
-          <div className="row">
+
+          <div className={cn("w-full h-px my-12 bg-gray-200 dark:bg-gray-700")} />
+
+          {/* Article Grid */}
+          <div className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3", gap.lg)}>
             {paginatedArticles.map((article, idx) => (
-              <article key={idx} className="post-list-style-2 mb-5 col-md-4">
-                <Link href={`/article/${article.id}`}>
-                  <figure
-                    className="bgcover d-none d-md-block"
-                    style={{
-                      backgroundImage: `url(${article.image})`,
-                      minHeight: 200,
-                    }}
-                  />
-                </Link>
-                <h3 className="entry-title mb-3">
-                  <Link href={`/article/${article.id}`}>{article.title}</Link>
-                </h3>
-                <div className="entry-excerpt">
-                  <p>{article.excerpt}</p>
-                </div>
-                <div className="entry-meta align-items-center">
-                  <Link href="/author">{article.author}</Link> in <Link href="/archive">{article.category}</Link>
-                  <br />
-                  <span>{article.date}</span>
-                  <span className="middotDivider" />
-                  <span className="readingTime" title={article.readTime}>
-                    {article.readTime}
-                  </span>
-                  <span className="svgIcon svgIcon--star">
-                    <svg className="svgIcon-use" width={15} height={15}>
-                      <path d="M7.438 2.324c.034-.099.09-.099.123 0l1.2 3.53a.29.29 0 0 0 .26.19h3.884c.11 0 .127.049.038.111L9.8 8.327a.271.271 0 0 0-.099.291l1.2 3.53c.034.1-.011.131-.098.069l-3.142-2.18a.303.303 0 0 0-.32 0l-3.145 2.182c-.087.06-.132.03-.099-.068l1.2-3.53a.271.271 0 0 0-.098-.292L2.056 6.146c-.087-.06-.071-.112.038-.112h3.884a.29.29 0 0 0 .26-.19l1.2-3.52z" />
-                    </svg>
-                  </span>
-                </div>
-              </article>
+              <ArticleCard 
+                key={article.id || idx}
+                id={article.id}
+                title={article.title}
+                excerpt={article.excerpt}
+                image={article.image}
+                author={article.author}
+                category={article.category}
+                date={article.date}
+                readTime={article.readTime}
+              />
             ))}
+          </div>
+          
+          <div className="mt-16">
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={handlePageChange}
             />
           </div>
-        </div>
-        {/*content-widget*/}
-      </div>
-      <div className="content-widget">
-        <div className="container">
-          <div className="sidebar-widget ads">
+
+        </Container>
+      </section>
+
+      {/* Ads Section */}
+      <section className={cn(sectionPadding.md, colors.background.base)}>
+        <Container>
+          <div className={cn(
+              "flex justify-center items-center overflow-hidden",
+              surface.raised,
+              componentPadding.md,
+              borderRadius.lg
+          )}>
             <Link href="#">
               <Image
                 src="/assets/images/ads/ads-2.png"
-                alt="ads"
+                alt="Advertisement"
                 width={600}
                 height={71}
+                className="max-w-full h-auto"
               />
             </Link>
           </div>
-          <div className="hr" />
-        </div>
-      </div>
-      {/*content-widget*/}
+          <div className={cn("w-full h-px mt-12 bg-gray-200 dark:bg-gray-700")} />
+        </Container>
+      </section>
     </>
   );
 }

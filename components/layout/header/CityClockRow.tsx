@@ -49,14 +49,21 @@ const getClockState = (timeZone: string, date: Date) => {
 };
 
 const useCurrentTime = () => {
-  const [now, setNow] = useState(() => new Date());
+  // Start with null to ensure server and client render match
+  const [now, setNow] = useState<Date | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // Set mounted flag and initial time after hydration
+    setMounted(true);
+    setNow(new Date());
+    
     const timer = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  return now;
+  // Return a static date during SSR/initial render to prevent hydration mismatch
+  return mounted && now ? now : new Date(0);
 };
 
 export default function CityClockRow() {
@@ -85,10 +92,12 @@ export default function CityClockRow() {
             <span
               className="header-clock__hand header-clock__hand--hour"
               style={{ transform: `rotate(${city.hourAngle}deg)` }}
+              suppressHydrationWarning
             />
             <span
               className="header-clock__hand header-clock__hand--minute"
               style={{ transform: `rotate(${city.minuteAngle}deg)` }}
+              suppressHydrationWarning
             />
           </div>
         </div>

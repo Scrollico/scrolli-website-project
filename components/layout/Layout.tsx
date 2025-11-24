@@ -10,10 +10,9 @@ import StickyNav from "./header/StickyNav";
 interface LayoutProps {
   children?: React.ReactNode;
   classList?: string;
-  onNewsletterClick?: () => void;
 }
 
-export default function Layout({ classList, children, onNewsletterClick }: LayoutProps) {
+export default function Layout({ classList, children }: LayoutProps) {
   const [scroll, setScroll] = useState<boolean>(false);
   // Mobile Menu
   const [isMobileMenu, setMobileMenu] = useState<boolean>(false);
@@ -47,7 +46,7 @@ export default function Layout({ classList, children, onNewsletterClick }: Layou
         <div id="wrapper">
           {/* Site Header with navigation */}
           <header role="banner">
-            <Header onNewsletterClick={onNewsletterClick} />
+            <Header />
           </header>
 
           {/* Sticky Navbar */}

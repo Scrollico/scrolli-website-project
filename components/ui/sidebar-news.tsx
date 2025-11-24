@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useIsMobile } from "@/hooks/use-media-query";
 import { cn, gradientVariants } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
+import { colors } from "@/lib/design-tokens";
 
 export interface NewsArticle {
   href: string;
@@ -239,9 +240,12 @@ function NewsCard({
     <Card
       ref={ref}
       className={cn(
-        "relative select-none gap-2 p-3 text-[0.8125rem] bg-white",
+        "relative select-none gap-2 p-3 text-[0.8125rem]",
+        colors.background.base,
+        "dark:!bg-[#374152]", // Force dark background - white text needs dark bg
         "translate-x-[calc(var(--dx)*1px)] rotate-[calc(var(--dx)*0.05deg)] opacity-[calc(1-max(var(--dx),-1*var(--dx))/var(--w)/2)]",
-        "border border-neutral-200",
+        colors.border.DEFAULT,
+        "border",
         // Responsive sizing to prevent overflow
         "w-full max-w-full h-auto",
         "sm:p-4 sm:text-sm",
@@ -249,6 +253,7 @@ function NewsCard({
       )}
       data-dragging={dragging}
       data-active={active}
+      data-news-card="true"
       onPointerDown={onPointerDown}
       onClick={onClick}
     >
@@ -256,19 +261,17 @@ function NewsCard({
       <div className={`absolute inset-0 ${gradientVariants.textOverlay} opacity-20 pointer-events-none rounded`} />
       <div className={cn("relative flex flex-col h-full z-10", hideContent && "opacity-0")}>
         {/* 1. Title */}
-        <h3 className="line-clamp-1 font-medium text-foreground mb-1 text-sm sm:text-sm md:text-base">
+        <h3 className={cn("line-clamp-1 font-medium mb-1 text-sm sm:text-sm md:text-base", colors.foreground.primary, "dark:!text-gray-900")}>
           {title}
         </h3>
 
         {/* 2. Subtitle */}
-        <p className="line-clamp-2 text-xs leading-4 text-muted-foreground mb-2 sm:mb-3 flex-shrink-0
-          sm:text-xs md:text-sm">
+        <p className={cn("line-clamp-2 text-xs leading-4 mb-2 sm:mb-3 flex-shrink-0 sm:text-xs md:text-sm", colors.foreground.secondary, "dark:!text-gray-900")}>
           {description}
         </p>
         
         {/* 3. Image */}
-        <div className="relative mt-auto aspect-[16/9] w-full shrink-0 overflow-hidden rounded border bg-muted
-          max-h-[120px] sm:max-h-[140px] md:max-h-[160px] lg:max-h-[180px]">
+        <div className={cn("relative mt-auto aspect-[16/9] w-full shrink-0 overflow-hidden rounded border max-h-[120px] sm:max-h-[140px] md:max-h-[160px] lg:max-h-[180px]", colors.surface.elevated, colors.border.DEFAULT)}>
           {image && (
             <>
               <Image
@@ -288,7 +291,8 @@ function NewsCard({
         {/* 4. Read more + Dismiss (appear on hover) */}
         <div
           className={cn(
-            "absolute bottom-0 left-0 right-0 overflow-hidden transition-[height,opacity] duration-200 z-20 bg-white",
+            "absolute bottom-0 left-0 right-0 overflow-hidden transition-[height,opacity] duration-200 z-20",
+            colors.background.base,
             "h-0 opacity-0",
             active && "group-hover:h-8 group-hover:opacity-100 group-hover:pt-2",
             "group-has-[*[data-dragging=true]]:h-8 group-has-[*[data-dragging=true]]:opacity-100 group-has-[*[data-dragging=true]]:pt-2"
@@ -298,14 +302,14 @@ function NewsCard({
             <Link
               href={href || "https://alara.scrolli.co"}
               target="_blank"
-              className="font-medium text-gray-700 hover:!text-gray-700 hover:!no-underline"
+              className={cn("font-medium hover:!no-underline transition-colors", colors.foreground.primary, "dark:!text-gray-900", "hover:text-primary")}
             >
               Read more
             </Link>
             <button
               type="button"
               onClick={dismiss}
-              className="text-gray-700 hover:!text-gray-700 cursor-pointer"
+              className={cn("cursor-pointer transition-colors", colors.foreground.primary, "dark:!text-gray-900", "hover:text-primary")}
             >
               Dismiss
             </button>

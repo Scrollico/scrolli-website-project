@@ -4,6 +4,22 @@ import blogData from '@/data/blog.json';
 import Pagination from '@/components/elements/Pagination';
 import { useState } from 'react';
 import Image from 'next/image';
+import { Facebook, Twitter, Instagram } from 'lucide-react';
+import { Container } from '@/components/responsive';
+import { Heading, Text } from '@/components/ui/typography';
+import { SectionHeader } from '@/components/ui/SectionHeader';
+import { Badge } from '@/components/ui/badge';
+import { 
+  sectionPadding, 
+  gap, 
+  componentPadding, 
+  colors, 
+  borderRadius, 
+  border,
+  elevation,
+  typography
+} from '@/lib/design-tokens';
+import { cn } from '@/lib/utils';
 
 export default function Section1() {
   const { RyanMarkPosts, hightlightPosts } = blogData;
@@ -12,7 +28,23 @@ export default function Section1() {
   const totalPages = Math.ceil(RyanMarkPosts.articles.length / articlesPerPage);
 
   const handlePageChange = (page: number) => {
+    // Save scroll position before state update
+    const scrollPosition = window.scrollY;
     setCurrentPage(page);
+    // Restore scroll position after state update
+    requestAnimationFrame(() => {
+      window.scrollTo({
+        top: scrollPosition,
+        behavior: 'instant' as ScrollBehavior
+      });
+      // Double check after render
+      setTimeout(() => {
+        window.scrollTo({
+          top: scrollPosition,
+          behavior: 'instant' as ScrollBehavior
+        });
+      }, 0);
+    });
   };
 
   const startIdx = (currentPage - 1) * articlesPerPage;
@@ -21,114 +53,233 @@ export default function Section1() {
 
   return (
     <>
-      <div className="content-widget">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-8">
-              <div className="box box-author m_b_2rem">
-                <div className="post-author row-flex">
-                  <div className="author-img">
-                    <Image
-                      alt="author avatar"
-                      src="/assets/images/author-avata-1.jpg"
-                      className="avatar"
-                      width={106}
-                      height={106}
-                    />
+      <section className={sectionPadding.md}>
+        <Container>
+          <div className={cn("grid grid-cols-1 lg:grid-cols-12", gap.lg)}>
+            {/* Main Content - 8 columns */}
+            <div className="lg:col-span-8">
+              {/* Author Box */}
+              <div className={cn(
+                borderRadius.lg,
+                border.thin,
+                colors.background.elevated,
+                elevation[1],
+                componentPadding.lg,
+                "mb-8 md:mb-12"
+              )}>
+                <div className={cn("flex flex-col md:flex-row", gap.md)}>
+                  <div className="flex-shrink-0">
+                    <div className="relative">
+                      <Image
+                        alt="author avatar"
+                        src="/assets/images/author-avata-1.jpg"
+                        className={cn(
+                          borderRadius.full,
+                          border.thin,
+                          "border-4",
+                          colors.border.light
+                        )}
+                        width={106}
+                        height={106}
+                      />
+                    </div>
                   </div>
-                  <div className="author-content">
-                    <div className="top-author">
-                      <h5 className="heading-font">
-                        <Link href="/author" title="Ryan" rel="author">
+                  <div className="flex-1 min-w-0">
+                    <div className={cn("mb-4")}>
+                      <Heading level={5} variant="h5">
+                        <Link 
+                          href="/author" 
+                          title="Ryan" 
+                          rel="author"
+                          className={cn(
+                            colors.foreground.primary,
+                            colors.foreground.interactive,
+                            "transition-colors"
+                          )}
+                        >
                           Ryan Mark
                         </Link>
-                      </h5>
+                      </Heading>
                     </div>
-                    <p className="d-none d-md-block">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse laoreet ut ligula et semper. Aenean consectetur, est id gravida venenatis.</p>
-                    <div className="content-social-author">
-                      <Link target="_blank" className="author-social" href="https://www.facebook.com">
-                        Facebook
+                    <Text 
+                      variant="body" 
+                      color="secondary" 
+                      className="hidden md:block mb-4"
+                    >
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse laoreet ut ligula et semper. Aenean consectetur, est id gravida venenatis.
+                    </Text>
+                    <div className={cn("flex flex-wrap items-center", gap.md)}>
+                      <Link 
+                        target="_blank" 
+                        className={cn(
+                          colors.foreground.secondary,
+                          colors.foreground.interactive,
+                          "transition-colors",
+                          "flex items-center"
+                        )}
+                        href="https://www.facebook.com"
+                        aria-label="Facebook"
+                      >
+                        <Facebook className="w-5 h-5" />
                       </Link>
-                      <Link target="_blank" className="author-social" href="https://www.twitter.com">
-                        Twitter
+                      <Link 
+                        target="_blank" 
+                        className={cn(
+                          colors.foreground.secondary,
+                          colors.foreground.interactive,
+                          "transition-colors",
+                          "flex items-center"
+                        )}
+                        href="https://www.twitter.com"
+                        aria-label="Twitter"
+                      >
+                        <Twitter className="w-5 h-5" />
                       </Link>
-                      <Link target="_blank" className="author-social" href="https://www.instagram.com">
-                        Instagram
+                      <Link 
+                        target="_blank" 
+                        className={cn(
+                          colors.foreground.secondary,
+                          colors.foreground.interactive,
+                          "transition-colors",
+                          "flex items-center"
+                        )}
+                        href="https://www.instagram.com"
+                        aria-label="Instagram"
+                      >
+                        <Instagram className="w-5 h-5" />
                       </Link>
                     </div>
                   </div>
                 </div>
               </div>
-              <h4 className="spanborder">
-                <span>Latest Posts</span>
-              </h4>
-              {paginatedArticles.map((article, idx) => (
-                <article key={idx} className="row justify-content-between mb-5 mr-0">
-                  <div className="col-md-9 ">
-                    <div className="align-self-center">
-                      {article.tag && <div className="capsSubtle mb-2">{article.tag}</div>}
-                      <h3 className="entry-title mb-3">
-                        <Link href={`/article/${article.id}`}>{article.title}</Link>
-                      </h3>
-                      <div className="entry-excerpt">
-                        <p>{article.excerpt}</p>
-                      </div>
-                      <div className="entry-meta align-items-center">
-                        <Link href="/author">{article.author}</Link> in <Link href="/archive">{article.category}</Link>
-                        <br />
-                        <span>{article.date}</span>
-                        <span className="middotDivider" />
-                        <span className="readingTime" title={article.readTime}>
-                          {article.readTime}
-                        </span>
-                        <span className="svgIcon svgIcon--star">
-                          <svg className="svgIcon-use" width={15} height={15}>
-                            <path d="M7.438 2.324c.034-.099.09-.099.123 0l1.2 3.53a.29.29 0 0 0 .26.19h3.884c.11 0 .127.049.038.111L9.8 8.327a.271.271 0 0 0-.099.291l1.2 3.53c.034.1-.011.131-.098.069l-3.142-2.18a.303.303 0 0 0-.32 0l-3.145 2.182c-.087.06-.132.03-.099-.068l1.2-3.53a.271.271 0 0 0-.098-.292L2.056 6.146c-.087-.06-.071-.112.038-.112h3.884a.29.29 0 0 0 .26-.19l1.2-3.52z" />
-                          </svg>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className="col-md-3 bgcover"
-                    style={{
-                      backgroundImage: `url(${article.image})`,
-                    }}
-                  />
-                </article>
-              ))}
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-              />
-            </div>
-            {/*col-md-8*/}
-            <div className="col-md-4 pl-md-5 sticky-sidebar">
-              <div className="sidebar-widget latest-tpl-4">
-                <h5 className="spanborder widget-title">
-                  <span>{hightlightPosts.title}</span>
-                </h5>
-                <ol>
-                  {hightlightPosts.articles.map((article, index) => (
-                    <li key={index} className="d-flex">
-                      <div className="post-count">{(index + 1).toString().padStart(2, '0')}</div>
-                      <div className="post-content">
-                        <h5 className="entry-title mb-3">
-                          <Link href={`/article/${article.id}`}>{article.title}</Link>
-                        </h5>
-                        <div className="entry-meta align-items-center">
-                          <Link href="/author">{article.author}</Link> in <Link href="/archive">{article.category}</Link>
-                          <br />
+
+              {/* Latest Posts Section */}
+              <div className="mb-8 md:mb-12">
+                <SectionHeader 
+                  title="Latest Posts"
+                  level={4}
+                  variant="h4"
+                />
+              </div>
+
+              {/* Articles List */}
+              <div className={cn("flex flex-col", gap.lg)}>
+                {paginatedArticles.map((article, idx) => (
+                  <article 
+                    key={idx} 
+                    className={cn(
+                      "flex flex-col md:flex-row",
+                      gap.md,
+                      "pb-6 md:pb-8",
+                      idx < paginatedArticles.length - 1 && "border-b",
+                      colors.border.DEFAULT
+                    )}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className={cn("flex flex-col", gap.sm)}>
+                        {article.tag && (
+                          <Badge variant="secondary" appearance="default" className="self-start">
+                            {article.tag}
+                          </Badge>
+                        )}
+                        <Heading level={3} variant="h3" className="mb-2">
+                          <Link 
+                            href={`/article/${article.id}`}
+                            className={cn(
+                              colors.foreground.primary,
+                              colors.foreground.interactive,
+                              "transition-colors"
+                            )}
+                          >
+                            {article.title}
+                          </Link>
+                        </Heading>
+                        <Text variant="body" color="secondary" className="mb-4">
+                          {article.excerpt}
+                        </Text>
+                        <div className={cn("flex flex-wrap items-center", gap.sm, typography.caption, colors.foreground.muted)}>
                           <span>{article.date}</span>
-                          <span className="middotDivider" />
                           <span className="readingTime" title={article.readTime}>
                             {article.readTime}
                           </span>
-                          <span className="svgIcon svgIcon--star">
-                            <svg className="svgIcon-use" width={15} height={15}>
-                              <path d="M7.438 2.324c.034-.099.09-.099.123 0l1.2 3.53a.29.29 0 0 0 .26.19h3.884c.11 0 .127.049.038.111L9.8 8.327a.271.271 0 0 0-.099.291l1.2 3.53c.034.1-.011.131-.098.069l-3.142-2.18a.303.303 0 0 0-.32 0l-3.145 2.182c-.087.06-.132.03-.099-.068l1.2-3.53a.271.271 0 0 0-.098-.292L2.056 6.146c-.087-.06-.071-.112.038-.112h3.884a.29.29 0 0 0 .26-.19l1.2-3.52z" />
-                            </svg>
+                        </div>
+                      </div>
+                    </div>
+                    <div 
+                      className={cn(
+                        "w-full md:w-32 lg:w-40 flex-shrink-0",
+                        "aspect-[4/3] md:aspect-square",
+                        borderRadius.md,
+                        "overflow-hidden",
+                        "bg-cover bg-center"
+                      )}
+                      style={{
+                        backgroundImage: `url(${article.image})`,
+                      }}
+                    />
+                  </article>
+                ))}
+              </div>
+
+              {/* Pagination */}
+              <div className="mt-8 md:mt-12">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              </div>
+            </div>
+
+            {/* Sidebar - 4 columns */}
+            <aside className="lg:col-span-4 lg:pl-8">
+              <div className={cn(
+                borderRadius.lg,
+                border.thin,
+                colors.background.elevated,
+                elevation[1],
+                componentPadding.md,
+                "sticky top-4"
+              )}>
+                <div className="mb-6">
+                  <SectionHeader 
+                    title={hightlightPosts.title}
+                    level={5}
+                    variant="h5"
+                  />
+                </div>
+                <ol className={cn("flex flex-col", gap.md)}>
+                  {hightlightPosts.articles.map((article, index) => (
+                    <li key={index} className={cn("flex", gap.md)}>
+                      <div className={cn(
+                        "flex-shrink-0",
+                        "w-8 h-8",
+                        "flex items-center justify-center",
+                        borderRadius.md,
+                        colors.background.base,
+                        colors.foreground.primary,
+                        typography.bodySmall,
+                        "font-semibold"
+                      )}>
+                        {(index + 1).toString().padStart(2, '0')}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <Heading level={5} variant="h5" className="mb-2">
+                          <Link 
+                            href={`/article/${article.id}`}
+                            className={cn(
+                              colors.foreground.primary,
+                              colors.foreground.interactive,
+                              "transition-colors"
+                            )}
+                          >
+                            {article.title}
+                          </Link>
+                        </Heading>
+                        <div className={cn("flex flex-wrap items-center", gap.sm, typography.caption, colors.foreground.muted)}>
+                          <span>{article.date}</span>
+                          <span className="readingTime" title={article.readTime}>
+                            {article.readTime}
                           </span>
                         </div>
                       </div>
@@ -136,28 +287,32 @@ export default function Section1() {
                   ))}
                 </ol>
               </div>
-            </div>
-            {/*col-md-4*/}
+            </aside>
           </div>
-        </div>
-        {/*content-widget*/}
-      </div>
-      <div className="content-widget">
-        <div className="container">
-          <div className="sidebar-widget ads">
-            <Link href="#">
+        </Container>
+      </section>
+
+      {/* Ads Section */}
+      <section className={sectionPadding.sm}>
+        <Container>
+          <div className={cn(
+            "flex justify-center",
+            "pb-8",
+            "border-b",
+            colors.border.DEFAULT
+          )}>
+            <Link href="#" className="block">
               <Image
                 src="/assets/images/ads/ads-2.png"
                 alt="ads"
                 width={600}
                 height={71}
+                className="w-full max-w-full h-auto"
               />
             </Link>
           </div>
-          <div className="hr" />
-        </div>
-      </div>
-      {/*content-widget*/}
+        </Container>
+      </section>
     </>
   );
 }

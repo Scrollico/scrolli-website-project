@@ -1,6 +1,6 @@
-# Serena MCP Integration for Merinda
+# Serena MCP Integration for Scrolli
 
-This document explains how to use Serena MCP (Model Context Protocol) server with your Merinda Next.js project.
+This document explains how to use Serena MCP (Model Context Protocol) server with your Scrolli Next.js project.
 
 ## What is Serena?
 
@@ -22,11 +22,13 @@ Serena has been installed and configured for your project. Here's what was set u
 You have two options to start the Serena MCP server:
 
 #### Option 1: Using the provided script
+
 ```bash
 ./start-serena.sh
 ```
 
 #### Option 2: Manual command
+
 ```bash
 /Users/nihatavci/serena/.venv/bin/serena start-mcp-server --project .
 ```
@@ -43,6 +45,7 @@ Once the MCP server is running, Serena tools will be available in Cursor. The se
 ### Available Tools
 
 Serena provides many tools including:
+
 - `find_symbol`: Search for symbols by name
 - `find_referencing_symbols`: Find where symbols are referenced
 - `get_symbols_overview`: Get overview of symbols in a file
@@ -56,6 +59,7 @@ Serena provides many tools including:
 ### Project Configuration (.serena/project.yml)
 
 Your project is configured for TypeScript development with the following settings:
+
 - Language: TypeScript (supports your Next.js/React code)
 - Encoding: UTF-8
 - Git ignore integration: Enabled
@@ -63,21 +67,24 @@ Your project is configured for TypeScript development with the following setting
 
 ### MCP Server Configuration
 
-Serena is configured in `~/.cursor/mcp.json` and will automatically start when Cursor loads projects in the merinda directory.
+Serena is configured in `~/.cursor/mcp.json` and will automatically start when Cursor loads projects in the scrolli directory.
 
 ## Troubleshooting
 
 ### Server Won't Start
+
 - Ensure you're in the project root directory
 - Check that Python and uv are properly installed
 - Verify the project.yml file exists
 
 ### Tools Not Available in Cursor
+
 - Make sure the MCP server is running
 - Restart Cursor after configuration changes
 - Check Cursor logs for MCP connection errors
 
 ### Language Server Issues
+
 - Serena uses TypeScript language server for your Next.js code
 - If you encounter issues, try restarting the language server with the `restart_language_server` tool
 
@@ -86,6 +93,7 @@ Serena is configured in `~/.cursor/mcp.json` and will automatically start when C
 ### Custom Contexts and Modes
 
 Serena supports different contexts and modes for specialized workflows:
+
 - `desktop-app`: Default context with shell command execution
 - `editing`: Mode focused on code editing operations
 - `interactive`: Mode for conversational interactions
@@ -93,6 +101,7 @@ Serena supports different contexts and modes for specialized workflows:
 ### Memory System
 
 Serena has a built-in memory system for storing project-specific information:
+
 - Use `write_memory` to store important information
 - Use `read_memory` to retrieve stored information
 - Use `list_memories` to see all stored memories

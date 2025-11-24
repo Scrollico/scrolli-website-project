@@ -1,11 +1,13 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { containerPadding, type ContainerPadding } from "@/lib/design-tokens";
 import { ReactNode } from "react";
 
 interface ContainerProps {
   children: ReactNode;
   size?: "sm" | "md" | "lg" | "xl" | "full";
+  padding?: ContainerPadding;
   className?: string;
   center?: boolean;
 }
@@ -21,13 +23,15 @@ const sizeClasses = {
 export function Container({
   children,
   size = "lg",
+  padding = "md",
   className,
   center = true
 }: ContainerProps) {
   return (
     <div
       className={cn(
-        "w-full px-4 sm:px-6 lg:px-8",
+        "w-full",
+        containerPadding[padding],
         center && "mx-auto",
         sizeClasses[size],
         className

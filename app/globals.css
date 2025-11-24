@@ -5,10 +5,38 @@
 @layer base {
   :root {
     --offset: 10px;
+    --destructive-foreground: 0 0% 100%; /* white */
+    --primary-fill: #374152; /* Primary color for light mode */
   }
 
   .dark {
     --offset: 10px;
+    --destructive-foreground: 0 0% 100%; /* white */
+    --primary-fill: #374152; /* Primary color for dark mode */
+  }
+
+  /* Prevent horizontal overflow globally */
+  html,
+  body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  /* Performance optimizations */
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Optimize rendering */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* GPU acceleration for animations */
+  [data-animate] {
+    will-change: transform, opacity;
+    transform: translateZ(0);
   }
 }
 
@@ -62,6 +90,23 @@ article img,
 
 figure {
   display: block;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure images with fill prop cover the entire container */
+figure[class*="relative"] > span,
+figure[class*="relative"] > div {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+figure[class*="relative"] img {
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 /* Fix image loading issues */
@@ -90,4 +135,342 @@ img[data-nimg] {
 
 .dark .podcast-pagination .swiper-pagination-bullet-active {
   background: #f9fafb;
+}
+
+/* Swipe demonstration animation for articles section */
+.articles-swiper {
+  width: 100% !important;
+  overflow: hidden !important;
+}
+
+.articles-swiper .swiper-wrapper {
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+.articles-swiper .swiper-container {
+  width: 100% !important;
+  overflow: hidden !important;
+}
+
+/* Prevent horizontal overflow from Swiper */
+.articles-swiper,
+.articles-swiper .swiper,
+.articles-swiper .swiper-container {
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+/* Override blue background from color-default.css for tab buttons */
+[role="tab"],
+[role="tab"]:hover,
+[role="tab"]:active,
+[role="tab"]:focus,
+button[role="tab"],
+button[role="tab"]:hover,
+button[role="tab"]:active,
+button[role="tab"]:focus,
+.dark-mode [role="tab"]:hover,
+.dark-mode button[role="tab"]:hover {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Override blue background from color-default.css for "Take me back to the news" button only */
+[data-newsletter-popup] button[data-back-to-news],
+[data-newsletter-popup] button[data-back-to-news]:hover,
+[data-newsletter-popup] button[data-back-to-news]:active,
+[data-newsletter-popup] button[data-back-to-news]:focus {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: rgb(55, 65, 82) !important; /* gray-700 */
+  border: none !important;
+}
+
+.dark-mode [data-newsletter-popup] button[data-back-to-news],
+.dark-mode [data-newsletter-popup] button[data-back-to-news]:hover,
+.dark-mode [data-newsletter-popup] button[data-back-to-news]:active,
+.dark-mode [data-newsletter-popup] button[data-back-to-news]:focus {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: rgb(229, 231, 235) !important; /* gray-200 */
+  border: none !important;
+}
+
+/* Override blue background from color-default.css for pricing switch buttons */
+.pricing-switch-button,
+.pricing-switch-button:hover,
+.pricing-switch-button:active,
+.pricing-switch-button:focus,
+.dark-mode .pricing-switch-button:hover,
+.dark-mode .pricing-switch-button:active,
+.dark-mode .pricing-switch-button:focus {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Ensure selected pricing switch button text is dark in dark mode */
+.dark-mode .pricing-switch-button[data-selected="true"] .relative.z-10 {
+  color: #111827 !important;
+}
+
+/* Ensure selected pricing switch button text is white in light mode */
+.pricing-switch-button[data-selected="true"] .relative.z-10 {
+  color: #ffffff !important;
+}
+
+/* Prevent Subscribe button from resizing on hover */
+.subscribe-button-wrapper,
+.subscribe-button-wrapper *,
+.subscribe-button,
+.subscribe-button:hover,
+.subscribe-button:active,
+.subscribe-button:focus,
+.subscribe-button * {
+  transform: none !important;
+  scale: 1 !important;
+  will-change: auto !important;
+}
+
+/* Override global button:hover from color-default.css */
+.subscribe-button:hover,
+.dark-mode .subscribe-button:hover {
+  background-color: #2563eb !important;
+  background: linear-gradient(to top, #2563eb, #3b82f6, #2563eb) !important;
+}
+
+/* Prevent any parent transforms from affecting subscribe button */
+.subscribe-button-wrapper {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  transform: none !important;
+}
+
+.subscribe-button {
+  position: relative;
+  z-index: 2;
+  isolation: isolate;
+  box-sizing: border-box !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: auto !important;
+  min-height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  border-width: 4px !important;
+  border-style: solid !important;
+  padding: 0.5rem 1.5rem !important;
+  opacity: 1 !important;
+}
+
+.subscribe-button:hover,
+.subscribe-button:active,
+.subscribe-button:focus {
+  transform: none !important;
+  scale: 1 !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: auto !important;
+  min-height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  border-width: 4px !important;
+  border-style: solid !important;
+  padding: 0.5rem 1.5rem !important;
+  box-sizing: border-box !important;
+  opacity: 0.85 !important;
+  /* Keep original blue gradient - prevent any color changes */
+  background-color: #2563eb !important;
+  background-image: linear-gradient(to top, #2563eb, #3b82f6, #2563eb) !important;
+  border-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+.dark-mode .subscribe-button:hover,
+.dark-mode .subscribe-button:active,
+.dark-mode .subscribe-button:focus {
+  background-color: #2563eb !important;
+  background-image: linear-gradient(to top, #2563eb, #3b82f6, #2563eb) !important;
+  border-color: #3b82f6 !important;
+  color: #ffffff !important;
+}
+
+/* Allow gray background for active tab buttons in light mode */
+[role="tab"][data-state="active"],
+button[role="tab"][data-state="active"] {
+  background-color: #e5e7eb !important; /* gray-200 */
+  background: #e5e7eb !important;
+}
+
+/* Override for dark mode - lighter gray background for active tab to stand out */
+.dark-mode [role="tab"][data-state="active"],
+.dark-mode button[role="tab"][data-state="active"] {
+  background-color: #4b5563 !important; /* gray-600 - lighter than gray-800 to stand out */
+  background: #4b5563 !important;
+}
+
+/* ========================================================================
+   Gradient helper classes (light + dark mode aware)
+   ======================================================================== */
+
+.hero-gradient-overlay {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.45) 0%,
+    rgba(0, 0, 0, 0.25) 35%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+}
+
+.dark-mode .hero-gradient-overlay {
+  background: linear-gradient(
+    135deg,
+    rgba(55, 65, 82, 0.8) 0%,
+    rgba(55, 65, 82, 0.65) 35%,
+    rgba(55, 65, 82, 0.9) 100%
+  ) !important;
+}
+
+.hero-bottom-gradient {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 55%,
+    rgba(255, 255, 255, 0.9) 85%,
+    rgba(255, 255, 255, 1) 100%
+  );
+}
+
+.dark-mode .hero-bottom-gradient {
+  background: linear-gradient(
+    180deg,
+    rgba(55, 65, 82, 0) 0%,
+    rgba(55, 65, 82, 0.6) 50%,
+    rgba(55, 65, 82, 0.88) 80%,
+    rgba(55, 65, 82, 1) 100%
+  ) !important;
+}
+
+.hero-text-overlay {
+  background: linear-gradient(
+    135deg,
+    #f5f5f5 0%,
+    #f0f0f0 20%,
+    #e8e8e8 40%,
+    #e0e0e0 60%,
+    #e8e8e8 80%,
+    #f0f0f0 100%
+  );
+  border: 1px solid rgba(229, 231, 235, 0.8);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .hero-text-overlay {
+  background: linear-gradient(
+    135deg,
+    #374151 0%,
+    #2d3748 20%,
+    #1f2937 40%,
+    #111827 60%,
+    #1f2937 80%,
+    #2d3748 100%
+  );
+  border: 1px solid rgba(75, 85, 99, 0.8);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.alara-banner-gradient {
+  background: radial-gradient(
+    ellipse 150% 110% at center bottom,
+    rgba(192, 192, 192, 0.25) 0%,
+    rgba(192, 192, 192, 0.15) 25%,
+    rgba(192, 192, 192, 0.08) 50%,
+    transparent 80%
+  );
+}
+
+.dark-mode .alara-banner-gradient {
+  background: radial-gradient(
+    ellipse 150% 110% at center bottom,
+    rgba(55, 65, 82, 0.6) 0%,
+    rgba(55, 65, 82, 0.45) 25%,
+    rgba(55, 65, 82, 0.25) 50%,
+    transparent 80%
+  ) !important;
+}
+
+/* Alara AI Banner Background Gradient - Enhanced light mode with sophisticated depth */
+.alara-banner-gradient-bg {
+  background: linear-gradient(
+    135deg,
+    #fafafa 0%,
+    #f5f5f5 12%,
+    #f0f0f0 25%,
+    #e8e8e8 38%,
+    #e0e0e0 50%,
+    #d8d8d8 62%,
+    #e0e0e0 75%,
+    #e8e8e8 87%,
+    #f0f0f0 100%
+  );
+  border: 1px solid rgba(229, 231, 235, 0.9);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    0 2px 4px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.dark-mode .alara-banner-gradient-bg {
+  background: linear-gradient(
+    135deg,
+    #374151 0%,
+    #2d3748 20%,
+    #1f2937 40%,
+    #111827 60%,
+    #1f2937 80%,
+    #2d3748 100%
+  );
+  border: 1px solid rgba(75, 85, 99, 0.8);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Scrolli Premium Banner Gradient */
+.scrolli-premium-gradient-bg {
+  background: linear-gradient(
+    135deg,
+    #F8F5E4 0%,
+    #f0edd9 25%,
+    #e8e5d1 50%,
+    #f0edd9 75%,
+    #F8F5E4 100%
+  );
+}
+
+.dark-mode .scrolli-premium-gradient-bg {
+  background: linear-gradient(
+    135deg,
+    #374152 0%,
+    #2d3748 50%,
+    #1f2937 100%
+  );
+}
+
+.readers-vote-gradient {
+  background: radial-gradient(
+    ellipse 150% 110% at center bottom,
+    rgba(192, 192, 192, 0.25) 0%,
+    rgba(192, 192, 192, 0.12) 35%,
+    rgba(192, 192, 192, 0.05) 55%,
+    transparent 80%
+  );
+}
+
+.dark-mode .readers-vote-gradient {
+  background: radial-gradient(
+    ellipse 150% 110% at center bottom,
+    rgba(55, 65, 82, 0.55) 0%,
+    rgba(55, 65, 82, 0.35) 35%,
+    rgba(55, 65, 82, 0.18) 55%,
+    transparent 80%
+  ) !important;
 }

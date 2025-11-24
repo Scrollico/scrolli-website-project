@@ -97,7 +97,7 @@ export function FeatureCard8() {
               variants={variant1}
               className=" relative flex items-start gap-x-2 rounded-lg border border-neutral-400/20 bg-white p-4 shadow-[0px_0px_40px_-25px_rgba(0,0,0,0.25)] dark:border-neutral-800 dark:bg-neutral-900"
             >
-              <div className="h-6 w-6 rounded-full bg-blue-500">
+              <div className="h-6 w-6 rounded-full bg-[#374152]">
                 <img
                   className="h-full w-full rounded-full object-cover"
                   src="https://avatar.vercel.sh/joshua"
@@ -116,7 +116,7 @@ export function FeatureCard8() {
               className=" absolute inset-10 -bottom-14 z-[3] m-auto flex h-fit items-start gap-x-2 rounded-lg border border-neutral-400/20 bg-white p-4 shadow-[0px_0px_40px_-25px_rgba(0,0,0,0.25)] dark:border-neutral-800 dark:bg-neutral-900"
             >
               <div className="w-8 ">
-                <div className="h-6 w-6 rounded-full bg-blue-500">
+                <div className="h-6 w-6 rounded-full bg-[#374152]">
                   <img
                     className="h-full w-full rounded-full object-cover"
                     src="https://avatar.vercel.sh/christina"

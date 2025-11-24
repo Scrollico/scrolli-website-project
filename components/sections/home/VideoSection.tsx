@@ -1,7 +1,14 @@
 "use client";
 import { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { SmartButton } from "@/components/ui/smart-button";
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { SectionHeader } from "@/components/ui/SectionHeader";
 import 'swiper/css';
+import { colors } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
+import { PlayIcon, CloseIcon, ArrowLeftIcon, ArrowRightIcon } from "@/components/icons/ScrolliIcons";
 
 interface VideoItem {
   id: string;
@@ -58,61 +65,52 @@ const videos: VideoItem[] = [
 function VideoCard({
   video,
   onPlay,
-  videoRef
+  videoRef,
+  index = 0
 }: {
   video: VideoItem;
   onPlay: () => void;
   videoRef?: React.RefObject<HTMLVideoElement>;
+  index?: number;
 }) {
+  const handleClick = () => {
+    console.log('[VideoCard] Click handler fired for video:', video.id);
+    onPlay();
+  };
   const posterVideoRef = useRef<HTMLVideoElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const isInView = useInView(cardRef, { once: true, margin: "-100px" });
 
   useEffect(() => {
     const videoElement = posterVideoRef.current;
     if (!videoElement) return undefined;
-      // Ensure video loads and shows first frame
-      videoElement.load();
-      const handleCanPlay = () => {
-        if (videoElement.readyState >= 2) {
-          videoElement.currentTime = 0.1;
-        }
-      };
-      
-      const handlePlaying = () => {
-        setIsPlaying(true);
-        console.log('Video is playing');
-      };
-      
-      const handlePause = () => {
-        setIsPlaying(false);
-        console.log('Video is paused');
-      };
 
-      const handlePlay = () => {
-        setIsPlaying(true);
-        console.log('Video play event');
-      };
+    videoElement.load();
 
-      const handleLoadedData = () => {
-        console.log('Video loaded, readyState:', videoElement.readyState);
-      };
+    const handleCanPlay = () => {
+      if (videoElement.readyState >= 2) {
+        videoElement.currentTime = 0.1;
+      }
+    };
 
-      videoElement.addEventListener('canplay', handleCanPlay);
-      videoElement.addEventListener('loadedmetadata', handleCanPlay);
-      videoElement.addEventListener('loadeddata', handleLoadedData);
-      videoElement.addEventListener('playing', handlePlaying);
-      videoElement.addEventListener('play', handlePlay);
-      videoElement.addEventListener('pause', handlePause);
-      
-      return () => {
-        videoElement.removeEventListener('canplay', handleCanPlay);
-        videoElement.removeEventListener('loadedmetadata', handleCanPlay);
-        videoElement.removeEventListener('loadeddata', handleLoadedData);
-        videoElement.removeEventListener('playing', handlePlaying);
-        videoElement.removeEventListener('play', handlePlay);
-        videoElement.removeEventListener('pause', handlePause);
-      };
+    const handlePlaying = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+    const handlePlay = () => setIsPlaying(true);
+
+    videoElement.addEventListener('canplay', handleCanPlay);
+    videoElement.addEventListener('loadedmetadata', handleCanPlay);
+    videoElement.addEventListener('playing', handlePlaying);
+    videoElement.addEventListener('play', handlePlay);
+    videoElement.addEventListener('pause', handlePause);
+
+    return () => {
+      videoElement.removeEventListener('canplay', handleCanPlay);
+      videoElement.removeEventListener('loadedmetadata', handleCanPlay);
+      videoElement.removeEventListener('playing', handlePlaying);
+      videoElement.removeEventListener('play', handlePlay);
+      videoElement.removeEventListener('pause', handlePause);
+    };
   }, [video.videoUrl]);
 
   // Autoplay first video when it enters viewport
@@ -120,55 +118,22 @@ function VideoCard({
     if (!videoRef || !videoRef.current) return undefined;
 
     const videoElement = videoRef.current;
-    
-    // Force video to load
     videoElement.load();
-    
-    // Wait for video to be ready, then play
-    const tryPlay = () => {
-      if (videoElement.readyState >= 3) { // HAVE_FUTURE_DATA or higher
-        console.log('Video ready, attempting autoplay');
-        const playPromise = videoElement.play();
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              console.log('Autoplay successful');
-              setIsPlaying(true);
-            })
-            .catch((error) => {
-              console.error('Autoplay blocked:', error);
-              setIsPlaying(false);
-            });
-        }
-      } else {
-        // Wait a bit more
-        setTimeout(tryPlay, 100);
-      }
-    };
 
     const handleCanPlayThrough = () => {
-      console.log('Video can play through');
-      const playPromise = videoElement.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            console.log('Autoplay successful (canPlayThrough)');
-            setIsPlaying(true);
-          })
-          .catch((error) => {
-            console.error('Autoplay blocked (canPlayThrough):', error);
-            setIsPlaying(false);
-          });
-      }
+      videoElement.play().catch(() => {
+        setIsPlaying(false);
+      });
     };
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            console.log('Video in viewport, readyState:', videoElement.readyState);
             videoElement.addEventListener('canplaythrough', handleCanPlayThrough, { once: true });
-            tryPlay();
+            videoElement.play().catch(() => {
+              setIsPlaying(false);
+            });
             observer.disconnect();
           }
         });
@@ -190,10 +155,42 @@ function VideoCard({
     };
   }, [videoRef]);
 
+  // Animation variants for slide-in and pop-up effect
+  const cardVariants = {
+    hidden: {
+      opacity: 0,
+      y: 50,
+      scale: 0.9,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
+        delay: index * 0.1, // Stagger animation based on index
+      },
+    },
+  };
+
   return (
-    <div className="video-card-wrapper" ref={cardRef}>
+    <motion.div
+      className="video-card-wrapper"
+      ref={cardRef}
+      variants={cardVariants}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      whileHover={{
+        scale: 1.02,
+        y: -5,
+        transition: { duration: 0.2 },
+      }}
+      whileTap={{ scale: 0.98 }}
+    >
       <article className="video-card">
-        <div className="video-thumbnail-link" onClick={onPlay}>
+        <div className="video-thumbnail-link" onClick={handleClick}>
           <div className="video-thumbnail">
             <video
               ref={videoRef || posterVideoRef}
@@ -206,14 +203,12 @@ function VideoCard({
               autoPlay={!!videoRef}
               poster=""
               onLoadedMetadata={(e) => {
-                // Show first frame
                 const video = e.currentTarget;
                 if (video.readyState >= 2) {
                   video.currentTime = 0.1;
                 }
               }}
               onCanPlay={(e) => {
-                // Ensure first frame is shown
                 const video = e.currentTarget;
                 if (video.currentTime === 0) {
                   video.currentTime = 0.1;
@@ -223,10 +218,9 @@ function VideoCard({
             {!isPlaying && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/20">
                 <div className="play-button">
-                  <svg width="50" height="50" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="md:w-[56px] md:h-[56px]">
-                    <circle cx="24" cy="24" r="22" fill="#000" fillOpacity="0.85"/>
-                    <path d="M18 16L30 24L18 32V16Z" fill="#fff"/>
-                  </svg>
+                  <div className="w-[50px] h-[50px] md:w-[56px] md:h-[56px] rounded-full bg-black/85 flex items-center justify-center">
+                    <PlayIcon size={24} className="text-white ml-1" accentColor="white" />
+                  </div>
                 </div>
               </div>
             )}
@@ -258,7 +252,7 @@ function VideoCard({
           {video.title.trim()}
         </h3>
       </article>
-    </div>
+    </motion.div>
   );
 }
 
@@ -280,22 +274,25 @@ function VideoPlayerModal({
   hasNext: boolean;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const modalRef = useRef<HTMLDivElement>(null);
-  const [genieState, setGenieState] = useState<'entering' | 'exiting' | 'idle'>('idle');
+  const scrollPositionRef = useRef<{ x: number; y: number } | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
-      setGenieState('entering');
-      if (videoRef.current) {
-        videoRef.current.play().catch(console.error);
-      }
-      return undefined;
-    } else {
-      setGenieState('exiting');
-      const timer = setTimeout(() => {
-        setGenieState('idle');
-      }, 300); // Match animation duration
-      return () => clearTimeout(timer);
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen && videoRef.current) {
+      // Small delay to ensure modal is rendered before playing video
+      const playTimer = setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.load();
+          videoRef.current.play().catch(() => {
+            // Ignore autoplay errors
+          });
+        }
+      }, 300); // Delay to match animation
+      return () => clearTimeout(playTimer);
     }
   }, [isOpen, video.id]);
 
@@ -313,84 +310,264 @@ function VideoPlayerModal({
     };
 
     if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
+      // Save current scroll position only if not already saved
+      if (!scrollPositionRef.current) {
+        scrollPositionRef.current = {
+          x: window.scrollX,
+          y: window.scrollY,
+        };
+      }
+
+      const scrollY = scrollPositionRef.current.y;
+
+      // Save original styles
+      const originalOverflow = document.body.style.overflow;
+      const originalPosition = document.body.style.position;
+      const originalTop = document.body.style.top;
+      const originalWidth = document.body.style.width;
+
+      // Prevent body scroll while keeping scroll position
       document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+
+      document.addEventListener('keydown', handleKeyDown);
+
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown);
+
+        // Restore original styles
+        document.body.style.overflow = originalOverflow || '';
+        document.body.style.position = originalPosition || '';
+        document.body.style.top = originalTop || '';
+        document.body.style.width = originalWidth || '';
+
+        // Restore scroll position
+        if (scrollPositionRef.current) {
+          window.scrollTo(scrollPositionRef.current.x, scrollPositionRef.current.y);
+          scrollPositionRef.current = null; // Clear after restoring
+        }
+      };
     }
 
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'unset';
-    };
+    return () => { };
   }, [isOpen, hasPrevious, hasNext, onClose, onPrevious, onNext]);
 
-  if (!isOpen && genieState === 'idle') return null;
+  // Animation variants for professional modal effects
+  const backdropVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.3,
+        ease: [0.4, 0, 0.2, 1],
+      },
+    },
+    exit: {
+      opacity: 0,
+      transition: {
+        duration: 0.2,
+        ease: [0.4, 0, 1, 1],
+      },
+    },
+  };
 
-  return (
-    <div 
-      ref={modalRef}
-      className={`video-player-modal fixed inset-0 z-[9999] bg-black flex items-center justify-center ${
-        genieState === 'entering' ? 'genie-entering' : genieState === 'exiting' ? 'genie-exiting' : ''
-      }`}
-    >
-      {/* Close Button */}
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 z-50 text-white hover:text-gray-300 transition-colors p-2 border-none outline-none bg-transparent"
-        aria-label="Close video player"
-      >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
-      </button>
+  const videoContainerVariants = {
+    hidden: {
+      opacity: 0,
+      scale: 0.8,
+      y: 20,
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+        delay: 0.1,
+      },
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.9,
+      y: 10,
+      transition: {
+        duration: 0.2,
+        ease: [0.4, 0, 1, 1],
+      },
+    },
+  };
 
-      {/* Navigation Buttons */}
-      <div className="absolute right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4">
-        <button
-          onClick={onPrevious}
-          disabled={!hasPrevious}
-          className={`text-white transition-opacity border-none outline-none bg-transparent ${
-            hasPrevious ? 'opacity-100 hover:opacity-80 cursor-pointer' : 'opacity-30 cursor-not-allowed'
-          }`}
-          aria-label="Previous video"
-        >
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="16" cy="16" r="15" fill="rgba(0,0,0,0.5)" stroke="white" strokeWidth="1"/>
-            <path d="M16 10L10 16L16 22" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-          </svg>
-        </button>
-        <button
-          onClick={onNext}
-          disabled={!hasNext}
-          className={`text-white transition-opacity border-none outline-none bg-transparent ${
-            hasNext ? 'opacity-100 hover:opacity-80 cursor-pointer' : 'opacity-30 cursor-not-allowed'
-          }`}
-          aria-label="Next video"
-        >
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="16" cy="16" r="15" fill="rgba(0,0,0,0.5)" stroke="white" strokeWidth="1"/>
-            <path d="M16 10L22 16L16 22" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-          </svg>
-        </button>
-      </div>
+  const buttonVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 25,
+        delay: 0.2,
+      },
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.8,
+      transition: { duration: 0.15 },
+    },
+  };
 
-      {/* Video Player */}
-      <div className="w-full h-full flex items-center justify-center max-w-7xl mx-auto px-4">
-        <video
-          ref={videoRef}
-          src={video.videoUrl}
-          controls
-          autoPlay
-          className="w-full h-full max-h-[90vh] object-contain"
-          onEnded={() => {
-            if (hasNext) {
-              setTimeout(() => onNext(), 500);
+  if (!mounted) {
+    return null;
+  }
+
+  const modalContent = (
+    <AnimatePresence mode="wait">
+      {isOpen && (
+        <motion.div
+          key="modal-backdrop"
+          className="video-player-modal fixed inset-0 bg-black flex items-center justify-center"
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          variants={backdropVariants}
+          style={{
+            zIndex: 999999,
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: '#000',
+            margin: 0,
+            padding: 0,
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              onClose();
             }
           }}
-        />
-      </div>
+        >
+          {/* Close Button */}
+          <motion.button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose();
+            }}
+            className={cn(
+              "absolute top-4 right-4 transition-colors p-2 border-none outline-none bg-transparent",
+              colors.foreground.inverse,
+              colors.foreground.inverseHover
+            )}
+            style={{ zIndex: 1000000 }}
+            variants={buttonVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            aria-label="Close video player"
+          >
+            <CloseIcon size={24} />
+          </motion.button>
 
-    </div>
+          {/* Navigation Buttons */}
+          <motion.div
+            className="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col gap-4"
+            style={{ zIndex: 1000000 }}
+            variants={buttonVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <motion.button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onPrevious();
+              }}
+              disabled={!hasPrevious}
+              className={cn(
+                "transition-opacity border-none outline-none bg-transparent",
+                colors.foreground.inverse,
+                hasPrevious ? "opacity-100 hover:opacity-80 cursor-pointer" : "opacity-30 cursor-not-allowed"
+              )}
+              whileHover={hasPrevious ? { scale: 1.1 } : {}}
+              whileTap={hasPrevious ? { scale: 0.95 } : {}}
+              aria-label="Previous video"
+            >
+              <div className="w-8 h-8 rounded-full bg-black/50 flex items-center justify-center text-white">
+                <ArrowLeftIcon size={20} accentColor="white" />
+              </div>
+            </motion.button>
+            <motion.button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onNext();
+              }}
+              disabled={!hasNext}
+              className={cn(
+                "transition-opacity border-none outline-none bg-transparent",
+                colors.foreground.inverse,
+                hasNext ? "opacity-100 hover:opacity-80 cursor-pointer" : "opacity-30 cursor-not-allowed"
+              )}
+              whileHover={hasNext ? { scale: 1.1 } : {}}
+              whileTap={hasNext ? { scale: 0.95 } : {}}
+              aria-label="Next video"
+            >
+              <div className="w-8 h-8 rounded-full bg-black/50 flex items-center justify-center text-white">
+                <ArrowRightIcon size={20} accentColor="white" />
+              </div>
+            </motion.button>
+          </motion.div>
+
+          {/* Video Player */}
+          <motion.div
+            className="w-full h-full flex items-center justify-center max-w-7xl mx-auto px-4 video-container-visible"
+            variants={videoContainerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <video
+              ref={videoRef}
+              src={video.videoUrl}
+              controls
+              autoPlay
+              playsInline
+              className="w-full h-full max-h-[90vh] object-contain"
+              onEnded={() => {
+                if (hasNext) {
+                  setTimeout(() => onNext(), 500);
+                }
+              }}
+              onLoadedMetadata={() => {
+                // Ensure video is visible when metadata loads
+                if (videoRef.current && isOpen) {
+                  videoRef.current.style.opacity = '1';
+                  videoRef.current.style.visibility = 'visible';
+                  videoRef.current.style.display = 'block';
+                }
+              }}
+            />
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
+
+  // Render modal via portal to document.body to bypass any parent container constraints
+  return createPortal(modalContent, document.body);
 }
 
 export default function VideoSection() {
@@ -407,7 +584,7 @@ export default function VideoSection() {
         });
       },
       {
-        threshold: 0.5, // Trigger when 50% of the section is visible
+        threshold: 0.5,
       }
     );
 
@@ -425,7 +602,9 @@ export default function VideoSection() {
   useEffect(() => {
     if (firstVideoRef.current) {
       if (isInView) {
-        firstVideoRef.current.play().catch(console.error);
+        firstVideoRef.current.play().catch(() => {
+          // Ignore autoplay errors
+        });
       } else {
         firstVideoRef.current.pause();
       }
@@ -433,6 +612,7 @@ export default function VideoSection() {
   }, [isInView]);
 
   const handlePlay = (index: number) => {
+    console.log('[VideoSection] handlePlay called with index:', index);
     setSelectedVideoIndex(index);
   };
 
@@ -456,54 +636,58 @@ export default function VideoSection() {
   const hasPrevious = selectedVideoIndex !== null && selectedVideoIndex > 0;
   const hasNext = selectedVideoIndex !== null && selectedVideoIndex < videos.length - 1;
 
+  console.log('[VideoSection] selectedVideoIndex:', selectedVideoIndex, 'currentVideo:', currentVideo?.id);
+
   return (
     <>
-      <div className="content-widget" ref={sectionRef}>
+      <div className="content-widget pt-8 md:pt-10 lg:pt-12" ref={sectionRef}>
         <div className="container">
-          <div className="max-w-7xl mx-auto mb-8">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight text-black dark:text-white mb-4">Watch Today's Videos</h2>
-            <div className="w-12 h-0.5 bg-primary"></div>
+          <div className="max-w-7xl mx-auto">
+            <SectionHeader title="Watch Today's Videos" />
           </div>
         </div>
         <div className="w-full mt-6">
           <Swiper
-              spaceBetween={20}
-              slidesPerView={1.5}
-              loop={false}
-              breakpoints={{
-                480: {
-                  slidesPerView: 2,
-                  spaceBetween: 20,
-                },
-                640: {
-                  slidesPerView: 2.5,
-                  spaceBetween: 24,
-                },
-                768: {
-                  slidesPerView: 3,
-                  spaceBetween: 24,
-                },
-                1024: {
-                  slidesPerView: 3.5,
-                  spaceBetween: 32,
-                },
-                1280: {
-                  slidesPerView: 4,
-                  spaceBetween: 40,
-                },
-              }}
-              className="videos-swiper pb-12"
-            >
-              {videos.map((video, index) => (
-                <SwiperSlide key={video.id}>
-                  <VideoCard
-                    video={video}
-                    onPlay={() => handlePlay(index)}
-                    videoRef={index === 0 ? firstVideoRef : undefined}
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
+            spaceBetween={20}
+            slidesPerView={1.5}
+            loop={false}
+            speed={600}
+            grabCursor={true}
+            breakpoints={{
+              480: {
+                slidesPerView: 2,
+                spaceBetween: 20,
+              },
+              640: {
+                slidesPerView: 2.5,
+                spaceBetween: 24,
+              },
+              768: {
+                slidesPerView: 3,
+                spaceBetween: 24,
+              },
+              1024: {
+                slidesPerView: 3.5,
+                spaceBetween: 32,
+              },
+              1280: {
+                slidesPerView: 4,
+                spaceBetween: 40,
+              },
+            }}
+            className="videos-swiper pb-12"
+          >
+            {videos.map((video, index) => (
+              <SwiperSlide key={video.id}>
+                <VideoCard
+                  video={video}
+                  onPlay={() => handlePlay(index)}
+                  videoRef={index === 0 ? firstVideoRef : undefined}
+                  index={index}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
         <div className="divider-2 mt-8 md:mt-12"></div>
       </div>

@@ -1,254 +1,383 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import blogData from "@/data/blog.json";
+import {
+  sectionPadding,
+  componentPadding,
+  gap,
+  typography,
+  colors,
+  borderRadius,
+  border,
+  elevation,
+  margin,
+  transition
+} from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
+import { Heading, Text } from "@/components/ui/typography";
+import { Container } from "@/components/responsive";
+
+import { FreeContentBadgeIcon, PremiumContentBadgeIcon } from "@/components/icons/ScrolliIcons";
 
 export default function Section1() {
   const { Culture } = blogData;
   return (
     <>
-      <div className="content-widget">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-8">
-              <h4 className="spanborder">
-                <span>{Culture.title}</span>
-              </h4>
-              <article className="first mb-3">
-                <figure>
-                  <Link href={`/article/${Culture.mainArticle.id}`}>
+      <section className={cn(sectionPadding.md, colors.background.base)}>
+        <Container>
+          <div className={cn("grid grid-cols-1 lg:grid-cols-12", gap.lg)}>
+            {/* Main Content - 8 columns */}
+            <div className="lg:col-span-8">
+              <Heading level={4} variant="h4" className={cn("spanborder border-b-2 border-primary pb-2 mb-6")}>
+                {Culture.title}
+              </Heading>
+
+              {/* Featured Article */}
+              <article className={cn("mb-8 md:mb-12")}>
+                <figure className="mb-6 relative">
+                  <Link href={`/article/${Culture.mainArticle.id}`} prefetch={true}>
                     <Image
                       src={Culture.mainArticle.image}
                       alt={Culture.mainArticle.title}
                       width={736}
                       height={520}
+                      className="w-full h-auto object-cover rounded-lg"
                     />
                   </Link>
+                  <div className="absolute top-2 right-2 z-10 pointer-events-none">
+                    {(Culture.mainArticle as any).isPremium ? (
+                      <PremiumContentBadgeIcon size={24} className="drop-shadow-md" />
+                    ) : (
+                      <FreeContentBadgeIcon size={24} className="drop-shadow-md" />
+                    )}
+                  </div>
                 </figure>
-                <h1 className="entry-title mb-3">
-                  <Link href={`/article/${Culture.mainArticle.id}`}>{Culture.mainArticle.title}</Link>
-                </h1>
-                <div className="entry-excerpt">
-                  <p>{Culture.mainArticle.excerpt}</p>
+                <Heading level={1} variant="h1" className="mb-4">
+                  <Link href={`/article/${Culture.mainArticle.id}`} className={cn(colors.foreground.interactive, "hover:underline", transition.normal)}>
+                    {Culture.mainArticle.title}
+                  </Link>
+                </Heading>
+                <div className={cn("entry-excerpt overflow-hidden mb-6")}>
+                  <Text variant="body" color="secondary" className="line-clamp-3">
+                    {Culture.mainArticle.excerpt}
+                  </Text>
                 </div>
-                <div className="entry-meta align-items-center">
-                  <Link className="author-avatar" href="#">
+                <div className={cn("entry-meta flex flex-wrap items-center", gap.sm, typography.caption, colors.foreground.muted)}>
+                  <Link className="author-avatar flex-shrink-0" href="#">
                     <Image
                       src="/assets/images/author-avata-1.jpg"
                       alt="author avatar"
                       width={40}
                       height={40}
+                      className="rounded-full"
                     />
                   </Link>
-                  <Link href="/author">{Culture.mainArticle.author}</Link> in <Link href="/archive">{Culture.mainArticle.category}</Link>
-                  <br />
-                  <span>{Culture.mainArticle.date}</span>
-                  <span className="middotDivider" />
-                  <span className="readingTime" title={Culture.mainArticle.readTime}>
-                    {Culture.mainArticle.readTime}
-                  </span>
-                  <span className="svgIcon svgIcon--star">
-                    <svg className="svgIcon-use" width={15} height={15}>
-                      <path d="M7.438 2.324c.034-.099.09-.099.123 0l1.2 3.53a.29.29 0 0 0 .26.19h3.884c.11 0 .127.049.038.111L9.8 8.327a.271.271 0 0 0-.099.291l1.2 3.53c.034.1-.011.131-.098.069l-3.142-2.18a.303.303 0 0 0-.32 0l-3.145 2.182c-.087.06-.132.03-.099-.068l1.2-3.53a.271.271 0 0 0-.098-.292L2.056 6.146c-.087-.06-.071-.112.038-.112h3.884a.29.29 0 0 0 .26-.19l1.2-3.52z" />
-                    </svg>
-                  </span>
+                  <div className={cn("flex flex-wrap items-center", gap.xs)}>
+                    <Link href="/author" className={colors.foreground.interactive}>{Culture.mainArticle.author}</Link>
+                    <span>in</span>
+                    <Link href="/archive" className={colors.foreground.interactive}>{Culture.mainArticle.category}</Link>
+                  </div>
+                  <div className={cn("flex items-center", gap.xs)}>
+                    <span>{Culture.mainArticle.date}</span>
+                    <span className="middotDivider" />
+                    <span className="readingTime" title={Culture.mainArticle.readTime}>
+                      {Culture.mainArticle.readTime}
+                    </span>
+                  </div>
                 </div>
               </article>
-              <div className="divider" />
-              {Culture.articles.map((article, idx) => (
-                <article key={idx} className="row justify-content-between mb-5 mr-0">
-                  <div className="col-md-9 ">
-                    <div className="align-self-center">
-                      {article.tag && <div className="capsSubtle mb-2">{article.tag}</div>}
-                      <h3 className="entry-title mb-3">
-                        <Link href={`/article/${article.id}`}>{article.title}</Link>
-                      </h3>
-                      <div className="entry-excerpt">
-                        <p>{article.excerpt}</p>
-                      </div>
-                      <div className="entry-meta align-items-center">
-                        <Link href="/author">{article.author}</Link> in <Link href="/archive">{article.category}</Link>
-                        <br />
-                        <span>{article.date}</span>
-                        <span className="middotDivider" />
-                        <span className="readingTime" title={article.readTime}>
-                          {article.readTime}
-                        </span>
-                        <span className="svgIcon svgIcon--star">
-                          <svg className="svgIcon-use" width={15} height={15}>
-                            <path d="M7.438 2.324c.034-.099.09-.099.123 0l1.2 3.53a.29.29 0 0 0 .26.19h3.884c.11 0 .127.049.038.111L9.8 8.327a.271.271 0 0 0-.099.291l1.2 3.53c.034.1-.011.131-.098.069l-3.142-2.18a.303.303 0 0 0-.32 0l-3.145 2.182c-.087.06-.132.03-.099-.068l1.2-3.53a.271.271 0 0 0-.098-.292L2.056 6.146c-.087-.06-.071-.112.038-.112h3.884a.29.29 0 0 0 .26-.19l1.2-3.52z" />
-                          </svg>
-                        </span>
+
+              {/* Spacing */}
+              <div className={cn(margin.xl)} />
+
+              {/* Articles List */}
+              <div className={cn("flex flex-col", gap.lg)}>
+                {Culture.articles.map((article, idx) => (
+                  <article key={idx} className={cn("flex flex-col md:flex-row", gap.md, "pb-6 md:pb-8", idx < Culture.articles.length - 1 && "border-b", colors.border.DEFAULT)}>
+                    <div className="flex-1 min-w-0">
+                      <div className={cn("flex flex-col", gap.sm)}>
+                        {article.tag && (
+                          <Text variant="caption" color="muted" className="mb-0">
+                            {article.tag}
+                          </Text>
+                        )}
+                        <Heading level={3} variant="h5" className="mb-2">
+                          <Link href={`/article/${article.id}`} className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
+                            <span className="line-clamp-2 block">{article.title}</span>
+                          </Link>
+                        </Heading>
+                        <div className={cn("entry-excerpt overflow-hidden mb-4")}>
+                          <Text variant="body" color="secondary" className="line-clamp-2">
+                            {article.excerpt}
+                          </Text>
+                        </div>
+                        <div className={cn("entry-meta flex flex-wrap items-center", gap.sm, typography.caption, colors.foreground.muted)}>
+                          <div className={cn("flex flex-wrap items-center", gap.xs)}>
+                            <Link href="/author" className={colors.foreground.interactive}>{article.author}</Link>
+                            <span>in</span>
+                            <Link href="/archive" className={colors.foreground.interactive}>{article.category}</Link>
+                          </div>
+                          <div className={cn("flex items-center", gap.xs)}>
+                            <span>{article.date}</span>
+                            <span className="middotDivider" />
+                            <span className="readingTime" title={article.readTime}>
+                              {article.readTime}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    className="col-md-3 bgcover"
-                    style={{
-                      backgroundImage: `url(${article.image})`,
-                    }}
-                  />
-                </article>
-              ))}
-              <div className="row justify-content-between">
-                <div className="divider-2" />
-                {Culture.sideArticles.map((article, idx) => (
-                  <article key={idx} className="col-md-6">
-                    <div className="mb-3 d-flex row">
-                      <figure className="col-md-5">
-                        <Link href={`/article/${article.id}`}>
-                          <Image
-                            src={article.image}
-                            alt={article.title}
-                            width={190}
-                            height={165}
-                            className="w-full h-auto object-cover"
-                            sizes="(max-width: 768px) 100vw, 190px"
-                          />
-                        </Link>
-                      </figure>
-                      <div className="entry-content col-md-7 pl-md-0">
-                        <h5 className="entry-title mb-3">
-                          <Link href={`/article/${article.id}`}>{article.title}</Link>
-                        </h5>
-                        <div className="entry-meta align-items-center">
-                          <Link href="/author">{article.author}</Link> in <Link href="/archive">{article.category}</Link>
-                          <br />
-                          <span>{article.date}</span>
-                          <span className="middotDivider" />
-                          <span className="readingTime" title={article.readTime}>
-                            {article.readTime}
-                          </span>
-                          <span className="svgIcon svgIcon--star">
-                            <svg className="svgIcon-use" width={15} height={15}>
-                              <path d="M7.438 2.324c.034-.099.09-.099.123 0l1.2 3.53a.29.29 0 0 0 .26.19h3.884c.11 0 .127.049.038.111L9.8 8.327a.271.271 0 0 0-.099.291l1.2 3.53c.034.1-.011.131-.098.069l-3.142-2.18a.303.303 0 0 0-.32 0l-3.145 2.182c-.087.06-.132.03-.099-.068l1.2-3.53a.271.271 0 0 0-.098-.292L2.056 6.146c-.087-.06-.071-.112.038-.112h3.884a.29.29 0 0 0 .26-.19l1.2-3.52z" />
-                            </svg>
-                          </span>
-                        </div>
+                    <div className="relative">
+                      <div
+                        className={cn(
+                          "w-full md:w-32 lg:w-40 flex-shrink-0",
+                          "aspect-[4/3] md:aspect-square",
+                          borderRadius.md,
+                          "overflow-hidden",
+                          "bg-cover bg-center"
+                        )}
+                        style={{
+                          backgroundImage: `url(${article.image})`,
+                        }}
+                      />
+                      <div className="absolute top-2 right-2 z-10 pointer-events-none">
+                        {(article as any).isPremium ? (
+                          <PremiumContentBadgeIcon size={20} className="drop-shadow-md" />
+                        ) : (
+                          <FreeContentBadgeIcon size={20} className="drop-shadow-md" />
+                        )}
                       </div>
                     </div>
                   </article>
                 ))}
               </div>
+
+              {/* Side Articles Grid */}
+              <div className="mt-12 md:mt-16">
+                <div className={cn("grid grid-cols-1 md:grid-cols-2", gap.lg)}>
+                  {Culture.sideArticles.map((article, idx) => (
+                    <article key={idx} className={cn("flex flex-col md:flex-row", gap.md)}>
+                      <figure className="w-full md:w-32 lg:w-40 flex-shrink-0 relative">
+                        <Link href={`/article/${article.id}`} className={cn("block", transition.normal, "hover:opacity-90")}>
+                          <Image
+                            src={article.image}
+                            alt={article.title}
+                            width={190}
+                            height={165}
+                            className="w-full h-auto object-cover rounded-md"
+                            sizes="(max-width: 768px) 100vw, 190px"
+                          />
+                        </Link>
+                        <div className="absolute top-2 right-2 z-10 pointer-events-none">
+                          {(article as any).isPremium ? (
+                            <PremiumContentBadgeIcon size={20} className="drop-shadow-md" />
+                          ) : (
+                            <FreeContentBadgeIcon size={20} className="drop-shadow-md" />
+                          )}
+                        </div>
+                      </figure>
+                      <div className={cn("flex-1 min-w-0 flex flex-col justify-center")}>
+                        <Heading level={5} variant="h6" className="mb-2">
+                          <Link href={`/article/${article.id}`} className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
+                            <span className="line-clamp-2 block">{article.title}</span>
+                          </Link>
+                        </Heading>
+                        <div className={cn("flex flex-wrap items-center", gap.sm, typography.caption, colors.foreground.muted)}>
+                          <div className={cn("flex flex-wrap items-center", gap.xs)}>
+                            <Link href="/author" className={colors.foreground.interactive}>{article.author}</Link>
+                            <span>in</span>
+                            <Link href="/archive" className={colors.foreground.interactive}>{article.category}</Link>
+                          </div>
+                          <div className={cn("flex items-center", gap.xs)}>
+                            <span>{article.date}</span>
+                            <span className="middotDivider" />
+                            <span className="readingTime" title={article.readTime}>
+                              {article.readTime}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
             </div>
-            {/*col-md-8*/}
-            <div className="col-md-4 pl-md-5 sticky-sidebar">
-              <div className="sidebar-widget latest-tpl-4">
-                <h5 className="spanborder widget-title">
-                  <span>Popular in Culture</span>
-                </h5>
-                <ol>
-                  <li className="d-flex">
-                    <div className="post-count">01</div>
-                    <div className="post-content">
-                      <h5 className="entry-title mb-3">
-                        <Link href="/article/president-and-the-emails-who-will-guard-the-guards">President and the emails. Who will guard the guards?</Link>
-                      </h5>
-                      <div className="entry-meta align-items-center">
-                        <Link href="/author">Alentica</Link> in <Link href="/archive">Police</Link>
-                        <br />
-                        <span>May 14</span>
-                        <span className="middotDivider" />
-                        <span className="readingTime" title="3 min read">
-                          3 min read
-                        </span>
-                        <span className="svgIcon svgIcon--star">
-                          <svg className="svgIcon-use" width={15} height={15}>
-                            <path d="M7.438 2.324c.034-.099.09-.099.123 0l1.2 3.53a.29.29 0 0 0 .26.19h3.884c.11 0 .127.049.038.111L9.8 8.327a.271.271 0 0 0-.099.291l1.2 3.53c.034.1-.011.131-.098.069l-3.142-2.18a.303.303 0 0 0-.32 0l-3.145 2.182c-.087.06-.132.03-.099-.068l1.2-3.53a.271.271 0 0 0-.098-.292L2.056 6.146c-.087-.06-.071-.112.038-.112h3.884a.29.29 0 0 0 .26-.19l1.2-3.52z" />
-                          </svg>
-                        </span>
+
+            {/* Sidebar - 4 columns */}
+            <aside className={cn("lg:col-span-4 lg:pl-8")}>
+              <div className={cn(
+                "sticky top-4",
+                borderRadius.lg,
+                border.thin,
+                colors.background.elevated,
+                elevation[1],
+                componentPadding.md
+              )}>
+                <Heading level={5} variant="h6" className={cn("spanborder widget-title border-b-2 border-primary pb-2", margin.sm)}>
+                  Popular in Culture
+                </Heading>
+                <ol className={cn("flex flex-col", gap.md)}>
+                  <li className={cn("flex items-start", gap.md)}>
+                    <div className={cn(
+                      "flex-shrink-0",
+                      "w-8 h-8",
+                      "flex items-center justify-center",
+                      borderRadius.md,
+                      colors.background.base,
+                      colors.foreground.primary,
+                      typography.bodySmall,
+                      "font-semibold"
+                    )}>
+                      01
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <Heading level={5} variant="h6" className="mb-2">
+                        <Link href="/article/president-and-the-emails-who-will-guard-the-guards" className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
+                          <span className="line-clamp-2 block">President and the emails. Who will guard the guards?</span>
+                        </Link>
+                      </Heading>
+                      <div className={cn("flex flex-wrap items-center", gap.sm, typography.caption, colors.foreground.muted)}>
+                        <div className={cn("flex flex-wrap items-center", gap.xs)}>
+                          <Link href="/author" className={colors.foreground.interactive}>Alentica</Link>
+                          <span>in</span>
+                          <Link href="/archive" className={colors.foreground.interactive}>Police</Link>
+                        </div>
+                        <div className={cn("flex items-center", gap.xs)}>
+                          <span>May 14</span>
+                          <span className="middotDivider" />
+                          <span className="readingTime" title="3 min read">3 min read</span>
+                        </div>
                       </div>
                     </div>
                   </li>
-                  <li className="d-flex">
-                    <div className="post-count">02</div>
-                    <div className="post-content">
-                      <h5 className="entry-title mb-3">
-                        <Link href="/article/how-to-silence-the-persistent-ding-of-modern-life">How to Silence the Persistent Ding of Modern Life</Link>
-                      </h5>
-                      <div className="entry-meta align-items-center">
-                        <Link href="/author">Alentica</Link> in <Link href="/archive">Police</Link>
-                        <br />
-                        <span>Jun 12</span>
-                        <span className="middotDivider" />
-                        <span className="readingTime" title="3 min read">
-                          4 min read
-                        </span>
-                        <span className="svgIcon svgIcon--star">
-                          <svg className="svgIcon-use" width={15} height={15}>
-                            <path d="M7.438 2.324c.034-.099.09-.099.123 0l1.2 3.53a.29.29 0 0 0 .26.19h3.884c.11 0 .127.049.038.111L9.8 8.327a.271.271 0 0 0-.099.291l1.2 3.53c.034.1-.011.131-.098.069l-3.142-2.18a.303.303 0 0 0-.32 0l-3.145 2.182c-.087.06-.132.03-.099-.068l1.2-3.53a.271.271 0 0 0-.098-.292L2.056 6.146c-.087-.06-.071-.112.038-.112h3.884a.29.29 0 0 0 .26-.19l1.2-3.52z" />
-                          </svg>
-                        </span>
+                  <li className={cn("flex items-start", gap.md)}>
+                    <div className={cn(
+                      "flex-shrink-0",
+                      "w-8 h-8",
+                      "flex items-center justify-center",
+                      borderRadius.md,
+                      colors.background.base,
+                      colors.foreground.primary,
+                      typography.bodySmall,
+                      "font-semibold"
+                    )}>
+                      02
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <Heading level={5} variant="h6" className="mb-2">
+                        <Link href="/article/how-to-silence-the-persistent-ding-of-modern-life" className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
+                          <span className="line-clamp-2 block">How to Silence the Persistent Ding of Modern Life</span>
+                        </Link>
+                      </Heading>
+                      <div className={cn("flex flex-wrap items-center", gap.sm, typography.caption, colors.foreground.muted)}>
+                        <div className={cn("flex flex-wrap items-center", gap.xs)}>
+                          <Link href="/author" className={colors.foreground.interactive}>Alentica</Link>
+                          <span>in</span>
+                          <Link href="/archive" className={colors.foreground.interactive}>Police</Link>
+                        </div>
+                        <div className={cn("flex items-center", gap.xs)}>
+                          <span>Jun 12</span>
+                          <span className="middotDivider" />
+                          <span className="readingTime" title="3 min read">4 min read</span>
+                        </div>
                       </div>
                     </div>
                   </li>
-                  <li className="d-flex">
-                    <div className="post-count">03</div>
-                    <div className="post-content">
-                      <h5 className="entry-title mb-3">
-                        <Link href="/article/why-we-love-to-watch">Why We Love to Watch</Link>
-                      </h5>
-                      <div className="entry-meta align-items-center">
-                        <Link href="/author">Alentica</Link> in <Link href="/archive">Police</Link>
-                        <br />
-                        <span>May 15</span>
-                        <span className="middotDivider" />
-                        <span className="readingTime" title="3 min read">
-                          5 min read
-                        </span>
-                        <span className="svgIcon svgIcon--star">
-                          <svg className="svgIcon-use" width={15} height={15}>
-                            <path d="M7.438 2.324c.034-.099.09-.099.123 0l1.2 3.53a.29.29 0 0 0 .26.19h3.884c.11 0 .127.049.038.111L9.8 8.327a.271.271 0 0 0-.099.291l1.2 3.53c.034.1-.011.131-.098.069l-3.142-2.18a.303.303 0 0 0-.32 0l-3.145 2.182c-.087.06-.132.03-.099-.068l1.2-3.53a.271.271 0 0 0-.098-.292L2.056 6.146c-.087-.06-.071-.112.038-.112h3.884a.29.29 0 0 0 .26-.19l1.2-3.52z" />
-                          </svg>
-                        </span>
+                  <li className={cn("flex items-start", gap.md)}>
+                    <div className={cn(
+                      "flex-shrink-0",
+                      "w-8 h-8",
+                      "flex items-center justify-center",
+                      borderRadius.md,
+                      colors.background.base,
+                      colors.foreground.primary,
+                      typography.bodySmall,
+                      "font-semibold"
+                    )}>
+                      03
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <Heading level={5} variant="h6" className="mb-2">
+                        <Link href="/article/why-we-love-to-watch" className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
+                          <span className="line-clamp-2 block">Why We Love to Watch</span>
+                        </Link>
+                      </Heading>
+                      <div className={cn("flex flex-wrap items-center", gap.sm, typography.caption, colors.foreground.muted)}>
+                        <div className={cn("flex flex-wrap items-center", gap.xs)}>
+                          <Link href="/author" className={colors.foreground.interactive}>Alentica</Link>
+                          <span>in</span>
+                          <Link href="/archive" className={colors.foreground.interactive}>Police</Link>
+                        </div>
+                        <div className={cn("flex items-center", gap.xs)}>
+                          <span>May 15</span>
+                          <span className="middotDivider" />
+                          <span className="readingTime" title="3 min read">5 min read</span>
+                        </div>
                       </div>
                     </div>
                   </li>
-                  <li className="d-flex">
-                    <div className="post-count">04</div>
-                    <div className="post-content">
-                      <h5 className="entry-title mb-3">
-                        <Link href="/article/how-health-apps-let">How Health Apps Let</Link>
-                      </h5>
-                      <div className="entry-meta align-items-center">
-                        <Link href="/author">Alentica</Link> in <Link href="/archive">Police</Link>
-                        <br />
-                        <span>April 27</span>
-                        <span className="middotDivider" />
-                        <span className="readingTime" title="3 min read">
-                          6 min read
-                        </span>
-                        <span className="svgIcon svgIcon--star">
-                          <svg className="svgIcon-use" width={15} height={15}>
-                            <path d="M7.438 2.324c.034-.099.09-.099.123 0l1.2 3.53a.29.29 0 0 0 .26.19h3.884c.11 0 .127.049.038.111L9.8 8.327a.271.271 0 0 0-.099.291l1.2 3.53c.034.1-.011.131-.098.069l-3.142-2.18a.303.303 0 0 0-.32 0l-3.145 2.182c-.087.06-.132.03-.099-.068l1.2-3.53a.271.271 0 0 0-.098-.292L2.056 6.146c-.087-.06-.071-.112.038-.112h3.884a.29.29 0 0 0 .26-.19l1.2-3.52z" />
-                          </svg>
-                        </span>
+                  <li className={cn("flex items-start", gap.md)}>
+                    <div className={cn(
+                      "flex-shrink-0",
+                      "w-8 h-8",
+                      "flex items-center justify-center",
+                      borderRadius.md,
+                      colors.background.base,
+                      colors.foreground.primary,
+                      typography.bodySmall,
+                      "font-semibold"
+                    )}>
+                      04
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <Heading level={5} variant="h6" className="mb-2">
+                        <Link href="/article/how-health-apps-let" className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
+                          <span className="line-clamp-2 block">How Health Apps Let</span>
+                        </Link>
+                      </Heading>
+                      <div className={cn("flex flex-wrap items-center", gap.sm, typography.caption, colors.foreground.muted)}>
+                        <div className={cn("flex flex-wrap items-center", gap.xs)}>
+                          <Link href="/author" className={colors.foreground.interactive}>Alentica</Link>
+                          <span>in</span>
+                          <Link href="/archive" className={colors.foreground.interactive}>Police</Link>
+                        </div>
+                        <div className={cn("flex items-center", gap.xs)}>
+                          <span>April 27</span>
+                          <span className="middotDivider" />
+                          <span className="readingTime" title="3 min read">6 min read</span>
+                        </div>
                       </div>
                     </div>
                   </li>
                 </ol>
               </div>
-            </div>
-            {/*col-md-4*/}
+            </aside>
           </div>
-        </div>
-        {/*content-widget*/}
-      </div>
-      <div className="content-widget">
-        <div className="container">
-          <div className="sidebar-widget ads">
-            <Link href="#">
+        </Container>
+      </section>
+
+      {/* Ads Section */}
+      <section className={cn(sectionPadding.sm, colors.background.base)}>
+        <Container>
+          <div className={cn(
+            "flex justify-center",
+            "pb-8",
+            "border-b",
+            colors.border.DEFAULT
+          )}>
+            <Link href="#" className="block">
               <Image
                 src="/assets/images/ads/ads-2.png"
                 alt="ads"
                 width={600}
                 height={71}
+                className="w-full max-w-full h-auto"
               />
             </Link>
           </div>
-          <div className="hr" />
-        </div>
-      </div>
-      {/*content-widget*/}
+        </Container>
+      </section>
     </>
   );
 }

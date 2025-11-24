@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { Badge } from '@/components/ui/badge'
 
 export default function Section1() {
   return (
@@ -365,20 +366,28 @@ export default function Section1() {
             </p>
             <div className="entry-bottom">
               <div className="tags-wrap heading">
-                <span className="tags">
-                  <Link href="#" rel="tag">
-                    fashion
-                  </Link>
-                  <Link href="#" rel="tag">
-                    lifestyle
-                  </Link>
-                  <Link href="#" rel="tag">
-                    news
-                  </Link>
-                  <Link href="#" rel="tag">
-                    style
-                  </Link>
-                </span>
+                <div className="tags flex flex-wrap gap-2">
+                  <Badge variant="secondary" appearance="outline" size="sm" asChild>
+                    <Link href="#" rel="tag">
+                      fashion
+                    </Link>
+                  </Badge>
+                  <Badge variant="secondary" appearance="outline" size="sm" asChild>
+                    <Link href="#" rel="tag">
+                      lifestyle
+                    </Link>
+                  </Badge>
+                  <Badge variant="secondary" appearance="outline" size="sm" asChild>
+                    <Link href="#" rel="tag">
+                      news
+                    </Link>
+                  </Badge>
+                  <Badge variant="secondary" appearance="outline" size="sm" asChild>
+                    <Link href="#" rel="tag">
+                      style
+                    </Link>
+                  </Badge>
+                </div>
               </div>
             </div>
             <div className="box box-author m_b_2rem">

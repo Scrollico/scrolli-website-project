@@ -1,6 +1,6 @@
-# merinda-nextjs
+# scrolli-nextjs
 
-Merinda - Multi-purpose Bootstrap 5 Next.js Template
+Scrolli - Multi-purpose Bootstrap 5 Next.js Template
 
 ## Features
 

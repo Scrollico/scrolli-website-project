@@ -2,10 +2,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import NextImage from "next/image";
-import { Menu, X, Search, Sun, Moon } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import CardNav from "./CardNav";
+import { Heading, Text } from "@/components/ui/typography";
 
-export default function Header({ onNewsletterClick }: any) {
+export default function Header() {
   const [isSearch, setIsSearch] = useState<number | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -13,29 +14,10 @@ export default function Header({ onNewsletterClick }: any) {
     setIsSearch((prevState) => (prevState === key ? null : key));
   };
 
-  // Dark/Light
-  const [isDark, setDark] = useState<boolean>(false);
-  const handleDark = (): void => {
-    try {
-      const newDarkState = !isDark;
-      setDark(newDarkState);
-      if (newDarkState) {
-        document.body.classList.add("dark-mode");
-      } else {
-        document.body.classList.remove("dark-mode");
-      }
-    } catch (error) {
-      console.warn('Dark mode toggle error:', error);
-    }
-  };
-
   // Pass these to CardNav
   const headerProps = {
     isSearch,
-    handleSearch,
-    isDark,
-    handleDark,
-    onNewsletterClick
+    handleSearch
   };
   // CardNav menu items configuration
   const cardNavItems = [
@@ -84,27 +66,19 @@ export default function Header({ onNewsletterClick }: any) {
       {/* Mobile Header */}
       <div className="flex items-center justify-between px-4 py-3 md:hidden">
         {/* Mobile Logo */}
-        <Link href="/" className="flex items-center space-x-2">
+        <Link href="/" prefetch={true} className="flex items-center space-x-2">
           <NextImage
             src="/assets/images/Standart/Primary-alternative.png"
-            alt="Merinda Logo"
+            alt="Scrolli Logo"
             width={32}
             height={32}
             className="h-8 w-8"
           />
-          <span className="text-lg font-bold">Merinda</span>
+          <span className="text-lg font-semibold">Scrolli</span>
         </Link>
 
         {/* Mobile Actions */}
         <div className="flex items-center space-x-2">
-          <button
-            onClick={() => handleDark()}
-            className="p-2 rounded-md hover:bg-accent"
-            aria-label="Toggle theme"
-          >
-            {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </button>
-
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="p-2 rounded-md hover:bg-accent"
@@ -121,19 +95,21 @@ export default function Header({ onNewsletterClick }: any) {
           <nav className="px-4 py-4 space-y-4">
             {cardNavItems.map((item) => (
               <div key={item.label} className="space-y-2">
-                <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
+                <Heading level={3} variant="h6" className="uppercase tracking-wide" color="muted">
                   {item.label}
-                </h3>
+                </Heading>
                 <div className="space-y-1 pl-4">
                   {item.links.map((link, index) => (
-                    <a
+                    <Text
                       key={index}
+                      as="a"
                       href="#"
-                      className="block py-2 text-sm hover:text-primary transition-colors"
+                      variant="bodySmall"
+                      className="block py-2 hover:text-primary transition-colors"
                       aria-label={link.ariaLabel}
                     >
                       {link.label}
-                    </a>
+                    </Text>
                   ))}
                 </div>
               </div>
@@ -145,7 +121,7 @@ export default function Header({ onNewsletterClick }: any) {
       {/* Desktop Header */}
       <CardNav
         logo="/assets/images/Standart/Primary-alternative.png"
-        logoAlt="Merinda Logo"
+        logoAlt="Scrolli Logo"
         items={cardNavItems}
         {...headerProps}
       />

@@ -1,26 +1,56 @@
 "use client";
+
 import { useState, FormEvent } from "react";
+import { Container } from "@/components/responsive";
+import { Heading } from "@/components/ui/typography";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { SmartButton } from "@/components/ui/smart-button";
+import {
+  sectionPadding,
+  gap,
+  colors,
+  componentPadding,
+  typography,
+  fontWeight,
+  borderRadius,
+} from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function Section1() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    message: ""
+    message: "",
+    agree: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<{
-    type: 'success' | 'error' | null;
+    type: "success" | "error" | null;
     message: string;
   }>({
     type: null,
-    message: ""
+    message: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
+    }));
+  };
+
+  const handleCheckboxChange = (checked: boolean) => {
+    setFormData((prev) => ({
+      ...prev,
+      agree: checked,
     }));
   };
 
@@ -30,33 +60,38 @@ export default function Section1() {
     setSubmitStatus({ type: null, message: "" });
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
+      const response = await fetch("/api/contact", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to send message');
+        throw new Error("Failed to send message");
       }
 
       setSubmitStatus({
-        type: 'success',
-        message: 'Your message has been sent successfully!'
+        type: "success",
+        message: "Your message has been sent successfully!",
       });
 
       // Reset form
       setFormData({
         name: "",
         email: "",
-        message: ""
+        message: "",
+        agree: false,
       });
     } catch (error) {
       setSubmitStatus({
-        type: 'error',
-        message: 'Failed to send message. Please try again.'
+        type: "error",
+        message: "Failed to send message. Please try again.",
       });
     } finally {
       setIsSubmitting(false);
@@ -64,93 +99,153 @@ export default function Section1() {
   };
 
   return (
-    <>
-      <div className="container">
-        {/*Begin Page Header*/}
-        <div className="row">
-          <div className="col-12 archive-header text-center pt-3 pb-3 mb-5">
-            <h1 className="mb-3">Contact Us</h1>
-            <p className="archive-intro">We have a dedicated support center for all of your support needs. We usually get back to you within 12-24 hours.</p>
-          </div>
-        </div>
-        {/*End Page Header*/}
-        <article className="mb-5">
-          <div className="row">
-            <div className="col-md-6 pe-lg-5">
-              <h4 className="spanborder">
-                <span>Contact details</span>
-              </h4>
-              <p>Maecenas sed diam eget risus varius blandit sit amet non magna. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Praesent commodo cursus magna, vel scelerisque nisl.</p>
-              <div className="sidebar-widget widget-about">
-                <p>
-                  <i className="icon-map" /> 423B, Wordwide Country, USA
-                </p>
-                <p>
-                  <i className="icon-paper-plane" /> alithemes@gmail.com
-                </p>
-                <p>
-                  <i className="icon-phone" /> +91-234-567-8900
-                </p>
-              </div>
+    <section className={cn(sectionPadding.xl, colors.background.base)}>
+      <Container size="lg" padding="lg">
+        <div className={cn("flex flex-col lg:flex-row", gap.xl)}>
+          {/* Left Side - Background Image */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="hidden lg:block lg:w-1/2 relative overflow-hidden rounded-lg"
+          >
+            <div className="relative w-full h-full min-h-[600px]">
+              <Image
+                src="https://cdn.prod.website-files.com/63b053ef35937392bd426a55/67965c7b0ad59049d74d0c05_Open%20Laptop%20Minimal%20Office%20Nov%2027.webp"
+                alt="Office workspace"
+                fill
+                className="object-cover blur-sm"
+                sizes="(max-width: 1024px) 0vw, 50vw"
+              />
             </div>
-            <div className="col-md-6">
-              <h4 className="spanborder">
-                <span>Get in touch</span>
-              </h4>
-              <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Cras mattis consectetur amet fermentum. Sed posuere consectetur est at lobortis.</p>
-              <form onSubmit={handleSubmit} className="form-contact">
+          </motion.div>
+
+          {/* Right Side - Contact Form */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="flex-1 lg:w-1/2"
+          >
+            <div className={cn("flex flex-col", gap.lg)}>
+              {/* Heading */}
+              <div className={cn("flex flex-col", gap.sm)}>
+                <Heading level={1} variant="h1" color="primary">
+                  Contact us
+                </Heading>
+              </div>
+
+              {/* Form */}
+              <form onSubmit={handleSubmit} className={cn("flex flex-col", gap.lg)}>
                 {submitStatus.type && (
-                  <div className={`alert alert-${submitStatus.type === 'success' ? 'success' : 'danger'} mb-4`}>
+                  <div
+                    className={cn(
+                      componentPadding.md,
+                      borderRadius.md,
+                      submitStatus.type === "success"
+                        ? colors.success.bg
+                        : colors.error.bg,
+                      submitStatus.type === "success"
+                        ? colors.success.DEFAULT
+                        : colors.error.DEFAULT,
+                      typography.bodySmall
+                    )}
+                  >
                     {submitStatus.message}
                   </div>
                 )}
-                <p>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Your Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                  />
-                </p>
-                <p>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Your Mail"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                  />
-                </p>
-                <p>
-                  <textarea
+
+                {/* Name and Email Row */}
+                <div className={cn("grid grid-cols-1 md:grid-cols-2", gap.md)}>
+                  {/* Name Field */}
+                  <div className={cn("flex flex-col", gap.sm)}>
+                    <Label htmlFor="name" className={cn(typography.bodySmall, fontWeight.medium, colors.foreground.primary)}>
+                      Name
+                    </Label>
+                    <Input
+                      id="name"
+                      type="text"
+                      name="name"
+                      placeholder="Name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                      className={cn(colors.background.base, colors.border.DEFAULT)}
+                    />
+                  </div>
+
+                  {/* Email Field */}
+                  <div className={cn("flex flex-col", gap.sm)}>
+                    <Label htmlFor="email" className={cn(typography.bodySmall, fontWeight.medium, colors.foreground.primary)}>
+                      Email
+                    </Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      name="email"
+                      placeholder="Email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className={cn(colors.background.base, colors.border.DEFAULT)}
+                    />
+                  </div>
+                </div>
+
+                {/* Message Field */}
+                <div className={cn("flex flex-col", gap.sm)}>
+                  <Label htmlFor="message" className={cn(typography.bodySmall, fontWeight.medium, colors.foreground.primary)}>
+                    Your message
+                  </Label>
+                  <Textarea
+                    id="message"
                     name="message"
-                    cols={40}
-                    rows={10}
-                    placeholder="Your Message"
+                    placeholder="Write your message"
                     value={formData.message}
                     onChange={handleChange}
                     required
+                    rows={6}
+                    className={cn(colors.background.base, colors.border.DEFAULT)}
                   />
-                </p>
-                <p>
-                  <button
-                    type="submit"
-                    className="submit-btn btn btn-success"
-                    disabled={isSubmitting}
+                </div>
+
+                {/* Checkbox */}
+                <div className={cn("flex items-start", gap.sm)}>
+                  <Checkbox
+                    id="agree"
+                    checked={formData.agree}
+                    onCheckedChange={handleCheckboxChange}
+                    required
+                  />
+                  <Label
+                    htmlFor="agree"
+                    className={cn(
+                      typography.bodySmall,
+                      colors.foreground.secondary,
+                      "cursor-pointer"
+                    )}
                   >
-                    {isSubmitting ? 'Sending...' : 'Send Message'}
-                  </button>
-                </p>
+                    Agree Thank you!
+                  </Label>
+                </div>
+
+                {/* Submit Button */}
+                <SmartButton
+                  type="submit"
+                  disabled={isSubmitting || !formData.agree}
+                  width="auto"
+                  size="md"
+                  className="w-full md:w-auto"
+                >
+                  {isSubmitting ? "Sending..." : "Submit"}
+                </SmartButton>
               </form>
             </div>
-          </div>
-        </article>
-        {/*entry-content*/}
-      </div>
-      {/*container*/}
-    </>
+          </motion.div>
+        </div>
+      </Container>
+    </section>
   );
 }

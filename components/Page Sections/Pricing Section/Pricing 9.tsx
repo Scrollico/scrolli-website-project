@@ -78,10 +78,10 @@ export function Component() {
                 {tiers.map((tier, index) => (
                   <th key={tier.name} className="p-4 text-center font-medium">
                     <div
-                      className={`rounded-2xl p-6 ${tier.popular ? "bg-gray-100 ring-2 ring-blue-500" : ""}`}
+                      className={`rounded-2xl p-6 ${tier.popular ? "bg-gray-100 ring-2 ring-[#374152]" : ""}`}
                     >
                       {tier.popular && (
-                        <span className="bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-full mb-4 inline-block">
+                        <span className="bg-[#374152] text-white text-xs font-semibold px-3 py-1 rounded-full mb-4 inline-block">
                           Most popular
                         </span>
                       )}
@@ -119,8 +119,8 @@ export function Component() {
                     <Button
                       className={`w-full ${
                         tier.popular
-                          ? "bg-blue-500 text-white hover:bg-blue-600"
-                          : "bg-white text-blue-500 border border-blue-500 hover:bg-blue-50"
+                          ? "bg-[#374152] text-white hover:bg-[#374152]/90"
+                          : "bg-white text-[#374152] border border-[#374152] hover:bg-[#374152]/10"
                       }`}
                     >
                       {tier.buttonText}
@@ -142,7 +142,7 @@ export function Component() {
                       {typeof available === "boolean" ? (
                         available ? (
                           <Check
-                            className="mx-auto h-5 w-5 text-blue-500"
+                            className="mx-auto h-5 w-5 text-[#374152]"
                             aria-label="Included"
                           />
                         ) : (

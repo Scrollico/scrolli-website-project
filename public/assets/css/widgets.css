@@ -33,8 +33,13 @@ Styling for widgets
 /*Widget Featured Posts*/
 
 .post-has-bg {
-  background: #fafafa;
+  background: #fafafa; /* gray-50 - light mode background */
   margin-bottom: 2rem;
+}
+
+/* Dark mode support - using Arc Publishing gray700 baseline */
+.dark-mode .post-has-bg {
+  background: #374152; /* gray-700 - Arc baseline (matches colors.background.base) */
 }
 
 .post-has-bg figure {

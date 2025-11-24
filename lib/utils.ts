@@ -104,6 +104,10 @@ export const gradientVariants = {
     md:via-white/80
     lg:via-white/75
     xl:via-white/70
+    dark:from-black dark:via-black/85 dark:to-transparent
+    dark:md:via-black/80
+    dark:lg:via-black/75
+    dark:xl:via-black/70
   `,
 
   // Content overlay gradients

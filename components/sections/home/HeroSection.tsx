@@ -3,56 +3,77 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/responsive";
-import { gradientVariants } from "@/lib/utils";
+import { Heading, Caption } from "@/components/ui/typography";
+import { Badge } from "@/components/ui/badge";
+import { colors } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
 export default function HeroSection() {
   return (
-    <section className="relative w-full min-h-screen md:h-screen flex items-center overflow-hidden">
+    <section className="relative w-full min-h-[70vh] md:h-[70vh] flex items-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-10">
         <Image
           src="/assets/images/thumb/thumb-1400x778.jpg"
           alt="Featured article background"
           fill
-          className="object-cover"
+          className="object-cover object-center"
           priority
           sizes="100vw"
         />
         {/* Overlay gradient - Responsive with varying opacity */}
-        <div className={`absolute inset-0 z-20 ${gradientVariants.heroOverlay}`} />
+        <div className="absolute inset-0 z-20 hero-gradient-overlay" />
         {/* Bottom gradient transition - Responsive height */}
-        <div className={`absolute bottom-0 left-0 w-full z-20
+        <div className={cn(`absolute bottom-0 left-0 w-full z-20
           h-[85%]
           md:h-[90%]
           lg:h-[95%]
           xl:h-[100%]
-          ${gradientVariants.bottomTransition}
-        `} />
+        `, "hero-bottom-gradient")} />
       </div>
 
       {/* Content */}
-      <Container className="relative z-30">
+      <Container className="relative z-30 pt-16 md:pt-24">
         <div className="max-w-2xl">
           {/* Featured Label */}
           <div className="mb-4 md:mb-8">
-            <span className="inline-block px-3 py-2 text-xs md:text-sm font-normal text-white bg-black/30 backdrop-blur-sm rounded border border-white/20 uppercase tracking-wide cursor-default opacity-90 shadow-sm">
+            <Badge
+              variant="secondary"
+              appearance="ghost"
+              size="sm"
+              className="!px-3 !py-2 uppercase tracking-wide !bg-black/30 backdrop-blur-sm !border !border-white/20 !text-white dark:!bg-black/30 dark:!border-white/20 dark:!text-white rounded opacity-90 shadow-sm cursor-default !bg-none"
+              style={{ backgroundImage: 'none' }}
+            >
               Featured
-            </span>
+            </Badge>
           </div>
 
           {/* Headline */}
-          <h1 className="mb-6 md:mb-8 text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold leading-tight text-white max-w-full font-cabin" style={{ textShadow: '0 2px 8px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 0, 0, 0.3)' }}>
+          <Heading
+            level={1}
+            variant="h2"
+            className={cn(
+              "mb-6 md:mb-8 max-w-full font-semibold",
+              "text-gray-900 dark:text-gray-100"
+            )}
+            style={{ textShadow: '0 1px 1px rgba(0, 0, 0, 0.1)' }}
+          >
             Marco Grassi: 'A painting's months-long journey can't keep up with the pace of the digital world'
-          </h1>
+          </Heading>
 
           {/* Read More Link */}
           <Link
             href="#"
-            className="inline-flex items-center gap-3 px-6 py-4 md:px-8 md:py-5 text-base md:text-lg font-medium text-foreground no-underline bg-white/20 backdrop-blur-md rounded-full border border-white/30 hover:bg-white/30 hover:-translate-y-1 transition-all duration-300"
+            className={cn(
+              "inline-flex items-center gap-2 no-underline transition-colors duration-300",
+              "text-gray-900 dark:text-gray-100",
+              "hover:text-gray-800 dark:hover:text-gray-200"
+            )}
+            style={{ textShadow: '0 1px 1px rgba(0, 0, 0, 0.1)' }}
           >
             Read in-depth
             <svg
-              className="h-5 w-5 md:h-6 md:w-6"
+              className="h-4 w-4 md:h-5 md:w-5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

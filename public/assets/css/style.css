@@ -1,6 +1,6 @@
 /***
- Theme Name:  merinda
- Theme URI:   http://demos.alithemes.com/merinda
+Theme Name:  scrolli
+Theme URI:   http://demos.alithemes.com/scrolli
  Description: WordPress Theme like Medium Blog Platform
  Author:    alithemes.com
  Author URI:  http://alithemes.com
@@ -217,10 +217,11 @@ img {
 
 .divider {
   position: relative;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15); /* gray-200 border in light mode */
   margin-top: 1.5rem;
   margin-bottom: 2.25rem;
 }
+
 
 .divider-2 {
   position: relative;
@@ -897,6 +898,18 @@ header .logo-wrapper {
   justify-content: space-between;
   min-height: 80px;
   height: 80px;
+  position: relative;
+}
+
+/* Center Group - Logo and Menu Items */
+.card-nav-center-group {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 .card-nav-logo {
@@ -904,6 +917,9 @@ header .logo-wrapper {
   display: flex;
   align-items: center;
   height: 100%;
+  position: absolute;
+  left: 0;
+  transform: translateX(-50%);
 }
 
 .card-nav-logo .logo-image {
@@ -928,10 +944,13 @@ header .logo-wrapper {
 .card-nav-menu {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 4rem;
-  position: relative;
-  flex: 1;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  position: absolute;
+  right: 0;
+  flex-shrink: 0;
+  white-space: nowrap;
+  transform: translateX(calc(-100% - 2.5rem));
 }
 
 .card-nav-link {
@@ -966,6 +985,7 @@ header .logo-wrapper {
   display: flex;
   align-items: center;
   height: 100%;
+  z-index: 1;
 }
 
 .alara-hover-image {
@@ -977,7 +997,7 @@ header .logo-wrapper {
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
-  z-index: 1001;
+  z-index: 9999 !important;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.95);
   padding: 0;
@@ -1005,61 +1025,88 @@ header .logo-wrapper {
   display: flex;
   align-items: center;
   height: 100%;
-  gap: 1rem;
-  margin-left: 2rem;
+  gap: 0;
+  margin-left: 0;
 }
 
-/* Newsletter Signup Button */
-.newsletter-signup-btn {
+/* Auth Group - Contains auth buttons and utilities together */
+.card-nav-auth-group {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 16px;
-  font-weight: bold;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  border: none;
-  outline: none;
-  background: transparent;
-  color: #666;
-  position: relative;
-}
-
-/* Light mode styling */
-.newsletter-signup-btn {
-  color: #666;
-  background: rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.newsletter-signup-btn:hover {
-  background: rgba(53, 0, 253, 0.1);
-  color: #3500fd;
-  transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(53, 0, 253, 0.15);
-}
-
-/* Dark mode styling */
-.dark-mode .newsletter-signup-btn {
-  background: transparent;
-  color: #ccc;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.dark-mode .newsletter-signup-btn:hover {
-  background: rgba(139, 92, 246, 0.1);
-  color: #8b5cf6;
-  border-color: rgba(139, 92, 246, 0.3);
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
-}
-
-/* Spacing for elements after search */
-.card-nav-container > .newsletter-signup-btn {
+  gap: 1rem;
+  flex-shrink: 0;
   margin-left: 1rem;
+}
+
+/* Minimal auth buttons - FT.com / Washington Post style */
+.card-nav-auth-buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.card-nav-sign-in {
+  font-size: 0.875rem;
+  font-weight: 400;
+  text-decoration: none;
+  color: rgba(35, 31, 32, 0.7);
+  padding: 0;
+  line-height: 1.5;
+  transition: color 0.2s ease, opacity 0.2s ease;
+  white-space: nowrap;
+}
+
+.dark-mode .card-nav-sign-in {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.card-nav-sign-in:hover {
+  color: #231f20;
+  text-decoration: none;
+  opacity: 1;
+}
+
+.dark-mode .card-nav-sign-in:hover {
+  color: #ffffff;
+  opacity: 1;
+}
+
+.card-nav-subscribe {
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: #ffffff;
+  background-color: #231f20;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  line-height: 1.5;
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+  display: inline-block;
+  opacity: 1;
+}
+
+.dark-mode .card-nav-subscribe {
+  background-color: #ffffff;
+  color: #231f20 !important;
+}
+
+.card-nav-subscribe:hover,
+.card-nav-subscribe:active,
+.card-nav-subscribe:focus {
+  opacity: 0.85;
+  text-decoration: none;
+  background-color: #231f20;
+  color: #ffffff !important;
+}
+
+.dark-mode .card-nav-subscribe:hover,
+.dark-mode .card-nav-subscribe:active,
+.dark-mode .card-nav-subscribe:focus {
+  opacity: 0.85;
+  background-color: #ffffff;
+  color: #231f20 !important;
 }
 
 .card-nav-container > .dark-light-toggle {
@@ -1071,7 +1118,7 @@ header .logo-wrapper {
   display: flex;
   align-items: center;
   height: 100%;
-  margin-left: 2rem;
+  margin-left: 0;
 }
 
 .card-nav-clocks .header-clock-row {
@@ -1137,12 +1184,121 @@ header .logo-wrapper {
   color: #ffffff;
 }
 
+/* Right Side Group - Contains all right-side elements */
+.card-nav-right-group {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-shrink: 0;
+  margin-left: auto;
+  order: 999;
+}
+
+/* Utility Group - Settings & Preferences (Theme, Language) */
+.card-nav-utilities {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+  margin-left: 0;
+}
+
+/* User Info Group - Profile & Context (Clocks, Avatar) */
+.card-nav-user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
 .card-nav-search {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   height: 100%;
-  margin-left: auto;
+  margin-left: 0;
+  order: -1;
+}
+
+.card-nav-search-form {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.dark-mode .card-nav-search-form {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.card-nav-search-form:focus-within {
+  border-color: rgba(53, 0, 253, 0.5);
+  box-shadow: 0 0 0 3px rgba(53, 0, 253, 0.1);
+}
+
+.dark-mode .card-nav-search-form:focus-within {
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.card-nav-search-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.6);
+  padding: 0;
+  flex-shrink: 0;
+  border-radius: 20px 0 0 20px;
+}
+
+.dark-mode .card-nav-search-toggle {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.card-nav-search-toggle:hover {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.dark-mode .card-nav-search-toggle:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.card-nav-search-input {
+  flex: 1;
+  height: 40px;
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 0 12px;
+  font-size: 0.875rem;
+  color: rgba(0, 0, 0, 0.8);
+  min-width: 0;
+}
+
+.dark-mode .card-nav-search-input {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.card-nav-search-input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.dark-mode .card-nav-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
 }
 
 /* Hero Section - Remove default margins */
@@ -1426,7 +1582,7 @@ section[style*="height: 100vh"] > div:first-child {
 .articles-swiper .swiper-slide figure {
   position: relative;
   width: 100%;
-  height: 100%;
+  flex-shrink: 0;
 }
 
 .articles-swiper .swiper-slide figure a {
@@ -1468,6 +1624,26 @@ section[style*="height: 100vh"] > div:first-child {
   display: flex !important;
   flex-direction: column !important;
   overflow: visible !important;
+  transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out,
+    transform 0.3s ease-in-out !important;
+  background-color: #f9fafb !important;
+}
+
+.dark .articles-swiper .swiper-slide article {
+  background-color: #1f2937 !important;
+}
+
+/* Classy hover effect with subtle shadow */
+.articles-swiper .swiper-slide article:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.12),
+    0 2px 4px -1px rgba(0, 0, 0, 0.08) !important;
+  transform: translateY(-2px) !important;
+}
+
+.dark .articles-swiper .swiper-slide article:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4),
+    0 2px 4px -1px rgba(0, 0, 0, 0.3) !important;
+  transform: translateY(-2px) !important;
 }
 
 .articles-swiper .swiper-slide .article-title-container {
@@ -1477,31 +1653,60 @@ section[style*="height: 100vh"] > div:first-child {
   position: relative !important;
   z-index: 10 !important;
   width: 100% !important;
-  background-color: white !important;
+  background-color: #f9fafb !important;
   flex-shrink: 0 !important;
-  padding-left: 0 !important;
-  margin-left: 0 !important;
+  padding: 1rem !important;
+  margin: 0 !important;
+  min-height: 60px !important;
+  box-sizing: border-box !important;
 }
 
-.dark .articles-swiper .swiper-slide .article-title-container {
-  background-color: hsl(var(--card)) !important;
+.dark .articles-swiper .swiper-slide .article-title-container,
+.dark-mode .articles-swiper .swiper-slide .article-title-container {
+  background-color: #1f2937 !important; /* gray-800 - dark background for white text */
+  color: #ffffff !important; /* white text */
 }
 
 .articles-swiper .swiper-slide .article-title-container h3 {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
-  margin-left: 0 !important;
-  padding-left: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #111827 !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  line-height: 1.5 !important;
+}
+
+@media (min-width: 768px) {
+  .articles-swiper .swiper-slide .article-title-container h3 {
+    font-size: 1rem !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .articles-swiper .swiper-slide .article-title-container h3 {
+    font-size: 1.125rem !important;
+  }
 }
 
 .articles-swiper .swiper-slide .article-title-container a {
-  display: inline !important;
+  display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
-  color: inherit !important;
-  margin-left: 0 !important;
-  padding-left: 0 !important;
+  color: #111827 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-decoration: none !important;
+  width: 100% !important;
+}
+
+.dark .articles-swiper .swiper-slide .article-title-container h3,
+.dark .articles-swiper .swiper-slide .article-title-container a,
+.dark-mode .articles-swiper .swiper-slide .article-title-container h3,
+.dark-mode .articles-swiper .swiper-slide .article-title-container a {
+  color: #ffffff !important; /* white text */
 }
 
 /* Vertical dividers between article cards - centered in the gap */
@@ -1561,6 +1766,7 @@ section[style*="height: 100vh"] > div:first-child {
 .videos-swiper .swiper-wrapper {
   margin-left: 0 !important;
   padding-left: 0 !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .videos-swiper .swiper-slide {
@@ -1573,6 +1779,8 @@ section[style*="height: 100vh"] > div:first-child {
   width: 100% !important;
   display: flex !important;
   flex-direction: column !important;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  will-change: transform, opacity;
 }
 
 /* Fixed widths for video cards in swiper */
@@ -1687,12 +1895,56 @@ section[style*="height: 100vh"] > div:first-child {
   animation: fadeOut 0.3s ease-in-out forwards;
 }
 
-.video-player-modal.genie-entering > div {
+.video-player-modal.genie-entering > div:not(.video-container-visible) {
   animation: fadeIn 0.3s ease-in-out forwards;
 }
 
-.video-player-modal.genie-exiting > div {
+.video-player-modal.genie-exiting > div:not(.video-container-visible) {
   animation: fadeOut 0.3s ease-in-out forwards;
+}
+
+/* Ensure video container and video are always visible */
+.video-player-modal .video-container-visible {
+  opacity: 1 !important;
+  visibility: visible !important;
+  animation: none !important;
+}
+
+.video-player-modal .video-container-visible video {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  animation: none !important;
+}
+
+/* Ensure video container stays visible */
+.video-player-modal .video-container-visible {
+  opacity: 1 !important;
+  visibility: visible !important;
+  animation: none !important; /* Prevent animation interference */
+}
+
+.video-player-modal .video-container-visible video {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  animation: none !important; /* Prevent animation interference */
+}
+
+/* CRITICAL: Prevent animations from affecting video container and video element */
+.video-player-modal.genie-entering .video-container-visible,
+.video-player-modal.genie-exiting .video-container-visible {
+  animation: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.video-player-modal.genie-entering .video-container-visible video,
+.video-player-modal.genie-exiting .video-container-visible video {
+  animation: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
 }
 
 .videos-grid:active {
@@ -1868,9 +2120,10 @@ section[style*="height: 100vh"] {
   }
 
   .card-nav-menu {
-    order: 3;
+    order: 2;
     width: 100%;
     justify-content: center;
+    margin-left: 0;
     margin-top: 1rem;
     gap: 2rem;
   }
@@ -1881,16 +2134,44 @@ section[style*="height: 100vh"] {
     gap: 0.75rem;
   }
 
+  .card-nav-right-group {
+    order: 2;
+    width: 100%;
+    justify-content: space-between;
+    margin-left: 0;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
   .card-nav-search {
-    order: 5;
-    margin-left: auto;
-    justify-content: flex-end;
+    order: 1;
+    margin-left: 0;
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .card-nav-utilities {
+    order: 2;
+    gap: 0.5rem;
+  }
+
+  .card-nav-user-info {
+    order: 3;
+    gap: 0.75rem;
   }
 
   .card-nav-clocks {
-    order: 4;
     margin-left: 0;
     justify-content: center;
+  }
+
+  .card-nav-auth-buttons {
+    order: 4;
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
+    margin-top: 0.5rem;
   }
 
   .card-nav-clocks .header-clock-row {
@@ -1901,10 +2182,17 @@ section[style*="height: 100vh"] {
   .card-nav-logo {
     order: 1;
     height: 60px;
+    position: relative;
+    left: auto;
+    transform: none;
   }
 
   .card-nav-logo .logo-image {
     max-width: 100px;
+  }
+
+  .card-nav-search {
+    order: 1;
   }
 }
 
@@ -2659,7 +2947,8 @@ blockquote ol:last-child {
   top: 70px;
 }
 
-.social-sticky a {
+.social-sticky a,
+.social-sticky button {
   display: flex !important;
   align-items: center;
   justify-content: center;
@@ -2670,14 +2959,64 @@ blockquote ol:last-child {
   height: 30px;
   margin-bottom: 0.5rem;
   font-size: 13px;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
 }
 
-.social-sticky a svg {
+.social-sticky a:hover,
+.social-sticky button:hover {
+  color: rgba(0, 0, 0, 0.8);
+  border-color: rgba(0, 0, 0, 0.5);
+  transform: scale(1.1);
+}
+
+.social-sticky a svg,
+.social-sticky button svg {
   color: rgba(0, 0, 0, 0.54) !important;
   fill: rgba(0, 0, 0, 0.54) !important;
   width: 13px !important;
   height: 13px !important;
   vertical-align: middle;
+}
+
+.social-sticky a:hover svg,
+.social-sticky button:hover svg {
+  color: rgba(0, 0, 0, 0.8) !important;
+  fill: rgba(0, 0, 0, 0.8) !important;
+}
+
+.social-sticky .social-heart.liked,
+.social-sticky .social-heart.liked svg,
+.social-sticky .social-heart.liked i {
+  color: #ef4444 !important;
+  fill: #ef4444 !important;
+  border-color: #ef4444 !important;
+}
+
+.dark-mode .social-sticky a,
+.dark-mode .social-sticky button {
+  color: rgba(255, 255, 255, 0.54);
+  border-color: rgba(255, 255, 255, 0.34);
+}
+
+.dark-mode .social-sticky a:hover,
+.dark-mode .social-sticky button:hover {
+  color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.dark-mode .social-sticky a svg,
+.dark-mode .social-sticky button svg {
+  color: rgba(255, 255, 255, 0.54) !important;
+  fill: rgba(255, 255, 255, 0.54) !important;
+}
+
+.dark-mode .social-sticky a:hover svg,
+.dark-mode .social-sticky button:hover svg {
+  color: rgba(255, 255, 255, 0.8) !important;
+  fill: rgba(255, 255, 255, 0.8) !important;
 }
 
 .dropcap p:first-child:first-letter {
@@ -2779,6 +3118,65 @@ blockquote ol:last-child {
 /*Related posts*/
 .related-posts h3 {
   text-align: center;
+}
+
+.related-posts {
+  max-width: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.related-posts .swiper-container,
+.related-posts .swiper-container-related,
+.related-posts .related-posts-container {
+  max-width: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.related-posts-slider {
+  width: 100% !important;
+}
+
+.related-posts-slider .swiper-wrapper {
+  width: 100% !important;
+}
+
+.related-posts-slider .swiper-slide img {
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+.related-posts-slider .swiper-slide {
+  height: auto;
+}
+
+/* Perplexity-style compact layout */
+.related-post-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Centered pale vertical divider */
+.related-post-slide:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -10px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: rgba(0, 0, 0, 0.06);
+  z-index: 10;
+}
+
+.dark .related-post-slide:not(:last-child)::after {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Remove any duplicate vertical lines */
+.related-posts-slider .swiper-slide > div {
+  position: relative;
 }
 
 /*PAGEs*/
@@ -2978,12 +3376,166 @@ button.owl-next:hover {
 }
 
 .dark-mode {
-  --body-bg: #1a1a1a;
-  --text-color: #f0f0f0;
-  --link-color: #fff;
-  --border-color: #333;
-  --card-bg: #1a1a1a;
-  --header-bg: #1a1a1a;
+  /* Arc Publishing standards: gray700 baseline (#374151), avoid pure black/white */
+  --body-bg: #374151; /* gray-700 - Arc baseline (not #1a1a1a/black) */
+  --text-color: #f3f4f6; /* gray-100 - Arc onBackground (not #ffffff/white) */
+  --link-color: #f3f4f6; /* gray-100 - Arc onBackground */
+  --border-color: #4b5563; /* gray-600 - Arc outline */
+  --card-bg: #374151; /* gray-700 - Arc baseline */
+  --header-bg: #374151; /* gray-700 - Arc baseline */
+}
+
+/* ARC PUBLISHING STANDARD: All text must be gray-based (not pure white) in dark mode */
+/* Arc: Use gray-100 (#f3f4f6) for onBackground, not pure white (#ffffff) */
+.dark-mode p,
+.dark-mode span,
+.dark-mode div,
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5,
+.dark-mode h6,
+.dark-mode li,
+.dark-mode td,
+.dark-mode th,
+.dark-mode label,
+.dark-mode input:not([type="checkbox"]):not([type="radio"]),
+.dark-mode textarea,
+.dark-mode select {
+  color: #f3f4f6 !important; /* gray-100 - Arc onBackground (not #ffffff/white) */
+}
+
+/* Links - gray-100 by default (Arc onBackground), purple on hover */
+.dark-mode a {
+  color: #f3f4f6 !important; /* gray-100 - Arc onBackground (not #ffffff/white) */
+}
+
+.dark-mode a:hover,
+.dark-mode a:active,
+.dark-mode a:focus {
+  color: #8b5cf6 !important; /* Scrolli brand purple for hover */
+}
+
+/* Override for Subscribe button - must stay black in dark mode */
+.dark-mode .card-nav-subscribe,
+.dark-mode a.card-nav-subscribe {
+  color: #231f20 !important;
+  background-color: #ffffff !important;
+}
+
+.dark-mode .card-nav-subscribe:hover,
+.dark-mode .card-nav-subscribe:active,
+.dark-mode .card-nav-subscribe:focus,
+.dark-mode a.card-nav-subscribe:hover,
+.dark-mode a.card-nav-subscribe:active,
+.dark-mode a.card-nav-subscribe:focus {
+  color: #231f20 !important;
+  background-color: #ffffff !important;
+}
+
+.dark-mode .card-nav-link:hover {
+  color: #8b5cf6 !important; /* Scrolli brand purple for hover */
+}
+
+/* Allow muted text for secondary content - Arc onBackground-subtle */
+.dark-mode .text-muted,
+.dark-mode .muted,
+.dark-mode .secondary-text,
+.dark-mode .entry-meta,
+.dark-mode .entry-excerpt {
+  color: #e5e7eb !important; /* gray-200 - Arc onBackground-subtle (not rgba white) */
+}
+
+/* Allow disabled text - Arc disabled state */
+.dark-mode .disabled,
+.dark-mode [disabled] {
+  color: #6b7280 !important; /* gray-500 - Arc disabled state (not rgba white) */
+}
+
+/* Override any hardcoded black text colors - Arc: use gray-100 (not pure white) */
+.dark-mode [style*="color: rgba(0, 0, 0"],
+.dark-mode [style*="color:#222"],
+.dark-mode [style*="color: #222"],
+.dark-mode [style*="color:#111827"],
+.dark-mode [style*="color: #111827"],
+.dark-mode [style*="color:#231f20"],
+.dark-mode [style*="color: #231f20"] {
+  color: #f3f4f6 !important; /* gray-100 - Arc onBackground (not #ffffff/white) */
+}
+
+/* Badge exceptions - Force dark background in dark mode for readability */
+.dark-mode [data-slot="badge"] {
+  background-color: #1f2937 !important; /* gray-800 - dark background for white text */
+  color: #ffffff !important; /* white text */
+}
+
+/* NewsCard - Force black text in dark mode (card has light background) */
+.dark-mode [data-news-card="true"] {
+  color: #111827 !important; /* gray-900 - black text for light background */
+}
+
+.dark-mode [data-news-card="true"] h3,
+.dark-mode [data-news-card="true"] p,
+.dark-mode [data-news-card="true"] a,
+.dark-mode [data-news-card="true"] button {
+  color: #111827 !important; /* gray-900 - black text */
+}
+
+/* Tabs container - No background */
+.dark-mode [data-tabs-container="true"],
+.dark-mode [data-tabs-container="true"] * {
+  background: transparent !important;
+}
+
+/* TabsList - Force dark background with white text in dark mode */
+.dark-mode [data-tabs-list="true"],
+.dark-mode [role="tablist"] {
+  background-color: #1f293700 !important; /* gray-800 - dark background */
+  color: #ffffff !important; /* white text */
+}
+
+.dark-mode [role="tab"] {
+  background-color: #1f2937 !important; /* gray-800 - dark background */
+  color: #ffffff !important; /* white text */
+}
+
+/* Podcast navigation buttons - Force dark background with white text in dark mode */
+.dark-mode [data-podcast-nav="true"] {
+  background-color: #1f2937 !important; /* gray-800 - dark background */
+  color: #ffffff !important; /* white text */
+}
+
+.dark-mode [data-podcast-nav="true"] button,
+.dark-mode [data-podcast-nav="true"] svg {
+  color: #ffffff !important; /* white text/icons */
+}
+
+/* ARC PUBLISHING STANDARD: No white backgrounds in dark mode - use gray700 baseline */
+.dark-mode
+  [class*="bg-white"]:not([class*="dark:bg-"]):not([class*="dark-mode"]):not(
+    [data-slot="badge"]
+  ):not([data-news-card="true"]) {
+  background-color: #374151 !important; /* gray-700 - Arc baseline (not #1a1a1a/black) */
+}
+
+/* Card background - ensure dark mode support - Arc gray700 baseline */
+.dark-mode .bg-card,
+.dark-mode [class*="bg-card"] {
+  background-color: var(--card-bg) !important;
+  background-color: #374151 !important; /* gray-700 - Arc baseline (not #1a1a1a/black) */
+}
+
+.dark-mode [style*="background-color: white"],
+.dark-mode [style*="background-color: #fff"],
+.dark-mode [style*="background-color: #ffffff"],
+.dark-mode [style*="background-color:rgba(255, 255, 255"],
+.dark-mode [style*="background: white"],
+.dark-mode [style*="background: #fff"],
+.dark-mode [style*="background: #ffffff"],
+.dark-mode [style*="background:rgba(255, 255, 255"] {
+  background-color: #374151 !important; /* gray-700 - Arc baseline (not #1a1a1a/black) */
+  background: #374151 !important;
 }
 
 /* Apply variables */
@@ -3057,8 +3609,11 @@ body {
   background-color: var(--card-bg);
 }
 
-/* Border colors */
-.dark-mode .divider,
+/* Border colors - using Arc Publishing border tokens */
+.dark-mode .divider {
+  border-bottom-color: rgba(255, 255, 255, 0.15); /* gray-600 border in dark mode */
+}
+
 .dark-mode .divider-2,
 .dark-mode .hr {
   background-color: var(--border-color);
@@ -3081,6 +3636,118 @@ body {
   fill: #3500fd !important;
 }
 
+/* Header Language Selector */
+.header-language {
+  position: relative;
+  display: inline-block;
+  margin-left: 0;
+}
+
+.header-language-minimal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.dark-mode .header-language-minimal {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.header-language-minimal:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.dark-mode .header-language-minimal:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.header-lang-text {
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.header-lang-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+  transition: all 0.2s ease;
+  z-index: 50;
+  margin-top: 4px;
+  min-width: 80px;
+}
+
+.dark-mode .header-lang-dropdown {
+  background: #1f2937;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-language:hover .header-lang-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.header-lang-btn {
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 400;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: transparent !important;
+  color: #111827 !important;
+  text-align: left;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.dark-mode .header-lang-btn {
+  color: #f3f4f6 !important;
+}
+
+.header-lang-btn:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+
+.dark-mode .header-lang-btn:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.header-lang-btn.active {
+  background: rgba(0, 0, 0, 0.08) !important;
+  color: #111827 !important;
+  font-weight: 500;
+}
+
+.dark-mode .header-lang-btn.active {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #f3f4f6 !important;
+}
+
 /* Sidebar and widget styles */
 .dark-mode .sidebar-widget {
   background-color: var(--card-bg);
@@ -3095,7 +3762,18 @@ body {
   color: var(--text-color);
 }
 
-/* Footer styles */
+/* Footer styles - Force dark background with opacity */
+.dark-mode .footer-modern,
+.dark-mode footer.footer-modern {
+  background: rgba(
+    55,
+    65,
+    82,
+    0.878
+  ) !important; /* #374152e0 - gray-700 with opacity */
+  color: #ffffff !important; /* white text */
+}
+
 .dark-mode footer {
   background-color: var(--header-bg);
   color: var(--text-color);
@@ -3146,7 +3824,7 @@ body {
 }
 
 .dark-mode .post-has-bg {
-  background: #202020;
+  background: #374152; /* gray-700 - Arc baseline (matches colors.background.base) */
   margin-bottom: 2rem;
 }
 
@@ -3526,13 +4204,25 @@ body {
 
 /* Video Player Modal */
 .video-player-modal {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  z-index: 9999 !important;
   background-color: #000;
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  width: 100vw !important;
+  overflow: hidden !important;
+  /* Ensure it's positioned relative to viewport, not transformed body */
+  contain: layout style paint;
 }
 
 .video-player-modal video {

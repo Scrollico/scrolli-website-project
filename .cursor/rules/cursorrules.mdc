@@ -1,0 +1,543 @@
+---
+alwaysApply: true
+---
+
+Always start with YOOO!!
+
+# Merinda - News/Blog Magazine Website
+
+## Project Overview
+
+This is a Next.js 15 news/blog magazine website built with TypeScript, Tailwind CSS, and featuring a modern, responsive design with dark mode support. The project follows Turkish content patterns and uses a component-based architecture.
+
+## Tech Stack
+
+- **Framework**: Next.js 15 with App Router
+- **Language**: TypeScript 5
+- **Styling**: Tailwind CSS 3.4.0
+- **UI Components**: Radix UI primitives (@radix-ui/react-tabs, @radix-ui/react-slot)
+- **Carousels**: Swiper.js 11.2.6
+- **Animations**: Framer Motion 12.23.24, GSAP 3.13.0
+- **Forms**: React Hook Form 7.65.0 with Zod validation
+- **Utilities**: clsx, tailwind-merge, class-variance-authority
+- **Icons**: Lucide React
+- **Images**: Next.js Image component with optimization
+
+## Project Structure
+
+```
+app/                    # Next.js App Router pages
+  page.tsx              # Home page
+  article/[id]/         # Single article pages
+  archive/              # Archive pages
+  categories/           # Category pages
+  contact/              # Contact page
+  search/               # Search page
+  globals.css           # Global styles
+  layout.tsx            # Root layout
+
+components/
+  sections/             # Page-specific sections
+    home/               # Home page sections (HeroSection, Section1-4, PodcastSection, etc.)
+    single/             # Single article sections
+    archive/            # Archive sections
+    categories/         # Category sections
+    author/             # Author sections
+    contact/            # Contact sections
+  layout/               # Layout components
+    header/             # Header components (Header, CardNav, StickyNav, CityClockRow)
+    footer/             # Footer component
+    Layout.tsx          # Main layout wrapper
+    MobileMenu.tsx       # Mobile navigation
+  ui/                   # Reusable UI components (shadcn/ui style)
+    button.tsx          # Button component
+    card.tsx            # Card component
+    tabs.tsx            # Tabs component (Radix UI based)
+    form.tsx            # Form components
+    input.tsx           # Input component
+    label.tsx           # Label component
+    sidebar-news.tsx    # News sidebar component
+  responsive/           # Responsive container components
+    Container.tsx       # Main container component
+    ResponsiveGrid.tsx  # Responsive grid
+    Stack.tsx           # Stack component
+  elements/             # Small reusable elements
+    BackToTop.tsx       # Back to top button
+    Pagination.tsx      # Pagination component
+  Page Sections/        # Template sections library (Hero, CTA, Carousel, FAQ, etc.)
+  magicui/              # Magic UI components
+    marquee.tsx         # Marquee component
+
+data/                   # JSON data files
+  blog.json             # Blog/article data
+  comments.json         # Comments data
+
+lib/                    # Utility functions
+  utils.ts             # Common utilities including gradientVariants, cn helper
+
+hooks/                  # Custom React hooks
+  use-media-query.ts   # Media query hook
+
+public/                 # Static assets
+  assets/
+    images/            # Image assets
+    videos/            # Video assets
+    css/               # Additional CSS files
+    font/              # Font files
+```
+
+## Code Style & Conventions
+
+### Component Structure
+
+- Use `"use client"` directive for client components (interactive components, hooks, state)
+- Use functional components with TypeScript
+- Export default for page components
+- Use named exports for reusable components
+- Keep components focused and single-responsibility
+
+### File Naming
+
+- Components: PascalCase (e.g., `HeroSection.tsx`, `PodcastSection.tsx`)
+- Pages: lowercase (e.g., `page.tsx`)
+- Utilities: camelCase (e.g., `utils.ts`)
+- Hooks: camelCase with `use` prefix (e.g., `use-media-query.ts`)
+
+### Component Patterns
+
+```typescript
+// Client Component Example
+"use client";
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Container } from "@/components/responsive";
+import { gradientVariants } from "@/lib/utils";
+
+export default function ComponentName() {
+  const [state, setState] = useState(false);
+
+  return (
+    <section className="relative w-full py-8 md:py-12">
+      <Container>{/* Component content */}</Container>
+    </section>
+  );
+}
+```
+
+### Styling Guidelines
+
+#### Tailwind CSS
+
+- Use Tailwind utility classes for styling
+- Prefer composition over custom CSS
+- Use responsive breakpoints: `sm:`, `md:`, `lg:`, `xl:`, `2xl:`
+- Dark mode: Always use `dark:` prefix for dark mode styles
+- Use `cn()` utility from `@/lib/utils` for conditional classes
+
+#### Common Patterns
+
+- **Gradients**: Use `gradientVariants` from `@/lib/utils` for consistent gradients
+  - `gradientVariants.heroOverlay` - Hero section gradient
+  - `gradientVariants.contentOverlay` - Content overlay gradients
+  - `gradientVariants.bottomTransition` - Bottom gradient transitions
+  - `gradientVariants.textOverlay` - Text overlay gradients
+- **Containers**: Use `Container` component from `@/components/responsive`
+- **Spacing**: Use Tailwind spacing scale (mb-4, p-6, gap-4, etc.)
+- **Colors**: Use semantic color names (text-gray-700, bg-white, etc.)
+- **Green accent**: Use `bg-green-600` for primary actions (as seen in tabs)
+
+#### Image Handling
+
+- Always use Next.js `Image` component with:
+  - `fill` prop for responsive images in containers
+  - `priority` for above-the-fold images
+  - Appropriate `sizes` attribute for responsive images
+  - `object-cover` to fill container (most common)
+  - `object-contain` when full image must be visible
+  - `object-center` for centering focus
+  - Always provide descriptive `alt` text
+
+```typescript
+<Image
+  src="/assets/images/thumb/thumb-1400x778.jpg"
+  alt="Descriptive alt text"
+  fill
+  className="object-cover transition-transform duration-300 group-hover:scale-105"
+  priority
+  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
+/>
+```
+
+### Component Organization
+
+#### Section Components
+
+- Located in `components/sections/[page-name]/`
+- Each section is a self-contained component
+- Sections should be reusable and composable
+- Use descriptive names: `HeroSection.tsx`, `PodcastSection.tsx`, etc.
+- Follow naming: `Section1.tsx`, `Section2.tsx` for numbered sections
+
+#### Layout Components
+
+- Header/Footer in `components/layout/`
+- Use responsive containers
+- Support dark mode
+- StickyNav for scroll-based navigation
+- MobileMenu for mobile navigation
+
+#### UI Components
+
+- Reusable components in `components/ui/`
+- Follow shadcn/ui patterns
+- Use Radix UI primitives when available
+- Export components with proper TypeScript types
+
+### Data Handling
+
+- Static data in `data/blog.json`
+- Use TypeScript interfaces for type safety
+- Import data at component level
+- Access nested data: `blogData.featured`, `blogData.todayHighlights`, etc.
+
+```typescript
+import blogData from "@/data/blog.json";
+const { featured, todayHighlights, featuredSlider } = blogData;
+```
+
+### Common Patterns
+
+#### Links
+
+- Use Next.js `Link` component for navigation
+- Always provide `href` prop
+- Use template literals for dynamic routes: `/article/${article.id}`
+- Use `className` for styling
+- Add hover states: `hover:text-primary`, `hover:underline`
+
+```typescript
+<Link
+  href={`/article/${article.id}`}
+  className="hover:text-primary transition-colors"
+>
+  {article.title}
+</Link>
+```
+
+#### Carousels (Swiper)
+
+- Import Swiper modules as needed
+- Use responsive breakpoints
+- Include pagination and navigation when appropriate
+- Import Swiper CSS files
+- Use custom navigation buttons with class selectors
+
+```typescript
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+
+<Swiper
+  modules={[Navigation, Pagination]}
+  spaceBetween={24}
+  slidesPerView={1.2}
+  loop={false}
+  pagination={{
+    clickable: true,
+    el: ".custom-pagination",
+  }}
+  navigation={{
+    nextEl: ".custom-nav-next",
+    prevEl: ".custom-nav-prev",
+  }}
+  breakpoints={{
+    640: { slidesPerView: 1.5, spaceBetween: 24 },
+    768: { slidesPerView: 2, spaceBetween: 24 },
+    1024: { slidesPerView: 2.5, spaceBetween: 32 },
+    1280: { slidesPerView: 3, spaceBetween: 40 },
+  }}
+  className="custom-swiper"
+>
+  {/* slides */}
+</Swiper>;
+```
+
+#### Tabs (Radix UI)
+
+- Use Radix UI Tabs component
+- Customize with Tailwind classes
+- Support active/inactive states
+- Include dark mode variants
+- Use `data-[state=active]` and `data-[state=inactive]` for styling
+- Use `bg-green-600` for active state
+
+```typescript
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+<Tabs defaultValue="tümü" className="w-full">
+  <TabsList className="bg-transparent p-0 h-auto gap-2">
+    <TabsTrigger
+      value="tümü"
+      className="rounded-lg px-4 py-2 data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=inactive]:bg-white data-[state=inactive]:text-gray-900 dark:data-[state=inactive]:bg-gray-800 dark:data-[state=inactive]:text-gray-300"
+    >
+      Tümü
+    </TabsTrigger>
+  </TabsList>
+  <TabsContent value="tümü">{/* content */}</TabsContent>
+</Tabs>;
+```
+
+### Dark Mode Support
+
+- Always include dark mode variants
+- Use `dark:` prefix for dark mode styles
+- Test both light and dark modes
+- Common patterns:
+  - Text: `text-black dark:text-white`
+  - Background: `bg-white dark:bg-gray-800`
+  - Borders: `border-gray-300 dark:border-gray-700`
+
+```typescript
+className =
+  "text-black dark:text-white bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700";
+```
+
+### Responsive Design
+
+- Mobile-first approach
+- Use responsive breakpoints consistently
+- Common breakpoints: 640px (sm), 768px (md), 1024px (lg), 1280px (xl)
+- Test on multiple screen sizes
+- Use `aspect-ratio` utilities for images
+- Use responsive padding: `py-8 md:py-12`
+
+### Accessibility
+
+- Use semantic HTML elements (`<section>`, `<article>`, `<header>`, `<footer>`, etc.)
+- Provide alt text for images
+- Use proper heading hierarchy (h1, h2, h3)
+- Include ARIA labels when needed
+- Ensure keyboard navigation works
+- Use `aria-label` for icon-only buttons
+
+### Performance
+
+- Use Next.js Image optimization
+- Lazy load below-the-fold content
+- Use `priority` for critical images
+- Optimize bundle size
+- Use `dynamic import` for heavy components if needed
+
+### Code Quality
+
+#### TypeScript
+
+- Use interfaces for props and data structures
+- Avoid `any` type
+- Use type inference where possible
+- Export types when reusable
+- Use proper typing for component props
+
+```typescript
+interface ArticleCard {
+  id: string;
+  title: string;
+  image: string;
+  excerpt: string;
+  author?: string;
+  date?: string;
+}
+
+interface ComponentProps {
+  articles: ArticleCard[];
+  title?: string;
+}
+```
+
+#### Imports
+
+- Group imports: React, Next.js, third-party, local
+- Use absolute imports with `@/` alias
+- Order: external → internal → relative
+- Use named imports when possible
+
+```typescript
+// React and Next.js
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+
+// Third-party
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+
+// Local components
+import { Container } from "@/components/responsive";
+import { gradientVariants } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+// Data
+import blogData from "@/data/blog.json";
+```
+
+### Common Utilities
+
+#### gradientVariants
+
+Located in `lib/utils.ts`, provides consistent gradient overlays:
+
+- `heroOverlay` - Hero section gradient
+- `contentOverlay` - Content overlay gradients
+- `bottomTransition` - Bottom gradient transitions
+- `textOverlay` - Text overlay gradients
+
+Usage:
+
+```typescript
+import { gradientVariants } from "@/lib/utils";
+
+<div className={`absolute inset-0 ${gradientVariants.heroOverlay}`} />;
+```
+
+#### cn() Helper
+
+Utility for conditional class names:
+
+```typescript
+import { cn } from "@/lib/utils";
+
+<div className={cn("base-class", condition && "conditional-class")} />;
+```
+
+#### Container Component
+
+Use for consistent page width:
+
+```typescript
+import { Container } from "@/components/responsive";
+
+<Container className="...">{/* content */}</Container>;
+```
+
+### Content Guidelines
+
+- Support Turkish language content
+- Use proper typography hierarchy
+- Maintain consistent spacing
+- Follow design system patterns
+- Use proper date formatting for Turkish locale
+
+### Error Handling
+
+- Always handle missing data gracefully
+- Use optional chaining (`?.`)
+- Provide fallback content
+- Use null checks before rendering
+
+### Testing Considerations
+
+- Components should be testable
+- Avoid side effects in render
+- Use proper key props for lists
+- Keep components pure when possible
+
+## Best Practices
+
+1. **Component Reusability**: Create reusable components when pattern repeats
+2. **Performance**: Optimize images, use proper lazy loading, avoid unnecessary re-renders
+3. **Accessibility**: Always include alt text, proper semantic HTML, ARIA labels
+4. **Responsive**: Design mobile-first, test all breakpoints, use responsive utilities
+5. **Dark Mode**: Always support both light and dark themes
+6. **Type Safety**: Use TypeScript interfaces, avoid `any`, proper typing
+7. **Code Organization**: Follow project structure, keep related code together
+8. **Consistency**: Use existing patterns, gradients, and utilities
+9. **Image Optimization**: Always use Next.js Image, proper sizes, priority for above-fold
+10. **Styling**: Use Tailwind utilities, gradientVariants, dark mode variants
+
+## Common Tasks
+
+### Adding a New Section
+
+1. Create component in `components/sections/[page-name]/`
+2. Use `"use client"` if interactive
+3. Import necessary utilities (Container, gradientVariants, etc.)
+4. Follow existing section patterns
+5. Add to page file
+6. Include dark mode support
+
+### Creating a Carousel
+
+1. Import Swiper components and modules
+2. Import Swiper CSS files
+3. Configure responsive breakpoints
+4. Add pagination/navigation if needed
+5. Map over data to create slides
+6. Use custom navigation buttons with class selectors
+
+### Styling Components
+
+1. Use Tailwind utilities first
+2. Use gradientVariants for gradients
+3. Include dark mode variants
+4. Use responsive breakpoints
+5. Follow spacing scale
+6. Use cn() for conditional classes
+
+### Creating Tabs
+
+1. Import Tabs components from `@/components/ui/tabs`
+2. Use Radix UI Tabs primitives
+3. Style with `data-[state=active]` and `data-[state=inactive]`
+4. Include dark mode variants
+5. Use green-600 for active state (bg-green-600)
+
+### Adding Images
+
+1. Use Next.js Image component
+2. Use `fill` for responsive containers
+3. Add `priority` for above-fold images
+4. Provide descriptive `alt` text
+5. Use appropriate `sizes` attribute
+6. Choose `object-cover` or `object-contain` based on design
+7. Add hover effects if needed
+
+## Design System
+
+**IMPORTANT**: Always use the Merinda Design System tokens. See `.cursor/rules/design-system.mdc` for complete guidelines.
+
+### Quick Reference
+
+- **Spacing**: Use `sectionPadding`, `containerPadding`, `gap`, `componentPadding` from `@/lib/design-tokens`
+- **Typography**: Use `typography` variants or `Heading`, `Text`, `Label`, `Caption` components
+- **Colors**: Use `colors` tokens with semantic names (primary, secondary, not blue, gray)
+- **Borders**: Use `borderRadius`, `border`, `borderWidth` tokens
+- **Shadows**: Use `elevation` or `surface` tokens
+- **Never use**: Hardcoded Tailwind classes for spacing, typography, colors, borders, shadows
+
+### Cursor Commands
+
+- `/sc/spacing` - Spacing token reference
+- `/sc/typography` - Typography token reference
+- `/sc/colors` - Color token reference
+- `/sc/borders` - Border token reference
+- `/sc/shadows` - Shadow/elevation reference
+- `/sc/component` - Component template generator
+- `/sc/audit` - Design system audit checklist
+
+## Notes
+
+- This is a content-heavy website (news/blog magazine)
+- Turkish language support is important
+- Performance is critical for good UX
+- Dark mode is a key feature
+- Responsive design is essential
+- Uses design system tokens for all styling (see `lib/design-tokens.ts`)
+- Follows component-based architecture
+- Uses Swiper for carousels and sliders
+- Uses Radix UI for accessible components
+- Uses Framer Motion and GSAP for animations
+- Uses Next.js 15 App Router
+- Uses TypeScript for type safety

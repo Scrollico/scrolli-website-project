@@ -1,11 +1,12 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { gap, type Gap } from "@/lib/design-tokens";
 import { ReactNode } from "react";
 
 interface StackProps {
   children: ReactNode;
-  spacing?: "none" | "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
+  spacing?: Gap | "none";
   direction?: "vertical" | "horizontal";
   align?: "start" | "center" | "end" | "stretch";
   justify?: "start" | "center" | "end" | "between" | "around" | "evenly";
@@ -13,15 +14,14 @@ interface StackProps {
   responsive?: boolean;
 }
 
-const spacingClasses = {
+const spacingClasses: Record<Gap | "none", string> = {
   none: "gap-0",
-  xs: "gap-1",
-  sm: "gap-2",
-  md: "gap-4",
-  lg: "gap-6",
-  xl: "gap-8",
-  "2xl": "gap-12",
-  "3xl": "gap-16",
+  xs: gap.xs,
+  sm: gap.sm,
+  md: gap.md,
+  lg: gap.lg,
+  xl: gap.xl,
+  "2xl": gap["2xl"],
 };
 
 const directionClasses = {

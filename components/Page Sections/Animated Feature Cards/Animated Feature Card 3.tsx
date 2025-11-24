@@ -78,7 +78,7 @@ export function FeatureCard3() {
             variants={variant2}
             className="flex max-w-[300px] items-start gap-x-2 rounded-lg border border-neutral-300 bg-white p-4 shadow-[0px_0px_40px_-25px_rgba(0,0,0,0.25)] dark:border-neutral-800 dark:bg-neutral-900"
           >
-            <div className="flex h-6 w-6 shrink-0 rounded-full bg-blue-500">
+            <div className="flex h-6 w-6 shrink-0 rounded-full bg-[#374152]">
               <img
                 className="h-full w-full rounded-full object-cover"
                 src="https://avatar.vercel.sh/jane"
