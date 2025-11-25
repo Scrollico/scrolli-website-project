@@ -62,8 +62,8 @@ a:hover {
 
 .entry-title,
 .entry-title a:hover {
-  color: rgba(0, 0, 0, 0.84) !important;
-  fill: rgba(0, 0, 0, 0.84) !important;
+  color: #374151 !important; /* gray-700 - 2 levels lighter than gray-900 */
+  fill: #374151 !important;
 }
 
 .entry-title {
@@ -76,22 +76,23 @@ a:hover {
   --baseline-multiplier: 0.22 !important;
   transform: translateY(0.96px);
   letter-spacing: -0.17px !important;
+  max-width: 56rem !important; /* max-w-5xl - longer container */
 }
 
 .dark-mode .entry-title {
-  color: white !important;
+  color: #d1d5db !important; /* gray-300 - 2 levels lighter than gray-100 */
 }
 
 .single h1.entry-title {
   font-weight: 700;
-  font-size: 3.5rem;
+  font-size: 2.75rem; /* Smaller - reduced from 3.5rem */
   line-height: 1.1;
   letter-spacing: -0.02em;
 }
 
 @media (max-width: 768px) {
   .single h1.entry-title {
-    font-size: 2.5rem;
+    font-size: 2rem; /* Smaller - reduced from 2.5rem */
   }
 }
 
@@ -221,7 +222,6 @@ img {
   margin-top: 1.5rem;
   margin-bottom: 2.25rem;
 }
-
 
 .divider-2 {
   position: relative;
@@ -892,7 +892,7 @@ header .logo-wrapper {
 .card-nav-container {
   max-width: 1600px;
   margin: 0 auto;
-  padding: 0 3rem;
+  padding: 0 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -901,25 +901,56 @@ header .logo-wrapper {
   position: relative;
 }
 
-/* Center Group - Logo and Menu Items */
-.card-nav-center-group {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  height: 100%;
+@media (min-width: 640px) {
+  .card-nav-container {
+    padding: 0 1.5rem;
+  }
 }
 
+@media (min-width: 1024px) {
+  .card-nav-container {
+    padding: 0 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .card-nav-container {
+    padding: 0 3rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .card-nav-container {
+    padding: 0 4rem;
+  }
+}
+
+/* Logo - Fixed on Left */
 .card-nav-logo {
   flex-shrink: 0;
   display: flex;
   align-items: center;
   height: 100%;
+  position: relative;
+  z-index: 2;
+  margin-left: 9rem;
+}
+
+/* Center Group - Menu Items Only */
+.card-nav-center-group {
   position: absolute;
-  left: 0;
-  transform: translateX(-50%);
+  left: 35%;
+  transform: translateX(0);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  max-width: calc(50% - 200px);
+  pointer-events: none;
+}
+
+.card-nav-center-group > * {
+  pointer-events: auto;
 }
 
 .card-nav-logo .logo-image {
@@ -944,13 +975,11 @@ header .logo-wrapper {
 .card-nav-menu {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 1.5rem;
-  position: absolute;
-  right: 0;
+  justify-content: center;
+  gap: 1.25rem;
   flex-shrink: 0;
   white-space: nowrap;
-  transform: translateX(calc(-100% - 2.5rem));
+  width: 100%;
 }
 
 .card-nav-link {
@@ -972,11 +1001,11 @@ header .logo-wrapper {
 }
 
 .card-nav-link:hover {
-  color: #3500fd !important;
+  color: #6b7280 !important; /* Pale gray hover */
 }
 
 .dark-mode .card-nav-link:hover {
-  color: #8b5cf6 !important; /* Lighter purple for dark mode */
+  color: #9ca3af !important; /* Pale gray hover for dark mode */
 }
 
 /* Alara AI Hover Image */
@@ -1062,13 +1091,13 @@ header .logo-wrapper {
 }
 
 .card-nav-sign-in:hover {
-  color: #231f20;
+  color: #6b7280; /* Pale gray hover */
   text-decoration: none;
   opacity: 1;
 }
 
 .dark-mode .card-nav-sign-in:hover {
-  color: #ffffff;
+  color: #9ca3af; /* Pale gray hover for dark mode */
   opacity: 1;
 }
 
@@ -1226,7 +1255,9 @@ header .logo-wrapper {
   height: 40px;
   min-width: 40px;
   border-radius: 20px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(10px);
   overflow: hidden;
@@ -1234,19 +1265,29 @@ header .logo-wrapper {
   box-sizing: border-box;
 }
 
+.card-nav-search-form input {
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 .dark-mode .card-nav-search-form {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
   background: rgba(255, 255, 255, 0.05);
 }
 
 .card-nav-search-form:focus-within {
-  border-color: rgba(53, 0, 253, 0.5);
-  box-shadow: 0 0 0 3px rgba(53, 0, 253, 0.1);
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .dark-mode .card-nav-search-form:focus-within {
-  border-color: rgba(139, 92, 246, 0.5);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .card-nav-search-toggle {
@@ -1280,9 +1321,10 @@ header .logo-wrapper {
 .card-nav-search-input {
   flex: 1;
   height: 40px;
-  border: none;
+  border: 0 !important;
   background: transparent;
-  outline: none;
+  outline: none !important;
+  box-shadow: none !important;
   padding: 0 12px;
   font-size: 0.875rem;
   color: rgba(0, 0, 0, 0.8);
@@ -2543,8 +2585,8 @@ header a.logo {
 }
 
 #main-menu .menu-primary li ul.sub-menu a:hover {
-  color: #3500fd;
-  background: rgba(53, 0, 253, 0.05);
+  color: #6b7280; /* Pale gray hover */
+  background: rgba(107, 114, 128, 0.05);
   padding-left: 30px;
 }
 
@@ -2559,8 +2601,8 @@ header a.logo {
 }
 
 .dark-mode #main-menu .menu-primary li ul.sub-menu a:hover {
-  color: #8b5cf6;
-  background: rgba(139, 92, 246, 0.1);
+  color: #9ca3af; /* Pale gray hover */
+  background: rgba(156, 163, 175, 0.1);
 }
 
 #main-menu.scroll-to-fixed-fixed {
@@ -3414,7 +3456,7 @@ button.owl-next:hover {
 .dark-mode a:hover,
 .dark-mode a:active,
 .dark-mode a:focus {
-  color: #8b5cf6 !important; /* Scrolli brand purple for hover */
+  color: #9ca3af !important; /* Pale gray hover */
 }
 
 /* Override for Subscribe button - must stay black in dark mode */
@@ -3435,7 +3477,7 @@ button.owl-next:hover {
 }
 
 .dark-mode .card-nav-link:hover {
-  color: #8b5cf6 !important; /* Scrolli brand purple for hover */
+  color: #9ca3af !important; /* Pale gray hover */
 }
 
 /* Allow muted text for secondary content - Arc onBackground-subtle */
@@ -3611,7 +3653,12 @@ body {
 
 /* Border colors - using Arc Publishing border tokens */
 .dark-mode .divider {
-  border-bottom-color: rgba(255, 255, 255, 0.15); /* gray-600 border in dark mode */
+  border-bottom-color: rgba(
+    255,
+    255,
+    255,
+    0.15
+  ); /* gray-600 border in dark mode */
 }
 
 .dark-mode .divider-2,
@@ -3632,8 +3679,8 @@ body {
 }
 
 .dark-light-toggle:hover {
-  color: #3500fd !important;
-  fill: #3500fd !important;
+  color: #6b7280 !important; /* Pale gray hover */
+  fill: #6b7280 !important;
 }
 
 /* Header Language Selector */
@@ -4190,12 +4237,12 @@ body {
 }
 
 .video-title a:hover {
-  color: #3500fd;
+  color: #6b7280; /* Pale gray hover */
   text-decoration: none;
 }
 
 .dark-mode .video-title a:hover {
-  color: #8b5cf6;
+  color: #9ca3af; /* Pale gray hover */
 }
 
 .video-divider {
@@ -4294,4 +4341,36 @@ body {
   .video-card-wrapper {
     padding: 0 12px !important;
   }
+}
+
+/* Override hover:text-primary globally - use pale gray instead of blue */
+/* Override color-default.css rules for links with hover:text-primary class */
+/* Use attribute selector to match Tailwind's hover:text-primary class */
+a[class*="hover:text-primary"]:hover,
+a[class*="hover:text-primary"]:focus,
+a[class*="hover:text-primary"]:active {
+  color: #6b7280 !important; /* gray-500 - pale gray hover */
+  fill: #6b7280 !important;
+}
+
+.dark-mode a[class*="hover:text-primary"]:hover,
+.dark-mode a[class*="hover:text-primary"]:focus,
+.dark-mode a[class*="hover:text-primary"]:active {
+  color: #9ca3af !important; /* gray-400 - pale gray hover for dark mode */
+  fill: #9ca3af !important;
+}
+
+/* Override entry-main-content links that have hover:text-primary */
+.entry-main-content a[class*="hover:text-primary"]:hover,
+.entry-main-content a[class*="hover:text-primary"]:focus,
+.entry-main-content a[class*="hover:text-primary"]:active {
+  color: #6b7280 !important;
+  fill: #6b7280 !important;
+}
+
+.dark-mode .entry-main-content a[class*="hover:text-primary"]:hover,
+.dark-mode .entry-main-content a[class*="hover:text-primary"]:focus,
+.dark-mode .entry-main-content a[class*="hover:text-primary"]:active {
+  color: #9ca3af !important;
+  fill: #9ca3af !important;
 }

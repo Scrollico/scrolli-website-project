@@ -2,8 +2,20 @@
 import Link from 'next/link';
 import NextImage from 'next/image';
 import { Globe } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { useState, useEffect } from 'react';
 
 export default function Footer() {
+  const [mounted, setMounted] = useState(false);
+  const { theme, resolvedTheme } = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Only calculate isDark after hydration to prevent mismatch
+  const isDark = mounted && (theme === 'dark' || resolvedTheme === 'dark');
+
   return (
     <footer className="footer-modern">
       <div className="container">
@@ -12,7 +24,7 @@ export default function Footer() {
           <div className="footer-brand">
             <Link href="/" prefetch={true} className="footer-logo">
               <NextImage
-                src="/assets/images/Standart/Primary-alternative.png"
+                src={mounted && isDark ? "/assets/images/Standart/Primary-alternative3.svg" : "/assets/images/Standart/Primary-alternative2.svg"}
                 alt="Scrolli Logo"
                 width={120}
                 height={40}

@@ -96,7 +96,7 @@ export default function CardNav({
             <motion.form
               action="/search"
               method="get"
-              className="card-nav-search-form"
+              className="card-nav-search-form pl-2 gap-2 border-0"
               initial={false}
               animate={{
                 width: isSearchOpen ? '280px' : '40px',
@@ -110,11 +110,66 @@ export default function CardNav({
               <motion.button
                 type="button"
                 onClick={toggleSearch}
-                className="card-nav-search-toggle"
-                whileHover={{ scale: 1.1 }}
+                className="relative flex h-6 w-6 items-center justify-center rounded-full p-0.5 transition-all duration-300 focus:outline-none z-10"
                 whileTap={{ scale: 0.95 }}
                 aria-label={isSearchOpen ? 'Close search' : 'Open search'}
+                style={{
+                  background: isDark
+                    ? 'radial-gradient(ellipse at top left, #1e293b 0%, #0f172a 40%, #020617 100%)'
+                    : 'radial-gradient(ellipse at top left, #ffffff 0%, #f1f5f9 40%, #cbd5e1 100%)',
+                  boxShadow: isDark
+                    ? `
+                      inset 5px 5px 12px rgba(0, 0, 0, 0.9),
+                      inset -5px -5px 12px rgba(71, 85, 105, 0.4),
+                      inset 8px 8px 16px rgba(0, 0, 0, 0.7),
+                      inset -8px -8px 16px rgba(100, 116, 139, 0.2),
+                      inset 0 2px 4px rgba(0, 0, 0, 1),
+                      inset 0 -2px 4px rgba(71, 85, 105, 0.4),
+                      inset 0 0 20px rgba(0, 0, 0, 0.6),
+                      0 1px 1px rgba(255, 255, 255, 0.05),
+                      0 2px 4px rgba(0, 0, 0, 0.4),
+                      0 8px 16px rgba(0, 0, 0, 0.4),
+                      0 16px 32px rgba(0, 0, 0, 0.3),
+                      0 24px 48px rgba(0, 0, 0, 0.2)
+                    `
+                    : `
+                      inset 5px 5px 12px rgba(148, 163, 184, 0.5),
+                      inset -5px -5px 12px rgba(255, 255, 255, 1),
+                      inset 8px 8px 16px rgba(100, 116, 139, 0.3),
+                      inset -8px -8px 16px rgba(255, 255, 255, 0.9),
+                      inset 0 2px 4px rgba(148, 163, 184, 0.4),
+                      inset 0 -2px 4px rgba(255, 255, 255, 1),
+                      inset 0 0 20px rgba(203, 213, 225, 0.3),
+                      0 1px 2px rgba(255, 255, 255, 1),
+                      0 2px 4px rgba(0, 0, 0, 0.1),
+                      0 8px 16px rgba(0, 0, 0, 0.08),
+                      0 16px 32px rgba(0, 0, 0, 0.06),
+                      0 24px 48px rgba(0, 0, 0, 0.04)
+                    `,
+                  border: isDark 
+                    ? '2px solid rgba(51, 65, 85, 0.6)' 
+                    : '2px solid rgba(203, 213, 225, 0.6)',
+                }}
               >
+                {/* Inner effects to match the cinematic look */}
+                <div 
+                  className="absolute inset-[1px] rounded-full pointer-events-none"
+                  style={{
+                    boxShadow: isDark
+                      ? 'inset 0 2px 6px rgba(0, 0, 0, 0.9), inset 0 -1px 3px rgba(71, 85, 105, 0.3)'
+                      : 'inset 0 2px 6px rgba(100, 116, 139, 0.4), inset 0 -1px 3px rgba(255, 255, 255, 0.8)',
+                  }}
+                />
+                <div 
+                  className="absolute inset-0 rounded-full pointer-events-none"
+                  style={{
+                    background: isDark
+                      ? `radial-gradient(ellipse at top, rgba(71, 85, 105, 0.15) 0%, transparent 50%), linear-gradient(to bottom, rgba(71, 85, 105, 0.2) 0%, transparent 30%, transparent 70%, rgba(0, 0, 0, 0.3) 100%)`
+                      : `radial-gradient(ellipse at top, rgba(255, 255, 255, 0.8) 0%, transparent 50%), linear-gradient(to bottom, rgba(255, 255, 255, 0.7) 0%, transparent 30%, transparent 70%, rgba(148, 163, 184, 0.15) 100%)`,
+                    mixBlendMode: 'overlay',
+                  }}
+                />
+
                 <AnimatePresence mode="wait">
                   {isSearchOpen ? (
                     <motion.div
@@ -123,8 +178,9 @@ export default function CardNav({
                       animate={{ opacity: 1, rotate: 0 }}
                       exit={{ opacity: 0, rotate: 90 }}
                       transition={{ duration: 0.2 }}
+                      className="relative z-10"
                     >
-                      <CloseIcon size={18} />
+                      <CloseIcon size={14} className={isDark ? "text-gray-300" : "text-gray-600"} />
                     </motion.div>
                   ) : (
                     <motion.div
@@ -133,8 +189,9 @@ export default function CardNav({
                       animate={{ opacity: 1, rotate: 0 }}
                       exit={{ opacity: 0, rotate: -90 }}
                       transition={{ duration: 0.2 }}
+                      className="relative z-10"
                     >
-                      <SearchIcon size={18} />
+                      <SearchIcon size={14} className={isDark ? "text-gray-300" : "text-gray-600"} />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -165,9 +222,37 @@ export default function CardNav({
           </div>
         )}
 
-        {/* Logo and Menu Items - Center Group */}
-        <div className="card-nav-center-group">
-          {/* Menu Items - Left side of logo */}
+        {/* Logo - Fixed on Left */}
+        <div className="card-nav-logo">
+          <Link href="/" prefetch={true}>
+            {logo ? (
+              <Image
+                src={mounted && isDark ? "/assets/images/Standart/Primary-alternative3.svg" : "/assets/images/Standart/Primary-alternative2.svg"}
+                alt={logoAlt}
+                width={120}
+                height={40}
+                className="logo-image"
+              />
+            ) : (
+              <span className="logo-text" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
+                {logoText || 'Logo'}
+              </span>
+            )}
+          </Link>
+        </div>
+
+        {/* Menu Items - Centered */}
+        <motion.div 
+          className="card-nav-center-group"
+          animate={{
+            x: isSearchOpen ? 120 : 0,
+          }}
+          transition={{
+            type: 'spring',
+            stiffness: 300,
+            damping: 30,
+          }}
+        >
           <div className="card-nav-menu">
             {items.map((item) => {
               // Custom URLs for specific items
@@ -223,26 +308,7 @@ export default function CardNav({
               );
             })}
           </div>
-
-          {/* Logo */}
-          <div className="card-nav-logo">
-            <Link href="/" prefetch={true}>
-              {logo ? (
-                <Image
-                  src={mounted && isDark ? "/assets/images/Standart/Primary.png" : logo}
-                  alt={logoAlt}
-                  width={120}
-                  height={40}
-                  className="logo-image"
-                />
-              ) : (
-                <span className="logo-text" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
-                  {logoText || 'Logo'}
-                </span>
-              )}
-            </Link>
-          </div>
-        </div>
+        </motion.div>
 
         {/* Right Side Actions Group */}
         <div className="card-nav-right-group">
@@ -295,11 +361,71 @@ export default function CardNav({
               {/* Theme Switcher */}
               <CinematicThemeSwitcher />
 
-              {/* Language Selector - Minimal */}
+              {/* Language Selector - Minimal - Cinematic Sphere Style */}
               <div className="header-language">
-                <button className="header-language-minimal" aria-label="Language selector">
-                  <GlobeIcon size={16} className="header-globe-icon" />
-                </button>
+                <motion.button 
+                  className="relative flex h-6 w-6 items-center justify-center rounded-full p-0.5 transition-all duration-300 focus:outline-none"
+                  aria-label="Language selector"
+                  whileTap={{ scale: 0.95 }}
+                  style={{
+                    background: isDark
+                      ? 'radial-gradient(ellipse at top left, #1e293b 0%, #0f172a 40%, #020617 100%)'
+                      : 'radial-gradient(ellipse at top left, #ffffff 0%, #f1f5f9 40%, #cbd5e1 100%)',
+                    boxShadow: isDark
+                      ? `
+                        inset 5px 5px 12px rgba(0, 0, 0, 0.9),
+                        inset -5px -5px 12px rgba(71, 85, 105, 0.4),
+                        inset 8px 8px 16px rgba(0, 0, 0, 0.7),
+                        inset -8px -8px 16px rgba(100, 116, 139, 0.2),
+                        inset 0 2px 4px rgba(0, 0, 0, 1),
+                        inset 0 -2px 4px rgba(71, 85, 105, 0.4),
+                        inset 0 0 20px rgba(0, 0, 0, 0.6),
+                        0 1px 1px rgba(255, 255, 255, 0.05),
+                        0 2px 4px rgba(0, 0, 0, 0.4),
+                        0 8px 16px rgba(0, 0, 0, 0.4),
+                        0 16px 32px rgba(0, 0, 0, 0.3),
+                        0 24px 48px rgba(0, 0, 0, 0.2)
+                      `
+                      : `
+                        inset 5px 5px 12px rgba(148, 163, 184, 0.5),
+                        inset -5px -5px 12px rgba(255, 255, 255, 1),
+                        inset 8px 8px 16px rgba(100, 116, 139, 0.3),
+                        inset -8px -8px 16px rgba(255, 255, 255, 0.9),
+                        inset 0 2px 4px rgba(148, 163, 184, 0.4),
+                        inset 0 -2px 4px rgba(255, 255, 255, 1),
+                        inset 0 0 20px rgba(203, 213, 225, 0.3),
+                        0 1px 2px rgba(255, 255, 255, 1),
+                        0 2px 4px rgba(0, 0, 0, 0.1),
+                        0 8px 16px rgba(0, 0, 0, 0.08),
+                        0 16px 32px rgba(0, 0, 0, 0.06),
+                        0 24px 48px rgba(0, 0, 0, 0.04)
+                      `,
+                    border: isDark 
+                      ? '2px solid rgba(51, 65, 85, 0.6)' 
+                      : '2px solid rgba(203, 213, 225, 0.6)',
+                  }}
+                >
+                  {/* Inner effects to match the cinematic look */}
+                  <div 
+                    className="absolute inset-[1px] rounded-full pointer-events-none"
+                    style={{
+                      boxShadow: isDark
+                        ? 'inset 0 2px 6px rgba(0, 0, 0, 0.9), inset 0 -1px 3px rgba(71, 85, 105, 0.3)'
+                        : 'inset 0 2px 6px rgba(100, 116, 139, 0.4), inset 0 -1px 3px rgba(255, 255, 255, 0.8)',
+                    }}
+                  />
+                  <div 
+                    className="absolute inset-0 rounded-full pointer-events-none"
+                    style={{
+                      background: isDark
+                        ? `radial-gradient(ellipse at top, rgba(71, 85, 105, 0.15) 0%, transparent 50%), linear-gradient(to bottom, rgba(71, 85, 105, 0.2) 0%, transparent 30%, transparent 70%, rgba(0, 0, 0, 0.3) 100%)`
+                        : `radial-gradient(ellipse at top, rgba(255, 255, 255, 0.8) 0%, transparent 50%), linear-gradient(to bottom, rgba(255, 255, 255, 0.7) 0%, transparent 30%, transparent 70%, rgba(148, 163, 184, 0.15) 100%)`,
+                      mixBlendMode: 'overlay',
+                    }}
+                  />
+                  
+                  <GlobeIcon size={14} className={isDark ? "text-gray-300 relative z-10" : "text-gray-600 relative z-10"} />
+                </motion.button>
                 <div className="header-lang-dropdown">
                   <button className="header-lang-btn">tr</button>
                   <button className="header-lang-btn active">Global</button>

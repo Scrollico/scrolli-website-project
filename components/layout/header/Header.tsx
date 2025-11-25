@@ -120,7 +120,7 @@ export default function Header() {
 
       {/* Desktop Header */}
       <CardNav
-        logo="/assets/images/Standart/Primary-alternative.png"
+        logo="/assets/images/Standart/Primary-alternative2.svg"
         logoAlt="Scrolli Logo"
         items={cardNavItems}
         {...headerProps}

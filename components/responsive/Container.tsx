@@ -17,7 +17,7 @@ const sizeClasses = {
   md: "max-w-5xl", // ~64rem
   lg: "max-w-6xl", // ~72rem
   xl: "max-w-7xl", // ~80rem
-  full: "max-w-full",
+  full: "max-w-[90rem]", // ~1440px - 10% longer than typical full width containers
 };
 
 export function Container({
