@@ -43,8 +43,8 @@ const nextConfig = {
   // Enable experimental features for better performance
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion', '@radix-ui/react-tabs', '@radix-ui/react-checkbox'],
-    // Enable optimized CSS loading
-    optimizeCss: true,
+    // Disable optimizeCss - requires critters package which causes build errors
+    // optimizeCss: true,
   },
   // Optimize production builds
   compiler: {
