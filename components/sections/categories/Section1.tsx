@@ -17,6 +17,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Heading, Text } from "@/components/ui/typography";
 import { Container } from "@/components/responsive";
+import { getAuthorName } from '@/lib/author-loader';
 
 import { FreeContentBadgeIcon, PremiumContentBadgeIcon } from "@/components/icons/ScrolliIcons";
 
@@ -114,7 +115,7 @@ export default function Section1() {
                         </div>
                         <div className={cn("entry-meta flex flex-wrap items-center", gap.sm, typography.caption, colors.foreground.muted)}>
                           <div className={cn("flex flex-wrap items-center", gap.xs)}>
-                            <Link href="/author" className={colors.foreground.interactive}>{article.author}</Link>
+                            <Link href={`/author/${article.author.toLowerCase().replace(/\s+/g, "-")}`} className={colors.foreground.interactive}>{getAuthorName(article.author)}</Link>
                             <span>in</span>
                             <Link href="/archive" className={colors.foreground.interactive}>{article.category}</Link>
                           </div>
@@ -185,7 +186,7 @@ export default function Section1() {
                         </Heading>
                         <div className={cn("flex flex-wrap items-center", gap.sm, typography.caption, colors.foreground.muted)}>
                           <div className={cn("flex flex-wrap items-center", gap.xs)}>
-                            <Link href="/author" className={colors.foreground.interactive}>{article.author}</Link>
+                            <Link href={`/author/${article.author.toLowerCase().replace(/\s+/g, "-")}`} className={colors.foreground.interactive}>{getAuthorName(article.author)}</Link>
                             <span>in</span>
                             <Link href="/archive" className={colors.foreground.interactive}>{article.category}</Link>
                           </div>

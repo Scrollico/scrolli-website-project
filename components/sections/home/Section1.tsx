@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from 'next/image';
 import blogData from "@/data/blog.json";
 import { Container, ResponsiveGrid } from "@/components/responsive";
-import { Heading, Text } from "@/components/ui/typography";
+import { Heading } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 import { colors } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,7 @@ export default function Section1() {
   const { featured } = blogData;
 
   return (
-    <section className="py-12 md:py-16 lg:py-20">
+    <section className="py-8 md:py-16 lg:py-20">
       <Container>
         {/* Section Title */}
         <div className="mb-8 md:mb-12">
@@ -28,9 +28,9 @@ export default function Section1() {
           </Heading>
         </div>
 
-        {/* Featured Articles Grid */}
+        {/* Featured Articles Grid - A2, A3, A4: Using only sideArticles to avoid duplicate with HeroSection (A1) */}
         <ResponsiveGrid columns={{ default: 1, md: 3 }} gap="lg" className="mb-8 md:mb-12">
-          {[featured.mainArticle, ...featured.sideArticles.slice(0, 2)].map((article) => (
+          {featured.sideArticles.slice(0, 3).map((article) => (
             <article key={article.id} className={cn("group rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col", colors.background.elevated)}>
               {/* Article Image - Separate from text */}
               <Link href={`/article/${article.id}`} className="block w-full">
@@ -49,7 +49,7 @@ export default function Section1() {
                     style={{ objectFit: 'cover' }}
                   />
                 </figure>
-                </Link>
+              </Link>
 
               {/* Article Content - Separate below image */}
               <div className="p-4 md:p-6 flex-1 flex flex-col">

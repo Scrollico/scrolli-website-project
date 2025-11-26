@@ -93,9 +93,7 @@ export default function ArticleList() {
       ))}
 
       {/* Author Articles Component */}
-      <div className={cn("border-b", colors.border.light)}>
-        <AuthorArticles />
-      </div>
+      <AuthorArticles />
     </div>
   );
 }

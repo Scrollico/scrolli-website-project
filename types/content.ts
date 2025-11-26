@@ -20,6 +20,9 @@ export interface Article {
   tag?: string;
   number?: string;
   isPremium?: boolean;
+  content?: string; // HTML content for article body
+  seoTitle?: string; // SEO title override
+  seoDescription?: string; // SEO description override
 }
 
 /**

@@ -28,6 +28,12 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'uploads-ssl.webflow.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   // Performance optimizations
@@ -36,9 +42,16 @@ const nextConfig = {
   reactStrictMode: true,
   // Enable experimental features for better performance
   experimental: {
-    optimizePackageImports: ['lucide-react', 'framer-motion'],
+    optimizePackageImports: ['lucide-react', 'framer-motion', '@radix-ui/react-tabs', '@radix-ui/react-checkbox'],
+    // Enable optimized CSS loading
+    optimizeCss: true,
   },
-  // Optimize production builds (swcMinify is default in Next.js 15)
+  // Optimize production builds
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
+  },
 };
 
 export default nextConfig;

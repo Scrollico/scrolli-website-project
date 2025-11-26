@@ -8,6 +8,7 @@ import { Container } from '@/components/responsive'
 import { Heading, Text } from '@/components/ui/typography'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
+import { getAuthorName } from '@/lib/author-loader'
 import {
   sectionPadding,
   gap,
@@ -172,10 +173,10 @@ export default function Section1({ searchQuery }: Section1Props) {
                         <div className={cn("flex flex-wrap items-center gap-2", colors.foreground.muted, "text-sm")}>
                           <Text as="span" variant="bodySmall" color="muted">
                             <Link
-                              href="/author"
+                              href={`/author/${article.author.toLowerCase().replace(/\s+/g, "-")}`}
                               className="hover:text-primary transition-colors"
                             >
-                              {article.author}
+                              {getAuthorName(article.author)}
                             </Link>
                             {' '}in{' '}
                             <Link

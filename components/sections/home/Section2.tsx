@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation } from 'swiper/modules';
 import { gridVariants, spacingVariants } from '@/lib/utils';
@@ -52,7 +53,7 @@ export default function Section2() {
             {featuredSlider.articles.map((article, index) => (
               <SwiperSlide key={index}>
                 <div className="blog-slider-card">
-                  <div className={gridVariants.heroGrid + " min-h-[400px] md:min-h-[500px] items-center"}>
+                  <div className={gridVariants.heroGrid + " min-h-[350px] md:min-h-[500px] items-center"}>
                     <div className="order-2 md:order-1">
                       <div className={spacingVariants.card}>
                         <Caption
@@ -73,7 +74,7 @@ export default function Section2() {
                             >
                               {article.category}
                             </Badge>
-                        </div>
+                          </div>
                         )}
                         <Heading
                           level={2}
@@ -91,13 +92,16 @@ export default function Section2() {
                         )}
                       </div>
                     </div>
-                    <div
-                      className="order-1 md:order-2 bg-cover bg-center bg-no-repeat rounded-lg relative"
-                      style={{
-                        backgroundImage: `url(${article.image})`,
-                        minHeight: '250px',
-                      }}
-                    >
+                    <div className="order-1 md:order-2 relative rounded-lg overflow-hidden min-h-[250px]">
+                      {article.image && (
+                        <Image
+                          src={article.image}
+                          alt={article.title}
+                          fill
+                          className="object-cover object-center"
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                        />
+                      )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent md:from-black/50 md:via-black/15 lg:from-black/40 lg:via-black/10 opacity-50"></div>
                     </div>
                   </div>

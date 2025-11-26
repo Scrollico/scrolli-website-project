@@ -24,14 +24,22 @@ export default function Layout({ classList, children }: LayoutProps) {
   // Navbar is now relative - no special layout classes needed
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = (): void => {
-      const scrollCheck: boolean = window.scrollY > 100;
-      if (scrollCheck !== scroll) {
-        setScroll(scrollCheck);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollCheck: boolean = window.scrollY > 100;
+          if (scrollCheck !== scroll) {
+            setScroll(scrollCheck);
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
-    document.addEventListener("scroll", handleScroll);
+    document.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
       document.removeEventListener("scroll", handleScroll);

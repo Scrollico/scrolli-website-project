@@ -4,10 +4,19 @@ import Image from 'next/image';
 import blogData from '@/data/blog.json';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Heading, Text } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 import NewsletterBanner from "@/components/sections/home/NewsletterBanner";
+import { getAuthorAvatar, getAuthorName } from '@/lib/author-loader';
+import { getRelatedArticles } from '@/lib/content';
+import dynamic from 'next/dynamic';
+
+// Client-only content wrapper to prevent hydration issues
+const ContentWithButton = dynamic(
+  () => import('./ContentWithButton'),
+  { ssr: false }
+);
 
 import { FreeContentBadgeIcon, PremiumContentBadgeIcon, HeartIcon } from "@/components/icons/ScrolliIcons";
 
@@ -37,6 +46,21 @@ interface Section1Props {
 export default function Section1({ article }: Section1Props) {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+  
+  // Get real related articles with additional deduplication
+  const relatedArticles = useMemo(() => {
+    const articles = getRelatedArticles(article, 6);
+    // Final safety check: ensure unique IDs
+    const uniqueArticles: typeof articles = [];
+    const seenIds = new Set<string>();
+    for (const article of articles) {
+      if (!seenIds.has(article.id)) {
+        seenIds.add(article.id);
+        uniqueArticles.push(article);
+      }
+    }
+    return uniqueArticles;
+  }, [article]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,7 +77,7 @@ export default function Section1({ article }: Section1Props) {
 
   // Get current page URL
   const articleUrl = typeof window !== 'undefined' ? window.location.href : '';
-  const shareText = `${article.title} - ${article.author}`;
+  const shareText = `${article.title} - ${getAuthorName(article.author)}`;
 
   // Share handlers
   const handleTwitterShare = (e: React.MouseEvent) => {
@@ -100,18 +124,15 @@ export default function Section1({ article }: Section1Props) {
         </header>
         {/*end single header*/}
         {article.image && (
-          <figure className="image zoom mb-5 featured-image relative">
-            <figure>
-              <Link href={`/article/${article.id}`} prefetch={true}>
-                <Image
-                  className="lazy img-fluid responsive-image"
-                  src={article.image}
-                  alt={article.title}
-                  width={1240}
-                  height={700}
-                />
-              </Link>
-            </figure>
+          <figure className="relative w-[70%] mx-auto mb-5 featured-image overflow-hidden rounded-lg aspect-video md:aspect-[16/9]">
+            <Image
+              src={article.image}
+              alt={article.title}
+              fill
+              className="object-cover object-center"
+              sizes="(max-width: 768px) 70vw, (max-width: 1200px) 63vw, 840px"
+              priority
+            />
           </figure>
         )}
         {/*figure*/}
@@ -148,16 +169,16 @@ export default function Section1({ article }: Section1Props) {
           </div>
           {/* Author Meta - After Image, Before Content, Aligned with Article Content */}
           <div className="entry-meta align-items-center mt-12 mb-3" itemProp="author" itemScope itemType="https://schema.org/Person">
-            <Link className="author-avatar" href="#">
+            <Link className="author-avatar" href={`/author/${article.author.toLowerCase().replace(/\s+/g, "-")}`}>
               <Image
-                src="/assets/images/author-avata-2.jpg"
-                alt="author avatar"
+                src={getAuthorAvatar(article.author) || "/assets/images/author-avata-2.jpg"}
+                alt={getAuthorName(article.author)}
                 width={40}
                 height={40}
               />
             </Link>
             <div className="entry-meta-line">
-              <Link href="/author">{article.author}</Link> in <Link href="/archive">{article.category}</Link>
+              <Link href={`/author/${article.author.toLowerCase().replace(/\s+/g, "-")}`}>{getAuthorName(article.author)}</Link> in <Link href="/archive">{article.category}</Link>
             </div>
             <div className="entry-meta-line">
               <span>{article.date}</span>
@@ -172,59 +193,20 @@ export default function Section1({ article }: Section1Props) {
               <p>{article.excerpt}</p>
             </div>
           )}
-          <div className="entry-main-content dropcap">
-            <p>
-              Gosh jaguar ostrich quail one excited dear hello and <Link href="#">bound</Link>
-              <sup>
-                <Link href="#">[1]</Link>
-              </sup>
-              and the and bland moral misheard roadrunner flapped lynx far that and jeepers giggled far and far bald that roadrunner python inside held shrewdly the manatee.
-            </p>
-            <p>
-              Thanks sniffed in hello after in foolhardy and some far purposefully much one at the much conjointly leapt skimpily that quail sheep some goodness <Link href="#">nightingale</Link> the instead exited expedient up far ouch mellifluous altruistic and and lighted more instead much when ferret but the.
-            </p>
-            <hr className="section-divider" />
-            <p>
-              Yet more some certainly yet alas abandonedly whispered <Link href="#">intriguingly</Link>
-              <sup>
-                <Link href="#">[2]</Link>
-              </sup>
-              well extensive one howled talkative admonishingly below a rethought overlaid dear gosh activated less <Link href="#">however</Link> hawk yet oh scratched ostrich some outside crud irrespective lightheartedly and much far amenably that the elephant since when.
-            </p>
-            <Heading level={2} variant="h3">The Guitar Legends</Heading>
-            <p>
-              Furrowed this in the upset <Link href="#">some across</Link>
-              <sup>
-                <Link href="#">[3]</Link>
-              </sup>
-              tiger oh loaded house gosh whispered <Link href="#">faltering alas</Link>
-              <sup>
-                <Link href="#">[4]</Link>
-              </sup>
-              ouch cuckoo coward in scratched undid together bit fumblingly so besides salamander heron during the jeepers hello fitting jauntily much smoothly globefish darn blessedly far so along bluebird leopard and.
-            </p>
-            <blockquote>
-              <p>
-                Integer eu faucibus <Link href="#">dolor</Link>
-                <sup>
-                  <Link href="#">[5]</Link>
-                </sup>
-                . Ut venenatis tincidunt diam elementum imperdiet. Etiam accumsan semper nisl eu congue. Sed aliquam magna erat, ac eleifend lacus rhoncus in.
-              </p>
-            </blockquote>
-            <p>Fretful human far recklessly while caterpillar well a well blubbered added one a some far whispered rampantly whispered while irksome far clung irrespective wailed more rosily and where saluted while black dear so yikes as considering recast to some crass until cow much less and rakishly overdrew consistent for by responsible oh one hypocritical less bastard hey oversaw zebra browbeat a well.</p>
-            <Heading level={3} variant="h4">Getting Crypto Rich</Heading>
-            <p>And far contrary smoked some contrary among stealthy engagingly suspiciously a cockatoo far circa sank dully lewd slick cracked llama the much gecko yikes more squirrel sniffed this and the the much within uninhibited this abominable a blubbered overdid foresaw through alas the pessimistic.</p>
-            <p>Gosh jaguar ostrich quail one excited dear hello and bound and the and bland moral misheard roadrunner flapped lynx far that and jeepers giggled far and far bald that roadrunner python inside held shrewdly the manatee.</p>
-            <hr className="section-divider" />
-            <p>Thanks sniffed in hello after in foolhardy and some far purposefully much one at the much conjointly leapt skimpily that quail sheep some goodness nightingale the instead exited expedient up far ouch mellifluous altruistic and and lighted more instead much when ferret but the.</p>
-            {/*Begin Subscribe*/}
-            <div className="mb-5">
-              <NewsletterBanner />
-            </div>
-            {/*End Subscribe*/}
-            <p>Yet more some certainly yet alas abandonedly whispered intriguingly well extensive one howled talkative admonishingly below a rethought overlaid dear gosh activated less however hawk yet oh scratched ostrich some outside crud irrespective lightheartedly and much far amenably that the elephant since when.</p>
+          <div className="entry-main-content dropcap article-content">
+            {article.content ? (
+              <div className="prose prose-lg dark:prose-invert max-w-none">
+                <ContentWithButton content={article.content} />
+              </div>
+            ) : (
+              <p>İçerik yükleniyor...</p>
+            )}
           </div>
+          {/*Begin Subscribe*/}
+          <div className="mb-5 mt-8">
+            <NewsletterBanner />
+          </div>
+          {/*End Subscribe*/}
           <div className="entry-bottom">
             <div className="tags-wrap heading">
               <div className="tags flex flex-wrap gap-2">
@@ -254,101 +236,86 @@ export default function Section1({ article }: Section1Props) {
         </article>
         {/*entry-content*/}
         {/*Begin post related*/}
-        <div className="related-posts mb-5">
-          <Heading level={4} variant="h4" className="spanborder text-center mb-4">
-            <span>{blogData.relatedPosts.title}</span>
-          </Heading>
-          <Swiper
-            modules={[Autoplay, Navigation, Pagination]}
-            spaceBetween={16}
-            slidesPerView={4}
-            navigation={false}
-            pagination={{ clickable: true }}
-            loop={true}
-            grabCursor={true}
-            resistance={true}
-            resistanceRatio={0.85}
-            autoplay={{
-              delay: 5000,
-              disableOnInteraction: false,
-            }}
-            breakpoints={{
-              320: {
-                slidesPerView: 1,
-                spaceBetween: 16
-              },
-              640: {
-                slidesPerView: 2,
-                spaceBetween: 16
-              },
-              768: {
-                slidesPerView: 3,
-                spaceBetween: 16
-              },
-              1024: {
-                slidesPerView: 4,
-                spaceBetween: 16
-              },
-              1280: {
-                slidesPerView: 4,
-                spaceBetween: 16
-              }
-            }}
-            className="related-posts-slider"
-          >
-            {blogData.relatedPosts.articles.map((post: any) => (
-              <SwiperSlide key={post.id} className="related-post-slide">
-                <article className="group related-post-card">
-                  <Link href={`/article/${post.id}`} prefetch={true} className="block h-full related-post-link">
-                    <figure className="relative w-full aspect-[16/9] overflow-hidden bg-gray-200">
-                      <Image
-                        className="lazy !object-cover !object-center transition-transform duration-300 group-hover:scale-105"
-                        src={post.image}
-                        alt={post.title}
-                        fill
-                        sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
-                        style={{ objectFit: 'cover' }}
-                      />
-                    </figure>
-                    <div className="entry-content flex-1">
-                      <Heading level={5} variant="h6" className="news-card-headline">
-                        {post.title}
-                      </Heading>
-                      {'excerpt' in post && post.excerpt && typeof post.excerpt === 'string' && (
-                        <Text variant="bodySmall" color="muted" className="news-card-summary">
-                          {post.excerpt}
-                        </Text>
+        {relatedArticles.length > 0 && (
+          <div className="related-posts mb-5">
+            <Heading level={4} variant="h4" className="spanborder text-center mb-4">
+              <span>İlgili Makaleler</span>
+            </Heading>
+            <Swiper
+              modules={[Autoplay, Navigation, Pagination]}
+              spaceBetween={16}
+              slidesPerView={4}
+              navigation={false}
+              pagination={{ clickable: true }}
+              loop={relatedArticles.length > 4}
+              grabCursor={true}
+              resistance={true}
+              resistanceRatio={0.85}
+              autoplay={{
+                delay: 5000,
+                disableOnInteraction: false,
+              }}
+              breakpoints={{
+                320: {
+                  slidesPerView: 1,
+                  spaceBetween: 16
+                },
+                640: {
+                  slidesPerView: 2,
+                  spaceBetween: 16
+                },
+                768: {
+                  slidesPerView: 3,
+                  spaceBetween: 16
+                },
+                1024: {
+                  slidesPerView: 4,
+                  spaceBetween: 16
+                },
+                1280: {
+                  slidesPerView: 4,
+                  spaceBetween: 16
+                }
+              }}
+              className="related-posts-slider"
+            >
+              {relatedArticles.map((post) => (
+                <SwiperSlide key={post.id} className="related-post-slide">
+                  <article className="group related-post-card">
+                    <Link href={`/article/${post.id}`} prefetch={true} className="block h-full related-post-link">
+                      {post.image && (
+                        <figure className="relative w-full aspect-[16/9] overflow-hidden bg-gray-200">
+                          <Image
+                            className="lazy !object-cover !object-center transition-transform duration-300 group-hover:scale-105"
+                            src={post.image}
+                            alt={post.title}
+                            fill
+                            sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                            style={{ objectFit: 'cover' }}
+                          />
+                        </figure>
                       )}
-                    </div>
-                  </Link>
-                </article>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
+                      <div className="entry-content flex-1">
+                        <Heading level={5} variant="h6" color="primary" className="news-card-headline text-gray-900 dark:text-white">
+                          {post.title}
+                        </Heading>
+                      </div>
+                    </Link>
+                  </article>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+        )}
         {/*End post related*/}
       </article>
       <style jsx>{`
-        .responsive-image {
-          height: 400px;
-          object-fit: cover;
-        }
         .featured-image {
-          max-height: 400px;
-          object-fit: cover;
-          object-position: center;
-          overflow: hidden;
-          display: flex;
-          align-content: center;
-          justify-content: center;
-          align-items: center;
+          min-height: 300px;
         }
         @media (min-width: 768px) {
-          .responsive-image {
-            height: 700px;
-          }
           .featured-image {
-            max-height: 700px;
+            min-height: 500px;
           }
         }
         :global(.swiper-container) {
@@ -466,14 +433,10 @@ export default function Section1({ article }: Section1Props) {
           border-radius: 0 0 10px 10px;
         }
         .news-card-headline {
-          font-size: 0.95rem;
-          font-weight: bold;
+          font-size: 0.95rem !important;
+          font-weight: 600 !important;
           margin: 0 0 8px 0;
-          color: #111827;
           line-height: 1.3;
-        }
-        .dark .news-card-headline {
-          color: #ffffff;
         }
         .news-card-summary {
           font-size: 0.95rem;

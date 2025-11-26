@@ -1,12 +1,127 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import blogData from "@/data/blog.json";
 import { Heading, Text } from "@/components/ui/typography";
 import { colors, gap, componentPadding, borderRadius } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
+import { getAuthorAvatar, getAuthorName } from '@/lib/author-loader';
+
+// Helper function to extract real authors and their latest articles from blog.json
+function getRealAuthors() {
+  const authorMap = new Map<string, { name: string; latestArticle: { id: string; title: string }; index: number }>();
+  
+  // Collect all articles from different sections (in order of priority: mostRecent first, then featured, etc.)
+  const allArticles: Array<{ id: string; title: string; author: string }> = [];
+  
+  // Most recent articles (highest priority - these are the latest)
+  if (blogData.mostRecent?.mainArticles) {
+    blogData.mostRecent.mainArticles.forEach((article: any) => {
+      if (article.author && article.title && article.id) {
+        allArticles.push({
+          id: article.id,
+          title: article.title,
+          author: article.author,
+        });
+      }
+    });
+  }
+  if (blogData.mostRecent?.sideArticles) {
+    blogData.mostRecent.sideArticles.forEach((article: any) => {
+      if (article.author && article.title && article.id) {
+        allArticles.push({
+          id: article.id,
+          title: article.title,
+          author: article.author,
+        });
+      }
+    });
+  }
+  
+  // Featured articles
+  if (blogData.featured?.mainArticle) {
+    const article = blogData.featured.mainArticle;
+    if (article.author && article.title && article.id) {
+      allArticles.push({
+        id: article.id,
+        title: article.title,
+        author: article.author,
+      });
+    }
+  }
+  if (blogData.featured?.sideArticles) {
+    blogData.featured.sideArticles.forEach((article: any) => {
+      if (article.author && article.title && article.id) {
+        allArticles.push({
+          id: article.id,
+          title: article.title,
+          author: article.author,
+        });
+      }
+    });
+  }
+  
+  // Today highlights
+  if (blogData.todayHighlights?.articles) {
+    blogData.todayHighlights.articles.forEach((article: any) => {
+      if (article.author && article.title && article.id) {
+        allArticles.push({
+          id: article.id,
+          title: article.title,
+          author: article.author,
+        });
+      }
+    });
+  }
+  
+  // Featured slider
+  if (blogData.featuredSlider?.articles) {
+    blogData.featuredSlider.articles.forEach((article: any) => {
+      if (article.author && article.title && article.id) {
+        allArticles.push({
+          id: article.id,
+          title: article.title,
+          author: article.author,
+        });
+      }
+    });
+  }
+  
+  // Keep only the first (latest) article for each author
+  allArticles.forEach((article, index) => {
+    if (!authorMap.has(article.author)) {
+      authorMap.set(article.author, {
+        name: article.author,
+        latestArticle: {
+          id: article.id,
+          title: article.title,
+        },
+        index: index,
+      });
+    }
+  });
+  
+  // Convert to array and sort by index to maintain order
+  return Array.from(authorMap.values())
+    .sort((a, b) => a.index - b.index)
+    .map(({ index, ...rest }) => rest);
+}
+
+// Author avatar mapping - cycle through available avatars
+const authorAvatars = [
+  "/assets/images/author-avata-1.jpg",
+  "/assets/images/author-avata-2.jpg",
+  "/assets/images/author-avata-3.jpg",
+  "/assets/images/author-avata-4.jpg",
+];
+
+// Helper function to format author name for display
+// Now uses getAuthorName from author-loader for proper formatting
+function formatAuthorName(authorSlug: string): string {
+  return getAuthorName(authorSlug);
+}
 
 // Mock authors data - simulating 20 authors, showing 5
 const mockAuthors = [
@@ -174,8 +289,21 @@ const mockAuthors = [
 ];
 
 export default function AuthorArticles() {
-  // Show only 5 authors (simulating selection from 20)
-  const authorsToShow = mockAuthors.slice(0, 5);
+  // Get real authors from blog.json
+  const realAuthors = useMemo(() => {
+    const authors = getRealAuthors();
+    // Map authors to real avatars from CSV, fallback to cycling through available avatars
+    return authors.slice(0, 5).map((author, index) => {
+      const realAvatar = getAuthorAvatar(author.name);
+      return {
+        ...author,
+        avatar: realAvatar || authorAvatars[index % authorAvatars.length],
+      };
+    });
+  }, []);
+  
+  // Use real authors if available, otherwise fallback to mock
+  const authorsToShow = realAuthors.length > 0 ? realAuthors : mockAuthors.slice(0, 5);
   const [isDragging, setIsDragging] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
   const dragState = useRef({
@@ -259,7 +387,10 @@ export default function AuthorArticles() {
           <div key={`${author.name}-${index}`} className="relative">
             {/* Vertical Dotted Divider - Centered between cards */}
             {index > 0 && (
-              <div className="absolute left-0 top-0 bottom-0 w-px border-l border-dotted border-gray-300 dark:border-gray-600 -translate-x-2" />
+              <div
+                className="absolute top-0 bottom-0 w-px border-l border-dotted border-gray-300 dark:border-gray-600 pointer-events-none"
+                style={{ left: "-0.5rem" }}
+              />
             )}
             <div
               className={cn(
@@ -270,7 +401,7 @@ export default function AuthorArticles() {
             >
             <article
               className={cn(
-                "group flex flex-col justify-between h-[140px] cursor-pointer",
+                "group flex flex-col justify-between h-[150px] cursor-pointer",
                 "bg-[#F8F5E4] dark:bg-[#374152]",
                 "hover:bg-[#F8F5E4]/80 dark:hover:bg-[#374152]/80",
                 "transition-colors duration-200",
@@ -284,36 +415,30 @@ export default function AuthorArticles() {
                 window.location.href = `/article/${author.latestArticle.id}`;
               }}
             >
-              {/* Article Title with View prefix */}
-              <Heading
-                level={3}
-                variant="h6"
-                className={cn(
-                  "leading-[1.2] text-[10px] flex-1 mb-0 overflow-hidden",
-                  colors.navbarBeige.text
-                )}
-                style={{
-                  display: '-webkit-box',
-                  WebkitLineClamp: 3,
-                  WebkitBoxOrient: 'vertical',
-                  wordBreak: 'break-word',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
-              >
-                <Link
-                  href={`/article/${author.latestArticle.id}`}
-                  className="hover:text-primary transition-colors"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
+              {/* Article Title - Limited to 3 lines with proper word breaking */}
+              <div className="flex-1 mb-0 min-h-0">
+                <Heading
+                  level={3}
+                  variant="h6"
+                  className={cn(
+                    "leading-tight text-[10px] line-clamp-3",
+                    colors.navbarBeige.text
+                  )}
                 >
-                  View / {author.latestArticle.title}
-                </Link>
-              </Heading>
+                  <Link
+                    href={`/article/${author.latestArticle.id}`}
+                    className="hover:text-primary transition-colors block break-words"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
+                    {author.latestArticle.title}
+                  </Link>
+                </Heading>
+              </div>
 
-              {/* Author Image and Name - Horizontal */}
-              <div className="flex items-center gap-1.5 mt-auto pt-1">
+              {/* Author Image and Name - Horizontal - More spacing from title */}
+              <div className="flex items-center gap-1.5 mt-3 pt-2">
                 <Link 
                   href={`/author/${author.name.toLowerCase().replace(/\s+/g, "-")}`}
                   onClick={(e) => {
@@ -332,9 +457,9 @@ export default function AuthorArticles() {
                 </Link>
                 <Text
                   variant="caption"
-                  className={cn(colors.foreground.secondary, "text-[10px] leading-tight whitespace-nowrap")}
+                  className={cn(colors.foreground.secondary, "text-[11px] leading-tight whitespace-nowrap")}
                 >
-                  {author.name}
+                  {formatAuthorName(author.name)}
                 </Text>
               </div>
             </article>

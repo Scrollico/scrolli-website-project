@@ -29,7 +29,7 @@ export default function MobileMenu({ isMobileMenu, handleMobileMenu }: MobileMen
   return (
     <>
       {/*Mobile navigation*/}
-      <div className="sticky-header fixed d-lg-none d-md-block">
+      <div className="sticky-header fixed hidden md:block lg:hidden">
         <div className="text-end">
           <div className="container mobile-menu-fixed pe-5">
             <h1 className="logo-small navbar-brand">

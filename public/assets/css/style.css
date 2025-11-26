@@ -52,6 +52,20 @@ a {
   text-decoration: none;
 }
 
+a:hover,
+a:focus,
+a:active {
+  color: #6b7280 !important;
+  fill: #6b7280 !important;
+}
+
+.dark-mode a:hover,
+.dark-mode a:focus,
+.dark-mode a:active {
+  color: #9ca3af !important;
+  fill: #9ca3af !important;
+}
+
 a:hover {
   text-decoration: none;
 }
@@ -62,8 +76,8 @@ a:hover {
 
 .entry-title,
 .entry-title a:hover {
-  color: #374151 !important; /* gray-700 - 2 levels lighter than gray-900 */
-  fill: #374151 !important;
+  color: #4b5563 !important; /* gray-600 - softer than gray-700 */
+  fill: #4b5563 !important;
 }
 
 .entry-title {
@@ -76,11 +90,11 @@ a:hover {
   --baseline-multiplier: 0.22 !important;
   transform: translateY(0.96px);
   letter-spacing: -0.17px !important;
-  max-width: 56rem !important; /* max-w-5xl - longer container */
+  max-width: 64rem !important; /* max-w-6xl - longer container for ~3 lines */
 }
 
 .dark-mode .entry-title {
-  color: #d1d5db !important; /* gray-300 - 2 levels lighter than gray-100 */
+  color: #e5e7eb !important; /* gray-200 for softer contrast */
 }
 
 .single h1.entry-title {
@@ -2939,13 +2953,20 @@ button[type="submit"] {
 }
 
 .entry-main-content {
-  line-height: 1.7;
-  font-size: 1.25rem;
-  margin-bottom: 4rem;
+  color: var(--text-color);
+  line-height: 1.75;
+  font-size: clamp(1.125rem, 1vw + 1rem, 1.25rem);
+  margin: 0 auto 4rem auto;
+  max-width: 72ch;
 }
 
 .entry-main-content p {
   margin-bottom: 1.5rem;
+  color: inherit;
+}
+
+.entry-main-content * {
+  color: inherit;
 }
 
 blockquote {
@@ -3410,8 +3431,8 @@ button.owl-next:hover {
 /* Dark mode styles */
 :root {
   --body-bg: #fff;
-  --text-color: #222;
-  --link-color: #000;
+  --text-color: #111827; /* gray-900 for Arc readability */
+  --link-color: #0f172a;
   --border-color: #ddd;
   --card-bg: #fff;
   --header-bg: #fff;

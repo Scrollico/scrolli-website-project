@@ -95,8 +95,8 @@ export function generateArticleMetadata(
   const articleUrl = generateArticleUrl(article.id);
   const imageUrl = generateImageUrl(article.image);
   const description =
-    article.excerpt || `${article.title} - ${SITE_CONFIG.description}`;
-  const title = generateTitle(article.title);
+    article.seoDescription || article.excerpt || `${article.title} - ${SITE_CONFIG.description}`;
+  const title = generateTitle(article.seoTitle || article.title);
 
   return {
     title,

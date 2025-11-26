@@ -4,6 +4,7 @@ import { Text } from "@/components/ui/typography";
 import { colors, gap } from "@/lib/design-tokens";
 import Link from "next/link";
 import { Star } from "lucide-react";
+import { getAuthorName } from '@/lib/author-loader';
 
 interface ArticleMetaProps {
   author: string;
@@ -26,8 +27,8 @@ export default function ArticleMeta({ author, category, date, readTime, classNam
   return (
     <div className={cn("flex flex-wrap items-center text-sm", gap.xs, colors.foreground.secondary, className)}>
       <div className="flex items-center gap-1">
-        <Link href="/author" className={cn(colors.foreground.interactive, "font-medium hover:underline")}>
-          {author}
+        <Link href={`/author/${author.toLowerCase().replace(/\s+/g, "-")}`} className={cn(colors.foreground.interactive, "font-medium hover:underline")}>
+          {getAuthorName(author)}
         </Link> 
         <span>in</span> 
         <Link href="/archive" className={cn(colors.foreground.interactive, "font-medium hover:underline")}>

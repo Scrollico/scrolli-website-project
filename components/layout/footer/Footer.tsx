@@ -28,6 +28,7 @@ export default function Footer() {
                 alt="Scrolli Logo"
                 width={120}
                 height={40}
+                unoptimized
                 className="logo-image"
               />
             </Link>

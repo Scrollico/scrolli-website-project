@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
+
 import Image from "next/image";
-import { AIIcon, LightningIcon, TrendIcon, ArrowRightIcon, CheckIcon } from "@/components/icons/ScrolliIcons";
+import { AIIcon, CheckIcon } from "@/components/icons/ScrolliIcons";
 import { cn } from "@/lib/utils";
 import {
   sectionPadding,
@@ -10,13 +10,13 @@ import {
   gap,
   colors,
   borderRadius,
-  transition,
   border
 } from "@/lib/design-tokens";
+
 import { Heading, Text } from "@/components/ui/typography";
-import { SmartButton } from "@/components/ui/smart-button";
 import { Badge } from "@/components/ui/badge";
 import { Container } from "@/components/responsive";
+import AlaraWPButton from "@/components/ui/alara-wp-button";
 
 /**
  * Alara AI Banner Component
@@ -107,15 +107,7 @@ export default function AlaraAIBanner() {
 
               {/* CTA Row */}
               <div className={cn("flex flex-col sm:flex-row sm:items-center pt-4", gap.md)}>
-                <Link href="/alara-ai" className="inline-block">
-                  <SmartButton
-                    size="lg"
-                    className="h-12 px-8 text-base shadow-sm"
-                  >
-                    Try Alara AI Free
-                    <ArrowRightIcon size={16} className="ml-2" />
-                  </SmartButton>
-                </Link>
+                <AlaraWPButton />
               </div>
             </div>
 

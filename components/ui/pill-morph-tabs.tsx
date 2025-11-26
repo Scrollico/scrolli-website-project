@@ -88,19 +88,20 @@ export default function PillMorphTabs({
   return (
     <div className={cn("w-full", className)}>
       <Tabs value={value} onValueChange={(v) => setValue(v)}>
-        <div className="flex justify-center mb-6">
+        <div className="flex justify-center mb-4 md:mb-6">
           <div
             ref={listRef}
             data-tabs-container="true"
             className={cn(
               "relative",
               // minimal design - no background, no border, no roundness
-              "inline-flex items-center gap-2 p-1",
-              "bg-transparent" // Explicitly remove any background
+              "inline-flex items-center gap-1 md:gap-2 p-1",
+              "bg-transparent", // Explicitly remove any background
+              "overflow-x-auto scrollbar-hide" // Allow horizontal scroll on mobile
             )}
           >
             {/* TabsList using shadcn TabsTrigger */}
-            <TabsList className="relative flex gap-1 p-1 bg-transparent dark:!bg-gray-800 dark:!text-white" data-tabs-list="true">
+            <TabsList className="relative flex gap-1 md:gap-1.5 p-1 bg-transparent dark:!bg-gray-800 dark:!text-white" data-tabs-list="true">
               {items.map((it) => {
                 const isActive = it.value === value;
                 return (
@@ -111,10 +112,11 @@ export default function PillMorphTabs({
                       if (el) triggerRefs.current[it.value] = el;
                     }}
                     className={cn(
-                      "relative z-10 px-4 py-2 text-sm font-medium transition-all duration-200",
+                      "relative z-10 px-2 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-medium transition-all duration-200",
                       "border rounded-md",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
                       "dark:!bg-gray-800 dark:!text-white",
+                      "flex-shrink-0", // Prevent tabs from shrinking on mobile
                       isActive
                         ? cn(
                             colors.foreground.primary,

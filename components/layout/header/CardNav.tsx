@@ -231,6 +231,7 @@ export default function CardNav({
                 alt={logoAlt}
                 width={120}
                 height={40}
+                unoptimized
                 className="logo-image"
               />
             ) : (

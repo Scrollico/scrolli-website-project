@@ -42,8 +42,8 @@ export default function ArticleCard({
     <article
       className={cn(
         "group w-full",
-        isHorizontal && "flex flex-col md:flex-row gap-4 md:gap-6",
-        "py-4 px-2 md:py-6 md:px-4",
+        isHorizontal && "flex flex-col md:flex-row gap-3 md:gap-6",
+        "py-3 px-2 md:py-6 md:px-4",
         // Premium Styling - background only, no border
         isPremium
           ? "bg-amber-50/40 dark:bg-amber-950/20 rounded-xl transition-colors duration-300"
@@ -127,7 +127,7 @@ export default function ArticleCard({
           isHorizontal && !imageOnRight && "md:order-1",
           !isHorizontal && "order-1",
           isHorizontal
-            ? "w-full md:w-48 md:flex-shrink-0 aspect-square md:aspect-[4/3]"
+            ? "w-full md:w-48 md:flex-shrink-0 aspect-[4/3] md:aspect-[4/3]"
             : "w-full aspect-video"
         )}
       >

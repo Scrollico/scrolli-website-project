@@ -3,24 +3,30 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/responsive";
-import { Heading, Caption } from "@/components/ui/typography";
+import { Heading } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
-import { colors } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
+import blogData from "@/data/blog.json";
 
 export default function HeroSection() {
+  const featuredArticle = blogData.featured.mainArticle;
+
   return (
     <section className="relative w-full min-h-[70vh] md:h-[70vh] flex items-center overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-10">
-        <Image
-          src="/assets/images/thumb/thumb-1400x778.jpg"
-          alt="Featured article background"
-          fill
-          className="object-cover object-center"
-          priority
-          sizes="100vw"
-        />
+        {featuredArticle.image && (
+          <Image
+            src={featuredArticle.image}
+            alt={featuredArticle.title}
+            fill
+            className="object-cover object-center"
+            priority
+            fetchPriority="high"
+            sizes="100vw"
+            quality={85}
+          />
+        )}
         {/* Overlay gradient - Responsive with varying opacity */}
         <div className="absolute inset-0 z-20 hero-gradient-overlay" />
         {/* Bottom gradient transition - Responsive height */}
@@ -33,7 +39,7 @@ export default function HeroSection() {
       </div>
 
       {/* Content */}
-      <Container className="relative z-30 pt-16 md:pt-24">
+      <Container className="relative z-30 pt-20 md:pt-24">
         <div className="max-w-2xl">
           {/* Featured Label */}
           <div className="mb-4 md:mb-8">
@@ -58,12 +64,12 @@ export default function HeroSection() {
             )}
             style={{ textShadow: '0 1px 1px rgba(0, 0, 0, 0.1)' }}
           >
-            Marco Grassi: 'A painting's months-long journey can't keep up with the pace of the digital world'
+            {featuredArticle.title}
           </Heading>
 
           {/* Read More Link */}
           <Link
-            href="#"
+            href={`/article/${featuredArticle.id}`}
             className={cn(
               "inline-flex items-center gap-2 no-underline transition-colors duration-300",
               "text-gray-900 dark:text-gray-100",

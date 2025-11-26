@@ -29,14 +29,15 @@ function TabContentPanel({
   articles: typeof blogData.todayHighlights.articles;
 }) {
   return (
-    <Container size="full" className="py-6 md:py-8">
-      <div className="space-y-6">
+    <Container size="full" className="py-4 md:py-6 lg:py-8">
+      <div className="space-y-4 md:space-y-6">
         {articles.map((article, index) => (
           <ArticleCard
             key={`${article.id}-${index}`}
             article={article}
             variant="horizontal"
             layout="image-right"
+            className="flex-col md:flex-row"
           />
         ))}
       </div>
@@ -108,11 +109,11 @@ export default function Section3() {
     <>
       <div className="content-widget">
         <Container size="xl" className="py-6 md:py-8">
-          <div className="flex justify-center">
+          <div className="flex justify-start md:justify-center overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0 scrollbar-hide">
             <PillMorphTabs
               items={tabItems}
               defaultValue="tümü"
-              className="w-full max-w-2xl"
+              className="w-full max-w-2xl md:min-w-max"
             />
           </div>
         </Container>
