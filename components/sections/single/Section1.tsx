@@ -194,13 +194,7 @@ export default function Section1({ article }: Section1Props) {
             </div>
           )}
           <div className="entry-main-content dropcap article-content">
-            {article.content ? (
-              <div className="prose prose-lg dark:prose-invert max-w-none">
-                <ContentWithButton content={article.content} />
-              </div>
-            ) : (
-              <p>İçerik yükleniyor...</p>
-            )}
+            <ContentWithButton content={article.content || ''} />
           </div>
           {/*Begin Subscribe*/}
           <div className="mb-5 mt-8">

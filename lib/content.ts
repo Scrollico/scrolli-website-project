@@ -125,9 +125,20 @@ function enrichWithGundemContent(article: Article, articleId: string): Article {
   if (typeof window === 'undefined') {
     try {
       // Dynamic import for server-side only
-      const gundemModule = require("./gundem-content");
-      const gundemArticle = gundemModule.getGundemArticleById(articleId);
-      if (gundemArticle) {
+      // Use a try-catch with explicit path resolution
+      let gundemModule;
+      try {
+        gundemModule = require("./gundem-content");
+      } catch (requireError) {
+        // If require fails, return article with empty content
+        return {
+          ...article,
+          content: article.content || '',
+        };
+      }
+      
+      const gundemArticle = gundemModule?.getGundemArticleById?.(articleId);
+      if (gundemArticle && gundemArticle.content) {
         // removeMailchimpForms already normalizes whitespace deterministically
         return {
           ...article,
@@ -140,11 +151,16 @@ function enrichWithGundemContent(article: Article, articleId: string): Article {
         };
       }
     } catch (error) {
-      // Silently fail if module not available (client-side)
+      // Silently fail and return article with existing content (or empty)
+      console.warn(`Failed to enrich article ${articleId} with Gündem content:`, error);
     }
   }
 
-  return article;
+  // Always return article with content (even if empty string)
+  return {
+    ...article,
+    content: article.content || '',
+  };
 }
 
 /**

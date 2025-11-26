@@ -9,8 +9,18 @@ interface ContentWithButtonProps {
 
 export default function ContentWithButton({ content }: ContentWithButtonProps) {
   const [splitContent, setSplitContent] = useState<{ firstHalf: string; secondHalf: string } | null>(null);
+  const [isProcessing, setIsProcessing] = useState(true);
 
   useEffect(() => {
+    // Handle empty or missing content
+    if (!content || typeof content !== 'string' || content.trim().length === 0) {
+      setSplitContent({ firstHalf: '', secondHalf: '' });
+      setIsProcessing(false);
+      return;
+    }
+
+    setIsProcessing(true);
+    
     // Create a temporary DOM element to parse the HTML
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = content;
@@ -22,6 +32,7 @@ export default function ContentWithButton({ content }: ContentWithButtonProps) {
 
     if (paragraphs.length < 2) {
       setSplitContent({ firstHalf: content, secondHalf: '' });
+      setIsProcessing(false);
       return;
     }
 
@@ -35,6 +46,7 @@ export default function ContentWithButton({ content }: ContentWithButtonProps) {
 
     if (middleIndexInAll < 0) {
       setSplitContent({ firstHalf: content, secondHalf: '' });
+      setIsProcessing(false);
       return;
     }
 
@@ -51,20 +63,37 @@ export default function ContentWithButton({ content }: ContentWithButtonProps) {
       firstHalf: firstHalfDiv.innerHTML,
       secondHalf: secondHalfDiv.innerHTML,
     });
+    setIsProcessing(false);
   }, [content]);
 
+  // Show loading state only briefly during processing
+  if (isProcessing) {
+    return null; // Don't show loading text, just render nothing until ready
+  }
+
+  // Handle empty content - show a helpful message
+  if (!content || content.trim().length === 0) {
+    return (
+      <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+        <p className="text-lg mb-2">İçerik henüz yüklenemedi.</p>
+        <p className="text-sm">Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.</p>
+      </div>
+    );
+  }
+
+  // If no split or no second half, render content directly
   if (!splitContent || !splitContent.secondHalf) {
-    return <div dangerouslySetInnerHTML={{ __html: content }} />;
+    return <div className="entry-main-content dropcap article-content" dangerouslySetInnerHTML={{ __html: content }} />;
   }
 
   return (
-    <>
+    <div className="entry-main-content dropcap article-content">
       <div dangerouslySetInnerHTML={{ __html: splitContent.firstHalf }} />
       <div className="my-8 flex justify-center">
         <FollowButton topic="Alara AI" />
       </div>
       <div dangerouslySetInnerHTML={{ __html: splitContent.secondHalf }} />
-    </>
+    </div>
   );
 }
 
