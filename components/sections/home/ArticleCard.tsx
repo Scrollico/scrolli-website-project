@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { colors } from "@/lib/design-tokens";
+import { colors, componentPadding, gap, borderRadius, transition } from "@/lib/design-tokens";
 import { Heading, Text, Caption } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 
@@ -43,11 +43,11 @@ export default function ArticleCard({
       className={cn(
         "group w-full",
         isHorizontal && "flex flex-col md:flex-row gap-3 md:gap-6",
-        "py-3 px-2 md:py-6 md:px-4",
+        componentPadding.sm,
+        borderRadius.xl,
+        transition.normal,
         // Premium Styling - background only, no border
-        isPremium
-          ? "bg-amber-50/40 dark:bg-amber-950/20 rounded-xl transition-colors duration-300"
-          : "rounded-xl transition-colors duration-300",
+        isPremium ? colors.warning.bg : "",
         className
       )}
     >
@@ -62,7 +62,7 @@ export default function ArticleCard({
       >
         {/* Category Badge */}
         {article.category && (
-          <div className="mb-2 flex justify-start">
+          <div className={cn(gap.sm, "flex justify-start")}>
             <Badge
               variant="secondary"
               appearance="outline"
@@ -79,7 +79,7 @@ export default function ArticleCard({
           <Caption
             as="time"
             dateTime={article.date}
-            className="mb-2"
+            className={gap.sm}
             color="muted"
           >
             {article.date}
@@ -87,11 +87,11 @@ export default function ArticleCard({
         )}
 
         {/* Title */}
-        <Heading level={3} variant="h5" className="mb-3">
+        <Heading level={3} variant="h5" className={gap.md}>
           <Link
             href={`/article/${article.id}`}
             prefetch={true}
-            className="transition-colors hover:text-primary focus:outline-none"
+            className={cn("transition-colors", colors.foreground.interactive, "focus:outline-none")}
           >
             {article.title}
           </Link>
@@ -99,7 +99,7 @@ export default function ArticleCard({
 
         {/* Excerpt */}
         {article.excerpt && (
-          <div className="mb-2">
+          <div className={gap.sm}>
             <Text variant="body" color="secondary" className="line-clamp-2">
               {article.excerpt}
             </Text>
@@ -108,7 +108,7 @@ export default function ArticleCard({
 
         {/* Sponsor Tag */}
         {article.sponsor && (
-          <div className="mt-2">
+          <div className={gap.sm}>
             <Caption
               as="span"
               className={cn("inline-block px-2 py-1 font-medium rounded", colors.success.bg)}

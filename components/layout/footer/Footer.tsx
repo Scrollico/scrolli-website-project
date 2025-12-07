@@ -4,6 +4,10 @@ import NextImage from 'next/image';
 import { Globe } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useState, useEffect } from 'react';
+import { cn } from '@/lib/utils';
+import { Container } from '@/components/responsive';
+import { Heading, Text } from '@/components/ui/typography';
+import { colors, sectionPadding, gap, typography } from '@/lib/design-tokens';
 
 export default function Footer() {
   const [mounted, setMounted] = useState(false);
@@ -17,11 +21,11 @@ export default function Footer() {
   const isDark = mounted && (theme === 'dark' || resolvedTheme === 'dark');
 
   return (
-    <footer className="footer-modern">
-      <div className="container">
-        <div className="footer-content">
+    <footer className={cn("footer-modern", colors.navbarBeige.DEFAULT)}>
+      <Container>
+        <div className={cn("footer-content", "grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr]", gap.xl, "mb-10")}>
           {/* Left Section - Brand */}
-          <div className="footer-brand">
+          <div className={cn("footer-brand", "flex flex-col", gap.md)}>
             <Link href="/" prefetch={true} className="footer-logo">
               <NextImage
                 src={mounted && isDark ? "/assets/images/Standart/Primary-alternative3.svg" : "/assets/images/Standart/Primary-alternative2.svg"}
@@ -47,9 +51,9 @@ export default function Footer() {
           </div>
 
           {/* Middle Section - Categories */}
-          <div className="footer-column">
-            <h4 className="footer-title">CATEGORIES</h4>
-            <ul className="footer-links">
+          <div className={cn("footer-column", "flex flex-col", gap.md)}>
+            <Heading level={4} variant="h6" className={cn(typography.caption, "uppercase tracking-wider", colors.foreground.secondary)}>CATEGORIES</Heading>
+            <ul className={cn("footer-links", "list-none p-0 m-0 flex flex-col", gap.sm)}>
               <li><Link href="/archive">Archive</Link></li>
               <li><Link href="/categories">Categories</Link></li>
               <li><Link href="/about-us">About Us</Link></li>
@@ -58,9 +62,9 @@ export default function Footer() {
           </div>
 
           {/* Right Section - Info */}
-          <div className="footer-column">
-            <h4 className="footer-title">INFO</h4>
-            <ul className="footer-links">
+          <div className={cn("footer-column", "flex flex-col", gap.md)}>
+            <Heading level={4} variant="h6" className={cn(typography.caption, "uppercase tracking-wider", colors.foreground.secondary)}>INFO</Heading>
+            <ul className={cn("footer-links", "list-none p-0 m-0 flex flex-col", gap.sm)}>
               <li><Link href="/contact">Contact</Link></li>
               <li><Link href="/kullanim-kosullari">Terms of Use</Link></li>
               <li><Link href="/kunye">Imprint</Link></li>
@@ -70,12 +74,12 @@ export default function Footer() {
         </div>
 
         {/* Bottom Copyright */}
-        <div className="footer-bottom">
-          <p className="copyright-text">
+        <div className={cn("footer-bottom", "pt-8 border-t", colors.border.DEFAULT)}>
+          <Text variant="caption" color="muted" className="m-0">
             ©2025 Scrolli. All Rights Reserved. Scrolli Media Inc.
-          </p>
+          </Text>
         </div>
-      </div>
+      </Container>
 
       <style jsx>{`
         .footer-modern {

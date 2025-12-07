@@ -213,9 +213,9 @@ export function Header() {
             src="/android-chrome-512x512.png"
             alt="MagicUI Logo"
           />
-          <h1 className="text-balance text-center text-4xl font-bold">
+          <Heading level={1} variant="h1" className="text-balance text-center">
           UI library for Design Engineers
-          </h1>
+          </Heading>
           <p className="text-balance text-center">
             50+ open-source animated components built with React, Typescript,
             Tailwind CSS, and Framer Motion. Save thousands of hours, create a

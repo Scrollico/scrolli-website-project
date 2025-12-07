@@ -7,9 +7,11 @@ import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import { useState, useEffect, useMemo } from 'react';
 import { Heading, Text } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
-import NewsletterBanner from "@/components/sections/home/NewsletterBanner";
 import { getAuthorAvatar, getAuthorName } from '@/lib/author-loader';
 import { getRelatedArticles } from '@/lib/content';
+import { Container } from "@/components/responsive";
+import { colors, gap, componentPadding, borderRadius, typography } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 import dynamic from 'next/dynamic';
 
 // Client-only content wrapper to prevent hydration issues
@@ -100,21 +102,22 @@ export default function Section1({ article }: Section1Props) {
 
   return (
     <>
-      <article className="container" itemScope itemType="https://schema.org/Article">
+      <article itemScope itemType="https://schema.org/Article">
+        <Container>
         {/* Article Header */}
         <header className="entry-header">
-          <div className="mb-5 flex flex-col items-center text-center">
+          <div className={cn(gap.lg, "flex flex-col items-center text-center")}>
             {/* Premium/Free Badge - Centered above title */}
-            <div className="mb-4">
+            <div className={gap.md}>
               {article.isPremium ? (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400">
-                  <PremiumContentBadgeIcon size={14} className="text-amber-600 dark:text-amber-400" />
-                  <span className="text-xs font-semibold uppercase tracking-wider">Premium Story</span>
+                <div className={cn("inline-flex items-center gap-1.5", componentPadding.xs, borderRadius.full, colors.warning.bg, colors.warning.DEFAULT)}>
+                  <PremiumContentBadgeIcon size={14} className={colors.warning.DEFAULT} />
+                  <span className={cn(typography.caption, "font-semibold uppercase tracking-wider")}>Premium Story</span>
                 </div>
               ) : (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                <div className={cn("inline-flex items-center gap-1.5", componentPadding.xs, borderRadius.full, colors.background.elevated, colors.foreground.secondary)}>
                   <FreeContentBadgeIcon size={14} />
-                  <span className="text-xs font-semibold uppercase tracking-wider">Free Read</span>
+                  <span className={cn(typography.caption, "font-semibold uppercase tracking-wider")}>Free Read</span>
                 </div>
               )}
             </div>
@@ -124,7 +127,7 @@ export default function Section1({ article }: Section1Props) {
         </header>
         {/*end single header*/}
         {article.image && (
-          <figure className="relative w-[70%] mx-auto mb-5 featured-image overflow-hidden rounded-lg aspect-video md:aspect-[16/9]">
+          <figure className={cn("relative w-[70%] mx-auto", gap.lg, "featured-image overflow-hidden", borderRadius.lg, "aspect-video md:aspect-[16/9]")}>
             <Image
               src={article.image}
               alt={article.title}
@@ -136,7 +139,7 @@ export default function Section1({ article }: Section1Props) {
           </figure>
         )}
         {/*figure*/}
-        <article className="entry-wraper mb-5">
+        <article className={cn("entry-wraper", gap.lg)}>
           <div className="entry-left-col">
             <div className="social-sticky">
               <button
@@ -168,7 +171,7 @@ export default function Section1({ article }: Section1Props) {
             </div>
           </div>
           {/* Author Meta - After Image, Before Content, Aligned with Article Content */}
-          <div className="entry-meta align-items-center mt-12 mb-3" itemProp="author" itemScope itemType="https://schema.org/Person">
+          <div className={cn("entry-meta align-items-center", gap.md)} itemProp="author" itemScope itemType="https://schema.org/Person">
             <Link className="author-avatar" href={`/author/${article.author.toLowerCase().replace(/\s+/g, "-")}`}>
               <Image
                 src={getAuthorAvatar(article.author) || "/assets/images/author-avata-2.jpg"}
@@ -189,18 +192,13 @@ export default function Section1({ article }: Section1Props) {
             </div>
           </div>
           {article.excerpt && (
-            <div className="excerpt mb-4">
+            <div className={cn("excerpt", gap.md)}>
               <p>{article.excerpt}</p>
             </div>
           )}
           <div className="entry-main-content dropcap article-content">
             <ContentWithButton content={article.content || ''} />
           </div>
-          {/*Begin Subscribe*/}
-          <div className="mb-5 mt-8">
-            <NewsletterBanner />
-          </div>
-          {/*End Subscribe*/}
           <div className="entry-bottom">
             <div className="tags-wrap heading">
               <div className="tags flex flex-wrap gap-2">
@@ -231,8 +229,8 @@ export default function Section1({ article }: Section1Props) {
         {/*entry-content*/}
         {/*Begin post related*/}
         {relatedArticles.length > 0 && (
-          <div className="related-posts mb-5">
-            <Heading level={4} variant="h4" className="spanborder text-center mb-4">
+          <div className={cn("related-posts", gap.lg)}>
+            <Heading level={4} variant="h4" className={cn("spanborder text-center", gap.md)}>
               <span>İlgili Makaleler</span>
             </Heading>
             <Swiper
@@ -302,6 +300,7 @@ export default function Section1({ article }: Section1Props) {
           </div>
         )}
         {/*End post related*/}
+        </Container>
       </article>
       <style jsx>{`
         .featured-image {

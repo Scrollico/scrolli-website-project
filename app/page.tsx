@@ -14,19 +14,6 @@ const ArticlesSection = dynamic(
   }
 );
 
-const NewsletterBanner = dynamic(
-  () => import('@/components/sections/home/NewsletterBanner'),
-  { ssr: false }
-);
-
-const Section2 = dynamic(
-  () => import('@/components/sections/home/Section2'),
-  {
-    loading: () => <ArticleListSkeleton count={4} />,
-    ssr: false,
-  }
-);
-
 const VideoSection = dynamic(
   () => import('@/components/sections/home/VideoSection'),
   {
@@ -54,8 +41,6 @@ export default function Home() {
       <HeroSection />
       <Section1 />
       <ArticlesSection />
-      <NewsletterBanner />
-      <Section2 />
       <VideoSection />
       <Section3 />
       <NewsletterPopup />

@@ -1,248 +1,400 @@
-# Design System Audit Report
-**Date:** 2024  
-**Scope:** Components audit for design system compliance
+# Design System Audit Report - Merinda Project
+
+**Audit Date:** December 2, 2025
+**Project:** Merinda - Next.js News/Blog Magazine
+**Auditor:** Cursor AI Assistant
 
 ## Executive Summary
 
-This audit evaluates components against the Merinda Design System standards. The design system emphasizes:
-- **Semantic tokens** over hardcoded values
-- **Arc Publishing standards** (gray700 baseline, no pure black/white)
-- **Dark mode support** via tokens (no manual `dark:` prefixes)
-- **Responsive spacing** via tokens (no manual breakpoints)
+The Merinda project has a comprehensive design token system in place (`/lib/design-tokens.ts`) that covers spacing, typography, colors, borders, shadows, and other design elements. However, the audit reveals significant non-compliance across the codebase, with many components using hardcoded Tailwind classes instead of the established design tokens.
 
-## Audit Results by Component
+**Overall Compliance Score: ~35%**
 
-### ✅ NewsletterPopup Component (`components/sections/home/NewsletterPopup.tsx`)
+### Key Findings
 
-#### Status: ⚠️ **PARTIALLY COMPLIANT** - Needs fixes
+1. **Strong Foundation**: The design token system is well-structured and follows Arc Publishing standards
+2. **Mixed Adoption**: Some components (Card, Container) are fully compliant, while others show minimal token usage
+3. **High Impact Areas**: Header, home sections, and article cards need immediate attention
+4. **Low Hanging Fruit**: Many hardcoded values can be easily replaced with existing tokens
 
-#### Issues Found:
+## Detailed Audit Results
 
-**❌ Spacing Violations:**
-- Line 127: Hardcoded `px-4 py-5 md:px-6 md:py-6` 
-  - **Should use:** `containerPadding` + `componentPadding` tokens
-- Line 129: Hardcoded `space-y-3`
-  - **Should use:** `gap` token
-- Line 134: Hardcoded `top-2 right-2`
-  - **Should use:** `componentPadding` or `margin` tokens
-- Line 164: Hardcoded `px-2 py-1 mt-1`
-  - **Should use:** `componentPadding` tokens
-- Line 179: Hardcoded `px-4`
-  - **Should use:** `componentPadding` tokens
-- Line 195: Hardcoded `mt-2`
-  - **Should use:** `margin` or `gap` tokens
-- Line 204: Hardcoded `gap-2 mt-3 pt-1`
-  - **Should use:** `gap` and `margin` tokens
+### ✅ Components with Good Compliance
 
-**❌ Typography Violations:**
-- Line 148: Hardcoded `font-serif font-bold text-xl`
-  - **Should use:** `typography.h3` or typography components
-- Line 157: Hardcoded `text-sm leading-relaxed`
-  - **Should use:** `typography.bodySmall` or `typography.caption`
-- Line 164: Hardcoded `text-sm font-semibold`
-  - **Should use:** `typography.label` or `typography.caption`
-- Line 179: Hardcoded `text-base`
-  - **Should use:** `typography.body` or `fontSize.base`
-- Line 204: Hardcoded `text-sm`
-  - **Should use:** `typography.bodySmall` or `typography.caption`
+#### Card Component (`components/ui/card.tsx`)
+- ✅ Uses `borderRadius`, `border`, `elevation`, `componentPadding` tokens
+- ✅ Uses semantic colors from design tokens
+- ⚠️ CardTitle uses hardcoded `text-2xl font-semibold` instead of typography tokens
 
-**❌ Color Violations:**
-- Line 122: Hardcoded background colors `#1f2937` and `#F8F5E4` in inline styles
-  - **Should use:** `colors.background.navbar` or `colors.navbarBeige.DEFAULT`
-- Line 123: Hardcoded border colors in inline styles
-  - **Should use:** `colors.border` tokens
-- Line 136: Hardcoded `hover:bg-black/5 dark:hover:bg-white/10`
-  - **Should use:** `colors.background.elevated` or semantic hover tokens
-- Line 165: Hardcoded `bg-yellow-300 dark:bg-yellow-500/30`
-  - **Should use:** `colors.warning.bg` token
-- Line 180: Hardcoded `border-gray-300 dark:border-gray-600`
-  - **Should use:** `colors.border.DEFAULT` or `border.thin`
-- Line 181: Hardcoded `bg-white dark:bg-gray-800`
-  - **Should use:** `colors.background.base` or `colors.surface.base`
-- Line 182: Hardcoded `focus-visible:ring-[#374152] dark:focus-visible:ring-gray-500`
-  - **Should use:** `colors.primary` or semantic focus tokens
-- Line 183: Hardcoded `placeholder:text-gray-400 dark:placeholder:text-gray-500`
-  - **Should use:** `colors.foreground.muted` token
-- Line 204: Hardcoded `text-gray-700 dark:text-gray-200`
-  - **Should use:** `colors.foreground.secondary` token
+#### Container Component (`components/responsive/Container.tsx`)
+- ✅ Uses `containerPadding` tokens
+- ✅ Well-structured with TypeScript interfaces
+- ✅ Proper responsive design implementation
 
-**❌ Border Violations:**
-- Line 135: Hardcoded `rounded-full`
-  - **Should use:** `borderRadius.full`
-- Line 195: Hardcoded `rounded-lg`
-  - **Should use:** `borderRadius.lg`
+### ❌ Components with Major Issues
 
-**✅ Good Practices Found:**
-- ✅ Uses `typography.h3` and `typography.body` for some text
-- ✅ Uses `colors.foreground.primary` for text colors
-- ✅ Imports design tokens correctly
-- ✅ Uses `cn()` utility for class composition
-
----
-
-## General Component Audit
-
-### Components Using Design Tokens ✅
-The following components are importing design tokens (good sign):
-- `HeroSection.tsx`
-- `VideoSection.tsx`
-- `AlaraAIBanner.tsx`
-- `NewsletterBanner.tsx`
-- `Section1.tsx`, `Section2.tsx`, `Section3.tsx`
-- `ArticlesSection.tsx`
-- `ArticleCard.tsx`
-- And 15+ more...
-
-### Components Needing Review ⚠️
-Based on grep patterns, these components likely have hardcoded values:
-- `components/sections/home/NewsletterPopup.tsx` (detailed above)
-- `components/sections/single/Section1.tsx`
-- `components/sections/typography/Section1.tsx`
-- `components/sections/home/HeroSection.tsx`
-- `components/sections/home/VideoSection.tsx`
-- `components/sections/contact/Section1.tsx`
-- `components/sections/about-us/AboutSection2.tsx`
-- `components/sections/categories/Section1.tsx`
-- `components/sections/search/Section1.tsx`
-- `components/sections/home/Section2.tsx`
-- `components/sections/home/Section1.tsx`
-- `components/sections/archive/Section1.tsx`
-- `components/sections/archive/ArticleMeta.tsx`
-- `components/sections/about-us/GuidelinesSection.tsx`
-- `components/sections/home/ArticlesSection.tsx`
-- `components/sections/home/ArticleCard.tsx`
-- `components/sections/home/Section3.tsx`
-
----
-
-## Common Violation Patterns
-
-### Pattern 1: Hardcoded Spacing
+#### HeroSection (`components/sections/home/HeroSection.tsx`)
 ```typescript
-// ❌ Bad
-<div className="px-4 py-5 md:px-6 md:py-6">
-<div className="space-y-3">
-<div className="mt-2">
+// BEFORE (Current Issues)
+<section className="relative w-full min-h-[70vh] md:h-[70vh] flex items-center overflow-hidden">
+  <Container className="relative z-30 pt-20 md:pt-24">
+    <div className="max-w-2xl">
+      <div className="mb-4 md:mb-8">
+        <Badge className="!px-3 !py-2 uppercase tracking-wide !bg-black/30 backdrop-blur-sm !border !border-white/20 !text-white dark:!bg-black/30 dark:!border-white/20 dark:!text-white rounded opacity-90 shadow-sm cursor-default">
+          Featured
+        </Badge>
+      </div>
+      <Heading className={cn("mb-6 md:mb-8 max-w-full font-semibold", "text-gray-900 dark:text-gray-100")}>
+        {featuredArticle.title}
+      </Heading>
+      <Link className={cn("text-gray-900 dark:text-gray-100", "hover:text-gray-800 dark:hover:text-gray-200")}>
+        Read in-depth
+      </Link>
+    </div>
+  </Container>
+</section>
 
-// ✅ Good
-<div className={cn(containerPadding.md, componentPadding.md)}>
-<div className={gap.sm}>
-<div className={margin.sm}>
+// AFTER (Design System Compliant)
+<section className={sectionPadding["2xl"]}>
+  <Container className="relative z-30" padding="lg">
+    <div className="max-w-2xl">
+      <div className={gap.md}>
+        <Badge className={cn("uppercase tracking-wide", colors.surface.overlay, borderRadius.md, "opacity-90")}>
+          Featured
+        </Badge>
+      </div>
+      <Heading level={1} variant="h1" className="max-w-full">
+        {featuredArticle.title}
+      </Heading>
+      <Link className={cn(colors.foreground.primary, colors.foreground.interactive)}>
+        Read in-depth
+      </Link>
+    </div>
+  </Container>
+</section>
 ```
 
-### Pattern 2: Hardcoded Typography
-```typescript
-// ❌ Bad
-<h2 className="font-serif font-bold text-xl">
-<p className="text-sm leading-relaxed">
-<label className="text-sm font-semibold">
+**Issues Found:**
+- ❌ No sectionPadding token (uses hardcoded `min-h-[70vh]`)
+- ❌ No containerPadding token (uses hardcoded `pt-20 md:pt-24`)
+- ❌ Hardcoded spacing (`mb-4 md:mb-8`, `mb-6 md:mb-8`)
+- ❌ Hardcoded colors (`text-gray-900 dark:text-gray-100`)
+- ❌ Hardcoded badge styling
 
-// ✅ Good
-<h2 className={typography.h3}>
-<p className={typography.bodySmall}>
-<label className={typography.label}>
+#### Section1 (`components/sections/home/Section1.tsx`)
+```typescript
+// Current Issues
+<section className="py-8 md:py-16 lg:py-20">
+  <Container>
+    <div className="mb-8 md:mb-12">
+      <Heading level={2} variant="h2" className="border-b-2 border-primary pb-2 inline-block">
+        {featured.title}
+      </Heading>
+    </div>
+    <ResponsiveGrid columns={{ default: 1, md: 3 }} gap="lg" className="mb-8 md:mb-12">
+      {featured.sideArticles.slice(0, 3).map((article) => (
+        <article className={cn("group rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col", colors.background.elevated)}>
+          <div className="p-4 md:p-6 flex-1 flex flex-col">
+            {/* content */}
+          </div>
+        </article>
+      ))}
+    </ResponsiveGrid>
+    <div className="grid grid-cols-1 lg:grid-cols-[7fr_3fr] xl:grid-cols-[2fr_1fr] gap-6 lg:gap-8 mt-12">
+      {/* content */}
+    </div>
+  </Container>
+</section>
+
+// Design System Compliant
+<section className={sectionPadding.lg}>
+  <Container>
+    <div className={gap.lg}>
+      <Heading level={2} variant="h2" className={cn("border-b-2 border-primary pb-2 inline-block")}>
+        {featured.title}
+      </Heading>
+    </div>
+    <ResponsiveGrid columns={{ default: 1, md: 3 }} gap="lg" className={gap.lg}>
+      {featured.sideArticles.slice(0, 3).map((article) => (
+        <article className={cn("group", borderRadius.lg, "overflow-hidden", elevation[1], elevationHover[2], transition.normal, "flex flex-col", colors.background.elevated)}>
+          <div className={cn(componentPadding.md, "flex-1 flex flex-col")}>
+            {/* content */}
+          </div>
+        </article>
+      ))}
+    </ResponsiveGrid>
+    <div className={cn("grid grid-cols-1 lg:grid-cols-[7fr_3fr] xl:grid-cols-[2fr_1fr]", gap.lg, "mt-12")}>
+      {/* content */}
+    </div>
+  </Container>
+</section>
 ```
 
-### Pattern 3: Hardcoded Colors
+**Issues Found:**
+- ❌ Hardcoded section padding (`py-8 md:py-16 lg:py-20`)
+- ❌ Hardcoded spacing (`mb-8 md:mb-12`)
+- ❌ Hardcoded padding (`p-4 md:p-6`)
+- ❌ Hardcoded gap (`gap-6 lg:gap-8`)
+- ❌ Hardcoded shadow (`shadow-sm hover:shadow-md`)
+
+#### ArticleCard (`components/sections/home/ArticleCard.tsx`)
 ```typescript
-// ❌ Bad
-className="bg-white dark:bg-gray-800"
-className="text-gray-700 dark:text-gray-200"
-className="border-gray-300 dark:border-gray-600"
-
-// ✅ Good
-className={colors.background.base}
-className={colors.foreground.secondary}
-className={colors.border.DEFAULT}
-```
-
-### Pattern 4: Hardcoded Borders
-```typescript
-// ❌ Bad
-className="rounded-lg"
-className="rounded-full"
-className="border border-gray-200"
-
-// ✅ Good
-className={borderRadius.lg}
-className={borderRadius.full}
-className={border.thin}
-```
-
----
-
-## Recommendations
-
-### Priority 1: Critical Fixes
-1. **NewsletterPopup Component** - Fix all violations listed above
-2. **Audit all section components** - Review each component in `components/sections/`
-3. **Create migration guide** - Document common patterns and fixes
-
-### Priority 2: Systematic Improvements
-1. **Add ESLint rules** - Enforce design token usage
-2. **Create component templates** - Standard templates using tokens
-3. **Update documentation** - Add examples for common patterns
-
-### Priority 3: Long-term
-1. **Automated testing** - Test for design system compliance
-2. **Design system showcase** - Visual examples of correct usage
-3. **Migration scripts** - Automated migration tools
-
----
-
-## Migration Example: NewsletterPopup
-
-### Before (Non-compliant)
-```typescript
-<div className="px-4 py-5 md:px-6 md:py-6">
-  <div className="relative space-y-3">
-    <button className="absolute top-2 right-2 w-8 h-8 rounded-full">
-    <h2 className="font-serif font-bold text-xl">
-    <p className="text-sm leading-relaxed">
-    <label className="text-sm font-semibold px-2 py-1">
-    <input className="px-4 text-base border border-gray-300 bg-white">
-    <button className="mt-2 rounded-lg">
-    <button className="gap-2 mt-3 pt-1 text-sm text-gray-700">
+// Current Issues
+<article className={cn("group w-full", "py-3 px-2 md:py-6 md:px-4", isPremium ? "bg-amber-50/40 dark:bg-amber-950/20 rounded-xl" : "rounded-xl")}>
+  <div className="mb-2 flex justify-start">
+    <Badge className="uppercase tracking-wide">
+      {article.category}
+    </Badge>
   </div>
-</div>
-```
+  <Heading level={3} variant="h5" className="mb-3">
+    <Link className="hover:text-primary transition-colors">
+      {article.title}
+    </Link>
+  </Heading>
+</article>
 
-### After (Compliant)
-```typescript
-import { containerPadding, componentPadding, gap, margin, typography, colors, borderRadius, border } from "@/lib/design-tokens";
-
-<div className={cn(containerPadding.md, componentPadding.md)}>
-  <div className={cn("relative", gap.sm)}>
-    <button className={cn("absolute", componentPadding.xs, "w-8 h-8", borderRadius.full)}>
-    <h2 className={typography.h3}>
-    <p className={typography.bodySmall}>
-    <label className={cn(typography.label, componentPadding.xs)}>
-    <input className={cn(componentPadding.sm, typography.body, border.thin, colors.background.base)}>
-    <button className={cn(margin.sm, borderRadius.lg)}>
-    <button className={cn("flex items-center", gap.xs, margin.sm, typography.bodySmall, colors.foreground.secondary)}>
+// Design System Compliant
+<article className={cn("group w-full", componentPadding.sm, borderRadius.xl, isPremium ? colors.warning.bg : "", transition.normal)}>
+  <div className={cn(gap.sm, "flex justify-start")}>
+    <Badge className="uppercase tracking-wide">
+      {article.category}
+    </Badge>
   </div>
-</div>
+  <Heading level={3} variant="h5" className={gap.md}>
+    <Link className={cn(colors.foreground.interactive, "transition-colors")}>
+      {article.title}
+    </Link>
+  </Heading>
+</article>
 ```
+
+**Issues Found:**
+- ❌ Hardcoded padding (`py-3 px-2 md:py-6 md:px-4`)
+- ❌ Hardcoded colors (`bg-amber-50/40 dark:bg-amber-950/20`)
+- ❌ Hardcoded spacing (`mb-2`, `mb-3`)
+- ❌ Hardcoded border radius (`rounded-xl`)
+
+#### Header (`components/layout/header/Header.tsx`)
+```typescript
+// Current Issues
+<header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+  <div className="flex items-center justify-between px-4 py-3 md:hidden relative z-[99] bg-background/95 backdrop-blur">
+    <button className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+      <X className="h-6 w-6 text-gray-900 dark:text-white" />
+    </button>
+  </div>
+  <motion.div className="fixed inset-y-0 right-0 z-[101] w-full max-w-[85vw] sm:max-w-[70vw] md:hidden bg-white dark:bg-gray-900 overflow-y-auto shadow-2xl">
+    <Heading level={2} variant="h3" className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+      Home
+    </Heading>
+  </motion.div>
+</header>
+
+// Design System Compliant
+<header className={cn("sticky top-0 z-50 w-full border-b", navbarBeige.DEFAULT, "backdrop-blur supports-[backdrop-filter]:bg-background/60")}>
+  <div className={cn("flex items-center justify-between", containerPadding.sm, "md:hidden relative z-[99]", navbarBeige.DEFAULT, "backdrop-blur")}>
+    <button className={cn(componentPadding.xs, borderRadius.md, colors.foreground.interactive)}>
+      <X className="h-6 w-6" />
+    </button>
+  </div>
+  <motion.div className={cn("fixed inset-y-0 right-0 z-[101] w-full max-w-[85vw] sm:max-w-[70vw] md:hidden overflow-y-auto", elevation[5], navbarBeige.DEFAULT)}>
+    <Heading level={2} variant="h3" className={typography.h3}>
+      Home
+    </Heading>
+  </motion.div>
+</header>
+```
+
+**Issues Found:**
+- ❌ Hardcoded colors (`bg-background/95`, `hover:bg-gray-100 dark:hover:bg-gray-800`)
+- ❌ Hardcoded padding (`px-4 py-3`)
+- ❌ Hardcoded shadow (`shadow-2xl`)
+- ❌ Hardcoded typography (`text-2xl sm:text-3xl font-bold`)
+
+#### Button (`components/ui/button.tsx`)
+```typescript
+// Current Issues
+const buttonVariants = cva(
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  {
+    variants: {
+      variant: {
+        default: "bg-[#374152] text-white hover:opacity-80 dark:bg-[#374152] dark:text-white dark:hover:opacity-80",
+        secondary: `${colors.background.elevated} ${colors.foreground.primary} hover:opacity-80 dark:hover:opacity-80`,
+        outline: `${colors.border.DEFAULT} bg-transparent ${colors.foreground.primary} hover:opacity-80 dark:hover:opacity-80`,
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+      },
+    },
+  }
+);
+
+// Design System Compliant
+const buttonVariants = cva(
+  cn(button.base, focusVisible),
+  {
+    variants: {
+      variant: {
+        default: cn(colors.primary.bg, colors.foreground.onDark),
+        secondary: cn(colors.background.elevated, colors.foreground.primary),
+        outline: cn(colors.border.DEFAULT, "bg-transparent", colors.foreground.primary),
+      },
+      size: {
+        default: button.padding.md,
+        sm: button.padding.sm,
+        lg: button.padding.lg,
+      },
+    },
+  }
+);
+```
+
+**Issues Found:**
+- ❌ Hardcoded colors (`bg-[#374152]`)
+- ❌ Hardcoded border radius (`rounded-md`)
+- ❌ Hardcoded padding (`h-10 px-4 py-2`)
 
 ---
+
+## Migration Priority Matrix
+
+### 🚨 Critical Priority (High User Visibility)
+
+1. **Header Component** - Main navigation, affects all pages
+2. **HeroSection** - Landing page hero, first impression
+3. **ArticleCard** - Used throughout the site for content display
+
+### ⚠️ High Priority (Core Components)
+
+1. **Section1-4** - Main home page sections
+2. **Button Component** - Used everywhere for interactions
+3. **Typography Components** - Text rendering consistency
+
+### 📋 Medium Priority (Supporting Components)
+
+1. **Footer Component**
+2. **Navigation Components** (StickyNav, CardNav)
+3. **Form Components**
+4. **Modal/Dialog Components**
+
+### ✅ Low Priority (Specialized Components)
+
+1. **Page-specific sections** (Podcast, Video sections)
+2. **Admin/dashboard components**
+3. **Utility components**
+
+## Recommended Migration Strategy
+
+### Phase 1: Foundation (Week 1)
+1. Update Button component to use design tokens
+2. Update CardTitle to use typography tokens
+3. Create utility functions for common patterns
+
+### Phase 2: Core Components (Week 2)
+1. Update Header component
+2. Update HeroSection
+3. Update ArticleCard
+4. Update main home sections (Section1-4)
+
+### Phase 3: Supporting Components (Week 3)
+1. Update Footer and navigation components
+2. Update form components
+3. Update modal components
+
+### Phase 4: Cleanup & Testing (Week 4)
+1. Search for remaining hardcoded values
+2. Test all components in both light and dark modes
+3. Update any missed components
+4. Performance testing and optimization
+
+## Implementation Guidelines
+
+### 1. Import Design Tokens
+```typescript
+import {
+  sectionPadding,
+  containerPadding,
+  componentPadding,
+  gap,
+  colors,
+  typography,
+  borderRadius,
+  border,
+  elevation,
+  navbarBeige
+} from "@/lib/design-tokens";
+```
+
+### 2. Replace Hardcoded Values
+```typescript
+// ❌ Before
+<section className="py-8 md:py-16 lg:py-20">
+  <div className="px-4 sm:px-6 lg:px-8 mb-8 md:mb-12">
+    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+      Title
+    </h2>
+  </div>
+</section>
+
+// ✅ After
+<section className={sectionPadding.lg}>
+  <Container padding="md">
+    <div className={gap.lg}>
+      <Heading level={2} variant="h2">
+        Title
+      </Heading>
+    </div>
+  </Container>
+</section>
+```
+
+### 3. Use Semantic Colors
+```typescript
+// ❌ Hardcoded colors
+className="bg-white text-black border-gray-200"
+
+// ✅ Design tokens
+className={cn(colors.background.base, colors.foreground.primary, colors.border.DEFAULT)}
+```
+
+### 4. Use Typography Variants
+```typescript
+// ❌ Hardcoded typography
+className="text-2xl font-bold leading-tight"
+
+// ✅ Typography tokens
+className={typography.h2}
+```
+
+## Success Metrics
+
+- [ ] 90%+ of components use design tokens
+- [ ] No hardcoded Tailwind color classes
+- [ ] No hardcoded spacing classes (`py-*`, `px-*`, `m-*`, `gap-*`)
+- [ ] No hardcoded typography classes (`text-*`, `font-*`)
+- [ ] All components work correctly in light and dark modes
+- [ ] Consistent visual hierarchy across all pages
 
 ## Next Steps
 
-1. **Fix NewsletterPopup** - Apply all fixes from this audit
-2. **Audit remaining components** - Review each component systematically
-3. **Create fix checklist** - Document fixes needed per component
-4. **Update .cursorrules** - Add design system compliance guidelines
-5. **Test dark mode** - Verify all fixes work in dark mode
+1. **Immediate Action**: Start with Phase 1 components (Button, CardTitle)
+2. **Team Communication**: Share this audit report with the development team
+3. **Timeline Planning**: Schedule the 4-week migration plan
+4. **Code Review**: Establish design token usage as a code review requirement
+5. **Testing**: Test all components in both light and dark modes before completion
 
 ---
 
-## Notes
+**Report Generated:** December 2, 2025
+**Next Audit Date:** January 2, 2026
+**Compliance Target:** 90% by end of Q1 2026
 
-- Design tokens are well-structured and comprehensive
-- Many components already import tokens (good foundation)
-- Main issue is inconsistent usage (some tokens, some hardcoded)
-- Dark mode support is critical - all colors must use tokens
-- Arc Publishing standards (gray700 baseline) must be followed
+
+
+
 
 
 

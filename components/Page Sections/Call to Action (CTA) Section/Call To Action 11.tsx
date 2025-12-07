@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Heading } from "@/components/ui/typography/Heading";
 
 export function CallToAction() {
   return (
@@ -7,9 +8,9 @@ export function CallToAction() {
         <div className="mx-auto grid max-w-5xl items-center justify-between rounded-xl border px-0 md:grid-cols-2">
           <div className="order-2 flex flex-col gap-y-5 p-7 md:order-1 lg:p-10">
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter lg:text-4xl/tight">
+              <Heading level={2} variant="h2" className="tracking-tighter">
                 Make animated components magical
-              </h2>
+              </Heading>
               <p className="max-w-[600px] text-neutral-500 dark:text-neutral-400 md:text-base/[1.5] lg:text-base/[1.5] xl:text-lg/[1.5]">
                 Here is your favourite React Library that you want to buy, it's
                 MagicUI. Make your website bold and make your components

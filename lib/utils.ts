@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { sectionPadding, containerPadding, componentPadding, gap, colors, typography, borderRadius, border, elevation, transition } from "./design-tokens";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -125,4 +126,138 @@ export const gradientVariants = {
     md:from-black/15 md:to-black/15
     lg:from-black/10 lg:to-black/10
   `,
+} as const;
+
+// ============================================================================
+// DESIGN TOKEN UTILITIES - Phase 1 Migration Helpers
+// ============================================================================
+
+/**
+ * Design Token Utility Functions
+ * These provide consistent, design-token-based patterns for components
+ * Gradually replace hardcoded Tailwind classes with these utilities
+ */
+
+/**
+ * Section Layout Utilities - Replace hardcoded py-* classes
+ */
+export const sectionLayout = {
+  base: (size: keyof typeof sectionPadding = "md") => sectionPadding[size],
+  withContainer: (sectionSize: keyof typeof sectionPadding = "md", containerSize: keyof typeof containerPadding = "md") =>
+    cn(sectionPadding[sectionSize], containerPadding[containerSize]),
+} as const;
+
+/**
+ * Spacing Utilities - Replace hardcoded gap-* and margin classes
+ */
+export const spacing = {
+  gap: (size: keyof typeof gap = "md") => gap[size],
+  margin: (size: keyof typeof gap = "md") => `m-${size}`,
+} as const;
+
+/**
+ * Color Utilities - Replace hardcoded color classes
+ */
+export const themeColors = {
+  // Background utilities
+  bg: {
+    base: colors.background.base,
+    elevated: colors.background.elevated,
+    navbar: colors.navbarBeige.DEFAULT,
+  },
+  // Text utilities
+  text: {
+    primary: colors.foreground.primary,
+    secondary: colors.foreground.secondary,
+    muted: colors.foreground.muted,
+    onDark: colors.foreground.onDark,
+  },
+  // Interactive utilities
+  interactive: {
+    hover: colors.foreground.interactive,
+    focus: "focus:ring-2 focus:ring-primary focus:ring-offset-2",
+  },
+} as const;
+
+/**
+ * Border Utilities - Replace hardcoded border-* classes
+ */
+export const borders = {
+  default: border.thin,
+  none: border.none,
+  radius: (size: keyof typeof borderRadius = "md") => borderRadius[size],
+} as const;
+
+/**
+ * Elevation Utilities - Replace hardcoded shadow-* classes
+ */
+export const elevations = {
+  none: elevation[0],
+  low: elevation[1],
+  medium: elevation[2],
+  high: elevation[3],
+  modal: elevation[4],
+} as const;
+
+/**
+ * Typography Utilities - Replace hardcoded text-* font-* classes
+ */
+export const textStyles = {
+  h1: typography.h1,
+  h2: typography.h2,
+  h3: typography.h3,
+  h4: typography.h4,
+  h5: typography.h5,
+  h6: typography.h6,
+  body: typography.body,
+  bodyLarge: typography.bodyLarge,
+  bodySmall: typography.bodySmall,
+  caption: typography.caption,
+  label: typography.label,
+  button: typography.button,
+} as const;
+
+/**
+ * Component Pattern Utilities - Common component combinations
+ */
+export const componentPatterns = {
+  // Card base pattern
+  card: cn(
+    colors.background.base,
+    colors.foreground.primary,
+    borderRadius.lg,
+    border.thin,
+    elevation[1]
+  ),
+
+  // Interactive card pattern
+  cardInteractive: cn(
+    colors.background.base,
+    colors.foreground.primary,
+    borderRadius.lg,
+    border.thin,
+    elevation[1],
+    transition.normal,
+    "hover:shadow-md"
+  ),
+
+  // Form input pattern
+  input: cn(
+    colors.foreground.primary,
+    border.thin,
+    componentPadding.sm,
+    borderRadius.md,
+    transition.normal,
+    "focus:ring-2 focus:ring-primary"
+  ),
+
+  // Button hover pattern (common across variants)
+  buttonHover: "hover:opacity-80",
+
+  // Link pattern
+  link: cn(
+    colors.foreground.primary,
+    colors.foreground.interactive,
+    "underline-offset-4 hover:underline"
+  ),
 } as const;

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Heading } from "@/components/ui/typography/Heading";
 
 export function Component() {
   const [agreed, setAgreed] = useState<boolean | "indeterminate">(false);
@@ -17,9 +18,9 @@ export function Component() {
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:grid-cols-2">
           <div className="flex flex-col justify-center space-y-4">
             <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+              <Heading level={1} variant="h1" className="tracking-tighter">
                 UI Design for Web & Mobile Apps
-              </h1>
+              </Heading>
               <p className="max-w-[600px] text-muted-foreground md:text-xl">
                 Effective marketing and advertising materials. It is also a
                 great tool to use when you want to present your.

@@ -208,6 +208,119 @@ button[role="tab"]:focus,
   background: transparent !important;
 }
 
+/* CRITICAL: Ensure borders ALWAYS remain visible for pricing switch indicator - highest priority override */
+/* NOTE: border-color is set explicitly in rules below, NOT inherited */
+.pricing-switch-indicator,
+.pricing-switch-button .pricing-switch-indicator,
+.pricing-switch-button:hover .pricing-switch-indicator,
+.pricing-switch-button:active .pricing-switch-indicator,
+.pricing-switch-button:focus .pricing-switch-indicator,
+.pricing-switch-button[data-selected="true"] .pricing-switch-indicator,
+.pricing-switch-button[data-selected="true"]:hover .pricing-switch-indicator,
+.pricing-switch-button[data-selected="false"]:hover .pricing-switch-indicator,
+.pricing-switch-button[data-selected="false"]:hover
+  + .pricing-switch-button[data-selected="true"]
+  .pricing-switch-indicator,
+.pricing-switch-button[data-selected="false"]:hover
+  ~ .pricing-switch-button[data-selected="true"]
+  .pricing-switch-indicator,
+.pricing-switch-button:hover
+  ~ .pricing-switch-button[data-selected="true"]
+  .pricing-switch-indicator,
+.pricing-switch-button:hover
+  + .pricing-switch-button[data-selected="true"]
+  .pricing-switch-indicator,
+.dark-mode .pricing-switch-button .pricing-switch-indicator,
+.dark-mode .pricing-switch-button:hover .pricing-switch-indicator,
+.dark-mode .pricing-switch-button:active .pricing-switch-indicator,
+.dark-mode .pricing-switch-button:focus .pricing-switch-indicator,
+.dark-mode
+  .pricing-switch-button[data-selected="true"]
+  .pricing-switch-indicator,
+.dark-mode
+  .pricing-switch-button[data-selected="true"]:hover
+  .pricing-switch-indicator,
+.dark-mode
+  .pricing-switch-button[data-selected="false"]:hover
+  .pricing-switch-indicator,
+.dark-mode
+  .pricing-switch-button[data-selected="false"]:hover
+  ~ .pricing-switch-button[data-selected="true"]
+  .pricing-switch-indicator,
+.dark-mode
+  .pricing-switch-button:hover
+  ~ .pricing-switch-button[data-selected="true"]
+  .pricing-switch-indicator {
+  border-width: 4px !important;
+  border-style: solid !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  border-image: none !important;
+  outline: none !important;
+}
+
+/* CRITICAL: Explicitly set border colors for pricing switch indicator - prevent ANY color changes on hover */
+/* This must override color-default.css rules that change border-color on hover */
+/* Dark mode border color - must match inline style - NEVER CHANGE */
+.dark-mode .pricing-switch-indicator,
+.dark-mode .pricing-switch-button .pricing-switch-indicator,
+.dark-mode .pricing-switch-button:hover .pricing-switch-indicator,
+.dark-mode .pricing-switch-button:active .pricing-switch-indicator,
+.dark-mode .pricing-switch-button:focus .pricing-switch-indicator,
+.dark-mode
+  .pricing-switch-button[data-selected="true"]
+  .pricing-switch-indicator,
+.dark-mode
+  .pricing-switch-button[data-selected="true"]:hover
+  .pricing-switch-indicator,
+.dark-mode
+  .pricing-switch-button[data-selected="false"]:hover
+  .pricing-switch-indicator,
+.dark-mode
+  .pricing-switch-button[data-selected="false"]:hover
+  ~ .pricing-switch-button[data-selected="true"]
+  .pricing-switch-indicator,
+.dark-mode
+  .pricing-switch-button:hover
+  ~ .pricing-switch-button[data-selected="true"]
+  .pricing-switch-indicator,
+.dark-mode
+  .pricing-switch-button:hover
+  + .pricing-switch-button[data-selected="true"]
+  .pricing-switch-indicator,
+.dark-mode button:hover .pricing-switch-indicator,
+.dark-mode .pricing-switch-button:hover span.pricing-switch-indicator {
+  border-color: #f8f5e4 !important;
+  border-width: 4px !important;
+  border-style: solid !important;
+}
+
+/* Light mode border color - must match inline style - NEVER CHANGE */
+.pricing-switch-indicator:not(.dark-mode .pricing-switch-indicator),
+.pricing-switch-button .pricing-switch-indicator:not(.dark-mode),
+.pricing-switch-button:hover .pricing-switch-indicator:not(.dark-mode),
+.pricing-switch-button:active .pricing-switch-indicator:not(.dark-mode),
+.pricing-switch-button:focus .pricing-switch-indicator:not(.dark-mode),
+.pricing-switch-button[data-selected="true"]
+  .pricing-switch-indicator:not(.dark-mode),
+.pricing-switch-button[data-selected="true"]:hover
+  .pricing-switch-indicator:not(.dark-mode),
+.pricing-switch-button[data-selected="false"]:hover
+  .pricing-switch-indicator:not(.dark-mode),
+.pricing-switch-button[data-selected="false"]:hover
+  ~ .pricing-switch-button[data-selected="true"]
+  .pricing-switch-indicator:not(.dark-mode),
+.pricing-switch-button:hover
+  ~ .pricing-switch-button[data-selected="true"]
+  .pricing-switch-indicator:not(.dark-mode),
+button:hover .pricing-switch-indicator:not(.dark-mode),
+.pricing-switch-button:hover span.pricing-switch-indicator:not(.dark-mode) {
+  border-color: #374152 !important;
+  border-width: 4px !important;
+  border-style: solid !important;
+}
+
 /* Ensure selected pricing switch button text is dark in dark mode */
 .dark-mode .pricing-switch-button[data-selected="true"] .relative.z-10 {
   color: #111827 !important;
@@ -234,7 +347,19 @@ button[role="tab"]:focus,
 /* Override global button:hover from color-default.css - Remove blue #3500FD hover color */
 /* This overrides the rules from color-default.css lines 78-84 and 91-97 */
 /* Prevent blue #3500fd background on hover - exclude buttons with explicit backgrounds */
-button:not(.subscribe-button):not([class*="bg-"]):hover,
+.scroll-indicator-button:hover,
+.scroll-indicator-button:active,
+.scroll-indicator-button:focus,
+.dark-mode .scroll-indicator-button:hover,
+.dark-mode .scroll-indicator-button:active,
+.dark-mode .scroll-indicator-button:focus {
+  background-color: transparent !important;
+  background: transparent !important;
+  background-image: none !important;
+}
+button:not(.subscribe-button):not([class*="bg-"]):not(
+    .scroll-indicator-button
+  ):not(.pricing-switch-button):hover,
 button:not(.subscribe-button):not([class*="bg-"]):active,
 button:not(.subscribe-button):not([class*="bg-"]):focus,
 input[type="button"]:not(.subscribe-button):not([class*="bg-"]):hover,
@@ -252,18 +377,28 @@ input[type="submit"]:not(.subscribe-button):not([class*="bg-"]):focus,
 span[data-slot="badge"]:hover,
 span[data-slot="badge"]:active,
 span[data-slot="badge"]:focus,
-.dark-mode button:not(.subscribe-button):not([class*="bg-"]):hover,
+.dark-mode
+  button:not(.subscribe-button):not([class*="bg-"]):not(
+    .pricing-switch-button
+  ):hover,
 .dark-mode button:not(.subscribe-button):not([class*="bg-"]):active,
 .dark-mode button:not(.subscribe-button):not([class*="bg-"]):focus,
-.dark-mode input[type="button"]:not(.subscribe-button):not([class*="bg-"]):hover,
-.dark-mode input[type="button"]:not(.subscribe-button):not([class*="bg-"]):active,
-.dark-mode input[type="button"]:not(.subscribe-button):not([class*="bg-"]):focus,
+.dark-mode
+  input[type="button"]:not(.subscribe-button):not([class*="bg-"]):hover,
+.dark-mode
+  input[type="button"]:not(.subscribe-button):not([class*="bg-"]):active,
+.dark-mode
+  input[type="button"]:not(.subscribe-button):not([class*="bg-"]):focus,
 .dark-mode input[type="reset"]:not(.subscribe-button):not([class*="bg-"]):hover,
-.dark-mode input[type="reset"]:not(.subscribe-button):not([class*="bg-"]):active,
+.dark-mode
+  input[type="reset"]:not(.subscribe-button):not([class*="bg-"]):active,
 .dark-mode input[type="reset"]:not(.subscribe-button):not([class*="bg-"]):focus,
-.dark-mode input[type="submit"]:not(.subscribe-button):not([class*="bg-"]):hover,
-.dark-mode input[type="submit"]:not(.subscribe-button):not([class*="bg-"]):active,
-.dark-mode input[type="submit"]:not(.subscribe-button):not([class*="bg-"]):focus,
+.dark-mode
+  input[type="submit"]:not(.subscribe-button):not([class*="bg-"]):hover,
+.dark-mode
+  input[type="submit"]:not(.subscribe-button):not([class*="bg-"]):active,
+.dark-mode
+  input[type="submit"]:not(.subscribe-button):not([class*="bg-"]):focus,
 .dark-mode [role="button"]:not(.subscribe-button):not([class*="bg-"]):hover,
 .dark-mode [role="button"]:not(.subscribe-button):not([class*="bg-"]):active,
 .dark-mode [role="button"]:not(.subscribe-button):not([class*="bg-"]):focus,
@@ -325,7 +460,12 @@ span[data-slot="badge"]:focus,
   opacity: 0.85 !important;
   /* Keep original blue gradient - prevent any color changes */
   background-color: #2563eb !important;
-  background-image: linear-gradient(to top, #2563eb, #3b82f6, #2563eb) !important;
+  background-image: linear-gradient(
+    to top,
+    #2563eb,
+    #3b82f6,
+    #2563eb
+  ) !important;
   border-color: #2563eb !important;
   color: #ffffff !important;
 }
@@ -334,7 +474,12 @@ span[data-slot="badge"]:focus,
 .dark-mode .subscribe-button:active,
 .dark-mode .subscribe-button:focus {
   background-color: #2563eb !important;
-  background-image: linear-gradient(to top, #2563eb, #3b82f6, #2563eb) !important;
+  background-image: linear-gradient(
+    to top,
+    #2563eb,
+    #3b82f6,
+    #2563eb
+  ) !important;
   border-color: #3b82f6 !important;
   color: #ffffff !important;
 }
@@ -458,9 +603,7 @@ button[role="tab"][data-state="active"] {
     #f0f0f0 100%
   );
   border: 1px solid rgba(229, 231, 235, 0.9);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.06),
-    0 2px 4px rgba(0, 0, 0, 0.08),
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
@@ -482,21 +625,16 @@ button[role="tab"][data-state="active"] {
 .scrolli-premium-gradient-bg {
   background: linear-gradient(
     135deg,
-    #F8F5E4 0%,
+    #f8f5e4 0%,
     #f0edd9 25%,
     #e8e5d1 50%,
     #f0edd9 75%,
-    #F8F5E4 100%
+    #f8f5e4 100%
   );
 }
 
 .dark-mode .scrolli-premium-gradient-bg {
-  background: linear-gradient(
-    135deg,
-    #374152 0%,
-    #2d3748 50%,
-    #1f2937 100%
-  );
+  background: linear-gradient(135deg, #374152 0%, #2d3748 50%, #1f2937 100%);
 }
 
 .readers-vote-gradient {
@@ -626,4 +764,30 @@ button[role="tab"][data-state="active"] {
 /* Mailchimp embed styling */
 .article-content #mc_embed_shell {
   @apply my-8;
+}
+
+/* Override global h2 font-size from style.css to allow Tailwind typography tokens to work */
+/* This ensures our design system typography tokens take precedence over legacy CSS */
+/* Override the legacy h2 font-size rule from style.css */
+/* The legacy rule h2 { font-size: 1.694em; } is overridden here */
+h2 {
+  font-size: revert-layer;
+}
+
+/* Ensure Tailwind text utility classes work correctly on h2 elements */
+/* Tailwind's more specific selector (e.g., h2.text-6xl) will apply after this reset */
+h2.text-xs,
+h2.text-sm,
+h2.text-base,
+h2.text-lg,
+h2.text-xl,
+h2.text-2xl,
+h2.text-3xl,
+h2.text-4xl,
+h2.text-5xl,
+h2.text-6xl,
+h2.text-7xl,
+h2.text-8xl,
+h2[class*="text-"] {
+  /* Tailwind classes will apply their font-size values naturally */
 }

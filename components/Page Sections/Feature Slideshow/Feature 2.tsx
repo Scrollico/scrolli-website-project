@@ -11,6 +11,7 @@ import * as Accordion from "@radix-ui/react-accordion";
 import { motion, useInView } from "framer-motion";
 
 import { cn } from "@/lib/utils";
+import { Heading } from "@/components/ui/typography/Heading";
 
 type AccordionItemProps = {
   children: React.ReactNode;
@@ -220,9 +221,9 @@ const Feature = ({
             <h4 className="text-xl font-bold tracking-tight text-black dark:text-white">
               Features
             </h4>
-            <h2 className="text-4xl font-bold tracking-tight text-black dark:text-white sm:text-6xl">
+            <Heading level={2} variant="h2" className="tracking-tight">
               Blazingly fast to help your business grow
-            </h2>
+            </Heading>
           </div>
           <div className="mx-auto my-12 grid h-full max-w-5xl grid-cols-5 gap-x-10">
             <div

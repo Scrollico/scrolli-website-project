@@ -4,8 +4,11 @@ import blogData from "@/data/blog.json"
 import Pagination from '@/components/elements/Pagination'
 import Image from 'next/image'
 import { useState } from 'react'
-import { gradientVariants } from "@/lib/utils"
+import { gradientVariants, cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
+import { Container } from "@/components/responsive"
+import { Heading, Text } from "@/components/ui/typography"
+import { colors, gap, componentPadding, sectionPadding, typography } from "@/lib/design-tokens"
 
 export default function Section4() {
   const { mostRecent } = blogData;
@@ -25,19 +28,19 @@ export default function Section4() {
   return (
     <>
       <div className="content-widget">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-8">
-              <h2 className="spanborder h4">
-                <span>{mostRecent.title}</span>
-              </h2>
+        <Container>
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8 lg:gap-12">
+            <div>
+              <Heading level={2} variant="h2" decoration="underlinePrimary" className="mb-6">
+                {mostRecent.title}
+              </Heading>
               {mostRecent.mainArticles.map((article, index) => (
-                <article key={index} className="row justify-content-between mb-5 mr-0">
-                  <div className="col-md-9">
-                    <div className="align-self-center">
+                <article key={index} className={cn("grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6", gap.xl)}>
+                  <div>
+                    <div>
                       {/* Tag Badge */}
                       {article.tag && (
-                        <div className="mb-2 flex justify-start">
+                        <div className={cn(gap.sm, "flex justify-start")}>
                           <Badge
                             variant={article.tag === "Editors' Pick" ? "primary" : "secondary"}
                             appearance={article.tag === "Editors' Pick" ? "default" : "outline"}
@@ -50,7 +53,7 @@ export default function Section4() {
                       )}
                       {/* Category Badge */}
                       {article.category && (
-                        <div className="mb-2 flex justify-start">
+                        <div className={cn(gap.sm, "flex justify-start")}>
                           <Badge
                             variant="secondary"
                             appearance="outline"
@@ -61,15 +64,15 @@ export default function Section4() {
                           </Badge>
                         </div>
                       )}
-                      <h3 className="entry-title mb-3">
-                        <Link href={`/article/${article.id}`}>{article.title}</Link>
-                      </h3>
+                      <Heading level={3} variant="h3" className={gap.md}>
+                        <Link href={`/article/${article.id}`} className={colors.foreground.interactive}>{article.title}</Link>
+                      </Heading>
                       <div className="entry-excerpt">
-                        <p>{article.excerpt}</p>
+                        <Text variant="body" color="secondary">{article.excerpt}</Text>
                       </div>
                     </div>
                   </div>
-                  <div className="col-md-3 bgcover relative">
+                  <div className="relative rounded-lg overflow-hidden aspect-[4/3] md:aspect-[3/4]">
                     <div
                       className="absolute inset-0 bg-cover bg-center bg-no-repeat"
                       style={{

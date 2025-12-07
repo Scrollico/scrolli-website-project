@@ -9,6 +9,7 @@ import {
   useSpring,
   Variant,
 } from "framer-motion";
+import { Heading } from "@/components/ui/typography/Heading";
 
 const stats = [
   { value: 50000, label: "Active Users" },
@@ -98,13 +99,13 @@ export function StatsSection() {
               custom={index}
               className="flex flex-col items-center"
             >
-              <h3 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-center">
+              <Heading level={3} variant="h3" className="mb-2 text-center">
                 <CountingNumber
                   value={stat.value}
                   prefix={stat.prefix}
                   suffix={stat.suffix}
                 />
-              </h3>
+              </Heading>
               <p className="text-sm text-muted-foreground text-center">
                 {stat.label}
               </p>

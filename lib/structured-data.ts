@@ -19,7 +19,7 @@ import {
 const SITE_CONFIG = {
   name: "Scrolli",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://scrolli.com",
-  logo: "/assets/images/Standart/Primary-alternative.png",
+  logo: "/assets/images/Standart/primary-icon.png",
   description: "Modern news and blog magazine platform",
   sameAs: [
     // Add social media URLs here

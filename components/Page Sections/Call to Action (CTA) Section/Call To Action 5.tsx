@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Heading } from "@/components/ui/typography/Heading";
 
 export function Component() {
   return (
@@ -17,9 +18,9 @@ export function Component() {
           </div>
           <div className="flex flex-col justify-center space-y-4 lg:w-1/2">
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
+              <Heading level={2} variant="h2" className="tracking-tighter">
                 Experience Our Mobile App
-              </h2>
+              </Heading>
               <p className="text-sm text-muted-foreground md:text-base">
                 Discover a seamless mobile experience with our feature-rich app.
                 Designed for convenience and efficiency, it puts the power of

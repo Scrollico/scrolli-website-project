@@ -6,13 +6,14 @@ import { Container } from "@/components/responsive";
 import { Heading } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { sectionPadding, containerPadding, gap, colors, typography, borderRadius, margin, marginBottom } from "@/lib/design-tokens";
 import blogData from "@/data/blog.json";
 
 export default function HeroSection() {
   const featuredArticle = blogData.featured.mainArticle;
 
   return (
-    <section className="relative w-full min-h-[70vh] md:h-[70vh] flex items-center overflow-hidden">
+    <section className="relative w-full min-h-[70vh] md:h-[70vh] flex items-end overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 z-10">
         {featuredArticle.image && (
@@ -39,16 +40,15 @@ export default function HeroSection() {
       </div>
 
       {/* Content */}
-      <Container className="relative z-30 pt-20 md:pt-24">
-        <div className="max-w-2xl">
+      <Container className={cn("relative z-30", marginBottom.lg)} padding="lg">
+        <div className={cn("max-w-2xl", "flex flex-col", gap.lg)}>
           {/* Featured Label */}
-          <div className="mb-4 md:mb-8">
+          <div>
             <Badge
               variant="secondary"
               appearance="ghost"
               size="sm"
-              className="!px-3 !py-2 uppercase tracking-wide !bg-black/30 backdrop-blur-sm !border !border-white/20 !text-white dark:!bg-black/30 dark:!border-white/20 dark:!text-white rounded opacity-90 shadow-sm cursor-default !bg-none"
-              style={{ backgroundImage: 'none' }}
+              className={cn("!px-3 !py-2 uppercase tracking-wide backdrop-blur-sm opacity-90 shadow-sm cursor-default", colors.surface.overlay, borderRadius.md)}
             >
               Featured
             </Badge>
@@ -57,11 +57,8 @@ export default function HeroSection() {
           {/* Headline */}
           <Heading
             level={1}
-            variant="h2"
-            className={cn(
-              "mb-6 md:mb-8 max-w-full font-semibold",
-              "text-gray-900 dark:text-gray-100"
-            )}
+            variant="h1"
+            className="max-w-full"
             style={{ textShadow: '0 1px 1px rgba(0, 0, 0, 0.1)' }}
           >
             {featuredArticle.title}
@@ -72,8 +69,8 @@ export default function HeroSection() {
             href={`/article/${featuredArticle.id}`}
             className={cn(
               "inline-flex items-center gap-2 no-underline transition-colors duration-300",
-              "text-gray-900 dark:text-gray-100",
-              "hover:text-gray-800 dark:hover:text-gray-200"
+              colors.foreground.primary,
+              colors.foreground.interactive
             )}
             style={{ textShadow: '0 1px 1px rgba(0, 0, 0, 0.1)' }}
           >

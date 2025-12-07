@@ -2,13 +2,14 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { typography, colors } from "@/lib/design-tokens";
+import { typography, colors, headingDecor } from "@/lib/design-tokens";
 
 export interface HeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {
   as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   variant?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   color?: "primary" | "secondary" | "muted";
+  decoration?: "underline" | "underlinePrimary";
 }
 
 const headingVariants = {
@@ -33,6 +34,7 @@ export const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
       level,
       variant,
       color = "primary",
+      decoration,
       className,
       children,
       ...props
@@ -45,14 +47,16 @@ export const Heading = React.forwardRef<HTMLHeadingElement, HeadingProps>(
     // Determine the variant
     const headingVariant = variant || (`h${level || 1}` as keyof typeof headingVariants);
     
+    const headingVariantClass = headingVariants[headingVariant];
+    const colorClass = colorVariants[color];
+    const decorationClass = decoration ? headingDecor[decoration] : undefined;
+    
+    const finalClassName = cn(headingVariantClass, colorClass, decorationClass, className);
+    
     return (
       <Component
         ref={ref}
-        className={cn(
-          headingVariants[headingVariant],
-          colorVariants[color],
-          className
-        )}
+        className={finalClassName}
         {...props}
       >
         {children}

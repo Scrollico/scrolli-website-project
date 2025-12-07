@@ -7,6 +7,8 @@ import { PillTab } from "@/components/ui/pill-morph-tabs";
 import ArticleCard from "./ArticleCard";
 import PodcastSection from "./PodcastSection";
 import { ArticleListSkeleton } from "@/components/ui/LoadingSkeletons";
+import { sectionPadding, componentPadding, gap, containerPadding } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
 // Dynamically import PillMorphTabs with SSR disabled to prevent hydration mismatch
 // Radix UI generates random IDs that differ between server and client
@@ -29,8 +31,8 @@ function TabContentPanel({
   articles: typeof blogData.todayHighlights.articles;
 }) {
   return (
-    <Container size="full" className="py-4 md:py-6 lg:py-8">
-      <div className="space-y-4 md:space-y-6">
+    <Container size="full" className={componentPadding.lg}>
+      <div className={gap.md}>
         {articles.map((article, index) => (
           <ArticleCard
             key={`${article.id}-${index}`}
@@ -108,8 +110,8 @@ export default function Section3() {
   return (
     <>
       <div className="content-widget">
-        <Container size="xl" className="py-6 md:py-8">
-          <div className="flex justify-start md:justify-center overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0 scrollbar-hide">
+        <Container size="xl" className={sectionPadding.md}>
+          <div className={cn("flex justify-start md:justify-center overflow-x-auto", "pb-2 -mx-4 px-4 md:mx-0 md:px-0 md:pb-0 scrollbar-hide")}>
             <PillMorphTabs
               items={tabItems}
               defaultValue="tümü"

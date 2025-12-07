@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
-import { borderRadius, border, elevation, componentPadding, colors } from "@/lib/design-tokens";
+import { borderRadius, border, elevation, componentPadding, colors, typography } from "@/lib/design-tokens";
 
 const Card = React.forwardRef<
   HTMLDivElement,
@@ -41,7 +41,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-2xl font-semibold leading-tight tracking-tight",
+      typography.h4,
       colors.foreground.primary,
       className,
     )}

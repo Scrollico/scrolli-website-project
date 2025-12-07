@@ -6,6 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Heading } from "@/components/ui/typography/Heading";
 
 const faqs = [
   {
@@ -90,9 +91,9 @@ export function FAQ() {
             <h4 className="text-xl font-bold tracking-tight text-black dark:text-white">
               FAQs
             </h4>
-            <h2 className="text-4xl font-bold tracking-tight text-black dark:text-white sm:text-6xl">
+            <Heading level={2} variant="h2" className="tracking-tight">
               Frequently Asked Questions
-            </h2>
+            </Heading>
             <p className="mt-6 text-xl leading-8 text-black/80 dark:text-white">
               Need help with something? Here are some of the most common
               questions we get.

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { buttonVariants } from "@/components/ui/button";
+import { Heading } from "@/components/ui/typography/Heading";
 import { cn } from "@/lib/utils";
 import Marquee from "@/components/magicui/marquee";
 import { ChevronRight, HeartHandshake } from "lucide-react";
@@ -139,9 +140,9 @@ export function CallToAction() {
               <HeartHandshake className="mx-auto size-16 text-black dark:text-white lg:size-24" />
             </div>
             <div className="z-10 mt-4 flex flex-col items-center text-center text-black dark:text-white">
-              <h1 className="text-3xl font-bold lg:text-4xl">
+              <Heading level={1} variant="h1">
                 Stop wasting time on design.
-              </h1>
+              </Heading>
               <p className="mt-2">
                 Start your 7-day free trial. No credit card required.
               </p>

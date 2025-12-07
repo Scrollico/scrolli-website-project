@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { CloseIcon, ArrowRightIcon } from "@/components/icons/ScrolliIcons";
@@ -17,60 +17,124 @@ import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { SmartButton } from "@/components/ui/smart-button";
 
+const STORAGE_KEY = 'newsletter-popup-dismissed';
+const TIME_DELAY_MS = 30000; // 30 seconds
+const SCROLL_THRESHOLD_PERCENT = 25; // 25% scroll
+
+// localStorage utility functions
+const isPopupDismissed = (): boolean => {
+    if (typeof window === 'undefined') return false;
+    try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (!stored) return false;
+        const data = JSON.parse(stored);
+        return data.dismissed === true;
+    } catch {
+        return false;
+    }
+};
+
+const setPopupDismissed = (): void => {
+    if (typeof window === 'undefined') return;
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+            dismissed: true,
+            timestamp: Date.now()
+        }));
+    } catch (error) {
+        // localStorage might be disabled or full
+        console.error('Failed to save dismissal state:', error);
+    }
+};
+
 export default function NewsletterPopup() {
     const [isMounted, setIsMounted] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
-    const [isDismissed, setIsDismissed] = useState(false);
     const [email, setEmail] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { theme, resolvedTheme } = useTheme();
+    const pageLoadTimeRef = useRef<number | null>(null);
+    const hasShownRef = useRef<boolean>(false);
 
+    // Initialize component and check localStorage
     useEffect(() => {
         setIsMounted(true);
+        pageLoadTimeRef.current = Date.now();
+        
+        // Check if popup was previously dismissed
+        if (isPopupDismissed()) {
+            return;
+        }
     }, []);
 
+    // Handle external open event (if needed)
     useEffect(() => {
         const handleOpenEvent = () => {
-            setIsVisible(true);
-            setIsDismissed(false);
+            if (!isPopupDismissed() && !hasShownRef.current) {
+                setIsVisible(true);
+                hasShownRef.current = true;
+            }
         };
 
         window.addEventListener('openNewsletter', handleOpenEvent);
         return () => window.removeEventListener('openNewsletter', handleOpenEvent);
     }, []);
 
+    // Scroll and time-based trigger logic
     useEffect(() => {
-        const handleScroll = () => {
-            if (isDismissed) return;
+        // Don't set up listeners if already dismissed or already shown
+        if (isPopupDismissed() || hasShownRef.current || !pageLoadTimeRef.current) {
+            return;
+        }
+
+        const checkAndShowPopup = () => {
+            if (hasShownRef.current) return;
+
+            // Check if 30 seconds have passed
+            const timeElapsed = Date.now() - (pageLoadTimeRef.current || 0);
+            if (timeElapsed < TIME_DELAY_MS) {
+                return; // Not enough time has passed
+            }
 
             // Calculate scroll percentage
             const scrollTop = window.scrollY || window.pageYOffset;
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            
+            // Prevent division by zero
+            if (docHeight <= 0) return;
 
-            // console.log("Scroll Debug:", { scrollTop, docHeight, percent: scrollTop / docHeight });
+            const scrollPercent = (scrollTop / docHeight) * 100;
 
-            // Show immediately for testing if requested, otherwise use scroll logic
-            // For now, let's make it show up more easily (e.g. > 100px)
-            if (scrollTop > 100) {
+            // Show popup if scroll threshold is reached
+            if (scrollPercent >= SCROLL_THRESHOLD_PERCENT) {
                 setIsVisible(true);
+                hasShownRef.current = true;
             }
         };
 
+        const handleScroll = () => {
+            checkAndShowPopup();
+        };
+
+        // Check periodically in case user stops scrolling after 30 seconds
+        const intervalId = setInterval(() => {
+            checkAndShowPopup();
+        }, 1000); // Check every second
+
         // Initial check
-        handleScroll();
+        checkAndShowPopup();
 
         window.addEventListener("scroll", handleScroll, { passive: true });
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, [isDismissed]);
-
-    // Debug: Force visible immediately on mount
-    useEffect(() => {
-        if (!isDismissed) setIsVisible(true);
-    }, [isDismissed]);
+        
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            clearInterval(intervalId);
+        };
+    }, []);
 
     const handleDismiss = () => {
         setIsVisible(false);
-        setIsDismissed(true);
+        setPopupDismissed(); // Save to localStorage
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -78,8 +142,7 @@ export default function NewsletterPopup() {
         setIsSubmitting(true);
 
         // Simulate API call
-        console.log("Newsletter modal signup:", email);
-
+        // TODO: Replace with actual API call
         setTimeout(() => {
             setIsSubmitting(false);
             setEmail("");
@@ -87,16 +150,8 @@ export default function NewsletterPopup() {
         }, 1000);
     };
 
-    console.log("NewsletterPopup RENDER state:", { isVisible, isDismissed });
-
-    if (!isVisible) {
-        console.log("NewsletterPopup: Not visible, returning null");
-        return null;
-    }
-
-    console.log("NewsletterPopup: Rendering modal");
-
-    if (!isMounted) {
+    // Don't render if not visible or not mounted
+    if (!isVisible || !isMounted) {
         return null;
     }
 

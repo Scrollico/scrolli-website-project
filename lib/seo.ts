@@ -15,7 +15,7 @@ const SITE_CONFIG = {
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://scrolli.com",
   description: "Modern news and blog magazine platform",
   twitterHandle: "@scrolli",
-  defaultImage: "/assets/images/og-default.jpg",
+  defaultImage: "/assets/images/Standart/primary-icon.png",
   locale: "tr_TR",
   type: "website",
 } as const;

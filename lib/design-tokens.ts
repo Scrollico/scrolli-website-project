@@ -1,12 +1,12 @@
 /**
  * Scrolli Design System Tokens
- * 
+ *
  * Comprehensive design token system following Arc Publishing principles.
  * All tokens are semantic, responsive, and support dark mode.
- * 
+ *
  * DARK MODE REQUIREMENTS:
  * =======================
- * 
+ *
  * 1. CONSISTENCY: All components must work identically in light and dark modes
  * 2. NO WHITE LEFTOVERS: Never use bg-white without dark:bg-* equivalent
  * 3. ALWAYS USE TOKENS: Use design tokens instead of hardcoded colors
@@ -14,7 +14,7 @@
  * 5. FONT ADAPTATION: All text colors must adapt properly
  * 6. BUTTON ADAPTATION: All button variants must work in dark mode
  * 7. COMPONENT ADAPTATION: All interactive states must work in dark mode
- * 
+ *
  * When implementing any component:
  * - Import colors from @/lib/design-tokens
  * - Use colors.background.* for backgrounds
@@ -88,6 +88,19 @@ export const margin = {
   xl: "m-12 md:m-16",
 } as const;
 
+/**
+ * Bottom Margin System - Bottom-only external spacing
+ * Extracted from sectionPadding values for consistency
+ */
+export const marginBottom = {
+  xs: "mb-4 md:mb-6",
+  sm: "mb-6 md:mb-8",
+  md: "mb-8 md:mb-12 lg:mb-16",
+  lg: "mb-12 md:mb-16 lg:mb-20",
+  xl: "mb-16 md:mb-20 lg:mb-24",
+  "2xl": "mb-20 md:mb-24 lg:mb-32",
+} as const;
+
 // ============================================================================
 // TYPOGRAPHY TOKENS
 // ============================================================================
@@ -108,13 +121,14 @@ export const fontFamily = {
 export const fontSize = {
   xs: "text-xs",
   sm: "text-sm md:text-base",
-  base: "text-sm md:text-base",
-  lg: "text-base md:text-lg",
-  xl: "text-lg md:text-xl",
-  "2xl": "text-xl md:text-2xl",
-  "3xl": "text-2xl md:text-3xl lg:text-4xl",
-  "4xl": "text-3xl md:text-4xl lg:text-5xl",
-  "5xl": "text-3xl md:text-4xl lg:text-5xl", /* Smaller H1 - reduced from text-4xl md:text-5xl lg:text-6xl */
+  base: "text-base md:text-lg",
+  lg: "text-lg md:text-xl",
+  xl: "text-xl md:text-2xl",
+  "2xl": "text-2xl md:text-3xl",
+  "3xl": "text-3xl md:text-4xl",
+  "4xl": "text-4xl md:text-5xl",
+  "5xl": "text-4xl md:text-5xl lg:text-6xl",
+  "6xl": "text-5xl md:text-6xl lg:text-7xl",
 } as const;
 
 /**
@@ -153,23 +167,33 @@ export const letterSpacing = {
  * Typography Variants - Pre-composed typography styles
  */
 export const typography = {
-  // Headings
-  h1: `${fontSize["5xl"]} ${fontWeight.bold} ${lineHeight.tight}`,
-  h2: `${fontSize["4xl"]} ${fontWeight.bold} ${lineHeight.tight}`,
-  h3: `${fontSize["3xl"]} ${fontWeight.semibold} ${lineHeight.normal}`,
+  // Headings - Following Arc Publishing guidelines (H1: ~42px, H2: 32px, H3: ~26px)
+  // Responsive scale: mobile → tablet → desktop
+  h1: `text-2xl md:text-3xl lg:text-4xl ${fontWeight.bold} ${lineHeight.tight}`, // 24px → 30px → 36px (Arc: ~42px, using smaller for readability)
+  h2: `text-xl md:text-2xl lg:text-3xl ${fontWeight.bold} ${lineHeight.tight}`, // 20px → 24px → 30px (Arc: 32px, using smaller for readability)
+  h3: `text-lg md:text-xl lg:text-2xl ${fontWeight.semibold} ${lineHeight.tight}`, // 18px → 20px → 24px (Arc: ~26px, using smaller for readability)
   h4: `${fontSize["2xl"]} ${fontWeight.semibold} ${lineHeight.normal}`,
   h5: `${fontSize.xl} ${fontWeight.semibold} ${lineHeight.normal}`,
   h6: `${fontSize.lg} ${fontWeight.medium} ${lineHeight.normal}`,
-  
+
   // Body text
   body: `${fontSize.base} ${fontWeight.normal} ${lineHeight.relaxed}`,
   bodyLarge: `${fontSize.lg} ${fontWeight.normal} ${lineHeight.relaxed}`,
   bodySmall: `${fontSize.sm} ${fontWeight.normal} ${lineHeight.normal}`,
-  
+
   // Specialized
   caption: `${fontSize.xs} ${fontWeight.normal} ${lineHeight.normal}`,
   label: `${fontSize.sm} ${fontWeight.medium} ${lineHeight.normal}`,
   button: `${fontSize.sm} ${fontWeight.medium} ${lineHeight.normal}`,
+} as const;
+
+/**
+ * Heading Treatments - Decorative options for titles
+ */
+export const headingDecor = {
+  underline: "inline-flex items-baseline border-b-2 pb-2",
+  underlinePrimary:
+    "inline-flex items-baseline border-b-2 pb-2 border-primary dark:border-primary",
 } as const;
 
 // ============================================================================
@@ -178,21 +202,21 @@ export const typography = {
 
 /**
  * Semantic Colors - Use semantic names, not visual names
- * 
+ *
  * ARC PUBLISHING STANDARDS (Washington Post Design System):
  * Following https://build.washingtonpost.com/foundations/color
- * 
+ *
  * KEY PRINCIPLES:
  * 1. **Gray700 Baseline**: Use gray-700 (#374151) as baseline for background, surface, portal
  * 2. **Avoid Pure Black/White**: Never use white (#FFFFFF) on black (#000000) - causes halation
  * 3. **Semantic "on" Colors**: Use "onSurface", "onBackground" for text/icon colors
  * 4. **Surfaces Change**: Surface colors change in dark mode to create elevation & hierarchy
  * 5. **AAA Contrast**: Target 7:1 contrast ratio for accessibility
- * 
+ *
  * DARK MODE SUPPORT:
  * All colors support dark mode via Tailwind's dark: prefix automatically.
  * Each color token includes both light and dark mode variants.
- * 
+ *
  * DARK MODE VERIFICATION CHECKLIST:
  * When implementing or updating components, always verify:
  * 1. ✅ Background colors: Use colors.background.* tokens (never hardcode bg-white)
@@ -202,7 +226,7 @@ export const typography = {
  * 5. ✅ Component adaptation: Test all interactive states (hover, focus, active) in dark mode
  * 6. ✅ Visual testing: Manually verify no white backgrounds "shine" in dark mode
  * 7. ✅ Contrast: Ensure all text is readable with proper contrast in both modes (AAA: 7:1)
- * 
+ *
  * ARC PUBLISHING COLOR MAPPING RULES:
  * - Light backgrounds → Dark backgrounds (gray700 baseline):
  *   - white → gray-700 (baseline, not gray-900/black)
@@ -215,14 +239,14 @@ export const typography = {
  * - Borders:
  *   - gray-200 → gray-600
  *   - gray-300 → gray-500
- * 
+ *
  * COMMON MISTAKES TO AVOID:
  * ❌ Don't: <div className="bg-white text-black"> (pure black/white)
  * ✅ Do: <div className={cn(colors.background.base, colors.foreground.primary)}>
- * 
+ *
  * ❌ Don't: dark:bg-gray-900 dark:text-white (pure black/white)
  * ✅ Do: dark:bg-gray-700 dark:text-gray-100 (gray700 baseline, gray text)
- * 
+ *
  * ❌ Don't: Hardcode colors without dark mode variants
  * ✅ Do: Always use design tokens for consistency
  */
@@ -234,14 +258,14 @@ export const colors = {
     border: "border-primary dark:border-primary",
     hover: "hover:opacity-80 dark:hover:opacity-80",
   },
-  
+
   // Secondary colors
   secondary: {
     DEFAULT: "text-secondary dark:text-secondary",
     bg: "bg-secondary dark:bg-secondary",
     border: "border-secondary dark:border-secondary",
   },
-  
+
   // Status colors
   success: {
     DEFAULT: "text-green-600 dark:text-green-400",
@@ -255,7 +279,7 @@ export const colors = {
     DEFAULT: "text-red-600 dark:text-red-400",
     bg: "bg-red-50 dark:bg-red-900/20",
   },
-  
+
   // Neutral colors - Following Arc Publishing standards (gray700 baseline)
   background: {
     base: "bg-white dark:bg-[#374152]", // Exact Scrolli dark mode color #374152
@@ -263,7 +287,7 @@ export const colors = {
     overlay: "bg-white/90 dark:bg-[#374152]/90 backdrop-blur-sm",
     navbar: "bg-[#F8F5E4] dark:bg-[#374152]", // Navbar beige - Scrolli brand color, exact dark mode color
   },
-  
+
   // Navbar beige - Scrolli brand color for header, footer, and components
   navbarBeige: {
     DEFAULT: "bg-[#F8F5E4] dark:bg-[#374152]", // Exact Scrolli dark mode color #374152
@@ -271,7 +295,7 @@ export const colors = {
     border: "border-gray-200 dark:border-gray-600", // Arc: gray-600 borders
     hover: "hover:bg-[#F8F5E4]/90 dark:hover:bg-[#374152]/90",
   },
-  
+
   // Foreground colors - Arc Publishing "on" colors (semantic text colors)
   foreground: {
     primary: "text-gray-900 dark:text-gray-100", // Arc: onBackground (gray-100, not pure white)
@@ -284,7 +308,7 @@ export const colors = {
     // Button text colors - ensures white text on dark backgrounds
     onDark: "text-white dark:text-white", // White text for buttons with dark backgrounds (primary, etc.)
   },
-  
+
   // Surface colors - Arc Publishing semantic surfaces
   surface: {
     base: "bg-white dark:bg-[#374152]", // Exact Scrolli dark mode color #374152
@@ -292,7 +316,7 @@ export const colors = {
     onSurface: "text-gray-900 dark:text-gray-100", // Arc: onSurface (gray-100, not pure white)
     onSurfaceSubtle: "text-gray-700 dark:text-gray-200", // Arc: onSurface-subtle
   },
-  
+
   border: {
     DEFAULT: "border-gray-200 dark:border-gray-600", // Arc: outline (gray-600, not gray-700)
     light: "border-gray-100 dark:border-gray-700", // Arc: outline-subtle
@@ -308,9 +332,12 @@ export const colors = {
 
 export const states = {
   tab: {
-    activeBackground: "data-[state=active]:bg-primary dark:data-[state=active]:bg-primary",
-    activeText: "data-[state=active]:text-gray-100 dark:data-[state=active]:text-gray-900",
-    inactiveText: "data-[state=inactive]:text-gray-700 dark:data-[state=inactive]:text-gray-200",
+    activeBackground:
+      "data-[state=active]:bg-primary dark:data-[state=active]:bg-primary",
+    activeText:
+      "data-[state=active]:text-gray-100 dark:data-[state=active]:text-gray-900",
+    inactiveText:
+      "data-[state=inactive]:text-gray-700 dark:data-[state=inactive]:text-gray-200",
     base: "transition-colors data-[state=inactive]:opacity-80",
   },
 } as const;
@@ -473,4 +500,3 @@ export type FontSize = keyof typeof fontSize;
 export type FontWeight = keyof typeof fontWeight;
 export type BorderRadius = keyof typeof borderRadius;
 export type Elevation = keyof typeof elevation;
-

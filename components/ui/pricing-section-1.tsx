@@ -16,6 +16,7 @@ import { motion } from "framer-motion";
 import { useId, useRef, useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { SmartButton } from "@/components/ui/smart-button";
+import ScrollIndicator from "@/components/ui/scroll-indicator";
 
 const PricingSwitch = ({
   buttons,
@@ -50,7 +51,6 @@ const PricingSwitch = ({
     <div
       className={cn(
         "relative z-10 w-full rounded-full",
-        colors.background.elevated,
         colors.border.DEFAULT,
         "p-1 gap-1.5",
         className,
@@ -83,11 +83,16 @@ const PricingSwitch = ({
               <motion.span
                 layoutId={switchLayoutId}
                 className={cn(
-                  "absolute top-0 left-0 sm:h-14 h-10 w-full rounded-full border-4 shadow-sm z-0",
+                  "absolute top-0 left-0 sm:h-14 h-10 w-full rounded-full border-4 shadow-sm z-0 pricing-switch-indicator",
                   isDark
                     ? "bg-gradient-to-t from-[#F8F5E4] via-[#F8F5E4] to-[#F8F5E4] border-[#F8F5E4] shadow-[#F8F5E4]/20"
                     : "bg-gradient-to-t from-[#374152] via-[#374152] to-[#374152] border-[#374152] shadow-[#374152]/30"
                 )}
+                style={{
+                  borderColor: isDark ? '#F8F5E4' : '#374152',
+                  borderWidth: '4px',
+                  borderStyle: 'solid',
+                }}
                 transition={{ type: "spring", stiffness: 500, damping: 30 }}
               />
             )}
@@ -180,7 +185,7 @@ export default function PricingSection1() {
   ];
 
   return (
-    <div className={cn("w-full min-h-screen mx-auto relative", containerPadding.md, "pt-10")} ref={pricingRef}>
+    <div className={cn("w-full mx-auto relative", containerPadding.md, "pt-10 pb-12")} ref={pricingRef}>
       <div className={cn(colors.background.base, sectionPadding.lg, containerPadding.md)}>
         <div
           className="absolute inset-0 z-0 dark:hidden"
@@ -302,17 +307,6 @@ export default function PricingSection1() {
                   )}
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0">
-                  <Link
-                    href="/log-in"
-                    className={cn(
-                      typography.body,
-                      colors.foreground.secondary,
-                      "hover:" + colors.foreground.interactive.split(" ")[0],
-                      "transition-colors underline whitespace-nowrap"
-                    )}
-                  >
-                    Log in
-                  </Link>
                   <Link href="/pricing" className="inline-block">
                     <SmartButton
                       size="lg"
@@ -326,28 +320,17 @@ export default function PricingSection1() {
               </TimelineContent>
             </div>
           </div>
-
-          {/* Corporate Subscription CTA */}
-          <TimelineContent
-            as="div"
-            animationNum={12}
-            timelineRef={pricingRef}
-            customVariants={revealVariants}
-            className={cn(
-              "text-center mt-12 pt-8 border-t",
-              colors.border.DEFAULT
-            )}
-          >
-            <p className={cn(typography.h5, colors.foreground.primary, "mb-2 font-semibold")}>
-              Need a corporate subscription?
-            </p>
-            <p className={cn(typography.body, colors.foreground.secondary)}>
-              Reach out to us for corporate subscription
-            </p>
-          </TimelineContent>
+          
+          {/* Scroll Indicator */}
+          // YOOO!!
+          <div className="flex justify-center pt-0 pb-2 mt-[-40px] relative z-20">
+            <ScrollIndicator />
+          </div>
         </div>
       </div>
     </div>
   );
 }
+
+
 

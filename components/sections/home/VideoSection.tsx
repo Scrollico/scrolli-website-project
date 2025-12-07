@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { SmartButton } from "@/components/ui/smart-button";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -80,7 +80,6 @@ function VideoCard({
   const posterVideoRef = useRef<HTMLVideoElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const isInView = useInView(cardRef, { once: true, margin: "-100px" });
 
   useEffect(() => {
     const videoElement = posterVideoRef.current;
@@ -155,33 +154,10 @@ function VideoCard({
     };
   }, [videoRef]);
 
-  // Animation variants for slide-in and pop-up effect
-  const cardVariants = {
-    hidden: {
-      opacity: 0,
-      y: 50,
-      scale: 0.9,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 15,
-        delay: index * 0.1, // Stagger animation based on index
-      },
-    },
-  };
-
   return (
     <motion.div
       className="video-card-wrapper"
       ref={cardRef}
-      variants={cardVariants}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
       whileHover={{
         scale: 1.02,
         y: -5,

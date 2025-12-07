@@ -140,7 +140,8 @@ export default function ScrolliPremiumBanner() {
 
               <Heading 
                 level={2} 
-                className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-gray-900 dark:text-gray-100 mb-6 leading-[1.1]"
+                variant="h2"
+                className="tracking-tight mb-6 leading-[1.1]"
               >
                 Less breaking news. <br/>
                 <span className="text-gray-500 dark:text-gray-400">More breakthrough stories.</span>

@@ -1,4 +1,5 @@
 import React from "react";
+import { Heading } from "@/components/ui/typography/Heading";
 
 type Feature = {
   text: string;
@@ -123,9 +124,9 @@ export function Pricing() {
           <h4 className="text-xl font-bold tracking-tight text-black dark:text-white">
             Pricing
           </h4>
-          <h2 className="text-5xl font-bold tracking-tight text-black dark:text-white sm:text-6xl">
+          <Heading level={2} variant="h2" className="tracking-tight">
             Simple pricing for everyone.
-          </h2>
+          </Heading>
           <p className="mt-6 text-balance text-xl leading-8 text-black/80 dark:text-white">
             Choose an <strong>affordable plan</strong> that&apos;s packed with
             the best features for engaging your audience, creating customer

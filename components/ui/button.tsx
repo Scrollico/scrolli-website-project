@@ -3,42 +3,43 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
-import { colors } from "@/lib/design-tokens";
+import { colors, button, borderRadius, transition } from "@/lib/design-tokens";
 
 /**
- * Button component with logical dark mode support
- * 
- * LOGICAL COLOR SYSTEM:
- * - Primary: Dark background → White text (both modes)
- * - Secondary: Light bg → Dark text (light mode), Dark bg → Light text (dark mode)
- * - Outline: Transparent bg, colored border/text
- * - Ghost: Transparent bg, colored text only
- * - Destructive: Red bg → White text (both modes)
- * 
- * Principle: Dark backgrounds = Light text, Light backgrounds = Dark text
+ * Button component with logical dark mode support using design tokens
+ *
+ * LOGICAL COLOR SYSTEM (Arc Publishing Standards):
+ * - Primary: Dark background (gray700 baseline) → White text (both modes)
+ * - Secondary: Elevated background → Primary foreground text
+ * - Outline: Transparent bg, border + foreground text
+ * - Ghost: Transparent, foreground text only
+ * - Destructive: Red background → White text (both modes)
+ * - Link: Text only, underlined
+ *
+ * All variants support dark mode automatically via design tokens.
  */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  cn(button.base, "focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50"),
   {
     variants: {
       variant: {
-        // Primary: Dark background, white text (both modes) - hover decreases opacity
-        default: "bg-[#374152] text-white hover:opacity-80 dark:bg-[#374152] dark:text-white dark:hover:opacity-80",
-        // Secondary: Light bg + dark text (light), Dark bg + light text (dark) - hover decreases opacity
-        secondary: `${colors.background.elevated} ${colors.foreground.primary} hover:opacity-80 dark:hover:opacity-80`,
-        // Destructive: Red background, white text (both modes) - hover decreases opacity
-        destructive: `${colors.error.bg} text-white hover:opacity-80 dark:hover:opacity-80`,
+        // Primary: Dark background (gray700), white text - hover decreases opacity
+        default: cn(colors.primary.bg, colors.foreground.onDark, "hover:opacity-80"),
+        // Secondary: Elevated background, primary text - hover decreases opacity
+        secondary: cn(colors.background.elevated, colors.foreground.primary, "hover:opacity-80"),
+        // Destructive: Red background, white text - hover decreases opacity
+        destructive: cn(colors.error.bg, colors.foreground.onDark, "hover:opacity-80"),
         // Outline: Transparent bg, border + text color - hover decreases opacity
-        outline: `${colors.border.DEFAULT} bg-transparent ${colors.foreground.primary} hover:opacity-80 dark:hover:opacity-80`,
+        outline: cn("bg-transparent", colors.border.DEFAULT, colors.foreground.primary, "hover:opacity-80"),
         // Ghost: Transparent, text color only - hover decreases opacity
-        ghost: `bg-transparent ${colors.foreground.primary} hover:opacity-80 dark:hover:opacity-80`,
+        ghost: cn("bg-transparent", colors.foreground.primary, "hover:opacity-80"),
         // Link: Text only, underlined - hover decreases opacity
-        link: `bg-transparent ${colors.foreground.primary} underline-offset-4 hover:underline hover:opacity-80 dark:hover:opacity-80`,
+        link: cn("bg-transparent", colors.foreground.primary, "underline-offset-4 hover:underline hover:opacity-80"),
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
+        default: button.padding.md,
+        sm: button.padding.sm,
+        lg: button.padding.lg,
         icon: "h-10 w-10",
       },
     },

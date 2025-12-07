@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { Heading } from "@/components/ui/typography/Heading";
 import { cn } from "@/lib/utils";
 import { CheckIcon } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
@@ -98,9 +99,9 @@ export function Pricing() {
             Pricing
           </h4>
 
-          <h2 className="text-5xl font-bold tracking-tight text-black dark:text-white sm:text-6xl">
+          <Heading level={2} variant="h2" className="tracking-tight">
             Simple pricing for everyone.
-          </h2>
+          </Heading>
 
           <p className="mt-6 text-xl leading-8 text-black/80 dark:text-white">
             Choose an <strong>affordable plan</strong> that&apos;s packed with

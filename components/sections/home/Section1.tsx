@@ -5,7 +5,7 @@ import blogData from "@/data/blog.json";
 import { Container, ResponsiveGrid } from "@/components/responsive";
 import { Heading } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
-import { colors } from "@/lib/design-tokens";
+import { colors, sectionPadding, componentPadding, gap, elevation, elevationHover, transition, borderRadius, marginBottom, headingDecor } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 import ScrolliPremiumBanner from "./ScrolliPremiumBanner";
 import ArticleList from "./ArticleList";
@@ -15,23 +15,23 @@ export default function Section1() {
   const { featured } = blogData;
 
   return (
-    <section className="py-8 md:py-16 lg:py-20">
+    <section className={sectionPadding.lg}>
       <Container>
         {/* Section Title */}
-        <div className="mb-8 md:mb-12">
+        <div className={cn(gap.lg, marginBottom.md)}>
           <Heading
             level={2}
-            variant="h2"
-            className="border-b-2 border-primary pb-2 inline-block"
+            variant="h1"
+            decoration="underlinePrimary"
           >
             {featured.title}
           </Heading>
         </div>
 
         {/* Featured Articles Grid - A2, A3, A4: Using only sideArticles to avoid duplicate with HeroSection (A1) */}
-        <ResponsiveGrid columns={{ default: 1, md: 3 }} gap="lg" className="mb-8 md:mb-12">
+        <ResponsiveGrid columns={{ default: 1, md: 3 }} gap="lg" className={gap.lg}>
           {featured.sideArticles.slice(0, 3).map((article) => (
-            <article key={article.id} className={cn("group rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col", colors.background.elevated)}>
+            <article key={article.id} className={cn("group", borderRadius.lg, "overflow-hidden", elevation[1], elevationHover[2], transition.normal, "flex flex-col", colors.background.elevated)}>
               {/* Article Image - Separate from text */}
               <Link href={`/article/${article.id}`} className="block w-full">
                 <figure
@@ -52,10 +52,10 @@ export default function Section1() {
               </Link>
 
               {/* Article Content - Separate below image */}
-              <div className="p-4 md:p-6 flex-1 flex flex-col">
+              <div className={cn(componentPadding.md, "flex-1 flex flex-col")}>
                 {/* Category Badge */}
                 {article.category && (
-                  <div className="mb-2 flex justify-start">
+                  <div className={cn(gap.sm, "flex justify-start")}>
                     <Badge
                       variant="secondary"
                       appearance="outline"
@@ -73,7 +73,7 @@ export default function Section1() {
                 >
                   <Link
                     href={`/article/${article.id}`}
-                    className="hover:text-primary transition-colors"
+                    className={cn(colors.foreground.interactive)}
                   >
                     {article.title}
                   </Link>
@@ -85,7 +85,7 @@ export default function Section1() {
         </ResponsiveGrid>
 
         {/* Newsletter Section with Article List */}
-        <div className="grid grid-cols-1 lg:grid-cols-[7fr_3fr] xl:grid-cols-[2fr_1fr] gap-6 lg:gap-8 mt-12">
+        <div className={cn("grid grid-cols-1 lg:grid-cols-[7fr_3fr] xl:grid-cols-[2fr_1fr]", gap.lg, "mt-12")}>
           <div className="min-w-0">
             <ArticleList />
           </div>
@@ -97,7 +97,7 @@ export default function Section1() {
         </div>
 
         {/* Divider */}
-        <hr className="border-t border-border mt-12 md:mt-16" />
+        <hr className={cn("border-t", colors.border.DEFAULT, gap.lg)} />
       </Container>
 
       {/* Scrolli Premium CTA Banner */}

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Heading } from "@/components/ui/typography/Heading";
 
 // If using Next.js, uncomment the following line
 // import Image from 'next/image';
@@ -57,7 +58,7 @@ export function FeatureScroll1() {
   return (
     <section>
       <div className="h-[50vh] bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center">
-        <h3 className="text-4xl font-bold">Hero Section</h3>
+        <Heading level={3} variant="h3">Hero Section</Heading>
       </div>
       <div className="flex flex-col gap-20 container p-10">
         <FeatureScrollContainer
@@ -66,7 +67,7 @@ export function FeatureScroll1() {
           imageSrc="https://cdn.magicui.design/iphone.png"
         >
           <div className="flex flex-col gap-4 max-w-sm mx-auto lg:mx-0 items-center justify-center lg:items-start lg:justify-start text-center lg:text-left">
-            <h1 className="text-4xl font-bold">Scroll Feature</h1>
+            <Heading level={1} variant="h1">Scroll Feature</Heading>
             <p className="text-lg">
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
               Voluptates, quibusdam.
@@ -85,7 +86,7 @@ export function FeatureScroll1() {
           imageSrc="https://cdn.magicui.design/iphone.png"
         >
           <div className="flex flex-col gap-4 max-w-sm mx-auto lg:mx-0 items-center justify-center lg:items-start lg:justify-start text-center lg:text-left">
-            <h1 className="text-4xl font-bold">Scroll Feature</h1>
+            <Heading level={1} variant="h1">Scroll Feature</Heading>
             <p className="text-lg">
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
               Voluptates, quibusdam.
@@ -102,7 +103,7 @@ export function FeatureScroll1() {
         </FeatureScrollContainer>
       </div>
       <div className="h-[50vh] bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center">
-        <h3 className="text-4xl font-bold">Footer Section</h3>
+        <Heading level={3} variant="h3">Footer Section</Heading>
       </div>
     </section>
   );

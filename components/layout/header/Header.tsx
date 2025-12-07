@@ -9,6 +9,8 @@ import { Heading, Text } from "@/components/ui/typography";
 import CinematicThemeSwitcher from "@/components/ui/cinematic-theme-switcher";
 import { SmartButton } from "@/components/ui/smart-button";
 import { getCategoriesFromBlog } from "@/lib/navigation";
+import { cn } from "@/lib/utils";
+import { containerPadding, componentPadding, colors, typography, elevation, gap, borderRadius } from "@/lib/design-tokens";
 
 export default function Header() {
   const [isSearch, setIsSearch] = useState<number | null>(null);
@@ -80,7 +82,7 @@ export default function Header() {
   }, [isMobileMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className={cn("sticky top-0 z-50 w-full border-b", colors.navbarBeige.DEFAULT, "backdrop-blur supports-[backdrop-filter]:bg-background/60")}>
       {/* Skip to main content link for accessibility */}
       <a
         href="#main-content"
@@ -90,7 +92,7 @@ export default function Header() {
       </a>
 
       {/* Mobile Header */}
-      <div className="flex items-center justify-between px-4 py-3 md:hidden relative z-[99] bg-background/95 backdrop-blur">
+      <div className={cn("flex items-center justify-between", containerPadding.sm, "md:hidden relative z-[99]", colors.navbarBeige.DEFAULT, "backdrop-blur")}>
         {/* Mobile Logo */}
         <Link href="/" prefetch={true} className="flex items-center z-10">
           <NextImage
@@ -115,7 +117,7 @@ export default function Header() {
         <div className="flex items-center space-x-2 z-10">
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className={cn(componentPadding.xs, borderRadius.md, colors.foreground.interactive)}
             aria-label="Toggle menu"
             type="button"
           >
@@ -143,13 +145,13 @@ export default function Header() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: '100%' }}
               transition={{ duration: 0.3, ease: 'easeInOut' }}
-              className="fixed inset-y-0 right-0 z-[101] w-full max-w-[85vw] sm:max-w-[70vw] md:hidden bg-white dark:bg-gray-900 overflow-y-auto shadow-2xl"
+              className={cn("fixed inset-y-0 right-0 z-[101] w-full max-w-[85vw] sm:max-w-[70vw] md:hidden overflow-y-auto", elevation[5], colors.navbarBeige.DEFAULT)}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="absolute top-4 right-4 z-10 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors bg-white dark:bg-gray-900 shadow-sm"
+                className={cn("absolute top-4 right-4 z-10", componentPadding.xs, borderRadius.md, colors.foreground.interactive, colors.navbarBeige.DEFAULT, "shadow-sm")}
                 aria-label="Close menu"
               >
                 <X className="h-6 w-6 text-gray-900 dark:text-white" />
@@ -166,7 +168,7 @@ export default function Header() {
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="block py-5 border-b border-dotted border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors -mx-6 sm:-mx-8 px-6 sm:px-8"
                     >
-                      <Heading level={2} variant="h3" className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                      <Heading level={2} variant="h3" className={typography.h3}>
                         Home
                       </Heading>
                     </Link>
@@ -179,7 +181,7 @@ export default function Header() {
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="block py-5 border-b border-dotted border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors -mx-6 sm:-mx-8 px-6 sm:px-8"
                       >
-                        <Heading level={2} variant="h3" className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                        <Heading level={2} variant="h3" className={typography.h3}>
                           {category.displayName}
                         </Heading>
                       </Link>
@@ -198,7 +200,7 @@ export default function Header() {
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="block py-2 hover:text-primary transition-colors"
                       >
-                        <Text variant="body" className="text-base font-medium text-gray-700 dark:text-gray-300">
+                        <Text variant="body" className={cn(typography.body, colors.foreground.secondary)}>
                           {link.label}
                         </Text>
                       </Link>
@@ -220,14 +222,14 @@ export default function Header() {
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="block text-center py-2"
                     >
-                      <Text variant="body" className="text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">
+                      <Text variant="body" className={cn(typography.bodySmall, colors.foreground.muted, colors.foreground.interactive)}>
                         Sign In
                       </Text>
                     </Link>
 
                     {/* Theme Switcher */}
                     <div className="flex items-center justify-between pt-6 border-t border-dotted border-gray-300 dark:border-gray-700">
-                      <Text variant="body" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      <Text variant="body" className={cn(typography.bodySmall, colors.foreground.secondary)}>
                         Appearance
                       </Text>
                       <CinematicThemeSwitcher />
