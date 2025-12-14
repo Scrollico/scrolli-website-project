@@ -106,7 +106,7 @@ export default function Section1({ article }: Section1Props) {
         <Container>
         {/* Article Header */}
         <header className="entry-header">
-          <div className={cn(gap.lg, "flex flex-col items-center text-center")}>
+          <div className={cn("gap-6 md:gap-9", "flex flex-col items-center justify-center text-center", "h-[200px]", "mt-[29px] mb-[29px]")}>
             {/* Premium/Free Badge - Centered above title */}
             <div className={gap.md}>
               {article.isPremium ? (
@@ -171,7 +171,7 @@ export default function Section1({ article }: Section1Props) {
             </div>
           </div>
           {/* Author Meta - After Image, Before Content, Aligned with Article Content */}
-          <div className={cn("entry-meta align-items-center", gap.md)} itemProp="author" itemScope itemType="https://schema.org/Person">
+          <div className={cn("entry-meta align-items-center", gap.md, "pt-[23px] pb-[23px]")} itemProp="author" itemScope itemType="https://schema.org/Person">
             <Link className="author-avatar" href={`/author/${article.author.toLowerCase().replace(/\s+/g, "-")}`}>
               <Image
                 src={getAuthorAvatar(article.author) || "/assets/images/author-avata-2.jpg"}
