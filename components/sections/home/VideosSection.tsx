@@ -337,7 +337,7 @@ export default function ArticlesSection() {
         }
         
         .videos-title {
-          font-family: 'Cabin', sans-serif;
+          font-family: var(--font-newsreader), serif;
           font-weight: 700;
           font-size: clamp(1.25rem, 5vw, 2rem);
           line-height: 1.2;
@@ -431,7 +431,7 @@ export default function ArticlesSection() {
         }
         
         .video-title {
-          font-family: 'Cabin', sans-serif;
+          font-family: var(--font-newsreader), serif;
           font-weight: 500;
           font-size: 1.4rem;
           line-height: 1.3;

@@ -171,6 +171,12 @@ module.exports = {
         'xl': '1280px',
         '2xl': '1536px',
       },
+
+      // Font families
+      fontFamily: {
+        display: ['var(--font-newsreader)', 'serif'], // Newsreader for headings/display text
+        sans: ['var(--font-newsreader)', 'serif'], // Newsreader for body text site-wide (header, footer, navigation, general content)
+      },
     },
   },
   plugins: [],

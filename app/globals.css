@@ -38,6 +38,44 @@
     will-change: transform, opacity;
     transform: translateZ(0);
   }
+
+  /* Ensure Newsreader font is applied to headings with font-display class */
+  /* Override any CSS from style.css that sets other fonts on headings */
+  .font-display,
+  h1.font-display,
+  h2.font-display,
+  h3.font-display,
+  h4.font-display,
+  h5.font-display,
+  h6.font-display {
+    font-family: var(--font-newsreader), serif !important;
+  }
+}
+
+/* Additional override layer to ensure Newsreader applies after style.css */
+/* This must override style.css line 441 which sets other fonts on all h1-h6 */
+@layer utilities {
+  .font-display,
+  h1.font-display,
+  h2.font-display,
+  h3.font-display,
+  h4.font-display,
+  h5.font-display,
+  h6.font-display {
+    font-family: var(--font-newsreader), serif !important;
+  }
+}
+
+/* Global override for all headings with font-display - highest priority */
+/* This ensures Newsreader applies even if style.css loads after globals.css */
+h1.font-display,
+h2.font-display,
+h3.font-display,
+h4.font-display,
+h5.font-display,
+h6.font-display,
+.font-display {
+  font-family: var(--font-newsreader), serif !important;
 }
 
 @keyframes slide-up-fade {
@@ -658,12 +696,15 @@ button[role="tab"][data-state="active"] {
 }
 
 /* Article Content Styling */
+/* Instrument Sans is ONLY used for article detail page body content */
 .article-content {
   @apply text-gray-900 dark:text-gray-100;
+  font-family: var(--font-instrument-sans), sans-serif !important;
 }
 
 .article-content p {
   @apply mb-4 leading-relaxed;
+  font-family: var(--font-instrument-sans), sans-serif !important;
 }
 
 .article-content h1,
@@ -673,6 +714,7 @@ button[role="tab"][data-state="active"] {
 .article-content h5,
 .article-content h6 {
   @apply font-bold mt-8 mb-4 text-gray-900 dark:text-gray-100;
+  font-family: var(--font-newsreader), serif !important;
 }
 
 .article-content h1 {
@@ -693,6 +735,7 @@ button[role="tab"][data-state="active"] {
 
 .article-content blockquote {
   @apply border-l-4 border-primary pl-4 py-2 my-6 italic text-gray-700 dark:text-gray-300;
+  font-family: var(--font-instrument-sans), sans-serif !important;
 }
 
 .article-content figure {
@@ -718,6 +761,7 @@ button[role="tab"][data-state="active"] {
 .article-content ul,
 .article-content ol {
   @apply my-4 pl-6;
+  font-family: var(--font-instrument-sans), sans-serif !important;
 }
 
 .article-content ul {
@@ -730,6 +774,7 @@ button[role="tab"][data-state="active"] {
 
 .article-content li {
   @apply mb-2;
+  font-family: var(--font-instrument-sans), sans-serif !important;
 }
 
 .article-content hr {
@@ -764,6 +809,70 @@ button[role="tab"][data-state="active"] {
 /* Mailchimp embed styling */
 .article-content #mc_embed_shell {
   @apply my-8;
+}
+
+/* ========================================================================
+   OVERRIDE CABIN FONT WITH NEWSREADER - Site-wide body text
+   ======================================================================== */
+/* These overrides replace all Cabin font references from style.css with Newsreader */
+/* Instrument Sans is ONLY used in .article-content (article detail pages) */
+
+/* Body element - base font for site-wide text */
+body {
+  font-family: var(--font-newsreader), serif !important;
+}
+
+/* Header elements */
+.card-nav-link,
+.card-nav-clocks .header-clock__label,
+.navbar-brand,
+header,
+header * {
+  font-family: var(--font-newsreader), serif !important;
+}
+
+/* Navigation elements */
+.menu-primary,
+.menu-primary *,
+.mobi-menu nav,
+.mobi-menu nav *,
+.capsSubtle {
+  font-family: var(--font-newsreader), serif !important;
+}
+
+/* Entry meta, excerpts, titles - site-wide (article-content has its own rules) */
+.entry-meta,
+.entry-excerpt,
+.entry-title,
+.entry-header,
+.entry-wraper .excerpt,
+.archive-intro,
+.author-section,
+.section-featured h2,
+.heading-font {
+  font-family: var(--font-newsreader), serif !important;
+}
+
+/* Video titles and captions */
+.video-title,
+.video-caption {
+  font-family: var(--font-newsreader), serif !important;
+}
+
+/* Footer elements */
+footer,
+footer * {
+  font-family: var(--font-newsreader), serif !important;
+}
+
+/* All headings site-wide (article-content headings have their own rules) */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-newsreader), serif !important;
 }
 
 /* Override global h2 font-size from style.css to allow Tailwind typography tokens to work */

@@ -107,10 +107,16 @@ export const marginBottom = {
 
 /**
  * Font Families
+ * - heading: Newsreader (serif display font) for all headings
+ * - body: Newsreader (serif) for body text site-wide (header, footer, navigation, general content)
+ * - mono: Monospace for code/technical content
+ *
+ * NOTE: Instrument Sans is ONLY used for article detail page body content (`.article-content` class)
+ * and is applied via CSS in globals.css, not through these design tokens.
  */
 export const fontFamily = {
-  heading: "font-sans",
-  body: "font-sans",
+  heading: "font-display", // Newsreader for headings/display text
+  body: "font-sans", // Newsreader for body text site-wide (header, footer, navigation, general content)
   mono: "font-mono",
 } as const;
 
@@ -165,26 +171,31 @@ export const letterSpacing = {
 
 /**
  * Typography Variants - Pre-composed typography styles
+ * Headings use Newsreader (font-display), body text uses Newsreader (font-sans) site-wide
+ *
+ * NOTE: Instrument Sans is ONLY used for article detail page body content (`.article-content` class)
+ * and is applied via CSS in globals.css, not through these typography tokens.
  */
 export const typography = {
   // Headings - Following Arc Publishing guidelines (H1: ~42px, H2: 32px, H3: ~26px)
   // Responsive scale: mobile → tablet → desktop
-  h1: `text-2xl md:text-3xl lg:text-4xl ${fontWeight.bold} ${lineHeight.tight}`, // 24px → 30px → 36px (Arc: ~42px, using smaller for readability)
-  h2: `text-xl md:text-2xl lg:text-3xl ${fontWeight.bold} ${lineHeight.tight}`, // 20px → 24px → 30px (Arc: 32px, using smaller for readability)
-  h3: `text-lg md:text-xl lg:text-2xl ${fontWeight.semibold} ${lineHeight.tight}`, // 18px → 20px → 24px (Arc: ~26px, using smaller for readability)
-  h4: `${fontSize["2xl"]} ${fontWeight.semibold} ${lineHeight.normal}`,
-  h5: `${fontSize.xl} ${fontWeight.semibold} ${lineHeight.normal}`,
-  h6: `${fontSize.lg} ${fontWeight.medium} ${lineHeight.normal}`,
+  // All headings use Newsreader display font
+  h1: `${fontFamily.heading} text-2xl md:text-3xl lg:text-4xl ${fontWeight.bold} ${lineHeight.tight}`, // 24px → 30px → 36px (Arc: ~42px, using smaller for readability)
+  h2: `${fontFamily.heading} text-xl md:text-2xl lg:text-3xl ${fontWeight.bold} ${lineHeight.tight}`, // 20px → 24px → 30px (Arc: 32px, using smaller for readability)
+  h3: `${fontFamily.heading} text-lg md:text-xl lg:text-2xl ${fontWeight.semibold} ${lineHeight.tight}`, // 18px → 20px → 24px (Arc: ~26px, using smaller for readability)
+  h4: `${fontFamily.heading} ${fontSize["2xl"]} ${fontWeight.semibold} ${lineHeight.normal}`,
+  h5: `${fontFamily.heading} ${fontSize.lg} ${fontWeight.semibold} ${lineHeight.normal}`, // text-lg md:text-xl (one size smaller)
+  h6: `${fontFamily.heading} ${fontSize.lg} ${fontWeight.medium} ${lineHeight.normal}`,
 
-  // Body text
-  body: `${fontSize.base} ${fontWeight.normal} ${lineHeight.relaxed}`,
-  bodyLarge: `${fontSize.lg} ${fontWeight.normal} ${lineHeight.relaxed}`,
-  bodySmall: `${fontSize.sm} ${fontWeight.normal} ${lineHeight.normal}`,
+  // Body text - uses Newsreader (font-sans) for site-wide body text (header, footer, navigation, general content)
+  body: `${fontFamily.body} ${fontSize.base} ${fontWeight.normal} ${lineHeight.relaxed}`,
+  bodyLarge: `${fontFamily.body} ${fontSize.lg} ${fontWeight.normal} ${lineHeight.relaxed}`,
+  bodySmall: `${fontFamily.body} ${fontSize.sm} ${fontWeight.normal} ${lineHeight.normal}`,
 
   // Specialized
-  caption: `${fontSize.xs} ${fontWeight.normal} ${lineHeight.normal}`,
-  label: `${fontSize.sm} ${fontWeight.medium} ${lineHeight.normal}`,
-  button: `${fontSize.sm} ${fontWeight.medium} ${lineHeight.normal}`,
+  caption: `${fontFamily.body} ${fontSize.xs} ${fontWeight.normal} ${lineHeight.normal}`,
+  label: `${fontFamily.body} ${fontSize.sm} ${fontWeight.medium} ${lineHeight.normal}`,
+  button: `${fontFamily.body} ${fontSize.sm} ${fontWeight.medium} ${lineHeight.normal}`,
 } as const;
 
 /**

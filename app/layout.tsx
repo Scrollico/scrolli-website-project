@@ -1,5 +1,7 @@
-// Using only Cabin font throughout the design system
-// Google Fonts commented out - Cabin loaded via CSS
+// Using Instrument Sans font for body text - loaded via Next.js font optimization
+// Newsreader font for display text (headings) - loaded via Next.js font optimization
+import { Newsreader } from "next/font/google"
+import { Instrument_Sans } from "next/font/google"
 import "/public/assets/css/bootstrap.css"
 import "/public/assets/css/widgets.css"
 import "/public/assets/css/color-default.css"
@@ -14,6 +16,22 @@ import { generateSiteMetadata } from "@/lib/seo"
 import Script from "next/script"
 import { generateOrganizationStructuredData, generateWebsiteStructuredData } from "@/lib/structured-data"
 import { ThemeProvider } from "@/components/providers/theme-provider"
+
+// Configure Newsreader font for display text (headings)
+const newsreader = Newsreader({
+	subsets: ['latin'],
+	display: 'swap',
+	weight: ['400', '500', '600', '700'],
+	variable: '--font-newsreader',
+})
+
+// Configure Instrument Sans font for body text
+const instrumentSans = Instrument_Sans({
+	subsets: ['latin'],
+	display: 'swap',
+	weight: ['400', '500', '600', '700'],
+	variable: '--font-instrument-sans',
+})
 
 const THEME_COOKIE_KEY = 'theme';
 
@@ -146,7 +164,7 @@ export default function RootLayout({
 	const websiteData = generateWebsiteStructuredData()
 
 	return (
-		<html lang="tr" suppressHydrationWarning className={initialHtmlClass}>
+		<html lang="tr" suppressHydrationWarning className={`${newsreader.variable} ${instrumentSans.variable} ${initialHtmlClass}`}>
 			<head>
 				<style
 					id="theme-inline-style"
