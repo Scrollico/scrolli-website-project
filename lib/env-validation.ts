@@ -29,9 +29,17 @@ const criticalEnvVars = [
 
 /**
  * Validate environment variables
- * Throws error if critical variables are missing
+ * Throws error if critical variables are missing.
+ * Skips validation during Next.js build phase so Vercel/build can complete;
+ * validation runs at runtime when the app serves requests.
  */
 export function validateEnvVars(): void {
+  // Skip during build phase (e.g. Vercel "Collecting page data") so build succeeds.
+  // Env vars are validated at runtime when layout runs on the server.
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    return;
+  }
+
   const missing: string[] = [];
   
   for (const varName of criticalEnvVars) {
