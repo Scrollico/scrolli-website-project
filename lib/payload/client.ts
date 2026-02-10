@@ -12,17 +12,13 @@ import {
 } from "./types";
 
 // Get environment variables - only available on server
-// On client, these will be undefined, so we check at function call time
+// On client or when env vars are missing (e.g. Vercel build/runtime before env is set), return null
+// so pages can render with empty/fallback content instead of 500.
 export function getPayloadConfig() {
   const PAYLOAD_API_URL = process.env.PAYLOAD_API_URL;
   const PAYLOAD_API_KEY = process.env.PAYLOAD_API_KEY;
 
   if (!PAYLOAD_API_URL || !PAYLOAD_API_KEY) {
-    // Only throw on server - client components shouldn't call these functions
-    if (typeof window === "undefined") {
-      throw new Error("Missing Payload CMS environment variables");
-    }
-    // On client, return null to indicate unavailable
     return null;
   }
 
@@ -299,6 +295,10 @@ export async function fetchHikayeler(
  * Fetch from a single Payload collection with retry logic
  * Retries up to 2 times for transient failures (5xx errors)
  */
+function emptyPayloadResponse<T>(): PayloadResponse<T> {
+  return { docs: [], totalDocs: 0, limit: 0, totalPages: 0 };
+}
+
 async function fetchPayload<T>(
   collection: string,
   query?: FetchParams,
@@ -306,7 +306,7 @@ async function fetchPayload<T>(
 ): Promise<PayloadResponse<T>> {
   const config = getPayloadConfig();
   if (!config) {
-    throw new Error("Payload CMS functions can only be called on the server");
+    return emptyPayloadResponse<T>();
   }
 
   const queryString = buildQueryString(query || {});
@@ -411,7 +411,7 @@ export async function getArticleById(
   try {
     const config = getPayloadConfig();
     if (!config) {
-      throw new Error("Payload CMS functions can only be called on the server");
+      return null;
     }
 
     const queryString = new URLSearchParams({
@@ -568,7 +568,7 @@ export async function getSiteSettings(): Promise<PayloadSiteSettings | null> {
   try {
     const config = getPayloadConfig();
     if (!config) {
-      throw new Error("Payload CMS functions can only be called on the server");
+      return null;
     }
 
     const response = await fetch(`${config.url}/globals/settings?locale=tr`, {
@@ -602,7 +602,7 @@ export async function getNavigation(): Promise<PayloadNavigation | null> {
   try {
     const config = getPayloadConfig();
     if (!config) {
-      throw new Error("Payload CMS functions can only be called on the server");
+      return null;
     }
 
     const response = await fetch(`${config.url}/globals/navigation?locale=tr`, {
