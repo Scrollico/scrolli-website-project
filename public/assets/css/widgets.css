@@ -180,8 +180,8 @@ Styling for widgets
 .latest-tpl-4 .post-count {
   font-size: 1.7em;
   line-height: 1;
-  color: rgba(0, 0, 0, .15) !important;
-  fill: rgba(0, 0, 0, .15) !important;
+  color: rgba(0, 0, 0, .15);
+  fill: rgba(0, 0, 0, .15);
   padding-top: 5px;
   display: none;
 }
@@ -390,8 +390,8 @@ Styling for widgets
 p.date {
   margin-bottom: 0 !important;
   margin-left: 20px;
-  color: rgba(0, 0, 0, .54) !important;
-  fill: rgba(0, 0, 0, .54) !important;
+  color: rgba(0, 0, 0, .54);
+  fill: rgba(0, 0, 0, .54);
 }
 
 .desc h6 {
@@ -409,24 +409,24 @@ a.btn-reply {
 }
 
 a.btn-reply:hover {
-  background-color: #3500fd !important;
-  color: #fff !important;
-  border-color: #3500fd !important;
+  background-color: #374152;
+  color: #fff;
+  border-color: #374152;
   transition-duration: .3s;
 }
 
 .dark-mode a.btn-reply:hover {
-  background-color: #8b5cf6 !important;
-  border-color: #8b5cf6 !important;
+  background-color: #374152;
+  border-color: #374152;
 }
 
 .swiper-pagination-bullet-active {
   opacity: var(--swiper-pagination-bullet-opacity, 1);
-  background: #3500fd !important;
+  background: #374152;
 }
 
 .dark-mode .swiper-pagination-bullet-active {
-  background: #8b5cf6 !important;
+  background: #374152;
 }
 
 .swiper-pagination {
@@ -441,22 +441,22 @@ a.btn-reply:hover {
 }
 
 button.page-numbers {
-  color: rgba(0, 0, 0, .54) !important;
-  fill: rgba(0, 0, 0, .54) !important;
+  color: rgba(0, 0, 0, .54);
+  fill: rgba(0, 0, 0, .54);
   border: none;
   padding: 0 10px;
 }
 
 button.page-numbers:hover {
-  background: transparent !important;
+  background: transparent;
 }
 
 ul.page-numbers span.current {
-  color: #3500fd !important;
-  fill: #3500fd !important;
+  color: #374152;
+  fill: #374152;
 }
 
 .dark-mode ul.page-numbers span.current {
-  color: #8b5cf6 !important;
-  fill: #8b5cf6 !important;
+  color: #374152;
+  fill: #374152;
 }

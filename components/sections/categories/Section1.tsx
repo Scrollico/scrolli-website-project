@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import blogData from "@/data/blog.json";
+import { Badge } from "@/components/ui/badge";
 import {
   sectionPadding,
   componentPadding,
@@ -19,7 +20,7 @@ import { Heading, Text } from "@/components/ui/typography";
 import { Container } from "@/components/responsive";
 import { getAuthorName } from '@/lib/author-loader';
 
-import { FreeContentBadgeIcon, PremiumContentBadgeIcon } from "@/components/icons/ScrolliIcons";
+import { FreeContentBadgeIcon, PremiumContentBadgeIcon } from "@/components/icons/scrolli-icons";
 
 export default function Section1() {
   const { Culture } = blogData;
@@ -37,7 +38,7 @@ export default function Section1() {
               {/* Featured Article */}
               <article className={cn("mb-8 md:mb-12")}>
                 <figure className="mb-6 relative">
-                  <Link href={`/article/${Culture.mainArticle.id}`} prefetch={true}>
+                  <Link href={`/${Culture.mainArticle.id}`} prefetch={true}>
                     <Image
                       src={Culture.mainArticle.image}
                       alt={Culture.mainArticle.title}
@@ -55,7 +56,7 @@ export default function Section1() {
                   </div>
                 </figure>
                 <Heading level={1} variant="h1" className="mb-4">
-                  <Link href={`/article/${Culture.mainArticle.id}`} className={cn(colors.foreground.interactive, "hover:underline", transition.normal)}>
+                  <Link href={`/${Culture.mainArticle.id}`} className={cn(colors.foreground.interactive, "hover:underline", transition.normal)}>
                     {Culture.mainArticle.title}
                   </Link>
                 </Heading>
@@ -77,7 +78,11 @@ export default function Section1() {
                   <div className={cn("flex flex-wrap items-center", gap.xs)}>
                     <Link href="/author" className={colors.foreground.interactive}>{Culture.mainArticle.author}</Link>
                     <span>in</span>
-                    <Link href="/archive" className={colors.foreground.interactive}>{Culture.mainArticle.category}</Link>
+                    <Link href="/archive">
+                      <Badge className="ml-1 cursor-pointer">
+                        {Culture.mainArticle.category}
+                      </Badge>
+                    </Link>
                   </div>
                   <div className={cn("flex items-center", gap.xs)}>
                     <span>{Culture.mainArticle.date}</span>
@@ -104,7 +109,7 @@ export default function Section1() {
                           </Text>
                         )}
                         <Heading level={3} variant="h5" className="mb-2">
-                          <Link href={`/article/${article.id}`} className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
+                          <Link href={`/${article.id}`} className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
                             <span className="line-clamp-2 block">{article.title}</span>
                           </Link>
                         </Heading>
@@ -117,7 +122,11 @@ export default function Section1() {
                           <div className={cn("flex flex-wrap items-center", gap.xs)}>
                             <Link href={`/author/${article.author.toLowerCase().replace(/\s+/g, "-")}`} className={colors.foreground.interactive}>{getAuthorName(article.author)}</Link>
                             <span>in</span>
-                            <Link href="/archive" className={colors.foreground.interactive}>{article.category}</Link>
+                            <Link href="/archive">
+                              <Badge className="ml-1 cursor-pointer">
+                                {article.category}
+                              </Badge>
+                            </Link>
                           </div>
                           <div className={cn("flex items-center", gap.xs)}>
                             <span>{article.date}</span>
@@ -160,7 +169,7 @@ export default function Section1() {
                   {Culture.sideArticles.map((article, idx) => (
                     <article key={idx} className={cn("flex flex-col md:flex-row", gap.md)}>
                       <figure className="w-full md:w-32 lg:w-40 flex-shrink-0 relative">
-                        <Link href={`/article/${article.id}`} className={cn("block", transition.normal, "hover:opacity-90")}>
+                        <Link href={`/${article.id}`} className={cn("block", transition.normal, "hover:opacity-90")}>
                           <Image
                             src={article.image}
                             alt={article.title}
@@ -180,7 +189,7 @@ export default function Section1() {
                       </figure>
                       <div className={cn("flex-1 min-w-0 flex flex-col justify-center")}>
                         <Heading level={5} variant="h6" className="mb-2">
-                          <Link href={`/article/${article.id}`} className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
+                          <Link href={`/${article.id}`} className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
                             <span className="line-clamp-2 block">{article.title}</span>
                           </Link>
                         </Heading>
@@ -188,7 +197,11 @@ export default function Section1() {
                           <div className={cn("flex flex-wrap items-center", gap.xs)}>
                             <Link href={`/author/${article.author.toLowerCase().replace(/\s+/g, "-")}`} className={colors.foreground.interactive}>{getAuthorName(article.author)}</Link>
                             <span>in</span>
-                            <Link href="/archive" className={colors.foreground.interactive}>{article.category}</Link>
+                            <Link href="/archive">
+                              <Badge className="ml-1 cursor-pointer">
+                                {article.category}
+                              </Badge>
+                            </Link>
                           </div>
                           <div className={cn("flex items-center", gap.xs)}>
                             <span>{article.date}</span>
@@ -234,7 +247,7 @@ export default function Section1() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <Heading level={5} variant="h6" className="mb-2">
-                        <Link href="/article/president-and-the-emails-who-will-guard-the-guards" className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
+                        <Link href="/president-and-the-emails-who-will-guard-the-guards" className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
                           <span className="line-clamp-2 block">President and the emails. Who will guard the guards?</span>
                         </Link>
                       </Heading>
@@ -267,7 +280,7 @@ export default function Section1() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <Heading level={5} variant="h6" className="mb-2">
-                        <Link href="/article/how-to-silence-the-persistent-ding-of-modern-life" className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
+                        <Link href="/how-to-silence-the-persistent-ding-of-modern-life" className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
                           <span className="line-clamp-2 block">How to Silence the Persistent Ding of Modern Life</span>
                         </Link>
                       </Heading>
@@ -300,7 +313,7 @@ export default function Section1() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <Heading level={5} variant="h6" className="mb-2">
-                        <Link href="/article/why-we-love-to-watch" className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
+                        <Link href="/why-we-love-to-watch" className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
                           <span className="line-clamp-2 block">Why We Love to Watch</span>
                         </Link>
                       </Heading>
@@ -333,7 +346,7 @@ export default function Section1() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <Heading level={5} variant="h6" className="mb-2">
-                        <Link href="/article/how-health-apps-let" className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
+                        <Link href="/how-health-apps-let" className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
                           <span className="line-clamp-2 block">How Health Apps Let</span>
                         </Link>
                       </Heading>

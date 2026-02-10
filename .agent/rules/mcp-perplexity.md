@@ -1,0 +1,25 @@
+---
+trigger: model_decision
+description: Web Search & Research Assistant
+---
+
+# Perplexity MCP - Web Search & Research
+
+**Apply Manually** - Only when @-mentioned (currently disabled).
+
+## When to Use
+
+- Research current information beyond codebase
+- Find solutions to complex problems
+- Get up-to-date documentation
+- Research best practices
+
+## Key Capabilities
+
+- Real-time web search via Perplexity Sonar API
+- Quick search for simple lookups
+- Deep reasoning for complex tasks
+
+## Project Context
+
+**Currently disabled** - Use only when explicitly requested for research tasks.

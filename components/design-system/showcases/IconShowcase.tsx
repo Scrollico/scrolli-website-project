@@ -1,9 +1,10 @@
 "use client";
 
 import { Heading, Text } from "@/components/ui/typography";
+import { Button } from "@/components/ui/button";
 import { colors, gap, sectionPadding, borderRadius, componentPadding, border } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
-import * as Icons from "@/components/icons/ScrolliIcons";
+import * as Icons from "@/components/icons/scrolli-icons";
 import { useState } from "react";
 
 export default function IconShowcase() {
@@ -137,32 +138,26 @@ export default function IconShowcase() {
                 </button>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2 flex-wrap justify-center">
-              <button
+              <Button
+                variant={selectedCategory === null ? "default" : "secondary"}
                 onClick={() => setSelectedCategory(null)}
-                className={cn(
-                  "px-4 py-2 rounded-lg text-sm font-medium transition-all",
-                  selectedCategory === null
-                    ? "bg-[#374152] text-white"
-                    : cn(colors.background.elevated, colors.foreground.secondary, "hover:bg-gray-100 dark:hover:bg-gray-700")
-                )}
+                size="sm"
+                className="h-9"
               >
                 All Icons
-              </button>
+              </Button>
               {iconCategories.map((category) => (
-                <button
+                <Button
                   key={category.title}
+                  variant={selectedCategory === category.title ? "default" : "secondary"}
                   onClick={() => setSelectedCategory(category.title)}
-                  className={cn(
-                    "px-4 py-2 rounded-lg text-sm font-medium transition-all",
-                    selectedCategory === category.title
-                      ? "bg-[#374152] text-white"
-                      : cn(colors.background.elevated, colors.foreground.secondary, "hover:bg-gray-100 dark:hover:bg-gray-700")
-                  )}
+                  size="sm"
+                  className="h-9"
                 >
                   {category.title}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -170,7 +165,7 @@ export default function IconShowcase() {
 
         {/* Icon Grid */}
         <div className="space-y-16">
-          {(selectedCategory 
+          {(selectedCategory
             ? iconCategories.filter(cat => cat.title === selectedCategory)
             : iconCategories
           ).map((category) => (
@@ -186,7 +181,7 @@ export default function IconShowcase() {
                   {category.icons.length} icons
                 </div>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                 {category.icons.map(({ name, component: IconComponent }) => {
                   const Icon = IconComponent as React.FC<Icons.ScrolliIconProps>;
@@ -316,20 +311,17 @@ export default function IconShowcase() {
                 "border border-gray-800 dark:border-gray-700"
               )}>
                 <pre className="text-gray-100 dark:text-gray-200">
-{`import { NewsIcon } from 
-  "@/components/icons/ScrolliIcons";
+                  {`import { NewsIcon } from "@/components/icons/scrolli-icons";
 
-// Default (24px, dark blue)
+// Default (24px)
 <NewsIcon />
 
 // Custom size
 <NewsIcon size={32} />
 
-// Custom accent color
-<NewsIcon accentColor="#10B981" />
-
-// Custom stroke color
-<NewsIcon className="text-gray-500" />`}
+// Custom color
+<NewsIcon color="#10B981" />
+`}
                 </pre>
               </div>
             </div>

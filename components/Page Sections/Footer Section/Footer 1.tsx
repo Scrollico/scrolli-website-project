@@ -138,7 +138,7 @@ export function Footer() {
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
             {footerNavs.map((nav) => (
               <div key={nav.label}>
-                <h2 className="mb-6 text-sm font-semibold uppercase text-neutral-900 dark:text-white">
+                <h2 className="mb-6 text-sm font-semibold text-neutral-900 dark:text-white">
                   {nav.label}
                 </h2>
                 <ul className="grid gap-2">

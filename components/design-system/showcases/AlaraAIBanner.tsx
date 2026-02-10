@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { AIIcon, LightningIcon, TrendIcon, ArrowRightIcon, CheckIcon } from "@/components/icons/ScrolliIcons";
+import { Bot as AIIcon, Zap as LightningIcon, TrendingUp as TrendIcon, ArrowRight as ArrowRightIcon, Check as CheckIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   sectionPadding,
@@ -199,6 +199,17 @@ export default function AlaraAIBanner() {
     </section>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

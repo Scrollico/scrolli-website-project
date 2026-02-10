@@ -1,10 +1,9 @@
 "use client";
 
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import {
   Carousel,
   CarouselApi,
@@ -43,8 +42,6 @@ export function PodcastGallery({
   items = [],
 }: PodcastGalleryProps) {
   const [carouselApi, setCarouselApi] = useState<CarouselApi>();
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
@@ -53,8 +50,6 @@ export function PodcastGallery({
     }
 
     const updateSelection = () => {
-      setCanScrollPrev(carouselApi.canScrollPrev());
-      setCanScrollNext(carouselApi.canScrollNext());
       setCurrentSlide(carouselApi.selectedScrollSnap());
     };
 
@@ -69,37 +64,12 @@ export function PodcastGallery({
     <section className={sectionPadding.xl}>
       <Container size="xl">
         {/* Header */}
-        <div className="flex items-end justify-between md:mb-14 lg:mb-16">
+        <div className="md:mb-14 lg:mb-16">
           <SectionHeader
             title={title}
             subtitle={subtitle}
             description={description}
-            className="flex-1"
           />
-          <div className="hidden shrink-0 gap-2 md:flex dark:!bg-gray-800 dark:!text-white" data-podcast-nav="true">
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={() => {
-                carouselApi?.scrollPrev();
-              }}
-              disabled={!canScrollPrev}
-              className="disabled:pointer-events-auto"
-            >
-              <ArrowLeft className="size-5" />
-            </Button>
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={() => {
-                carouselApi?.scrollNext();
-              }}
-              disabled={!canScrollNext}
-              className="disabled:pointer-events-auto"
-            >
-              <ArrowRight className="size-5" />
-            </Button>
-          </div>
         </div>
       </Container>
 
@@ -147,7 +117,7 @@ export function PodcastGallery({
                       >
                         {item.host.name} · {item.host.title}
                       </Text>
-                      
+
                       {/* Title */}
                       <Heading
                         level={3}
@@ -181,8 +151,8 @@ export function PodcastGallery({
               className={cn(
                 "h-2 w-2 rounded-full transition-colors",
                 currentSlide === index
-                  ? "bg-primary dark:bg-primary"
-                  : "bg-primary/20 dark:bg-primary/20"
+                  ? "bg-[#8080FF]"
+                  : "bg-[#8080FF]/25"
               )}
               onClick={() => carouselApi?.scrollTo(index)}
               aria-label={`Go to slide ${index + 1}`}

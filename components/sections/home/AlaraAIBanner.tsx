@@ -2,7 +2,7 @@
 
 
 import Image from "next/image";
-import { AIIcon, CheckIcon } from "@/components/icons/ScrolliIcons";
+import { AIIcon, CheckIcon } from "@/components/icons/scrolli-icons";
 import { cn } from "@/lib/utils";
 import {
   sectionPadding,

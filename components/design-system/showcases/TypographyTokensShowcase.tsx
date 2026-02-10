@@ -15,6 +15,23 @@ export default function TypographyTokensShowcase() {
         description="Typography tokens for font sizes, weights, line heights, and letter spacing. All tokens are responsive and support dark mode."
         demo={
           <div className={cn("w-full space-y-12", gap.xl)}>
+            {/* Font Families */}
+            <div className="space-y-4">
+              <Text variant="bodyLarge" className="font-semibold">Font Families</Text>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {Object.entries(fontFamily).map(([key, value]) => (
+                  <div key={key} className={cn("border rounded p-4", colors.border.DEFAULT, colors.background.elevated)}>
+                    <div className={cn("text-2xl font-newsreader", value, colors.foreground.primary)}>
+                      Scrolli {key.charAt(0).toUpperCase() + key.slice(1)}
+                    </div>
+                    <Text variant="caption" color="muted" className="mt-2 font-mono">
+                      {key}: {value} (Newsreader)
+                    </Text>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* Font Sizes */}
             <div className="space-y-4">
               <Text variant="bodyLarge" className="font-semibold">Font Sizes</Text>

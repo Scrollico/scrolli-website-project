@@ -192,3 +192,30 @@ export function ArticleGridSkeleton({
   );
 }
 
+/**
+ * Section3 (content-widget) skeleton for lazy-loaded Eksen/Gelecek columns
+ */
+export function Section3Skeleton() {
+  return (
+    <div className="w-full bg-background px-4 sm:px-6 lg:px-8 py-8 md:py-12 lg:py-16">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 mb-8 lg:mb-12">
+          {[1, 2].map((i) => (
+            <div key={i} className="lg:col-span-6 space-y-4">
+              <Skeleton className="h-6 w-24" />
+              <Skeleton className="h-48 w-full rounded-lg" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+              </div>
+              <div className="flex gap-4">
+                <Skeleton className="h-32 flex-1 rounded-lg" />
+                <Skeleton className="h-32 flex-1 rounded-lg" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}

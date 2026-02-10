@@ -19,6 +19,7 @@ import {
   fontWeight,
   componentPadding,
   borderRadius,
+  interactions,
 } from "@/lib/design-tokens";
 import Link from "next/link";
 
@@ -77,7 +78,7 @@ export default function TermsOfUseSection() {
                     className={cn(
                       typography.bodySmall,
                       colors.foreground.secondary,
-                      "hover:text-primary transition-colors"
+                      interactions.hover
                     )}
                   >
                     {link.label}

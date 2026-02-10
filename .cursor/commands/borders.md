@@ -1,4 +1,8 @@
-# Border Token Reference
+# /sc:borders - Border Token Reference
+
+## Purpose
+
+Border tokens for consistent styling and rounded corners.
 
 ## Border Radius
 
@@ -7,7 +11,7 @@ Consistent rounding across components.
 ```typescript
 import { borderRadius } from "@/lib/design-tokens";
 
-<div className={borderRadius.lg}>Rounded corners</div>
+<div className={borderRadius.lg}>Rounded corners</div>;
 ```
 
 **Available Sizes:** `none`, `sm`, `md`, `lg`, `xl`, `2xl`, `full`
@@ -15,11 +19,10 @@ import { borderRadius } from "@/lib/design-tokens";
 ## Border Widths
 
 ```typescript
-import { borderWidth } from "@/lib/design-tokens";
+import { borderWidth, colors } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
-<div className={cn(borderWidth[1], colors.border.DEFAULT)}>
-  Thin border
-</div>
+<div className={cn(borderWidth[1], colors.border.DEFAULT)}>Thin border</div>;
 ```
 
 **Available Widths:** `0`, `1`, `2`, `4`
@@ -37,7 +40,8 @@ import { border } from "@/lib/design-tokens";
 ## Border Colors
 
 ```typescript
-import { colors } from "@/lib/design-tokens";
+import { colors, borderWidth } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
 <div className={cn(borderWidth[1], colors.border.DEFAULT)}>
   Standard border
@@ -48,19 +52,17 @@ import { colors } from "@/lib/design-tokens";
 </div>
 ```
 
+**Available Colors:** `DEFAULT`, `light`, `medium`, `strong`
+
 ## Usage Example
 
 ```typescript
 import { borderRadius, border, colors } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
-<div className={cn(
-  borderRadius.lg,
-  border.thin,
-  colors.border.DEFAULT
-)}>
+<div className={cn(borderRadius.lg, border.thin, colors.border.DEFAULT)}>
   Card content
-</div>
+</div>;
 ```
 
 ## Common Patterns
@@ -70,20 +72,9 @@ import { cn } from "@/lib/utils";
 - **Inputs**: `borderRadius.md` + `border.thin`
 - **Modals**: `borderRadius.xl` + `border.thin`
 
+## Related Commands
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- `/sc:component` - Component templates
+- `/sc:design` - Design system reference
+- `/sc:colors` - Color tokens
+- `/sc:audit` - Design system audit

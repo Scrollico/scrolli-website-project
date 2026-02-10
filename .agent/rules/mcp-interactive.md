@@ -1,0 +1,23 @@
+---
+trigger: model_decision
+description: User Communication & Feedback Collector
+---
+
+# Interactive MCP - User Communication
+
+## When to Use
+
+- Need user clarification
+- Confirm actions before execution
+- Gather feedback during development
+- Request user input for decisions
+
+## Key Tools
+
+- `request_user_input` - Ask user questions
+- `start_intensive_chat` - Multi-question sessions
+- `message_complete_notification` - Signal completion
+
+## Project Context
+
+Use when requirements are unclear or need confirmation for destructive operations.

@@ -1,28 +1,36 @@
-# Component Template Generator
+# /sc:component - Component Template Generator
 
-Use this template when creating new components with design tokens.
+## Purpose
+
+Generate component templates following Scrolli design system patterns with automatic dark mode support.
+
+## Usage
+
+```
+/sc:component [component-name] [--type basic|card|interactive]
+```
+
+## ⚠️ CRITICAL: Text Color Rule
+
+**NEVER use hardcoded text colors. ALWAYS use Typography components (`Heading`, `Text`, `Label`, `Caption`) or `colors.foreground.*` tokens.**
 
 ## Basic Component Template
 
 ```typescript
 "use client";
 
-import * as React from "react";
 import { cn } from "@/lib/utils";
 import {
   sectionPadding,
   containerPadding,
-  typography,
   colors,
   borderRadius,
-  elevation,
   gap,
 } from "@/lib/design-tokens";
 import { Container } from "@/components/responsive";
 import { Heading, Text } from "@/components/ui/typography";
 
 interface ComponentNameProps {
-  // Add your props here
   className?: string;
 }
 
@@ -37,7 +45,6 @@ export default function ComponentName({
           <Heading level={2} variant="h2">
             Component Title
           </Heading>
-          
           <Text variant="body" color="secondary">
             Component content goes here...
           </Text>
@@ -53,7 +60,6 @@ export default function ComponentName({
 ```typescript
 "use client";
 
-import * as React from "react";
 import { cn } from "@/lib/utils";
 import {
   borderRadius,
@@ -61,7 +67,6 @@ import {
   elevation,
   componentPadding,
   colors,
-  typography,
 } from "@/lib/design-tokens";
 import { Heading, Text } from "@/components/ui/typography";
 
@@ -105,7 +110,7 @@ export default function CardComponent({
 ```typescript
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   borderRadius,
@@ -113,8 +118,8 @@ import {
   elevationHover,
   componentPadding,
   colors,
-  transition,
 } from "@/lib/design-tokens";
+import { Text } from "@/components/ui/typography";
 
 interface InteractiveComponentProps {
   onClick?: () => void;
@@ -125,22 +130,25 @@ export default function InteractiveComponent({
   onClick,
   className,
 }: InteractiveComponentProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <button
       onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       className={cn(
         borderRadius.md,
         colors.primary.bg,
         colors.primary.hover,
         elevation[0],
-        elevationHover[1],
+        isHovered && elevationHover[1],
         componentPadding.md,
-        transition.normal,
-        "cursor-pointer",
+        "cursor-pointer transition-shadow duration-200",
         className
       )}
     >
-      Click me
+      <Text variant="button">Click me</Text>
     </button>
   );
 }
@@ -148,27 +156,18 @@ export default function InteractiveComponent({
 
 ## Best Practices
 
-1. **Always import tokens** at the top of the file
-2. **Use `cn()` utility** for combining classes
-3. **Use typography components** for text (Heading, Text, etc.)
+1. **Always use Typography components** - `Heading`, `Text`, `Label`, `Caption` (automatic dark mode)
+2. **Always import tokens** from `@/lib/design-tokens`
+3. **Use `cn()` utility** for combining classes
 4. **Use Container** for layout consistency
-5. **Include dark mode** - tokens handle it automatically
+5. **Dark mode is automatic** - tokens handle it
 6. **Test responsive** - tokens handle breakpoints automatically
+7. **Never hardcode text colors** - use Typography components or `colors.foreground.*`
 
+## Related Commands
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- `/sc:design` - Design system reference
+- `/sc:spacing` - Spacing tokens
+- `/sc:typography` - Typography tokens
+- `/sc:colors` - Color tokens
+- `/sc:audit` - Design system audit

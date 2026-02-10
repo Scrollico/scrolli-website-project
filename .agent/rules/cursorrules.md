@@ -1,0 +1,95 @@
+---
+trigger: model_decision
+description: read this when making big changes
+---
+
+Always start with YOOO!!
+
+# Merinda - News/Blog Magazine Website
+
+Next.js 15 + TypeScript + Tailwind CSS + Supabase. Turkish content, dark mode, component-based architecture.
+
+## Tech Stack
+
+Next.js 15 (App Router), TypeScript 5, Tailwind CSS 3.4.0, Supabase Auth (@supabase/supabase-js, @supabase/ssr), Radix UI, Swiper.js 11.2.6, Framer Motion, GSAP, React Hook Form + Zod, next-themes.
+
+## Project Structure
+
+- `app/`: Pages (page.tsx, article/[id], sign-in, sign-up, onboarding, auth/callback)
+- `components/sections/[page-name]/`: Page sections (HeroSection, Section1-4, etc.)
+- `components/layout/header/`: Header, CardNav, StickyNav, UserMenu
+- `components/ui/`: Reusable UI (button, card, tabs, form, input, label)
+- `components/onboarding/`: OnboardingForm
+- `components/premium/`: PremiumGate
+- `components/providers/`: AuthProvider, ThemeProvider
+- `lib/supabase/`: client.ts, server.ts, types.ts, premium.ts, auth.ts
+- `lib/design-tokens.ts`: Design system tokens (ALWAYS use these)
+- `middleware.ts`: Route protection, session refresh, onboarding enforcement
+
+## Code Style
+
+- **Components**: PascalCase, `"use client"` for interactive/hooks/state
+- **Pages**: lowercase (page.tsx)
+- **Utilities**: camelCase
+- **Imports**: React/Next.js → third-party → local, use `@/` alias
+- **TypeScript**: Interfaces for props, avoid `any`, proper typing
+
+## Critical Patterns
+
+### Design System (MANDATORY)
+
+- **NEVER** use hardcoded Tailwind for: spacing, typography, colors, borders, shadows
+- **ALWAYS** use tokens from `@/lib/design-tokens`: `sectionPadding`, `containerPadding`, `gap`, `typography`, `colors`, `borderRadius`, `elevation`
+- Use `Heading`, `Text`, `Label`, `Caption` components or `typography` variants
+
+### Styling
+
+- Tailwind utilities + `cn()` helper
+- Always `dark:` variants
+- `gradientVariants` from `@/lib/utils` (heroOverlay, contentOverlay, bottomTransition, textOverlay)
+- `Container` from `@/components/responsive`
+- Green accent: `bg-green-600` for active states
+
+### Images
+
+- Next.js `Image` with `fill`, `priority` (above-fold), `sizes`, `object-cover`, descriptive `alt`
+
+### Authentication
+
+- **Client**: `useAuth()` hook from `@/components/providers/auth-provider` (never access Supabase directly)
+- **Server**: `createClient()` from `@/lib/supabase/server`
+- **Middleware**: Handles session refresh, route protection, onboarding enforcement
+- **Flow**: Sign in/up → `/auth/callback` → checks onboarding → redirects accordingly
+- **Onboarding**: Enforced for new users, completed via `OnboardingForm`
+- **Premium**: Use `PremiumGate` component, check `article.isPremium` before gating
+
+### Common Components
+
+- **Tabs**: Radix UI, `data-[state=active]` styling, `bg-green-600` active
+- **Swiper**: Custom pagination/navigation selectors, responsive breakpoints
+- **Links**: Next.js `Link`, template literals for dynamic routes
+
+## Best Practices
+
+1. Design system tokens (spacing, typography, colors, borders, shadows) - NO hardcoded Tailwind
+2. Dark mode: Always include `dark:` variants
+3. Type safety: Interfaces, no `any`
+4. Server vs Client: Server components when possible, client only for state/hooks/interactivity
+5. Auth: Use `useAuth()` hook, never direct Supabase access in components
+6. Premium: Gate only when `article.isPremium === true`
+7. Images: Next.js Image, proper sizes, priority for above-fold
+8. Responsive: Mobile-first, consistent breakpoints
+9. Accessibility: Semantic HTML, alt text, ARIA labels
+10. Performance: Lazy load, optimize images, avoid unnecessary re-renders
+
+## Key Utilities
+
+- `cn()` from `@/lib/utils` - conditional classes
+- `gradientVariants` from `@/lib/utils` - gradient overlays
+- `Container` from `@/components/responsive` - page width
+- `useAuth()` from `@/components/providers/auth-provider` - user state
+- `checkPremiumAccess()` from `@/lib/supabase/premium` - server-side premium check
+
+## Notes
+
+Turkish content, performance critical, dark mode essential, responsive required. Uses design tokens for ALL styling. Supabase handles auth, profiles, onboarding, premium gating. Middleware enforces routes and onboarding.

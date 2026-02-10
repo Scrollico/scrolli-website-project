@@ -142,8 +142,7 @@ export default function AboutSection2() {
                 </div>
                 <div className={cn(
                   colors.foreground.secondary,
-                  fontWeight.semibold,
-                  "uppercase"
+                  fontWeight.semibold
                 )}>
                   take you deeper
                 </div>

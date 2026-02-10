@@ -6,14 +6,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { SmartButton } from "@/components/ui/smart-button";
 import { Heading, Text } from "@/components/ui/typography";
-import { NewsletterIcon } from "@/components/icons/ScrolliIcons";
+import { NewsletterIcon } from "@/components/icons/scrolli-icons";
 import {
-  typography,
   colors,
   gap,
   componentPadding,
-  borderRadius,
-  border,
+  interactions,
 } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
@@ -78,33 +76,61 @@ export default function NewsletterSignup() {
     if (!email || selectedBriefings.length === 0) return;
 
     setIsSubmitting(true);
-    // TODO: Add API call for newsletter subscription
-    console.log("Newsletter signup:", { email, briefings: selectedBriefings });
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      if (!supabaseUrl) {
+        throw new Error('Supabase URL not configured');
+      }
+
+      const response = await fetch(`${supabaseUrl}/functions/v1/newsletter-subscribe`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          briefings: selectedBriefings,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to subscribe');
+      }
+
+      const data = await response.json();
+      console.log('Newsletter subscription successful:', data);
+
+      // Reset form on success
       setEmail("");
-      // Reset to default selections (first two briefings)
       setSelectedBriefings([briefings[0].id, briefings[1].id]);
-    }, 1000);
+
+      // Show success message (you can add a toast notification here)
+      alert('Başarıyla abone oldunuz!');
+    } catch (error) {
+      console.error('Newsletter subscription error:', error);
+      alert(error instanceof Error ? error.message : 'Abonelik sırasında bir hata oluştu.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className={cn("w-full", componentPadding.sm, "flex flex-col", gap.md)}>
       {/* Header */}
       <div className="flex items-center gap-2">
-        <NewsletterIcon 
-          size={20} 
+        <NewsletterIcon
+          size={20}
           className={cn(
             "flex-shrink-0",
-            colors.foreground.primary
-          )} 
+            "text-[#8080FF]"
+          )}
         />
         <Heading
           level={3}
           variant="h5"
-          className={cn(colors.foreground.primary, "font-bold text-lg")}
+          className={cn(colors.foreground.primary, "font-bold text-lg font-display")}
         >
           Sign up for our email briefings.
         </Heading>
@@ -129,15 +155,15 @@ export default function NewsletterSignup() {
         <SmartButton
           type="submit"
           disabled={isSubmitting || selectedBriefings.length === 0}
-          size="md"
+          size="default"
           className={cn(
             "h-10 whitespace-nowrap w-full sm:w-auto flex-shrink-0",
             selectedBriefings.length > 0 && "min-w-[100px]"
           )}
         >
-          {isSubmitting 
-            ? "Signing up..." 
-            : selectedBriefings.length > 0 
+          {isSubmitting
+            ? "Signing up..."
+            : selectedBriefings.length > 0
               ? `Sign Up (${selectedBriefings.length})`
               : "Sign Up"}
         </SmartButton>
@@ -154,7 +180,7 @@ export default function NewsletterSignup() {
       />
 
       {/* Briefing List */}
-      <div className={cn("flex flex-col", gap.none)}>
+      <div className={cn("flex flex-col", "gap-0")}>
         {briefings.map((briefing, index) => {
           const isSelected = selectedBriefings.includes(briefing.id);
           return (
@@ -173,7 +199,7 @@ export default function NewsletterSignup() {
               {/* Briefing Item */}
               <div
                 className={cn(
-                  "flex items-start gap-3 cursor-pointer group py-2",
+                  "flex items-start gap-3 cursor-pointer py-2",
                 )}
                 onClick={() => handleBriefingToggle(briefing.id)}
               >
@@ -182,12 +208,15 @@ export default function NewsletterSignup() {
                   <Checkbox
                     checked={isSelected}
                     onCheckedChange={() => handleBriefingToggle(briefing.id)}
-                    onClick={(e) => e.stopPropagation()}
                     className={cn(
-                      "h-5 w-5 [&>svg]:h-4 [&>svg]:w-4",
-                      "border border-gray-900 dark:border-gray-100",
-                      "group-hover:outline group-hover:outline-2 group-hover:outline-gray-900 dark:group-hover:outline-gray-100 group-hover:outline-offset-0",
-                      "transition-all"
+                      "h-5 w-5 [&>svg]:h-4 [&>svg]:w-4 pointer-events-none",
+                      // Custom Periwinkle Styling (#8080FF Selection)
+                      "data-[state=checked]:!bg-[#8080FF] data-[state=checked]:!border-[#8080FF]",
+                      "data-[state=checked]:!text-white",
+                      "dark:data-[state=checked]:!bg-[#8080FF] dark:data-[state=checked]:!border-[#8080FF]",
+                      "dark:data-[state=checked]:!text-white",
+                      // Clean hover states
+                      "hover:data-[state=checked]:!bg-[#8080FF] hover:data-[state=checked]:!border-[#8080FF]"
                     )}
                   />
                 </div>
@@ -200,7 +229,8 @@ export default function NewsletterSignup() {
                     variant="h6"
                     className={cn(
                       colors.foreground.primary,
-                      "font-bold mb-1 group-hover:text-primary transition-colors"
+                      "font-bold mb-1 font-display",
+                      interactions.hover
                     )}
                   >
                     {briefing.title}
@@ -209,7 +239,7 @@ export default function NewsletterSignup() {
                   {/* Description */}
                   <Text
                     variant="bodySmall"
-                    className={cn(colors.foreground.secondary, "mb-1.5 text-xs leading-relaxed")}
+                    className={cn(colors.foreground.secondary, "mb-1.5 text-xs leading-relaxed font-display")}
                   >
                     {briefing.description}
                   </Text>
@@ -218,7 +248,7 @@ export default function NewsletterSignup() {
                   <div className="flex items-center gap-2 flex-wrap">
                     <Text
                       variant="caption"
-                      className={cn(colors.foreground.secondary, "text-xs")}
+                      className={cn(colors.foreground.secondary, "text-xs font-display")}
                     >
                       {briefing.frequency}
                     </Text>
@@ -229,7 +259,8 @@ export default function NewsletterSignup() {
                       href={briefing.readItLink}
                       onClick={(e) => e.stopPropagation()}
                       className={cn(
-                        "text-xs font-medium hover:text-primary transition-colors",
+                        "text-xs font-medium font-display",
+                        interactions.hover,
                         colors.foreground.secondary
                       )}
                     >

@@ -58,8 +58,9 @@ export default function Guidelines() {
               </Text>
               <ul className={cn("list-disc list-inside space-y-2", colors.foreground.secondary)}>
                 <li>Always use design tokens for colors</li>
-                <li>Test components in both light and dark modes</li>
-                <li>Ensure proper contrast ratios</li>
+                <li><strong>Baseline Color:</strong> Charcoal <code>#374152</code> is the mandatory dark mode background (not pure black)</li>
+                <li><strong>Typography:</strong> <code>Newsreader</code> font family is used site-wide for all headings and body text</li>
+                <li>Ensure proper contrast ratios (Target WCAG AAA 7:1)</li>
                 <li>Verify no white backgrounds "shine" in dark mode</li>
               </ul>
             </div>
@@ -129,6 +130,66 @@ export default function Guidelines() {
                 <li>Document component props and usage</li>
                 <li>Test components in isolation</li>
               </ul>
+            </div>
+          </div>
+
+          {/* Zero Tolerance - Enforcement */}
+          <div className="space-y-4">
+            <Heading level={3} variant="h3" className="text-red-600 dark:text-red-400">🚫 Zero Tolerance Policy</Heading>
+            <div className={cn("space-y-3", gap.md)}>
+              <Text variant="body">
+                The following patterns are <strong>strictly forbidden</strong> and will be caught by automated auditing.
+                Run <code className="font-mono text-sm bg-gray-100 dark:bg-gray-800 px-1 rounded">npm run audit:design</code> before committing.
+              </Text>
+
+              {/* Banned Patterns */}
+              <div className={cn("p-4 rounded-lg border-2 border-red-200 dark:border-red-900/50", colors.background.elevated)}>
+                <Text variant="bodySmall" className="font-mono mb-3 text-red-600 dark:text-red-400 font-bold">❌ BANNED PATTERNS:</Text>
+                <div className="space-y-2">
+                  <Text variant="bodySmall" className="font-mono text-red-600 dark:text-red-400">
+                    • py-4, px-6, gap-8, p-4, m-4 → Use spacing tokens
+                  </Text>
+                  <Text variant="bodySmall" className="font-mono text-red-600 dark:text-red-400">
+                    • bg-white, bg-gray-100 → Use colors.background.*
+                  </Text>
+                  <Text variant="bodySmall" className="font-mono text-red-600 dark:text-red-400">
+                    • text-black, text-gray-900 → Use Typography components or colors.foreground.*
+                  </Text>
+                  <Text variant="bodySmall" className="font-mono text-red-600 dark:text-red-400">
+                    • rounded-lg, shadow-xl → Use borderRadius.*, elevation tokens
+                  </Text>
+                </div>
+              </div>
+
+              {/* Quick Fix Reference */}
+              <div className={cn("p-4 rounded-lg border-2 border-green-200 dark:border-green-900/50", colors.background.elevated)}>
+                <Text variant="bodySmall" className="font-mono mb-3 text-green-600 dark:text-green-400 font-bold">✅ QUICK FIXES:</Text>
+                <div className="space-y-2 font-mono text-xs">
+                  <Text variant="bodySmall" className="font-mono text-green-600 dark:text-green-400">
+                    py-8 → sectionPadding.md | px-4 → containerPadding.md
+                  </Text>
+                  <Text variant="bodySmall" className="font-mono text-green-600 dark:text-green-400">
+                    bg-white → colors.background.base | bg-gray-50 → colors.background.elevated
+                  </Text>
+                  <Text variant="bodySmall" className="font-mono text-green-600 dark:text-green-400">
+                    text-gray-900 → {"<Text>"} or colors.foreground.primary
+                  </Text>
+                  <Text variant="bodySmall" className="font-mono text-green-600 dark:text-green-400">
+                    rounded-lg → borderRadius.lg | shadow-md → elevation[2]
+                  </Text>
+                </div>
+              </div>
+
+              {/* Audit Command */}
+              <div className={cn("p-4 rounded-lg border", colors.background.elevated, colors.border.DEFAULT)}>
+                <Text variant="bodySmall" className="font-mono mb-2">🔍 Run Design Audit:</Text>
+                <Text variant="bodySmall" className="font-mono text-blue-600 dark:text-blue-400">
+                  npm run audit:design
+                </Text>
+                <Text variant="bodySmall" className="font-mono mt-2 opacity-70">
+                  Scans all .tsx files and reports violations with line numbers.
+                </Text>
+              </div>
             </div>
           </div>
         </div>

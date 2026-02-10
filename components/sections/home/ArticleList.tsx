@@ -2,27 +2,31 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import blogData from "@/data/blog.json";
 import { Heading, Text } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
-import { colors, gap } from "@/lib/design-tokens";
+import { colors, gap, interactions } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
+import { Article } from "@/types/content";
 import AuthorArticles from "./AuthorArticles";
+import { AuthorWithLatestArticle } from "./AuthorArticles";
 
-export default function ArticleList() {
-  // Use mostRecent articles - show 3 regular articles, then AuthorArticles component
-  const articles = blogData.mostRecent?.mainArticles?.slice(0, 3) || 
-                   blogData.todayHighlights?.articles?.slice(0, 3) || 
-                   [];
+interface ArticleListProps {
+  articles?: Article[];
+  authors?: AuthorWithLatestArticle[];
+}
 
-  if (articles.length === 0) {
+export default function ArticleList({ articles = [], authors = [] }: ArticleListProps) {
+  // Show first 3 articles, then AuthorArticles component
+  const displayArticles = articles.slice(0, 3);
+
+  if (displayArticles.length === 0) {
     return null;
   }
 
   return (
     <div className={cn("flex flex-col min-w-0 w-full", gap.md)}>
       {/* Regular Articles */}
-      {articles.map((article, index) => (
+      {displayArticles.map((article, index) => (
         <article
           key={article.id || index}
           className={cn(
@@ -32,9 +36,9 @@ export default function ArticleList() {
           )}
         >
           {/* Article Image */}
-          {article.image && (
+          {article.image ? (
             <Link
-              href={`/article/${article.id}`}
+              href={`/${article.id}`}
               className="block flex-shrink-0 w-full sm:w-32 h-32 rounded-lg overflow-hidden"
             >
               <figure className="relative w-full h-full m-0">
@@ -47,6 +51,10 @@ export default function ArticleList() {
                 />
               </figure>
             </Link>
+          ) : (
+            <div className="flex-shrink-0 w-full sm:w-32 h-32 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+              <span className="text-gray-400 dark:text-gray-500 text-xs">No Image</span>
+            </div>
           )}
 
           {/* Article Content */}
@@ -54,13 +62,8 @@ export default function ArticleList() {
             {/* Category Badge */}
             {article.category && (
               <div className="mb-2">
-                <Badge
-                  variant="secondary"
-                  appearance="outline"
-                  size="sm"
-                  className="uppercase tracking-wide"
-                >
-                  {article.category}
+<Badge className="tracking-wide border-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300">
+                {article.category}
                 </Badge>
               </div>
             )}
@@ -72,8 +75,8 @@ export default function ArticleList() {
               className="mb-2 leading-tight line-clamp-2"
             >
               <Link
-                href={`/article/${article.id}`}
-                className="hover:text-primary transition-colors"
+                href={`/${article.id}`}
+                className={interactions.hover}
               >
                 {article.title}
               </Link>
@@ -93,7 +96,7 @@ export default function ArticleList() {
       ))}
 
       {/* Author Articles Component */}
-      <AuthorArticles />
+      <AuthorArticles authors={authors} />
     </div>
   );
 }

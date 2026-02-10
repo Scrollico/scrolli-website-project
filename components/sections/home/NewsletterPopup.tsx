@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { CloseIcon, ArrowRightIcon } from "@/components/icons/ScrolliIcons";
+import { CloseIcon, ArrowRightIcon } from "@/components/icons/scrolli-icons";
 import { useTheme } from "next-themes";
 import {
     typography,
@@ -60,7 +60,7 @@ export default function NewsletterPopup() {
     useEffect(() => {
         setIsMounted(true);
         pageLoadTimeRef.current = Date.now();
-        
+
         // Check if popup was previously dismissed
         if (isPopupDismissed()) {
             return;
@@ -99,7 +99,7 @@ export default function NewsletterPopup() {
             // Calculate scroll percentage
             const scrollTop = window.scrollY || window.pageYOffset;
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            
+
             // Prevent division by zero
             if (docHeight <= 0) return;
 
@@ -125,7 +125,7 @@ export default function NewsletterPopup() {
         checkAndShowPopup();
 
         window.addEventListener("scroll", handleScroll, { passive: true });
-        
+
         return () => {
             window.removeEventListener("scroll", handleScroll);
             clearInterval(intervalId);
@@ -139,15 +139,47 @@ export default function NewsletterPopup() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!email) return;
+
         setIsSubmitting(true);
 
-        // Simulate API call
-        // TODO: Replace with actual API call
-        setTimeout(() => {
-            setIsSubmitting(false);
+        try {
+            const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+            if (!supabaseUrl) {
+                throw new Error('Supabase URL not configured');
+            }
+
+            // Default briefings for popup: ana-bulten and gundem-ozeti
+            const defaultBriefings = ['ana-bulten', 'gundem-ozeti'];
+
+            const response = await fetch(`${supabaseUrl}/functions/v1/newsletter-subscribe`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email,
+                    briefings: defaultBriefings,
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to subscribe');
+            }
+
+            const data = await response.json();
+            console.log('Newsletter subscription successful:', data);
+
+            // Reset form and close popup on success
             setEmail("");
-            handleDismiss(); // Close after success
-        }, 1000);
+            handleDismiss();
+        } catch (error) {
+            console.error('Newsletter subscription error:', error);
+            alert(error instanceof Error ? error.message : 'Abonelik sırasında bir hata oluştu.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     // Don't render if not visible or not mounted
@@ -273,7 +305,7 @@ export default function NewsletterPopup() {
                                     disabled={isSubmitting}
                                     size="lg"
                                     width="full"
-                                    className="mt-2 rounded-lg font-semibold"
+                                    className="mt-2 rounded-md font-semibold"
                                 >
                                     {isSubmitting ? "Gönderiliyor..." : "I want to subscribe"}
                                 </SmartButton>

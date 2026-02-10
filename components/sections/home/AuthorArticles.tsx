@@ -1,115 +1,28 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import blogData from "@/data/blog.json";
-import { Heading, Text } from "@/components/ui/typography";
-import { colors, gap, componentPadding, borderRadius } from "@/lib/design-tokens";
+import { Heading, Text, Label } from "@/components/ui/typography";
+import { colors, gap, componentPadding, borderRadius, interactions } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 import { getAuthorAvatar, getAuthorName } from '@/lib/author-loader';
 
-// Helper function to extract real authors and their latest articles from blog.json
-function getRealAuthors() {
-  const authorMap = new Map<string, { name: string; latestArticle: { id: string; title: string }; index: number }>();
-  
-  // Collect all articles from different sections (in order of priority: mostRecent first, then featured, etc.)
-  const allArticles: Array<{ id: string; title: string; author: string }> = [];
-  
-  // Most recent articles (highest priority - these are the latest)
-  if (blogData.mostRecent?.mainArticles) {
-    blogData.mostRecent.mainArticles.forEach((article: any) => {
-      if (article.author && article.title && article.id) {
-        allArticles.push({
-          id: article.id,
-          title: article.title,
-          author: article.author,
-        });
-      }
-    });
-  }
-  if (blogData.mostRecent?.sideArticles) {
-    blogData.mostRecent.sideArticles.forEach((article: any) => {
-      if (article.author && article.title && article.id) {
-        allArticles.push({
-          id: article.id,
-          title: article.title,
-          author: article.author,
-        });
-      }
-    });
-  }
-  
-  // Featured articles
-  if (blogData.featured?.mainArticle) {
-    const article = blogData.featured.mainArticle;
-    if (article.author && article.title && article.id) {
-      allArticles.push({
-        id: article.id,
-        title: article.title,
-        author: article.author,
-      });
-    }
-  }
-  if (blogData.featured?.sideArticles) {
-    blogData.featured.sideArticles.forEach((article: any) => {
-      if (article.author && article.title && article.id) {
-        allArticles.push({
-          id: article.id,
-          title: article.title,
-          author: article.author,
-        });
-      }
-    });
-  }
-  
-  // Today highlights
-  if (blogData.todayHighlights?.articles) {
-    blogData.todayHighlights.articles.forEach((article: any) => {
-      if (article.author && article.title && article.id) {
-        allArticles.push({
-          id: article.id,
-          title: article.title,
-          author: article.author,
-        });
-      }
-    });
-  }
-  
-  // Featured slider
-  if (blogData.featuredSlider?.articles) {
-    blogData.featuredSlider.articles.forEach((article: any) => {
-      if (article.author && article.title && article.id) {
-        allArticles.push({
-          id: article.id,
-          title: article.title,
-          author: article.author,
-        });
-      }
-    });
-  }
-  
-  // Keep only the first (latest) article for each author
-  allArticles.forEach((article, index) => {
-    if (!authorMap.has(article.author)) {
-      authorMap.set(article.author, {
-        name: article.author,
-        latestArticle: {
-          id: article.id,
-          title: article.title,
-        },
-        index: index,
-      });
-    }
-  });
-  
-  // Convert to array and sort by index to maintain order
-  return Array.from(authorMap.values())
-    .sort((a, b) => a.index - b.index)
-    .map(({ index, ...rest }) => rest);
+export interface AuthorWithLatestArticle {
+  name: string;
+  slug: string;
+  avatar?: string;
+  latestArticle: {
+    id: string;
+    title: string;
+  };
 }
 
-// Author avatar mapping - cycle through available avatars
+interface AuthorArticlesProps {
+  authors?: AuthorWithLatestArticle[];
+}
+
+// Author avatar mapping - cycle through available avatars as fallback
 const authorAvatars = [
   "/assets/images/author-avata-1.jpg",
   "/assets/images/author-avata-2.jpg",
@@ -123,187 +36,15 @@ function formatAuthorName(authorSlug: string): string {
   return getAuthorName(authorSlug);
 }
 
-// Mock authors data - simulating 20 authors, showing 5
-const mockAuthors = [
-  {
-    name: "Dave Gershgorn",
-    avatar: "/assets/images/author-avata-1.jpg",
-    latestArticle: {
-      id: "home-internet-is-becoming-a-luxury-for-the-wealthy-2",
-      title: "Home Internet Is Becoming a Luxury for the Wealthy"
-    }
-  },
-  {
-    name: "Ben Smith",
-    avatar: "/assets/images/author-avata-2.jpg",
-    latestArticle: {
-      id: "trump-mbs-and-mamdani-at-the-predators-ball",
-      title: "Trump, MBS, and Mamdani at the Predators' Ball"
-    }
-  },
-  {
-    name: "Darcy Reeder",
-    avatar: "/assets/images/author-avata-3.jpg",
-    latestArticle: {
-      id: "why-lack-of-sleep-is-so-bad-for-you-1",
-      title: "Why Lack of Sleep is So Bad For You"
-    }
-  },
-  {
-    name: "Anna Goldfarb",
-    avatar: "/assets/images/author-avata-1.jpg",
-    latestArticle: {
-      id: "i-learned-how-to-die-before-i-knew-how-to-live-1",
-      title: "I Learned How to Die Before I Knew How to Live"
-    }
-  },
-  {
-    name: "Azimi Şkalo",
-    avatar: "/assets/images/author-avata-2.jpg",
-    latestArticle: {
-      id: "regulators-just-put-a-target-on-apples-back-1",
-      title: "Regulators Just Put a Target on Apple's Back"
-    }
-  },
-  // Additional mock authors (not shown, but available)
-  {
-    name: "Johan Doan",
-    avatar: "/assets/images/author-avata-3.jpg",
-    latestArticle: {
-      id: "what-really-happens-to-airpods-when-they-die-1",
-      title: "What Really Happens to AirPods When They Die"
-    }
-  },
-  {
-    name: "Furukawa",
-    avatar: "/assets/images/author-avata-1.jpg",
-    latestArticle: {
-      id: "is-interactive-storytelling-the-future-of-media-1",
-      title: "Is 'Interactive Storytelling' the Future of Media?"
-    }
-  },
-  {
-    name: "Glorida",
-    avatar: "/assets/images/author-avata-2.jpg",
-    latestArticle: {
-      id: "how-not-to-get-a-30k-bill-from-firebase-1",
-      title: "How NOT to get a $30k bill from Firebase"
-    }
-  },
-  {
-    name: "Rayan Mark",
-    avatar: "/assets/images/author-avata-3.jpg",
-    latestArticle: {
-      id: "google-cant-figure-out-what-youtube-is-1",
-      title: "Google Can't Figure Out What YouTube Is"
-    }
-  },
-  {
-    name: "Steven Job",
-    avatar: "/assets/images/author-avata-1.jpg",
-    latestArticle: {
-      id: "what-i-wish-id-known-when-i-made-a-drastic-career-change",
-      title: "What I Wish I'd Known When I Made a Drastic Career Change"
-    }
-  },
-  {
-    name: "Jordan Ellis",
-    avatar: "/assets/images/author-avata-2.jpg",
-    latestArticle: {
-      id: "why-i-stopped-chasing-success-and-started-living-intentionally",
-      title: "Why I Stopped Chasing 'Success' and Started Living Intentionally"
-    }
-  },
-  {
-    name: "Mark Harris",
-    avatar: "/assets/images/author-avata-3.jpg",
-    latestArticle: {
-      id: "want-to-make-millions-then-act-like-a-millionaire",
-      title: "Want To Make Millions? Then Act Like a Millionaire"
-    }
-  },
-  {
-    name: "Alentica",
-    avatar: "/assets/images/author-avata-1.jpg",
-    latestArticle: {
-      id: "the-night-my-doorbell-camera-captured-a-shooting",
-      title: "The Night My Doorbell Camera Captured a Shooting"
-    }
-  },
-  {
-    name: "Otimus",
-    avatar: "/assets/images/author-avata-2.jpg",
-    latestArticle: {
-      id: "privacy-is-just-the-beginning-of-the-debate-over-tech",
-      title: "Privacy Is Just the Beginning of the Debate Over Tech"
-    }
-  },
-  {
-    name: "Adam Philip",
-    avatar: "/assets/images/author-avata-3.jpg",
-    latestArticle: {
-      id: "president-and-the-emails-who-will-guard-the-guards-2",
-      title: "President and the emails. Who will guard the guards?"
-    }
-  },
-  {
-    name: "Aaron Gell",
-    avatar: "/assets/images/author-avata-1.jpg",
-    latestArticle: {
-      id: "how-to-silence-the-persistent-ding-of-modern-life-2",
-      title: "How to Silence the Persistent Ding of Modern Life"
-    }
-  },
-  {
-    name: "Atlantic",
-    avatar: "/assets/images/author-avata-2.jpg",
-    latestArticle: {
-      id: "why-we-love-to-watch-2",
-      title: "Why We Love to Watch"
-    }
-  },
-  {
-    name: "Alentica",
-    avatar: "/assets/images/author-avata-3.jpg",
-    latestArticle: {
-      id: "how-health-apps-let-2",
-      title: "How Health Apps Let"
-    }
-  },
-  {
-    name: "Dave Gershgorn",
-    avatar: "/assets/images/author-avata-1.jpg",
-    latestArticle: {
-      id: "apple-is-designing-for-a-post-facebook-world-1",
-      title: "Apple Is Designing for a Post-Facebook World"
-    }
-  },
-  {
-    name: "Ryan Mark",
-    avatar: "/assets/images/author-avata-2.jpg",
-    latestArticle: {
-      id: "what-really-happens-to-airpods-when-they-die-1",
-      title: "What Really Happens to AirPods When They Die"
-    }
-  }
-];
-
-export default function AuthorArticles() {
-  // Get real authors from blog.json
-  const realAuthors = useMemo(() => {
-    const authors = getRealAuthors();
-    // Map authors to real avatars from CSV, fallback to cycling through available avatars
-    return authors.slice(0, 5).map((author, index) => {
-      const realAvatar = getAuthorAvatar(author.name);
-      return {
-        ...author,
-        avatar: realAvatar || authorAvatars[index % authorAvatars.length],
-      };
-    });
-  }, []);
-  
-  // Use real authors if available, otherwise fallback to mock
-  const authorsToShow = realAuthors.length > 0 ? realAuthors : mockAuthors.slice(0, 5);
+export default function AuthorArticles({ authors = [] }: AuthorArticlesProps) {
+  // Map authors to include avatars (from Payload or fallback)
+  const authorsToShow = authors.map((author, index) => {
+    const realAvatar = author.avatar || getAuthorAvatar(author.name);
+    return {
+      ...author,
+      avatar: realAvatar || authorAvatars[index % authorAvatars.length],
+    };
+  });
   const [isDragging, setIsDragging] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
   const dragState = useRef({
@@ -311,13 +52,16 @@ export default function AuthorArticles() {
     startX: 0,
     scrollLeft: 0,
     isClick: true,
-    animationId: 0,
+    lastX: 0,
+    velocity: 0,
+    lastTime: 0,
   });
 
   useEffect(() => {
     const grid = gridRef.current;
     if (!grid) return;
 
+    // Mouse handlers
     const handleMouseDown = (e: MouseEvent) => {
       dragState.current.isDown = true;
       dragState.current.isClick = true;
@@ -325,40 +69,185 @@ export default function AuthorArticles() {
       grid.style.userSelect = "none";
       dragState.current.startX = e.pageX - grid.offsetLeft;
       dragState.current.scrollLeft = grid.scrollLeft;
+      dragState.current.lastX = e.pageX;
+      dragState.current.lastTime = Date.now();
+      dragState.current.velocity = 0;
       setIsDragging(true);
     };
 
     const handleMouseLeave = () => {
       dragState.current.isDown = false;
-      grid.style.cursor = "grab";
+      grid.style.cursor = "move";
+      // Re-enable links
+      const allLinks = grid.querySelectorAll('a');
+      allLinks.forEach(link => {
+        link.style.pointerEvents = '';
+        link.style.userSelect = '';
+      });
       setIsDragging(false);
     };
 
     const handleMouseUp = () => {
+      // Re-enable links immediately if it was just a click (no drag)
+      if (dragState.current.isClick) {
+        const allLinks = grid.querySelectorAll('a');
+        allLinks.forEach(link => {
+          link.style.pointerEvents = '';
+          link.style.userSelect = '';
+        });
+      } else {
+        // If it was a drag, re-enable after a short delay
+        setTimeout(() => {
+          const allLinks = grid.querySelectorAll('a');
+          allLinks.forEach(link => {
+            link.style.pointerEvents = '';
+            link.style.userSelect = '';
+          });
+        }, 100);
+      }
+      
       dragState.current.isDown = false;
-      grid.style.cursor = "grab";
+      grid.style.cursor = "move";
       setIsDragging(false);
     };
 
     const handleMouseMove = (e: MouseEvent) => {
       if (!dragState.current.isDown) return;
       e.preventDefault();
+      
+      // Only disable links when actual dragging starts (movement detected)
+      if (dragState.current.isClick) {
+        const allLinks = grid.querySelectorAll('a');
+        allLinks.forEach(link => {
+          link.style.pointerEvents = 'none';
+          link.style.userSelect = 'none';
+          link.draggable = false;
+        });
+      }
+      
       dragState.current.isClick = false;
       const x = e.pageX - grid.offsetLeft;
-      const walk = (x - dragState.current.startX) * 2;
+      const walk = (x - dragState.current.startX) * 1.5; // Reduced multiplier for smoother feel
       grid.scrollLeft = dragState.current.scrollLeft - walk;
+      
+      // Calculate velocity for momentum
+      const now = Date.now();
+      const deltaTime = now - dragState.current.lastTime;
+      if (deltaTime > 0) {
+        const deltaX = e.pageX - dragState.current.lastX;
+        dragState.current.velocity = deltaX / deltaTime;
+      }
+      dragState.current.lastX = e.pageX;
+      dragState.current.lastTime = now;
     };
 
+    // Touch handlers for better mobile swipe
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      dragState.current.isDown = true;
+      dragState.current.isClick = true;
+      dragState.current.startX = touch.pageX - grid.offsetLeft;
+      dragState.current.scrollLeft = grid.scrollLeft;
+      dragState.current.lastX = touch.pageX;
+      dragState.current.lastTime = Date.now();
+      dragState.current.velocity = 0;
+      setIsDragging(true);
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!dragState.current.isDown) return;
+      e.preventDefault(); // Prevent text selection and link dragging
+      
+      // Only disable links when actual dragging starts (movement detected)
+      if (dragState.current.isClick) {
+        const allLinks = grid.querySelectorAll('a');
+        allLinks.forEach(link => {
+          link.style.pointerEvents = 'none';
+          link.style.userSelect = 'none';
+          link.draggable = false;
+        });
+      }
+      
+      const touch = e.touches[0];
+      dragState.current.isClick = false;
+      const x = touch.pageX - grid.offsetLeft;
+      const walk = (x - dragState.current.startX) * 1.2; // Smooth touch scrolling
+      grid.scrollLeft = dragState.current.scrollLeft - walk;
+      
+      // Calculate velocity
+      const now = Date.now();
+      const deltaTime = now - dragState.current.lastTime;
+      if (deltaTime > 0) {
+        const deltaX = touch.pageX - dragState.current.lastX;
+        dragState.current.velocity = deltaX / deltaTime;
+      }
+      dragState.current.lastX = touch.pageX;
+      dragState.current.lastTime = now;
+    };
+
+    const handleTouchEnd = () => {
+      // Apply momentum scrolling
+      if (Math.abs(dragState.current.velocity) > 0.1) {
+        const momentum = dragState.current.velocity * 200; // Momentum multiplier
+        const startScroll = grid.scrollLeft;
+        const targetScroll = startScroll - momentum;
+        const startTime = Date.now();
+        const duration = 300; // ms
+
+        const animate = () => {
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const ease = 1 - Math.pow(1 - progress, 3); // Ease out cubic
+          grid.scrollLeft = startScroll + (targetScroll - startScroll) * ease;
+          
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          }
+        };
+        requestAnimationFrame(animate);
+      }
+      
+      // Re-enable links immediately if it was just a tap (no drag)
+      if (dragState.current.isClick) {
+        const allLinks = grid.querySelectorAll('a');
+        allLinks.forEach(link => {
+          link.style.pointerEvents = '';
+          link.style.userSelect = '';
+        });
+      } else {
+        // If it was a drag, re-enable after a short delay
+        setTimeout(() => {
+          const allLinks = grid.querySelectorAll('a');
+          allLinks.forEach(link => {
+            link.style.pointerEvents = '';
+            link.style.userSelect = '';
+          });
+        }, 100);
+      }
+      
+      dragState.current.isDown = false;
+      setIsDragging(false);
+    };
+
+    // Mouse events
     grid.addEventListener("mousedown", handleMouseDown);
     grid.addEventListener("mouseleave", handleMouseLeave);
     grid.addEventListener("mouseup", handleMouseUp);
     grid.addEventListener("mousemove", handleMouseMove);
+    
+    // Touch events
+    grid.addEventListener("touchstart", handleTouchStart, { passive: false });
+    grid.addEventListener("touchmove", handleTouchMove, { passive: false });
+    grid.addEventListener("touchend", handleTouchEnd, { passive: true });
 
     return () => {
       grid.removeEventListener("mousedown", handleMouseDown);
       grid.removeEventListener("mouseleave", handleMouseLeave);
       grid.removeEventListener("mouseup", handleMouseUp);
       grid.removeEventListener("mousemove", handleMouseMove);
+      grid.removeEventListener("touchstart", handleTouchStart);
+      grid.removeEventListener("touchmove", handleTouchMove);
+      grid.removeEventListener("touchend", handleTouchEnd);
     };
   }, []);
 
@@ -372,7 +261,7 @@ export default function AuthorArticles() {
         ref={gridRef}
         className={cn(
           "flex gap-4 overflow-x-auto",
-          "cursor-grab active:cursor-grabbing",
+          "cursor-move",
           "touch-pan-x",
           "[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]",
           isDragging && "select-none"
@@ -381,6 +270,10 @@ export default function AuthorArticles() {
           scrollbarWidth: "none",
           msOverflowStyle: "none",
           WebkitOverflowScrolling: "touch",
+          scrollBehavior: "smooth",
+          overscrollBehaviorX: "contain",
+          userSelect: "none",
+          WebkitUserSelect: "none",
         }}
       >
         {authorsToShow.map((author, index) => (
@@ -412,7 +305,7 @@ export default function AuthorArticles() {
                   e.preventDefault();
                 }
                 dragState.current.isClick = true;
-                window.location.href = `/article/${author.latestArticle.id}`;
+                window.location.href = `/${author.latestArticle.id}`;
               }}
             >
               {/* Article Title - Limited to 3 lines with proper word breaking */}
@@ -426,8 +319,8 @@ export default function AuthorArticles() {
                   )}
                 >
                   <Link
-                    href={`/article/${author.latestArticle.id}`}
-                    className="hover:text-primary transition-colors block break-words"
+                    href={`/${author.latestArticle.id}`}
+                    className={cn(interactions.hover, "block break-words")}
                     onClick={(e) => {
                       e.stopPropagation();
                     }}
@@ -455,12 +348,13 @@ export default function AuthorArticles() {
                     />
                   </div>
                 </Link>
-                <Text
-                  variant="caption"
-                  className={cn(colors.foreground.secondary, "text-[11px] leading-tight whitespace-nowrap")}
+                <Label
+                  as="span"
+                  color="secondary"
+                  className="leading-tight whitespace-nowrap"
                 >
                   {formatAuthorName(author.name)}
-                </Text>
+                </Label>
               </div>
             </article>
           </div>

@@ -2,54 +2,41 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import { cva, type VariantProps } from "class-variance-authority";
+import { Button, type ButtonProps } from "./button";
 
-const loginButtonVariants = cva(
-  "font-medium rounded-lg inline-flex items-center justify-center whitespace-nowrap border-0 outline-none focus:outline-none focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 hover:opacity-80",
-  {
-    variants: {
-      variant: {
-        blue: "bg-gradient-to-t from-[#1F2937] via-[#374152] to-[#6B7280] text-white",
-        dark: "bg-gradient-to-t from-[#1F2937] via-[#374152] to-[#6B7280] text-white",
-        beige: "bg-gradient-to-t from-[#D4CFB8] via-[#F8F5E4] to-[#FEFCF7] text-gray-900",
-      },
-      size: {
-        sm: "h-9 text-sm px-3",
-        md: "h-11 text-sm px-6",
-        lg: "h-[52px] text-base px-8",
-      },
-      width: {
-        full: "w-full",
-        auto: "w-auto",
-      },
-    },
-    defaultVariants: {
-      variant: "blue",
-      size: "md",
-      width: "full",
-    },
-  }
-);
-
-export interface LoginButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof loginButtonVariants> {
-  children?: React.ReactNode;
+export interface LoginButtonProps extends ButtonProps {
+  width?: "full" | "auto";
 }
 
 export const LoginButton = React.forwardRef<HTMLButtonElement, LoginButtonProps>(
-  ({ children = "Sign In", variant, size, width, className, ...props }, ref) => {
+  ({ children = "Sign In", variant, size, width = "full", className, ...props }, ref) => {
+
+    // Map legacy variants to new Button variants
+    let mappedVariant: any = variant;
+    if (variant === "charcoal" || variant === "dark" || variant === "blue" || variant === "brand-charcoal") {
+      mappedVariant = "default";
+    } else if (variant === "green") {
+      mappedVariant = "success";
+    } else if (variant === "beige" || variant === "brand-beige") {
+      mappedVariant = "brand-beige";
+    }
+
     return (
-      <button
+      <Button
         ref={ref}
-        className={cn(loginButtonVariants({ variant, size, width }), className)}
+        variant={mappedVariant}
+        size={size === "md" ? "default" : size}
+        className={cn(
+          width === "full" && "w-full",
+          width === "auto" && "w-auto",
+          className
+        )}
         {...props}
       >
         {children}
-      </button>
+      </Button>
     );
   }
 );
 
 LoginButton.displayName = "LoginButton";
-

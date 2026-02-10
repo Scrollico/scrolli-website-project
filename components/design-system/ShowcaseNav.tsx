@@ -71,7 +71,7 @@ export default function ShowcaseNav() {
             <Text
               variant="bodySmall"
               color="muted"
-              className="mb-3 font-semibold uppercase tracking-wider"
+              className="mb-3 font-semibold tracking-wider"
             >
               {category}
             </Text>

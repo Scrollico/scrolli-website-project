@@ -7,7 +7,6 @@ import ButtonShowcase from "@/components/design-system/showcases/ButtonShowcase"
 import BadgeShowcase from "@/components/design-system/showcases/BadgeShowcase";
 import IconShowcase from "@/components/design-system/showcases/IconShowcase";
 import CardShowcase from "@/components/design-system/showcases/CardShowcase";
-import FormShowcase from "@/components/design-system/showcases/FormShowcase";
 import TabsShowcase from "@/components/design-system/showcases/TabsShowcase";
 import ColorsShowcase from "@/components/design-system/showcases/ColorsShowcase";
 import SpacingShowcase from "@/components/design-system/showcases/SpacingShowcase";
@@ -58,8 +57,9 @@ export default function DesignSystemPage() {
                 Scrolli Design System
               </Heading>
               <Text variant="bodyLarge" color="secondary" className="max-w-3xl">
-                Comprehensive component library and design tokens for building consistent,
-                accessible, and beautiful user interfaces. This is your bible for all design materials.
+                Comprehensive component library and design tokens following Arc Publishing standards.
+                All components use semantic design tokens for consistent styling, dark mode support,
+                and accessibility. This is your reference for all design system components and patterns.
               </Text>
             </div>
           </div>
@@ -74,7 +74,6 @@ export default function DesignSystemPage() {
         <BadgeShowcase />
         <IconShowcase />
         <CardShowcase />
-        <FormShowcase />
         <TabsShowcase />
 
         {/* Design Tokens Showcases */}

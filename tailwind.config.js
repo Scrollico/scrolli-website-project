@@ -17,7 +17,7 @@ module.exports = {
         'section-xl': '4rem',      // 64px
         'section-2xl': '5rem',     // 80px
       },
-      
+
       // Custom border radius scale
       borderRadius: {
         'xs': '0.125rem',   // 2px
@@ -27,7 +27,7 @@ module.exports = {
         'xl': '0.75rem',    // 12px
         '2xl': '1rem',      // 16px
       },
-      
+
       // Custom color palette - semantic colors
       // All colors support dark mode via Tailwind's dark: prefix
       colors: {
@@ -41,7 +41,7 @@ module.exports = {
           DEFAULT: '#6c757d',
           foreground: '#ffffff',
         },
-        
+
         // Status colors
         success: {
           DEFAULT: '#16a34a',
@@ -62,61 +62,63 @@ module.exports = {
           DEFAULT: '#dc2626',
           foreground: '#ffffff',
         },
-        
-        // Background colors - dark mode variants handled via dark: prefix
+
+        // Background colors - linked to CSS variables for instant theme switching
         background: {
-          DEFAULT: '#ffffff', // dark:bg-gray-900 via design tokens
-          elevated: '#f9fafb', // dark:bg-gray-800 via design tokens
-          overlay: 'rgba(255, 255, 255, 0.9)', // dark:bg-gray-900/90 via design tokens
-          navbar: '#F8F5E4', // Navbar beige - Scrolli brand color
+          DEFAULT: 'hsl(var(--background))',
+          elevated: 'hsl(var(--muted))',
+          overlay: 'hsla(var(--background), 0.9)',
+          navbar: '#F4F5FA', // Navbar background (light mode)
         },
-        
-        // Navbar beige - Scrolli brand color for header, footer, and components
+
+        // Navbar - Scrolli brand color (light mode)
         navbarBeige: {
-          DEFAULT: '#F8F5E4',
-          dark: '#1a1a1a', // Dark mode variant
-          foreground: '#111827', // Text color on navbar beige
+          DEFAULT: '#F4F5FA',
+          foreground: '#111827',
         },
-        
-        // Foreground/text colors - dark mode variants handled via dark: prefix
+        navbar: {
+          DEFAULT: '#F4F5FA',
+        },
+
+        // Foreground/text colors - linked to CSS variables
         foreground: {
-          DEFAULT: '#111827', // dark:text-white via design tokens
-          secondary: '#374151', // dark:text-gray-300 via design tokens
-          muted: '#6b7280', // dark:text-gray-400 via design tokens
-          disabled: '#9ca3af', // dark:text-gray-600 via design tokens
+          DEFAULT: 'hsl(var(--foreground))',
+          secondary: 'hsl(var(--muted-foreground))',
+          muted: 'hsl(var(--muted-foreground))',
+          disabled: '#9ca3af',
         },
-        
-        // Border colors - dark mode variants handled via dark: prefix
+
+        // Border colors - linked to CSS variables
         border: {
-          DEFAULT: '#e5e7eb', // dark:border-gray-700 via design tokens
-          light: '#f3f4f6', // dark:border-gray-800 via design tokens
-          medium: '#d1d5db', // dark:border-gray-600 via design tokens
-          strong: '#9ca3af', // dark:border-gray-500 via design tokens
+          DEFAULT: 'hsl(var(--border))',
+          light: 'hsl(var(--border))',
+          medium: 'hsl(var(--border))',
+          strong: '#9ca3af',
         },
-        
+
         // Input colors
         input: {
-          DEFAULT: '#e5e7eb', // dark:border-gray-700 via design tokens
+          DEFAULT: 'hsl(var(--input))',
         },
-        
+
         // Ring colors (for focus rings)
         ring: {
-          DEFAULT: '#374152', // primary color
+          DEFAULT: 'hsl(var(--ring))',
         },
-        
-        // Card colors - dark mode variants handled via dark: prefix
+
+        // Card colors - linked to CSS variables
         card: {
-          DEFAULT: '#ffffff', // dark:bg-gray-800 via design tokens
-          foreground: '#111827', // dark:text-white via design tokens
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
         },
-        
-        // Muted colors - dark mode variants handled via dark: prefix
+
+        // Muted colors - linked to CSS variables
         muted: {
-          DEFAULT: '#f3f4f6', // dark:bg-gray-800 via design tokens
-          foreground: '#6b7280', // dark:text-gray-400 via design tokens
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
         },
       },
-      
+
       // Custom typography scale
       fontSize: {
         'xs': ['0.75rem', { lineHeight: '1rem' }],
@@ -130,7 +132,7 @@ module.exports = {
         '5xl': ['3rem', { lineHeight: '1' }],
         '6xl': ['3.75rem', { lineHeight: '1' }],
       },
-      
+
       // Custom shadow scale for elevation
       boxShadow: {
         'elevation-0': 'none',
@@ -140,7 +142,7 @@ module.exports = {
         'elevation-4': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
         'elevation-5': '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
       },
-      
+
       // Accordion animations
       keyframes: {
         "accordion-down": {
@@ -179,5 +181,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 }

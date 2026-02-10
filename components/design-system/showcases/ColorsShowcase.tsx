@@ -7,18 +7,16 @@ import { cn } from "@/lib/utils";
 
 export default function ColorsShowcase() {
   const colorSwatches = [
-    { name: "Primary", token: colors.primary.bg, hex: "#3500FD", description: "Scrolli Blue - Main brand color" },
-    { name: "Secondary", token: colors.secondary.bg, hex: "#8080FF", description: "Violet Blue - Secondary brand color" },
-    { name: "Success", token: colors.success.bg, hex: "Green", description: "Success states" },
-    { name: "Warning", token: colors.warning.bg, hex: "Yellow", description: "Warning states" },
-    { name: "Error", token: colors.error.bg, hex: "Red", description: "Error states" },
+    { name: "Primary Charcoal", token: colors.primary.bg, hex: "#374152", description: "Primary brand color - Used for backgrounds, buttons, and primary elements." },
+    { name: "Navbar Beige", token: colors.navbarBeige.DEFAULT, hex: "#F4F5FA", description: "Navbar background - Used for header and light navigation surfaces." },
+    { name: "Success Green", token: colors.success.bg, hex: "#16A34A", description: "Accent color - Used for success states and active indicators." },
   ];
 
   const backgroundSwatches = [
     { name: "Base", token: colors.background.base, description: "Main background" },
     { name: "Elevated", token: colors.background.elevated, description: "Cards, panels" },
     { name: "Overlay", token: colors.background.overlay, description: "Modals, overlays" },
-    { name: "Navbar", token: colors.background.navbar, description: "Navbar beige (#F8F5E4)" },
+    { name: "Navbar", token: colors.background.navbar, description: "Navbar (#F4F5FA)" },
   ];
 
   const foregroundSwatches = [
@@ -33,7 +31,7 @@ export default function ColorsShowcase() {
       <ComponentShowcase
         id="colors"
         title="Colors"
-        description="Scrolli brand colors and semantic color tokens. All colors support dark mode automatically."
+        description="Semantic color tokens following our brand trio (Charcoal, Beige, Green). All colors support dark mode automatically and are reclaimed from legacy CSS overrides."
         demo={
           <div className={cn("w-full space-y-12", gap.xl)}>
             {/* Brand Colors */}

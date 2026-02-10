@@ -62,7 +62,7 @@ export default function Section1() {
             elevationHover[2],
             "border border-transparent hover:border-gray-200 dark:hover:border-gray-700 group"
           )}>
-            <Link href={`/article/${theStartup.mainArticle.id}`} className="relative w-full min-h-[300px] md:min-h-[400px] overflow-hidden">
+            <Link href={`/${theStartup.mainArticle.id}`} className="relative w-full min-h-[300px] md:min-h-[400px] overflow-hidden">
                <Image 
                  src={theStartup.mainArticle.image}
                  alt={theStartup.mainArticle.title}
@@ -73,11 +73,11 @@ export default function Section1() {
                />
             </Link>
             <div className={cn("flex flex-col justify-center", componentPadding.lg, gap.md)}>
-                <Text variant="caption" color="muted" className="uppercase tracking-wider font-medium">
+                <Text variant="caption" color="muted" className="tracking-wider font-medium">
                   {theStartup.mainArticle.tag}
                 </Text>
                 <Heading level={2} variant="h2">
-                  <Link href={`/article/${theStartup.mainArticle.id}`} className={cn(colors.foreground.interactive, "hover:underline")}>
+                  <Link href={`/${theStartup.mainArticle.id}`} className={cn(colors.foreground.interactive, "hover:underline")}>
                     {theStartup.mainArticle.title}
                   </Link>
                 </Heading>

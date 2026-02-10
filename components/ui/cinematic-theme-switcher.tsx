@@ -13,15 +13,15 @@ interface Particle {
 
 export default function CinematicThemeSwitcher() {
   const { theme, setTheme, resolvedTheme } = useTheme();
-  
+
   // State Management
   const [mounted, setMounted] = useState(false);
   const [particles, setParticles] = useState<Particle[]>([]);
   const [isAnimating, setIsAnimating] = useState(false);
-  
+
   // Ref to track toggle button DOM element
   const toggleRef = useRef<HTMLButtonElement>(null);
-  
+
   // Track whether toggle is in checked (dark) or unchecked (light) position
   const isDark = mounted && (theme === 'dark' || resolvedTheme === 'dark');
 
@@ -56,7 +56,11 @@ export default function CinematicThemeSwitcher() {
   // Toggle handler - switches theme and triggers particles
   const handleToggle = () => {
     generateParticles();
-    setTheme(isDark ? 'light' : 'dark');
+    const newTheme = isDark ? 'light' : 'dark';
+    setTheme(newTheme);
+
+    // Sync to cookie for server-side theme detection (prevents flash)
+    document.cookie = `theme=${newTheme}; path=/; max-age=31536000; SameSite=Lax`;
   };
 
   // Prevent hydration mismatch - show placeholder during SSR
@@ -70,8 +74,8 @@ export default function CinematicThemeSwitcher() {
 
   return (
     <div className="relative inline-block">
-        {/* SVG Filter for Film Grain Texture */}
-        <svg className="absolute w-0 h-0">
+      {/* SVG Filter for Film Grain Texture */}
+      <svg className="absolute w-0 h-0">
         <defs>
           {/* Light mode grain - subtle */}
           <filter id="grain-light">
@@ -92,7 +96,7 @@ export default function CinematicThemeSwitcher() {
             </feComponentTransfer>
             <feBlend in="SourceGraphic" in2="lightGrain" mode="overlay" />
           </filter>
-          
+
           {/* Dark mode grain - more visible */}
           <filter id="grain-dark">
             <feTurbulence
@@ -153,8 +157,8 @@ export default function CinematicThemeSwitcher() {
               0 16px 32px rgba(0, 0, 0, 0.06),
               0 24px 48px rgba(0, 0, 0, 0.04)
             `,
-          border: isDark 
-            ? '2px solid rgba(51, 65, 85, 0.6)' 
+          border: isDark
+            ? '2px solid rgba(51, 65, 85, 0.6)'
             : '2px solid rgba(203, 213, 225, 0.6)',
           position: 'relative',
         }}
@@ -164,7 +168,7 @@ export default function CinematicThemeSwitcher() {
         whileTap={{ scale: 0.98 }}
       >
         {/* Deep inner groove/rim effect */}
-        <div 
+        <div
           className="absolute inset-[3px] rounded-full pointer-events-none"
           style={{
             boxShadow: isDark
@@ -172,9 +176,9 @@ export default function CinematicThemeSwitcher() {
               : 'inset 0 2px 6px rgba(100, 116, 139, 0.4), inset 0 -1px 3px rgba(255, 255, 255, 0.8)',
           }}
         />
-        
+
         {/* Multi-layer glossy overlay */}
-        <div 
+        <div
           className="absolute inset-0 rounded-full pointer-events-none"
           style={{
             background: isDark
@@ -189,9 +193,9 @@ export default function CinematicThemeSwitcher() {
             mixBlendMode: 'overlay',
           }}
         />
-        
+
         {/* Ambient occlusion effect */}
-        <div 
+        <div
           className="absolute inset-0 rounded-full pointer-events-none"
           style={{
             boxShadow: isDark
@@ -245,7 +249,7 @@ export default function CinematicThemeSwitcher() {
           }}
         >
           {/* Glossy shine overlay on thumb */}
-          <div 
+          <div
             className="absolute inset-0 rounded-full pointer-events-none"
             style={{
               background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, transparent 40%, rgba(0, 0, 0, 0.1) 100%)',
@@ -277,7 +281,7 @@ export default function CinematicThemeSwitcher() {
                 }}
               >
                 {/* Grainy texture overlay */}
-                <div 
+                <div
                   className="absolute inset-0 rounded-full opacity-40"
                   style={{
                     backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,

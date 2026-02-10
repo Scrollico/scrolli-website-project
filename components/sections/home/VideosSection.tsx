@@ -2,6 +2,9 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { colors, borderRadius, elevation, transition, interactions } from '@/lib/design-tokens';
 
 interface VideoCard {
   id: string;
@@ -267,6 +270,50 @@ export default function ArticlesSection() {
     };
   }, []);
 
+  const scrollLeft = () => {
+    if (gridRef.current) {
+      const scrollAmount = gridRef.current.clientWidth * 0.8;
+      gridRef.current.scrollBy({
+        left: -scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const scrollRight = () => {
+    if (gridRef.current) {
+      const scrollAmount = gridRef.current.clientWidth * 0.8;
+      gridRef.current.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  useEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+
+    const checkScroll = () => {
+      setCanScrollLeft(grid.scrollLeft > 0);
+      setCanScrollRight(
+        grid.scrollLeft < grid.scrollWidth - grid.clientWidth - 10
+      );
+    };
+
+    checkScroll();
+    grid.addEventListener('scroll', checkScroll);
+    window.addEventListener('resize', checkScroll);
+
+    return () => {
+      grid.removeEventListener('scroll', checkScroll);
+      window.removeEventListener('resize', checkScroll);
+    };
+  }, []);
+
   return (
     <>
       <div className="videos-section">
@@ -276,10 +323,12 @@ export default function ArticlesSection() {
             <div className="videos-divider"></div>
           </div>
           
-          <div
-            className={`videos-grid ${isDragging ? 'dragging' : ''}`}
-            ref={gridRef}
-          >
+          <div className="relative">
+            <div className="overflow-x-hidden">
+              <div
+                className={`videos-grid ${isDragging ? 'dragging' : ''}`}
+                ref={gridRef}
+              >
             {videoData.map((video) => {
               const handleCardClick = (e: React.MouseEvent) => {
                 // Only navigate if it was actually a click (not a drag)
@@ -294,7 +343,7 @@ export default function ArticlesSection() {
               return (
                 <div key={video.id} className="video-card">
                   <div className="video-media">
-                    <Link href={`/article/${video.id}`} onClick={handleCardClick}>
+                    <Link href={`/${video.id}`} onClick={handleCardClick}>
                             <Image
                               src={video.thumbnail}
                               alt={video.title}
@@ -309,12 +358,61 @@ export default function ArticlesSection() {
 
                   <div className="video-content">
                     <h3 className="video-title">
-                      <Link href={`/article/${video.id}`} onClick={handleCardClick}>{video.title}</Link>
+                      <Link href={`/${video.id}`} onClick={handleCardClick}>{video.title}</Link>
                     </h3>
                   </div>
                 </div>
               );
             })}
+            </div>
+            </div>
+            
+            {/* Navigation Buttons */}
+            <button
+              onClick={scrollLeft}
+              disabled={!canScrollLeft}
+              className={cn(
+                "absolute top-1/2 -translate-y-1/2 z-20",
+                "-left-4",
+                "h-8 w-8 flex items-center justify-center",
+                borderRadius.full,
+                colors.background.elevated,
+                colors.border.DEFAULT,
+                "border",
+                colors.background.elevated,
+                interactions.hover,
+                transition.normal,
+                elevation[1],
+                "ml-0",
+                !canScrollLeft && "opacity-30 cursor-not-allowed"
+              )}
+              aria-label="Previous videos"
+            >
+              <ChevronLeft className={cn("h-4 w-4", colors.foreground.secondary)} />
+            </button>
+            
+            <button
+              onClick={scrollRight}
+              disabled={!canScrollRight}
+              className={cn(
+                "absolute top-1/2 -translate-y-1/2 z-20",
+                "-right-4",
+                "h-8 w-8 flex items-center justify-center",
+                borderRadius.full,
+                colors.background.elevated,
+                colors.border.DEFAULT,
+                "border",
+                colors.background.elevated,
+                interactions.hover,
+                transition.normal,
+                elevation[1],
+                "mr-2",
+                !canScrollRight && "opacity-30 cursor-not-allowed"
+              )}
+              aria-label="Next videos"
+            >
+              <ChevronRight className={cn("h-4 w-4", colors.foreground.secondary)} />
+            </button>
           </div>
         </div>
       </div>

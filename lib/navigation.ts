@@ -80,12 +80,26 @@ export function getCategoriesFromBlog(): Category[] {
   }
 
   // Convert to array and sort
-  const categories = Array.from(categoriesSet)
+  let categories = Array.from(categoriesSet)
     .map(slug => ({
       slug,
       displayName: formatCategoryName(slug),
     }))
     .sort((a, b) => a.displayName.localeCompare(b.displayName, 'tr'));
+
+  // Swap Hikayeler and Yazarlar positions
+  const hikayelerIndex = categories.findIndex(cat => 
+    cat.displayName === 'Hikayeler' || cat.slug.toLowerCase() === 'hikayeler'
+  );
+  const yazarlarIndex = categories.findIndex(cat => 
+    cat.displayName === 'Yazarlar' || cat.slug.toLowerCase() === 'yazarlar'
+  );
+  
+  if (hikayelerIndex !== -1 && yazarlarIndex !== -1) {
+    // Swap the positions
+    [categories[hikayelerIndex], categories[yazarlarIndex]] = 
+      [categories[yazarlarIndex], categories[hikayelerIndex]];
+  }
 
   return categories;
 }

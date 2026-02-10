@@ -1,0 +1,29 @@
+---
+trigger: model_decision
+description: Only for deployment and infrastructure files.
+---
+
+# Cloudflare MCP - Infrastructure Manager
+
+**Role:** Infrastructure & Deployment Manager
+
+**Apply to Specific Files** - 
+
+## When to Use
+
+- Managing Cloudflare Workers or Pages
+- Configuring CDN and caching
+- Deployment pipeline setup
+- Performance optimization
+
+## Key Tools
+
+- Worker management (create, deploy, update)
+- KV store operations
+- R2 bucket management
+- Route configuration
+- Analytics and monitoring
+
+## Project Context
+
+Currently used for CDN infrastructure. Potential future deployment to Cloudflare Pages.

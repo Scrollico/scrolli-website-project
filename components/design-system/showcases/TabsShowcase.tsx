@@ -77,21 +77,32 @@ export default function TabsShowcase() {
           </div>
         }
         code={`import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { colors, states } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
 <Tabs defaultValue="tab1">
-  <TabsList>
-    <TabsTrigger value="tab1">Tab 1</TabsTrigger>
-    <TabsTrigger value="tab2">Tab 2</TabsTrigger>
-    <TabsTrigger value="tab3">Tab 3</TabsTrigger>
+  <TabsList className="bg-transparent p-0 h-auto gap-2">
+    <TabsTrigger
+      value="tab1"
+      className={cn(
+        "rounded-lg px-4 py-2 border",
+        colors.surface.elevated,
+        colors.border.light,
+        colors.foreground.secondary,
+        states.tab.base,
+        states.tab.activeBackground,
+        states.tab.activeText,
+        states.tab.inactiveText
+      )}
+    >
+      Tab 1
+    </TabsTrigger>
+    <TabsTrigger value="tab2" className={cn(/* same classes */)}>
+      Tab 2
+    </TabsTrigger>
   </TabsList>
-  <TabsContent value="tab1">
+  <TabsContent value="tab1" className="mt-4">
     Content for Tab 1
-  </TabsContent>
-  <TabsContent value="tab2">
-    Content for Tab 2
-  </TabsContent>
-  <TabsContent value="tab3">
-    Content for Tab 3
   </TabsContent>
 </Tabs>`}
         props={{

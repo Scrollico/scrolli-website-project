@@ -14,7 +14,7 @@ import {
 } from "@/lib/design-tokens";
 import ArticleMeta from "./ArticleMeta";
 
-import { FreeContentBadgeIcon, PremiumContentBadgeIcon } from "@/components/icons/ScrolliIcons";
+import { FreeContentBadgeIcon, PremiumContentBadgeIcon } from "@/components/icons/scrolli-icons";
 
 interface ArticleCardProps {
    id: string;
@@ -50,7 +50,7 @@ export default function ArticleCard({ id, title, excerpt, image, author, categor
             ? "bg-amber-50/40 dark:bg-amber-950/20"
             : "border border-transparent hover:border-gray-200 dark:hover:border-gray-700"
       )}>
-         <Link href={`/article/${id}`} className={cn("relative block w-full aspect-[16/9] mb-4 overflow-hidden", borderRadius.md)}>
+         <Link href={`/${id}`} className={cn("relative block w-full aspect-[16/9] mb-4 overflow-hidden", borderRadius.md)}>
             <Image
                src={image}
                alt={title}
@@ -70,7 +70,7 @@ export default function ArticleCard({ id, title, excerpt, image, author, categor
 
          <div className={cn("flex flex-col flex-grow", gap.xs)}>
             <Heading level={3} variant="h5" className="line-clamp-2 mb-2">
-               <Link href={`/article/${id}`} className={cn(colors.foreground.interactive, "hover:underline")}>
+               <Link href={`/${id}`} className={cn(colors.foreground.interactive, "hover:underline")}>
                   {title}
                </Link>
             </Heading>

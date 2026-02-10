@@ -9,12 +9,12 @@ import { Container } from '@/components/responsive';
 import { Heading, Text } from '@/components/ui/typography';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { Badge } from '@/components/ui/badge';
-import { 
-  sectionPadding, 
-  gap, 
-  componentPadding, 
-  colors, 
-  borderRadius, 
+import {
+  sectionPadding,
+  gap,
+  componentPadding,
+  colors,
+  borderRadius,
   border,
   elevation,
   typography
@@ -87,9 +87,9 @@ export default function Section1() {
                   <div className="flex-1 min-w-0">
                     <div className={cn("mb-4")}>
                       <Heading level={5} variant="h5">
-                        <Link 
-                          href="/author" 
-                          title="Ryan" 
+                        <Link
+                          href="/author"
+                          title="Ryan"
                           rel="author"
                           className={cn(
                             colors.foreground.primary,
@@ -101,16 +101,16 @@ export default function Section1() {
                         </Link>
                       </Heading>
                     </div>
-                    <Text 
-                      variant="body" 
-                      color="secondary" 
+                    <Text
+                      variant="body"
+                      color="secondary"
                       className="hidden md:block mb-4"
                     >
                       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse laoreet ut ligula et semper. Aenean consectetur, est id gravida venenatis.
                     </Text>
                     <div className={cn("flex flex-wrap items-center", gap.md)}>
-                      <Link 
-                        target="_blank" 
+                      <Link
+                        target="_blank"
                         className={cn(
                           colors.foreground.secondary,
                           colors.foreground.interactive,
@@ -122,8 +122,8 @@ export default function Section1() {
                       >
                         <Facebook className="w-5 h-5" />
                       </Link>
-                      <Link 
-                        target="_blank" 
+                      <Link
+                        target="_blank"
                         className={cn(
                           colors.foreground.secondary,
                           colors.foreground.interactive,
@@ -135,8 +135,8 @@ export default function Section1() {
                       >
                         <Twitter className="w-5 h-5" />
                       </Link>
-                      <Link 
-                        target="_blank" 
+                      <Link
+                        target="_blank"
                         className={cn(
                           colors.foreground.secondary,
                           colors.foreground.interactive,
@@ -155,7 +155,7 @@ export default function Section1() {
 
               {/* Latest Posts Section */}
               <div className="mb-8 md:mb-12">
-                <SectionHeader 
+                <SectionHeader
                   title="Latest Posts"
                   level={4}
                   variant="h4"
@@ -165,8 +165,8 @@ export default function Section1() {
               {/* Articles List */}
               <div className={cn("flex flex-col", gap.lg)}>
                 {paginatedArticles.map((article, idx) => (
-                  <article 
-                    key={idx} 
+                  <article
+                    key={idx}
                     className={cn(
                       "flex flex-col md:flex-row",
                       gap.md,
@@ -178,13 +178,13 @@ export default function Section1() {
                     <div className="flex-1 min-w-0">
                       <div className={cn("flex flex-col", gap.sm)}>
                         {article.tag && (
-                          <Badge variant="secondary" appearance="default" className="self-start">
+                          <Badge className="self-start">
                             {article.tag}
                           </Badge>
                         )}
                         <Heading level={3} variant="h3" className="mb-2">
-                          <Link 
-                            href={`/article/${article.id}`}
+                          <Link
+                            href={`/${article.id}`}
                             className={cn(
                               colors.foreground.primary,
                               colors.foreground.interactive,
@@ -205,7 +205,7 @@ export default function Section1() {
                         </div>
                       </div>
                     </div>
-                    <div 
+                    <div
                       className={cn(
                         "w-full md:w-32 lg:w-40 flex-shrink-0",
                         "aspect-[4/3] md:aspect-square",
@@ -242,7 +242,7 @@ export default function Section1() {
                 "sticky top-4"
               )}>
                 <div className="mb-6">
-                  <SectionHeader 
+                  <SectionHeader
                     title={hightlightPosts.title}
                     level={5}
                     variant="h5"
@@ -265,8 +265,8 @@ export default function Section1() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <Heading level={5} variant="h5" className="mb-2">
-                          <Link 
-                            href={`/article/${article.id}`}
+                          <Link
+                            href={`/${article.id}`}
                             className={cn(
                               colors.foreground.primary,
                               colors.foreground.interactive,

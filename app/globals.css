@@ -7,19 +7,492 @@
     --offset: 10px;
     --destructive-foreground: 0 0% 100%; /* white */
     --primary-fill: #374152; /* Primary color for light mode */
+    --brand-charcoal: #374152;
+    --brand-beige: #f8f5e4;
+    --brand-green: #16a34a;
+
+    --background-hex: #ffffff;
+    --foreground-hex: #171717;
+
+    /* Theme Variables in HSL - Matching design tokens */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 218 19% 27%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
   }
 
   .dark {
     --offset: 10px;
     --destructive-foreground: 0 0% 100%; /* white */
     --primary-fill: #374152; /* Primary color for dark mode */
+    --brand-charcoal: #374152;
+    --brand-beige: #374152; /* Dark mode baseline */
+    --brand-green: #16a34a;
+
+    --background-hex: #0a0a0a;
+    --foreground-hex: #ededed;
+
+    /* Theme Variables in HSL - Matching Scrolli Charcoal #374152 (218 19% 27%) */
+    --background: 218 19% 27%;
+    --foreground: 210 40% 98%;
+    --card: 218 19% 27%;
+    --card-foreground: 210 40% 98%;
+    --popover: 218 19% 27%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 23%;
+    --muted-foreground: 215 20.2% 75.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 33%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
   }
 
-  /* Prevent horizontal overflow globally */
+  /* Links: no underline by default (overrides Bootstrap/legacy a { text-decoration: underline }) */
+  a {
+    text-decoration: none !important;
+  }
+
+  /* RECLAIM BRAND COLORS FROM BOOTSTRAP/LEGACY OVERRIDES - NUCLEAR RESET */
+  /* Target only specific legacy classes, NOT the base button or .btn elements */
+  .bg-primary,
+  .blue,
+  .btn-blue,
+  .btn-primary,
+  button.blue,
+  [style*="background-color: #3500fd"],
+  [style*="background-color: #8b5cf6"],
+  .dark-mode .blue,
+  .dark-mode button.blue,
+  .content-widget .readme:hover,
+  .form-control:focus,
+  .btn-green:hover {
+    background-color: var(--brand-charcoal) !important;
+    border-color: var(--brand-charcoal) !important;
+  }
+
+  .text-primary,
+  .text-blue,
+  [style*="color: #3500fd"],
+  [style*="color: #8b5cf6"] {
+    color: var(--brand-charcoal) !important;
+  }
+  .border-primary,
+  .border-blue {
+    border-color: var(--brand-charcoal) !important;
+  }
+
+  .bg-success {
+    background-color: var(--brand-green) !important;
+  }
+  .text-success {
+    color: var(--brand-green) !important;
+  }
+
+  /* STOP LEGACY CSS PURPLE/VIOLET SHIFTS - but don't force inherit on buttons which have design system colors */
+  .dark-mode a:not(.btn):hover,
+  .dark-mode a:not(.btn):active,
+  .dark-mode a:not(.btn):focus,
+  .dark-mode .mobi-menu .current-menu-item a,
+  .dark-mode .widget-about i,
+  .dark-mode .page-404 h1 {
+    color: inherit;
+  }
+
+  .dark .entry-wraper,
+  .dark-mode .entry-wraper,
+  .dark .hikayeler-content,
+  .dark-mode .hikayeler-content,
+  .dark .article-container,
+  .dark-mode .article-container {
+    background-color: hsl(var(--background)) !important;
+    color: inherit;
+  }
+
+  /* Footer: same background and text as navbar in dark mode (override legacy style.css .dark-mode footer) */
+  .dark footer,
+  .dark-mode footer {
+    background-color: hsl(var(--background)) !important;
+    color: hsl(var(--foreground)) !important;
+  }
+
+  /* Force dark text on beige brand buttons to defeat legacy .dark-mode a rule */
+  .dark-mode a[class*="brand-beige"],
+  .dark a[class*="brand-beige"],
+  .dark-mode button[class*="brand-beige"],
+  .dark button[class*="brand-beige"] {
+    color: #111827 !important;
+  }
+
+  /* Single article page: keep article wrapper and header visually flat (no legacy background/box-shadow) */
+  .single article,
+  .single .entry-wraper {
+    background-color: transparent !important;
+    background: none !important;
+    box-shadow: none !important;
+  }
+
+  .single .entry-header {
+    box-shadow: none !important;
+    background-image: none !important;
+  }
+
+  /* PRECISE INTERACTION DEFAULTS - MINIMALIST & PREMIUM */
+  button,
+  a.btn,
+  .sidebar-item {
+    transition: transform 0.1s ease-out, opacity 0.2s ease-out !important;
+    outline: none !important;
+  }
+
+  /* Re-force background for brand buttons only when not being overridden by specific variants */
+  .bg-primary:not([class*="brand-"]):hover,
+  .bg-primary:not([class*="brand-"]):active {
+    background-color: var(--brand-charcoal) !important;
+  }
+  .bg-success:not([class*="brand-"]):hover,
+  .bg-success:not([class*="brand-"]):active {
+    background-color: var(--brand-green) !important;
+  }
+
+  /* Universal button stability: Stop background color jumps from legacy CSS */
+  button:hover:not(.no-hover):not([role="checkbox"]):not(
+      [class*="purchases-"]
+    ):not([id*="purchases-"]),
+  a.btn:hover:not([class*="purchases-"]):not([id*="purchases-"]),
+  button:focus:not([class*="purchases-"]):not([id*="purchases-"]),
+  button:active:not([class*="purchases-"]):not([id*="purchases-"]) {
+    filter: brightness(
+      0.95
+    ); /* Subtle "pale" feedback affecting background & text slightly */
+    background-color: inherit !important; /* Defeat legacy bg jumps */
+  }
+
+  /* Let Tailwind background utility classes win if present, but NEVER text color */
+  button[class*="bg-"]:hover {
+    background-color: unset !important;
+  }
+
+  /* Only apply scaling to actual buttons, not nav links that shouldn't shrink */
+  button:active:not(.no-press),
+  .press-effect:active {
+    transform: scale(0.96) !important;
+  }
+
+  /* NO HOVER EFFECTS ON CHECKBOXES - hover does ABSOLUTELY NOTHING */
+  /* Override ALL possible hover effects from color-default.css (lines 78-84, 91-96) and other sources */
+  /* Use maximum specificity to override everything */
+  button[role="checkbox"]:hover,
+  button[role="checkbox"]:hover:active,
+  button[role="checkbox"]:hover:focus,
+  button[role="checkbox"]:hover:visited,
+  .dark-mode button[role="checkbox"]:hover,
+  .dark-mode button[role="checkbox"]:hover:active,
+  .dark-mode button[role="checkbox"]:hover:focus,
+  .dark button[role="checkbox"]:hover,
+  .dark button[role="checkbox"]:hover:active,
+  .dark button[role="checkbox"]:hover:focus {
+    opacity: 1 !important;
+    transform: none !important;
+    scale: 1 !important;
+  }
+
+  /* Unchecked checkbox hover - stay EXACTLY as unchecked state (override color-default.css) */
+  button[role="checkbox"][data-state="unchecked"]:hover,
+  button[role="checkbox"][data-state="unchecked"]:hover:active,
+  button[role="checkbox"][data-state="unchecked"]:hover:focus {
+    background-color: transparent !important;
+    background: transparent !important;
+    background-image: none !important;
+    border-color: rgb(156, 163, 175) !important; /* gray-400 */
+    border-width: 1px !important;
+    color: inherit !important;
+  }
+
+  .dark-mode button[role="checkbox"][data-state="unchecked"]:hover,
+  .dark-mode button[role="checkbox"][data-state="unchecked"]:hover:active,
+  .dark-mode button[role="checkbox"][data-state="unchecked"]:hover:focus,
+  .dark button[role="checkbox"][data-state="unchecked"]:hover,
+  .dark button[role="checkbox"][data-state="unchecked"]:hover:active,
+  .dark button[role="checkbox"][data-state="unchecked"]:hover:focus {
+    background-color: transparent !important;
+    background: transparent !important;
+    background-image: none !important;
+    border-color: rgb(107, 114, 128) !important; /* gray-500 */
+    border-width: 1px !important;
+    color: inherit !important;
+  }
+
+  /* Checked checkbox hover - maintain EXACT checked styles */
+  button[role="checkbox"][data-state="checked"]:hover,
+  button[role="checkbox"][data-state="checked"]:hover:active,
+  button[role="checkbox"][data-state="checked"]:hover:focus {
+    background-color: hsl(var(--primary)) !important;
+    background: hsl(var(--primary)) !important;
+    background-image: none !important;
+    border-color: hsl(var(--primary)) !important;
+    border-width: 1px !important;
+    color: hsl(var(--primary-foreground)) !important;
+  }
+
+  .dark-mode button[role="checkbox"][data-state="checked"]:hover,
+  .dark-mode button[role="checkbox"][data-state="checked"]:hover:active,
+  .dark-mode button[role="checkbox"][data-state="checked"]:hover:focus,
+  .dark button[role="checkbox"][data-state="checked"]:hover,
+  .dark button[role="checkbox"][data-state="checked"]:hover:active,
+  .dark button[role="checkbox"][data-state="checked"]:hover:focus {
+    background-color: #f8f5e4 !important;
+    background: #f8f5e4 !important;
+    background-image: none !important;
+    border-color: #f8f5e4 !important;
+    border-width: 1px !important;
+    color: rgb(17, 24, 39) !important; /* gray-900 */
+  }
+
+  /* Precise Focus Ring */
+  button:focus-visible {
+    box-shadow: 0 0 0 2px var(--body-bg), 0 0 0 4px var(--brand-charcoal) !important;
+  }
+
+  /* Prevent horizontal overflow globally - use clip to allow sticky positioning */
   html,
   body {
-    overflow-x: hidden;
+    overflow-x: clip;
+    overflow-y: auto; /* Ensure vertical scrolling works */
     max-width: 100vw;
+  }
+
+  /* Enable global snap for pricing page */
+  html.page-pricing,
+  body.page-pricing {
+    scroll-snap-type: y mandatory;
+  }
+
+  /* Override height constraints for Instorier stories on single article pages */
+  /* style.css sets html, body { height: 100%; } and #wrapper { min-height: 100%; } */
+  /* These prevent scrolling when Instorier content exceeds viewport height */
+
+  /* CRITICAL: Allow html/body to expand beyond viewport height */
+  /* Layout component adds .single-page class to html/body */
+  html.single-page,
+  body.single-page,
+  html:has(.single),
+  body:has(.single) {
+    height: auto !important;
+    min-height: 100vh !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  /* INSTORIER STICKY FIX: position:sticky requires overflow:visible on all ancestors */
+  /* This is added dynamically by InlineScriptRenderer for hikayeler pages */
+  html.hikayeler-page,
+  body.hikayeler-page {
+    overflow: visible !important;
+    overflow-x: clip !important; /* clip prevents horizontal scroll but allows sticky */
+    height: auto !important;
+    min-height: 100vh !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* HIKAYELER ARTICLE SHELL - Minimal container, no layout constraints */
+  /* Instorier controls its own height and scrolling, so we don't set min-height here */
+  .hikayeler-article-shell {
+    width: 100%;
+    /* NO min-height, NO overflow constraints - let Instorier manage everything */
+  }
+
+  /* HIKAYELER SCRIPT ROOT - Single mount point for Instorier HTML */
+  /* This is the div that receives the inlineScriptHtml injection */
+  #hikayeler-story-root,
+  .hikayeler-script-root {
+    width: 100%;
+    /* NO height, NO min-height, NO overflow - Instorier creates its own containers */
+  }
+
+  /* HIKAYELER CONTENT WRAPPER - Only handles opacity transition */
+  .hikayeler-content-wrapper {
+    width: 100%;
+    /* NO layout constraints - just opacity/visibility for fade-in */
+  }
+
+  /* Remove footer margin on hikayeler pages so story sits flush with footer */
+  .hikayeler-page .footer-modern,
+  .hikayeler-page footer,
+  body.hikayeler-page ~ footer,
+  html.hikayeler-page footer.footer-modern {
+    margin-top: 0 !important;
+  }
+
+  /* Prevent margin collapsing on hikayeler pages to eliminate 16px gaps */
+  .hikayeler-page #main-content {
+    display: flow-root !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Hide empty paragraphs that might be injected and cause spacing issues */
+  .hikayeler-page #main-content p:empty {
+    display: none !important;
+  }
+
+  /* Ensure no margins on first/last children leak out */
+  .hikayeler-page #main-content > *:first-child {
+    margin-top: 0 !important;
+  }
+
+  .hikayeler-page #main-content > *:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  /* Ensure Instorier containers can manage their own layout */
+  .hikayeler-page [class*="ibG8wLku-container"],
+  .hikayeler-page [id*="ibG8wLku"] {
+    /* Let Instorier control everything - no overrides */
+  }
+
+  /* Allow wrapper and main-content to grow beyond viewport height */
+  .single #wrapper,
+  .single #main-content {
+    min-height: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  /* Ensure Instorier containers are visible but don't force layout that might break them */
+  /* Support both old and new Instorier container patterns */
+  [class*="ibG8wLku-container"],
+  [id*="ibG8wLku"],
+  [class*="ictowf5f-container"],
+  [id*="ictowf5f"].instorier-story {
+    visibility: visible !important;
+    display: block !important;
+    opacity: 1 !important;
+    /* Let Instorier manage its own height and positioning */
+  }
+
+  /* Reset body/html height for specific pages to allow sticky to work */
+  .page-pricing #wrapper,
+  .page-pricing #main-content,
+  main:has([id*="ictowf5f"]),
+  .page-pricing main {
+    overflow: visible !important;
+    height: auto !important;
+    min-height: auto !important;
+    perspective: none !important;
+    transform: none !important;
+    contain: none !important;
+  }
+
+  /* PRICING SCROLLYTELLING FIX: position:sticky requires overflow:visible on all ancestors */
+  /* This is added dynamically by IntroAnimation component for scroll-telling animation */
+  html.pricing-scrollytelling,
+  body.pricing-scrollytelling {
+    overflow: visible !important;
+    overflow-x: clip !important; /* clip prevents horizontal scroll but allows sticky */
+    height: auto !important;
+    min-height: 100vh !important;
+  }
+
+  .title-case-fix {
+    text-transform: lowercase;
+  }
+  .title-case-fix::first-letter {
+    text-transform: uppercase;
+  }
+
+  .pricing-scrollytelling #wrapper,
+  .pricing-scrollytelling #main-content,
+  .pricing-scrollytelling main {
+    overflow: visible !important;
+    height: auto !important;
+    min-height: auto !important;
+  }
+
+  /* Protect hero section from Instorier scroll-jacking and style.css conflicts */
+  /* Fallback background prevents white flash before hero image loads (critical for deferred CSS) */
+  section[data-hero-section="true"],
+  section.hero-full-height {
+    position: relative !important;
+    top: 0 !important;
+    left: auto !important;
+    transform: none !important;
+    will-change: auto !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    /* Match live hero: 70vh above-the-fold layout */
+    height: 70vh !important;
+    min-height: 70vh !important;
+    z-index: 10 !important;
+    background-color: #1f2937 !important; /* Dark fallback until image paints; image covers it */
+  }
+
+  /* Override style.css rule that tries to position hero below navbar */
+  /* style.css line 1476 matches section[style*="height: 100vh"] - we avoid this by using class instead */
+  section[data-hero-section="true"],
+  section.hero-full-height,
+  section[data-hero-section="true"].hero-full-height {
+    top: 0 !important;
+    /* Keep consistent 70vh height for hero */
+    height: 70vh !important;
+    min-height: 70vh !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  /* In dark mode, ensure hero background matches brand dark (#374152) instead of pure black */
+  .dark section[data-hero-section="true"],
+  .dark section.hero-full-height,
+  .dark section[data-hero-section="true"].hero-full-height,
+  .dark-mode section[data-hero-section="true"],
+  .dark-mode section.hero-full-height {
+    background-color: #374152 !important;
+  }
+
+  /* Prevent Instorier from hijacking ONLY the hero media layer.
+     IMPORTANT: do NOT force the content container to absolute (it must stay in-flow at the bottom). */
+  section[data-hero-section="true"] > div[class*="absolute"][class*="inset-0"] {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+
+  /* Ensure hero section image container is not affected by scroll-jacking */
+  section[data-hero-section="true"] > div[class*="absolute"][class*="inset-0"] {
+    z-index: 10 !important;
+  }
+
+  /* Hero section content should be above image but below header */
+  section[data-hero-section="true"] > div[class*="relative"] {
+    z-index: 30 !important;
   }
 
   /* Performance optimizations */
@@ -96,6 +569,33 @@ h6.font-display,
   to {
     opacity: 1;
   }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
 }
 
 .animate-slide-up-fade {
@@ -248,6 +748,7 @@ button[role="tab"]:focus,
 
 /* CRITICAL: Ensure borders ALWAYS remain visible for pricing switch indicator - highest priority override */
 /* NOTE: border-color is set explicitly in rules below, NOT inherited */
+/* Light mode: border always visible, dark mode: no border */
 .pricing-switch-indicator,
 .pricing-switch-button .pricing-switch-indicator,
 .pricing-switch-button:hover .pricing-switch-indicator,
@@ -267,7 +768,15 @@ button[role="tab"]:focus,
   .pricing-switch-indicator,
 .pricing-switch-button:hover
   + .pricing-switch-button[data-selected="true"]
-  .pricing-switch-indicator,
+  .pricing-switch-indicator {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  border-image: none !important;
+  outline: none !important;
+}
+
+/* Dark mode: no border */
 .dark-mode .pricing-switch-button .pricing-switch-indicator,
 .dark-mode .pricing-switch-button:hover .pricing-switch-indicator,
 .dark-mode .pricing-switch-button:active .pricing-switch-indicator,
@@ -289,18 +798,15 @@ button[role="tab"]:focus,
   .pricing-switch-button:hover
   ~ .pricing-switch-button[data-selected="true"]
   .pricing-switch-indicator {
-  border-width: 4px !important;
-  border-style: solid !important;
+  border-width: 0px !important;
   opacity: 1 !important;
   visibility: visible !important;
   display: block !important;
-  border-image: none !important;
-  outline: none !important;
 }
 
 /* CRITICAL: Explicitly set border colors for pricing switch indicator - prevent ANY color changes on hover */
 /* This must override color-default.css rules that change border-color on hover */
-/* Dark mode border color - must match inline style - NEVER CHANGE */
+/* Dark mode border color - transparent (no border in dark mode) */
 .dark-mode .pricing-switch-indicator,
 .dark-mode .pricing-switch-button .pricing-switch-indicator,
 .dark-mode .pricing-switch-button:hover .pricing-switch-indicator,
@@ -329,12 +835,12 @@ button[role="tab"]:focus,
   .pricing-switch-indicator,
 .dark-mode button:hover .pricing-switch-indicator,
 .dark-mode .pricing-switch-button:hover span.pricing-switch-indicator {
-  border-color: #f8f5e4 !important;
-  border-width: 4px !important;
+  border-color: transparent !important;
+  border-width: 0px !important;
   border-style: solid !important;
 }
 
-/* Light mode border color - must match inline style - NEVER CHANGE */
+/* Light mode border color - must match inline style - ALWAYS visible on hover */
 .pricing-switch-indicator:not(.dark-mode .pricing-switch-indicator),
 .pricing-switch-button .pricing-switch-indicator:not(.dark-mode),
 .pricing-switch-button:hover .pricing-switch-indicator:not(.dark-mode),
@@ -353,10 +859,15 @@ button[role="tab"]:focus,
   ~ .pricing-switch-button[data-selected="true"]
   .pricing-switch-indicator:not(.dark-mode),
 button:hover .pricing-switch-indicator:not(.dark-mode),
-.pricing-switch-button:hover span.pricing-switch-indicator:not(.dark-mode) {
+.pricing-switch-button:hover span.pricing-switch-indicator:not(.dark-mode),
+.pricing-switch-button[data-selected="true"]:hover .pricing-switch-indicator,
+.pricing-switch-button[data-selected="true"]:hover
+  span.pricing-switch-indicator {
   border-color: #374152 !important;
   border-width: 4px !important;
   border-style: solid !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 /* Ensure selected pricing switch button text is dark in dark mode */
@@ -397,7 +908,7 @@ button:hover .pricing-switch-indicator:not(.dark-mode),
 }
 button:not(.subscribe-button):not([class*="bg-"]):not(
     .scroll-indicator-button
-  ):not(.pricing-switch-button):hover,
+  ):not(.pricing-switch-button):not([role="checkbox"]):hover,
 button:not(.subscribe-button):not([class*="bg-"]):active,
 button:not(.subscribe-button):not([class*="bg-"]):focus,
 input[type="button"]:not(.subscribe-button):not([class*="bg-"]):hover,
@@ -409,16 +920,22 @@ input[type="reset"]:not(.subscribe-button):not([class*="bg-"]):focus,
 input[type="submit"]:not(.subscribe-button):not([class*="bg-"]):hover,
 input[type="submit"]:not(.subscribe-button):not([class*="bg-"]):active,
 input[type="submit"]:not(.subscribe-button):not([class*="bg-"]):focus,
-[role="button"]:not(.subscribe-button):not([class*="bg-"]):hover,
-[role="button"]:not(.subscribe-button):not([class*="bg-"]):active,
-[role="button"]:not(.subscribe-button):not([class*="bg-"]):focus,
+[role="button"]:not(.subscribe-button):not([class*="bg-"]):not(
+    [role="checkbox"]
+  ):hover,
+[role="button"]:not(.subscribe-button):not([class*="bg-"]):not(
+    [role="checkbox"]
+  ):active,
+[role="button"]:not(.subscribe-button):not([class*="bg-"]):not(
+    [role="checkbox"]
+  ):focus,
 span[data-slot="badge"]:hover,
 span[data-slot="badge"]:active,
 span[data-slot="badge"]:focus,
 .dark-mode
   button:not(.subscribe-button):not([class*="bg-"]):not(
     .pricing-switch-button
-  ):hover,
+  ):not([role="checkbox"]):hover,
 .dark-mode button:not(.subscribe-button):not([class*="bg-"]):active,
 .dark-mode button:not(.subscribe-button):not([class*="bg-"]):focus,
 .dark-mode
@@ -437,7 +954,10 @@ span[data-slot="badge"]:focus,
   input[type="submit"]:not(.subscribe-button):not([class*="bg-"]):active,
 .dark-mode
   input[type="submit"]:not(.subscribe-button):not([class*="bg-"]):focus,
-.dark-mode [role="button"]:not(.subscribe-button):not([class*="bg-"]):hover,
+.dark-mode
+  [role="button"]:not(.subscribe-button):not([class*="bg-"]):not(
+    [role="checkbox"]
+  ):hover,
 .dark-mode [role="button"]:not(.subscribe-button):not([class*="bg-"]):active,
 .dark-mode [role="button"]:not(.subscribe-button):not([class*="bg-"]):focus,
 .dark-mode span[data-slot="badge"]:hover,
@@ -541,39 +1061,47 @@ button[role="tab"][data-state="active"] {
    ======================================================================== */
 
 .hero-gradient-overlay {
+  /* Light mode: gentle darkening from transparent to subtle black for readability */
   background: linear-gradient(
     135deg,
-    rgba(0, 0, 0, 0.45) 0%,
-    rgba(0, 0, 0, 0.25) 35%,
-    rgba(0, 0, 0, 0.6) 100%
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.15) 35%,
+    rgba(0, 0, 0, 0.45) 100%
   );
 }
 
+/* Dark mode: remove extra black layer – let #374152 hero-bottom-gradient carry the tone */
+.dark .hero-gradient-overlay,
 .dark-mode .hero-gradient-overlay {
   background: linear-gradient(
     135deg,
-    rgba(55, 65, 82, 0.8) 0%,
-    rgba(55, 65, 82, 0.65) 35%,
-    rgba(55, 65, 82, 0.9) 100%
+    rgba(55, 65, 82, 0) 0%,
+    rgba(55, 65, 82, 0) 100%
   ) !important;
 }
 
 .hero-bottom-gradient {
+  /* Light mode: white gradient matching dark mode shape */
   background: linear-gradient(
     180deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.6) 55%,
-    rgba(255, 255, 255, 0.9) 85%,
+    rgba(255, 255, 255, 0.3) 15%,
+    rgba(255, 255, 255, 0.6) 30%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 255, 255, 1) 70%,
+    rgba(255, 255, 255, 1) 90%,
     rgba(255, 255, 255, 1) 100%
   );
 }
 
+/* Force exact Scrolli dark color (#374152) for the hero bottom gradient */
+.dark .hero-bottom-gradient,
 .dark-mode .hero-bottom-gradient {
   background: linear-gradient(
     180deg,
     rgba(55, 65, 82, 0) 0%,
-    rgba(55, 65, 82, 0.6) 50%,
-    rgba(55, 65, 82, 0.88) 80%,
+    rgba(55, 65, 82, 0.6) 55%,
+    rgba(55, 65, 82, 0.9) 85%,
     rgba(55, 65, 82, 1) 100%
   ) !important;
 }
@@ -718,15 +1246,21 @@ button[role="tab"][data-state="active"] {
 }
 
 .article-content h1 {
-  @apply text-3xl md:text-4xl;
+  @apply text-3xl md:text-4xl lg:text-[42px];
+  line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
 .article-content h2 {
-  @apply text-2xl md:text-3xl;
+  @apply text-2xl md:text-3xl lg:text-[32px];
+  line-height: 1.25;
+  letter-spacing: -0.02em;
 }
 
 .article-content h3 {
-  @apply text-xl md:text-2xl;
+  @apply text-xl md:text-2xl lg:text-[26px];
+  line-height: 1.3;
+  letter-spacing: -0.01em;
 }
 
 .article-content h4 {
@@ -756,6 +1290,9 @@ button[role="tab"][data-state="active"] {
 
 .article-content a {
   @apply text-primary hover:underline;
+}
+.article-content a:hover {
+  text-decoration: underline !important; /* override base a { text-decoration: none } so in-article links show underline on hover */
 }
 
 .article-content ul,
@@ -793,6 +1330,19 @@ button[role="tab"][data-state="active"] {
   @apply w-full h-auto;
 }
 
+/* Article content images from Lexical editor */
+.article-content-image {
+  @apply w-full my-6;
+}
+
+.article-content-image img {
+  @apply w-full h-auto rounded-lg;
+}
+
+.article-content-image figcaption {
+  @apply text-sm text-gray-600 dark:text-gray-400 mt-2 text-center;
+}
+
 .article-content .w-richtext-figure-type-video {
   @apply my-6;
 }
@@ -822,22 +1372,22 @@ body {
   font-family: var(--font-newsreader), serif !important;
 }
 
-/* Header elements */
+/* Header elements - use body font (Instrument Sans) */
 .card-nav-link,
 .card-nav-clocks .header-clock__label,
 .navbar-brand,
 header,
 header * {
-  font-family: var(--font-newsreader), serif !important;
+  font-family: var(--font-instrument-sans), sans-serif !important;
 }
 
-/* Navigation elements */
+/* Navigation elements - use body font (Instrument Sans) */
 .menu-primary,
 .menu-primary *,
 .mobi-menu nav,
 .mobi-menu nav *,
 .capsSubtle {
-  font-family: var(--font-newsreader), serif !important;
+  font-family: var(--font-instrument-sans), sans-serif !important;
 }
 
 /* Entry meta, excerpts, titles - site-wide (article-content has its own rules) */
@@ -859,10 +1409,34 @@ header * {
   font-family: var(--font-newsreader), serif !important;
 }
 
-/* Footer elements */
+/* Footer elements - use body font (Instrument Sans) */
 footer,
-footer * {
-  font-family: var(--font-newsreader), serif !important;
+footer *,
+footer h1,
+footer h2,
+footer h3,
+footer h4,
+footer h5,
+footer h6,
+footer p,
+footer a,
+footer span,
+footer li,
+footer button,
+footer .footer-modern,
+footer .footer-modern *,
+footer .footer-content,
+footer .footer-content *,
+footer .footer-brand,
+footer .footer-brand *,
+footer .footer-column,
+footer .footer-column *,
+footer .footer-links,
+footer .footer-links *,
+footer .footer-tagline,
+footer .footer-language,
+footer .footer-language * {
+  font-family: var(--font-instrument-sans), sans-serif !important;
 }
 
 /* All headings site-wide (article-content headings have their own rules) */

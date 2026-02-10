@@ -2,13 +2,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SmartButton } from "@/components/ui/smart-button";
+// SmartButton import removed as unused
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import 'swiper/css';
 import { colors } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
-import { PlayIcon, CloseIcon, ArrowLeftIcon, ArrowRightIcon } from "@/components/icons/ScrolliIcons";
+import { PlayIcon, CloseIcon, ArrowLeftIcon, ArrowRightIcon } from "@/components/icons/scrolli-icons";
 
 interface VideoItem {
   id: string;
@@ -66,7 +66,7 @@ function VideoCard({
   video,
   onPlay,
   videoRef,
-  index = 0
+  index = 0,
 }: {
   video: VideoItem;
   onPlay: () => void;
@@ -85,10 +85,11 @@ function VideoCard({
     const videoElement = posterVideoRef.current;
     if (!videoElement) return undefined;
 
-    videoElement.load();
+    // Remove videoElement.load() to prevent aggressive preloading
 
     const handleCanPlay = () => {
-      if (videoElement.readyState >= 2) {
+      // Logic to set preview frame
+      if (videoElement.readyState >= 2 && videoElement.currentTime === 0) {
         videoElement.currentTime = 0.1;
       }
     };
@@ -117,7 +118,7 @@ function VideoCard({
     if (!videoRef || !videoRef.current) return undefined;
 
     const videoElement = videoRef.current;
-    videoElement.load();
+    // videoElement.load(); // Removed aggressive load
 
     const handleCanPlayThrough = () => {
       videoElement.play().catch(() => {
@@ -158,6 +159,16 @@ function VideoCard({
     <motion.div
       className="video-card-wrapper"
       ref={cardRef}
+      initial={{ opacity: 0, scale: 0.7, y: 140 }}
+      whileInView={{ opacity: 1, scale: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{
+        type: "spring",
+        stiffness: 120,
+        damping: 18,
+        mass: 0.8,
+        delay: Math.min(index * 0.06, 0.25),
+      }}
       whileHover={{
         scale: 1.02,
         y: -5,
@@ -174,7 +185,7 @@ function VideoCard({
               className="absolute inset-0 w-full h-full object-cover"
               muted
               playsInline
-              preload="auto"
+              preload="metadata"
               loop
               autoPlay={!!videoRef}
               poster=""
@@ -194,8 +205,8 @@ function VideoCard({
             {!isPlaying && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/20">
                 <div className="play-button">
-                  <div className="w-[50px] h-[50px] md:w-[56px] md:h-[56px] rounded-full bg-black/85 flex items-center justify-center">
-                    <PlayIcon size={24} className="text-white ml-1" accentColor="white" />
+                  <div className="w-[50px] h-[50px] md:w-[56px] md:h-[56px] rounded-full bg-[#8080FF] flex items-center justify-center">
+                    <PlayIcon size={24} className="text-[#F8F5E3] ml-1" />
                   </div>
                 </div>
               </div>
@@ -250,7 +261,7 @@ function VideoPlayerModal({
   hasNext: boolean;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const scrollPositionRef = useRef<{ x: number; y: number } | null>(null);
+  // scrollPositionRef removed as we use simple overflow: hidden now
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -270,6 +281,7 @@ function VideoPlayerModal({
       }, 300); // Delay to match animation
       return () => clearTimeout(playTimer);
     }
+    return undefined;
   }, [isOpen, video.id]);
 
   useEffect(() => {
@@ -286,44 +298,14 @@ function VideoPlayerModal({
     };
 
     if (isOpen) {
-      // Save current scroll position only if not already saved
-      if (!scrollPositionRef.current) {
-        scrollPositionRef.current = {
-          x: window.scrollX,
-          y: window.scrollY,
-        };
-      }
-
-      const scrollY = scrollPositionRef.current.y;
-
-      // Save original styles
-      const originalOverflow = document.body.style.overflow;
-      const originalPosition = document.body.style.position;
-      const originalTop = document.body.style.top;
-      const originalWidth = document.body.style.width;
-
-      // Prevent body scroll while keeping scroll position
+      // Prevent body scroll simply to avoid layout shifts (flicker)
       document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
 
       document.addEventListener('keydown', handleKeyDown);
 
       return () => {
         document.removeEventListener('keydown', handleKeyDown);
-
-        // Restore original styles
-        document.body.style.overflow = originalOverflow || '';
-        document.body.style.position = originalPosition || '';
-        document.body.style.top = originalTop || '';
-        document.body.style.width = originalWidth || '';
-
-        // Restore scroll position
-        if (scrollPositionRef.current) {
-          window.scrollTo(scrollPositionRef.current.x, scrollPositionRef.current.y);
-          scrollPositionRef.current = null; // Clear after restoring
-        }
+        document.body.style.overflow = '';
       };
     }
 
@@ -481,7 +463,7 @@ function VideoPlayerModal({
               aria-label="Previous video"
             >
               <div className="w-8 h-8 rounded-full bg-black/50 flex items-center justify-center text-white">
-                <ArrowLeftIcon size={20} accentColor="white" />
+                <ArrowLeftIcon size={20} />
               </div>
             </motion.button>
             <motion.button
@@ -502,7 +484,7 @@ function VideoPlayerModal({
               aria-label="Next video"
             >
               <div className="w-8 h-8 rounded-full bg-black/50 flex items-center justify-center text-white">
-                <ArrowRightIcon size={20} accentColor="white" />
+                <ArrowRightIcon size={20} />
               </div>
             </motion.button>
           </motion.div>
@@ -548,7 +530,6 @@ function VideoPlayerModal({
 
 export default function VideoSection() {
   const [selectedVideoIndex, setSelectedVideoIndex] = useState<number | null>(null);
-  const [isInView, setIsInView] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
   const firstVideoRef = useRef<HTMLVideoElement>(null);
 
@@ -556,11 +537,18 @@ export default function VideoSection() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          setIsInView(entry.isIntersecting);
+          const isVisible = entry.isIntersecting;
+          if (isVisible && firstVideoRef.current) {
+            firstVideoRef.current.play().catch(() => {
+              // Ignore autoplay errors
+            });
+          } else if (!isVisible && firstVideoRef.current) {
+            firstVideoRef.current.pause();
+          }
         });
       },
       {
-        threshold: 0.5,
+        threshold: 0.3,
       }
     );
 
@@ -574,18 +562,6 @@ export default function VideoSection() {
       }
     };
   }, []);
-
-  useEffect(() => {
-    if (firstVideoRef.current) {
-      if (isInView) {
-        firstVideoRef.current.play().catch(() => {
-          // Ignore autoplay errors
-        });
-      } else {
-        firstVideoRef.current.pause();
-      }
-    }
-  }, [isInView]);
 
   const handlePlay = (index: number) => {
     console.log('[VideoSection] handlePlay called with index:', index);
@@ -612,7 +588,8 @@ export default function VideoSection() {
   const hasPrevious = selectedVideoIndex !== null && selectedVideoIndex > 0;
   const hasNext = selectedVideoIndex !== null && selectedVideoIndex < videos.length - 1;
 
-  console.log('[VideoSection] selectedVideoIndex:', selectedVideoIndex, 'currentVideo:', currentVideo?.id);
+  // Removed continuous rendering log to reduce console noise and minor CPU cycles
+  // console.log('[VideoSection] selectedVideoIndex:', selectedVideoIndex, 'currentVideo:', currentVideo?.id);
 
   return (
     <>
@@ -622,7 +599,16 @@ export default function VideoSection() {
             <SectionHeader title="Watch Today's Videos" />
           </div>
         </div>
-        <div className="w-full mt-6">
+        <motion.div
+          className="w-full mt-6"
+          initial={{ scale: 0.92, opacity: 0.7 }}
+          whileInView={{ scale: 1, opacity: 1 }}
+          viewport={{ once: true, amount: 0.15 }}
+          transition={{
+            duration: 0.7,
+            ease: [0.25, 0.46, 0.45, 0.94],
+          }}
+        >
           <Swiper
             spaceBetween={20}
             slidesPerView={1.5}
@@ -664,7 +650,7 @@ export default function VideoSection() {
               </SwiperSlide>
             ))}
           </Swiper>
-        </div>
+        </motion.div>
         <div className="divider-2 mt-8 md:mt-12"></div>
       </div>
 

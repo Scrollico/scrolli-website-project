@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Text } from "@/components/ui/typography";
+import { UserMenu } from "./UserMenu";
+import { interactions } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
 // Essential menu items for sticky navbar (3 items)
 const STICKY_MENU_ITEMS = [
@@ -25,7 +28,7 @@ export default function StickyNav() {
       // Show sticky nav after scrolling down 100px
       if (scrollY > 100) {
         setIsScrolled(true);
-        
+
         // Show/hide based on scroll direction
         if (scrollY > lastScrollY && scrollY > 200) {
           // Scrolling down - show sticky nav
@@ -57,15 +60,17 @@ export default function StickyNav() {
 
   return (
     <nav
-      className={`fixed top-[80px] md:top-[100px] left-0 right-0 z-[60] bg-[#f5f5dc]/95 dark:bg-[#f5f5dc]/95 backdrop-blur-md border-b border-border/50 transition-all duration-300 ease-in-out ${
-        isVisible && isScrolled
-          ? 'translate-y-0 opacity-100 shadow-md'
-          : '-translate-y-full opacity-0 pointer-events-none'
-      }`}
+      className={`fixed top-[80px] md:top-[100px] left-0 right-0 z-[60] bg-[#f5f5dc]/95 dark:bg-[#f5f5dc]/95 backdrop-blur-md border-b border-border/50 transition-all duration-300 ease-in-out ${isVisible && isScrolled
+        ? 'translate-y-0 opacity-100 shadow-md'
+        : '-translate-y-full opacity-0 pointer-events-none'
+        }`}
       aria-label="Sticky navigation"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-center h-10 md:h-11">
+        <div className="flex items-center justify-between h-10 md:h-11">
+          {/* Spacer to balance layout */}
+          <div className="w-10 hidden md:block" />
+
           {/* Three essential menu items */}
           <div className="flex items-center gap-4 md:gap-6 lg:gap-8">
             {STICKY_MENU_ITEMS.map((item, index) => (
@@ -74,7 +79,7 @@ export default function StickyNav() {
                 as={Link}
                 href={item.href}
                 variant="bodySmall"
-                className="font-medium hover:text-primary transition-colors duration-200 relative group"
+                className={cn("font-medium relative group", interactions.hover)}
               >
                 <span className="relative z-10">{item.label}</span>
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />
@@ -83,6 +88,11 @@ export default function StickyNav() {
                 )}
               </Text>
             ))}
+          </div>
+
+          {/* User Menu */}
+          <div className="flex items-center">
+            <UserMenu />
           </div>
         </div>
       </div>

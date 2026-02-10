@@ -3,270 +3,309 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Container } from "@/components/responsive";
-import blogData from "@/data/blog.json";
 import PodcastSection from "./PodcastSection";
-import { sectionPadding, colors } from "@/lib/design-tokens";
+import { Article } from "@/types/content";
 import { cn } from "@/lib/utils";
-import { Heading, Text } from "@/components/ui/typography";
-import { FreeContentBadgeIcon, PremiumContentBadgeIcon } from "@/components/icons/ScrolliIcons";
+import { colors, sectionPadding, interactions } from "@/lib/design-tokens";
+import { Heading, Text, Caption } from "@/components/ui/typography";
+import { Badge } from "@/components/ui/badge";
+import { FreeContentBadgeIcon, PremiumContentBadgeIcon } from "@/components/icons/scrolli-icons";
 
-// Category configuration
-const categories = [
-  {
-    name: "Eksen",
-    slug: "eksen",
-    displayName: "Eksen",
-  },
-  {
-    name: "Gelecek",
-    slug: "gelecek",
-    displayName: "Gelecek",
-  },
-];
-
-export default function Section3() {
-  const { todayHighlights, mostRecent, featured, featuredSlider } = blogData;
-
-  // Get all available articles from multiple sources
-  const getAllAvailableArticles = () => {
-    const allArticles: any[] = [];
-    
-    // Add todayHighlights articles
-    if (todayHighlights?.articles) {
-      allArticles.push(...todayHighlights.articles);
-    }
-    
-    // Add mostRecent mainArticles
-    if (mostRecent?.mainArticles) {
-      allArticles.push(...mostRecent.mainArticles);
-    }
-    
-    // Add mostRecent sideArticles if available
-    if (mostRecent?.sideArticles) {
-      allArticles.push(...mostRecent.sideArticles);
-    }
-    
-    // Add featured main and side articles
-    if (featured?.mainArticle) {
-      allArticles.push(featured.mainArticle);
-    }
-    if (featured?.sideArticles) {
-      allArticles.push(...featured.sideArticles);
-    }
-
-    // Add featured slider articles
-    if (featuredSlider?.articles) {
-      allArticles.push(...featuredSlider.articles);
-    }
-
-    // Remove duplicates by ID
-    const uniqueArticles = allArticles.filter((article, index, self) =>
-      index === self.findIndex((a) => a.id === article.id)
-    );
-    
-    return uniqueArticles;
+interface Section3Props {
+  articlesByCategory: {
+    tümü: Article[];
+    eksen: Article[];
+    zest: Article[];
+    finans: Article[];
+    gelecek: Article[];
   };
+}
 
-  // Get articles for each category, ensuring we have 1 featured + 4 list items
-  const getCategoryData = (categorySlug: string) => {
-    const allArticles = getAllAvailableArticles();
-    
-    // Get articles from the specific category first
-    const categoryArticles = allArticles.filter(
-      (article) => article.category?.toLowerCase() === categorySlug.toLowerCase()
-    );
-    
-    // If we have enough category articles (5+), use them
-    if (categoryArticles.length >= 5) {
-      return {
-        featuredArticle: categoryArticles[0],
-        listArticles: categoryArticles.slice(1, 5),
-      };
-    }
-    
-    // If we have some category articles but not 5, prioritize them and fill with others
-    if (categoryArticles.length > 0) {
-      // Get other articles to fill up to 5
-      const otherArticles = allArticles.filter(
-        (article) => article.category?.toLowerCase() !== categorySlug.toLowerCase()
-      );
-      
-      // Combine: category articles first, then others
-      const combined = [...categoryArticles, ...otherArticles];
-      
-      // Ensure we have at least 5 articles (pad with duplicates if needed)
-      while (combined.length < 5 && categoryArticles.length > 0) {
-        combined.push(
-          ...categoryArticles.slice(0, Math.min(5 - combined.length, categoryArticles.length))
-        );
-      }
-      
-      return {
-        featuredArticle: combined[0],
-        listArticles: combined.slice(1, 5).filter(Boolean),
-      };
-    }
-    
-    // Fallback: use all available articles, pad if needed
-    let articlesToUse = [...allArticles];
-    while (articlesToUse.length < 5 && allArticles.length > 0) {
-      articlesToUse.push(
-        ...allArticles.slice(0, Math.min(5 - articlesToUse.length, allArticles.length))
-      );
-    }
-    
-    return {
-      featuredArticle: articlesToUse[0],
-      listArticles: articlesToUse.slice(1, 5).filter(Boolean),
-    };
-  };
+// Column component for Eksen/Gelecek sections
+function CategoryColumn({
+  title,
+  articles,
+  href,
+}: {
+  title: string;
+  articles: Article[];
+  href: string;
+}) {
+  const featuredArticle = articles[0];
+  const relatedArticles = articles.slice(1, 5); // Show up to 4 related articles
+
+  return (
+    <div className="flex flex-col h-full">
+      {/* Section Title - underline matches SectionHeader (Watch Today's Videos) */}
+      <div className="mb-6">
+        <Link
+          href={href}
+          className="inline-flex items-center gap-2 group"
+        >
+          <Heading
+            level={2}
+            variant="h3"
+            className={cn(
+              "font-bold text-lg md:text-xl mb-2",
+              colors.foreground.primary,
+              interactions.hover
+            )}
+          >
+            {title}
+            <span className="ml-1">{" >"}</span>
+          </Heading>
+        </Link>
+        <div className="h-0.5 w-12 bg-[#8080FF] mt-4" />
+      </div>
+
+      {/* Featured Article */}
+      {featuredArticle ? (
+        <article className="mb-8 group">
+          <Link href={`/${featuredArticle.id}`} className="block">
+            <figure className="relative w-full aspect-[16/10] mb-4 overflow-hidden rounded-lg">
+              {featuredArticle.image ? (
+                <Image
+                  src={featuredArticle.image}
+                  alt={featuredArticle.title}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
+                />
+              ) : (
+                <div className={cn(
+                  "w-full h-full flex items-center justify-center",
+                  colors.background.elevated
+                )}>
+                  <span className={cn("text-sm", colors.foreground.muted)}>
+                    No image
+                  </span>
+                </div>
+              )}
+
+              {/* Content Badge */}
+              <div className="absolute top-2 left-2 z-10 pointer-events-none">
+                {featuredArticle.isPremium ? (
+                  <PremiumContentBadgeIcon size={24} className="drop-shadow-md" />
+                ) : (
+                  <FreeContentBadgeIcon size={24} className="drop-shadow-md" />
+                )}
+              </div>
+            </figure>
+
+            {/* Article Meta */}
+            <div className="space-y-2">
+              {featuredArticle.category && (
+                <Badge
+                  className="tracking-wide"
+                >
+                  {featuredArticle.category}
+                </Badge>
+              )}
+              {featuredArticle.date && (
+                <Caption
+                  as="time"
+                  dateTime={featuredArticle.date}
+                  className={cn("block", colors.foreground.muted)}
+                >
+                  {featuredArticle.date}
+                </Caption>
+              )}
+
+              {/* Title */}
+              <Heading
+                level={3}
+                variant="h4"
+                className={cn(
+                  "font-bold text-xl md:text-2xl mb-2 line-clamp-2",
+                  colors.foreground.primary,
+                  interactions.hover
+                )}
+              >
+                {featuredArticle.title}
+              </Heading>
+
+              {/* Subtitle/Excerpt */}
+              {(featuredArticle.subtitle || featuredArticle.excerpt) && (
+                <Text
+                  variant="body"
+                  className={cn("line-clamp-2", colors.foreground.secondary)}
+                >
+                  {featuredArticle.subtitle || featuredArticle.excerpt}
+                </Text>
+              )}
+            </div>
+          </Link>
+        </article>
+      ) : (
+        <div className={cn(
+          "mb-8 p-8 rounded-lg text-center",
+          colors.background.elevated
+        )}>
+          <Text className={colors.foreground.muted}>
+            Bu kategoride henüz içerik bulunmuyor.
+          </Text>
+        </div>
+      )}
+
+      {/* Related Articles List */}
+      {relatedArticles.length > 0 && (
+        <div className="space-y-4 flex-1">
+          {relatedArticles.map((article, index) => (
+            <article
+              key={`${article.id}-${index}`}
+              className={cn(
+                "pb-4 border-b last:border-0 last:pb-0",
+                colors.border.DEFAULT
+              )}
+            >
+              <Link
+                href={`/${article.id}`}
+                className="group flex gap-4"
+              >
+                {/* Thumbnail */}
+                <figure className="relative w-24 h-16 md:w-32 md:h-20 flex-shrink-0 overflow-hidden rounded-md">
+                  {article.image ? (
+                    <Image
+                      src={article.image}
+                      alt={article.title}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      sizes="(max-width: 768px) 96px, 128px"
+                    />
+                  ) : (
+                    <div className={cn(
+                      "w-full h-full flex items-center justify-center",
+                      colors.background.elevated
+                    )}>
+                      <span className={cn("text-xs", colors.foreground.muted)}>
+                        No image
+                      </span>
+                    </div>
+                  )}
+                </figure>
+
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <Heading
+                    level={4}
+                    variant="h6"
+                    className={cn(
+                      "font-semibold text-sm md:text-base mb-1 line-clamp-2",
+                      colors.foreground.primary,
+                      interactions.hover
+                    )}
+                  >
+                    {article.title}
+                  </Heading>
+                  {article.date && (
+                    <Caption
+                      as="time"
+                      dateTime={article.date}
+                      className={colors.foreground.muted}
+                    >
+                      {article.date}
+                    </Caption>
+                  )}
+                </div>
+              </Link>
+            </article>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function Section3({ articlesByCategory }: Section3Props) {
+  const eksenArticles = articlesByCategory.eksen || [];
+  const gelecekArticles = articlesByCategory.gelecek || [];
+  const zestArticles = articlesByCategory.zest || [];
+  const finansArticles = articlesByCategory.finans || [];
 
   return (
     <>
-      <div className="content-widget">
-        <Container size="xl" className={sectionPadding.md}>
-          {/* Two Column Layout for Categories */}
-          <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-            {/* Vertical divider between the two sections on desktop */}
-            <div className="hidden lg:block absolute inset-y-0 left-1/2 w-px bg-border -translate-x-1/2" />
-            {categories.map((category) => {
-              const { featuredArticle, listArticles } = getCategoryData(category.slug);
+      <div className={cn("content-widget w-full", colors.background.base)}>
+        <Container size="xl" className={cn(sectionPadding.md, "w-full")}>
+          {/* WordPress.com-style Grid System */}
+          <div
+            className={cn(
+              "grid grid-cols-1 lg:grid-cols-12",
+              "gap-4 lg:gap-8",
+              "mb-8 lg:mb-12"
+            )}
+            style={{
+              '--table-row-gap': '32px',
+              '--table-col-gap': '32px',
+            } as React.CSSProperties}
+          >
+            {/* Eksen Column - Left */}
+            <div className={cn(
+              "lg:col-span-6",
+              "lg:pr-4",
+              "lg:border-r border-gray-200 dark:border-gray-700"
+            )}>
+              <CategoryColumn
+                title="Eksen"
+                articles={eksenArticles}
+                href="/categories?cat=eksen"
+              />
+            </div>
 
-              if (!featuredArticle) return null;
-
-              return (
-                <div key={category.slug} className="flex flex-col">
-                  {/* Category Title with Underline */}
-                  <div className="mb-8">
-                    <Link
-                      href={`/categories/${category.slug}`}
-                      className="group inline-block"
-                    >
-                      <Heading
-                        level={2}
-                        variant="h5"
-                        className={cn(
-                          "mb-2 text-xl md:text-2xl font-display",
-                          colors.foreground.primary,
-                          "group-hover:opacity-80 transition-opacity"
-                        )}
-                      >
-                        {category.displayName} &gt;
-                      </Heading>
-                    </Link>
-                    <div className={cn("h-px w-full", colors.border.DEFAULT)} />
-                    <div className="w-12 h-0.5 bg-primary mt-4" />
-                  </div>
-
-                  {/* 5-Column Grid Layout */}
-                  <div 
-                    className="chain hpgrid hpgrid-max-width ma-auto lg-dsktp-order include-dividers-tables large-bottom-separator no-line-bottom"
-                    style={{ 
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(5, 1fr)',
-                      gap: '32px',
-                      '--table-row-gap': '32px',
-                      '--table-col-gap': '32px',
-                      '--feature-row-gap': '32px',
-                      '--feature-col-gap': '32px'
-                    } as React.CSSProperties}
-                  >
-                    {/* Featured Article (spans columns 1-3) */}
-                    <article
-                      className="flex flex-col"
-                      style={{ gridColumn: '1 / 4' }}
-                    >
-                      {featuredArticle.image && (
-                        <figure className="relative w-full aspect-[4/3] mb-4 overflow-hidden rounded-lg">
-                          <Link
-                            href={`/article/${featuredArticle.id}`}
-                            prefetch={true}
-                            className="block w-full h-full"
-                          >
-                            <Image
-                              src={featuredArticle.image}
-                              alt={featuredArticle.title || "Article image"}
-                              fill
-                              className="object-cover transition-transform duration-300 hover:scale-105"
-                              sizes="(max-width: 1024px) 100vw, 60vw"
-                            />
-                          </Link>
-                          <div className="absolute top-2 right-2 z-10 pointer-events-none">
-                            {(featuredArticle as any).isPremium ? (
-                              <PremiumContentBadgeIcon size={20} className="drop-shadow-md" />
-                            ) : (
-                              <FreeContentBadgeIcon size={20} className="drop-shadow-md" />
-                            )}
-                          </div>
-                        </figure>
-                      )}
-
-                      {featuredArticle.title && (
-                        <Heading
-                          level={2}
-                          variant="h3"
-                          className="leading-tight font-display text-2xl md:text-3xl font-semibold"
-                        >
-                          <Link
-                            href={`/article/${featuredArticle.id}`}
-                            className={cn(
-                              colors.foreground.primary,
-                              "hover:opacity-80 transition-opacity"
-                            )}
-                          >
-                            {featuredArticle.title}
-                          </Link>
-                        </Heading>
-                      )}
-                    </article>
-
-                    {/* List Articles (spans columns 4-5) */}
-                    <div
-                      className="flex flex-col"
-                      style={{ gridColumn: '4 / 6' }}
-                    >
-                      <ul className="space-y-0">
-                        {listArticles
-                          .slice(0, 4)
-                          .filter((article) => article && article.id && article.title)
-                          .map((article, index, arr) => (
-                            <li
-                              key={`txt-${article.id || index}`}
-                              className={cn(
-                                index !== arr.length - 1 && "border-b",
-                                colors.border.DEFAULT,
-                                "py-4 first:pt-0"
-                              )}
-                            >
-                              <Link
-                                href={`/article/${article.id}`}
-                                className={cn(
-                                  "block group",
-                                  colors.foreground.primary,
-                                  "hover:opacity-80 transition-opacity"
-                                )}
-                              >
-                                <Text
-                                  variant="body"
-                                  className={cn(
-                                    "font-normal leading-snug font-display text-lg md:text-xl",
-                                    colors.foreground.primary
-                                  )}
-                                >
-                                  {article.title}
-                                </Text>
-                              </Link>
-                            </li>
-                          ))}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            {/* Gelecek Column - Right */}
+            <div className={cn(
+              "lg:col-span-6",
+              "lg:pl-4"
+            )}>
+              <CategoryColumn
+                title="Gelecek"
+                articles={gelecekArticles}
+                href="/categories?cat=gelecek"
+              />
+            </div>
           </div>
+
+          {/* Second Row: 1x2 Grid */}
+          {(zestArticles.length > 0 || finansArticles.length > 0) && (
+            <div
+              className={cn(
+                "grid grid-cols-1 lg:grid-cols-12",
+                "gap-4 lg:gap-8"
+              )}
+              style={{
+                '--table-row-gap': '32px',
+                '--table-col-gap': '32px',
+              } as React.CSSProperties}
+            >
+              {/* Zest Column - Left */}
+              <div className={cn(
+                "lg:col-span-6",
+                "lg:pr-4",
+                "lg:border-r border-gray-200 dark:border-gray-700"
+              )}>
+                <CategoryColumn
+                  title="Zest"
+                  articles={zestArticles}
+                  href="/categories?cat=zest"
+                />
+              </div>
+
+              {/* Finans Column - Right */}
+              <div className={cn(
+                "lg:col-span-6",
+                "lg:pl-4"
+              )}>
+                <CategoryColumn
+                  title="Finans"
+                  articles={finansArticles}
+                  href="/categories?cat=finans"
+                />
+              </div>
+            </div>
+          )}
         </Container>
       </div>
+      {/*content-widget*/}
 
       {/* Podcast Section */}
       <PodcastSection />

@@ -8,7 +8,7 @@ import { gradientVariants, cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Container } from "@/components/responsive"
 import { Heading, Text } from "@/components/ui/typography"
-import { colors, gap, componentPadding, sectionPadding, typography } from "@/lib/design-tokens"
+import { colors, gap } from "@/lib/design-tokens"
 
 export default function Section4() {
   const { mostRecent } = blogData;
@@ -41,31 +41,21 @@ export default function Section4() {
                       {/* Tag Badge */}
                       {article.tag && (
                         <div className={cn(gap.sm, "flex justify-start")}>
-                          <Badge
-                            variant={article.tag === "Editors' Pick" ? "primary" : "secondary"}
-                            appearance={article.tag === "Editors' Pick" ? "default" : "outline"}
-                            size="sm"
-                            className="uppercase tracking-wide"
-                          >
-                            {article.tag}
+<Badge className="tracking-wide">
+                          {article.tag}
                           </Badge>
                         </div>
                       )}
                       {/* Category Badge */}
                       {article.category && (
                         <div className={cn(gap.sm, "flex justify-start")}>
-                          <Badge
-                            variant="secondary"
-                            appearance="outline"
-                            size="sm"
-                            className="uppercase tracking-wide"
-                          >
+                          <Badge className="tracking-wide">
                             {article.category}
                           </Badge>
                         </div>
                       )}
                       <Heading level={3} variant="h3" className={gap.md}>
-                        <Link href={`/article/${article.id}`} className={colors.foreground.interactive}>{article.title}</Link>
+                        <Link href={`/${article.id}`} className={colors.foreground.interactive}>{article.title}</Link>
                       </Heading>
                       <div className="entry-excerpt">
                         <Text variant="body" color="secondary">{article.excerpt}</Text>
@@ -91,7 +81,7 @@ export default function Section4() {
                     <article key={index} className="col-md-6 mb-4">
                       <div className="mb-3 d-flex row">
                         <figure className="col-md-5">
-                          <Link href={`/article/${article.id}`}>
+                          <Link href={`/${article.id}`}>
                             <Image
                               className="lazy w-full h-auto object-cover"
                               src={article.image}
@@ -104,7 +94,7 @@ export default function Section4() {
                         </figure>
                         <div className="entry-content col-md-7 pl-md-0">
                           <h5 className="entry-title mb-3">
-                            <Link href={`/article/${article.id}`}>{article.title}</Link>
+                            <Link href={`/${article.id}`}>{article.title}</Link>
                           </h5>
                         </div>
                       </div>
@@ -132,7 +122,7 @@ export default function Section4() {
                       <div className="post-count">{article.number}</div>
                       <div className="post-content">
                         <h5 className="entry-title mb-3">
-                          <Link href={`/article/${article.id}`}>{article.title}</Link>
+                          <Link href={`/${article.id}`}>{article.title}</Link>
                         </h5>
                       </div>
                     </li>
@@ -142,7 +132,7 @@ export default function Section4() {
             </div>
             {/*col-md-4*/}
           </div>
-        </div>
+        </Container>
         {/*content-widget*/}
       </div>
       <div className="content-widget">

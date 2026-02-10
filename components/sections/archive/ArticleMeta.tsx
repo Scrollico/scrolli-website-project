@@ -5,6 +5,7 @@ import { colors, gap } from "@/lib/design-tokens";
 import Link from "next/link";
 import { Star } from "lucide-react";
 import { getAuthorName } from '@/lib/author-loader';
+import { Badge } from "@/components/ui/badge";
 
 interface ArticleMetaProps {
   author: string;
@@ -29,25 +30,27 @@ export default function ArticleMeta({ author, category, date, readTime, classNam
       <div className="flex items-center gap-1">
         <Link href={`/author/${author.toLowerCase().replace(/\s+/g, "-")}`} className={cn(colors.foreground.interactive, "font-medium hover:underline")}>
           {getAuthorName(author)}
-        </Link> 
-        <span>in</span> 
-        <Link href="/archive" className={cn(colors.foreground.interactive, "font-medium hover:underline")}>
-          {category}
+        </Link>
+        <span>in</span>
+        <Link href="/archive">
+          <Badge className="ml-1 cursor-pointer">
+            {category}
+          </Badge>
         </Link>
       </div>
-      
+
       <span className="hidden sm:inline-block text-gray-300 dark:text-gray-600 mx-1">•</span>
       <div className="w-full sm:w-auto h-0 sm:h-auto basis-full sm:basis-auto sm:hidden"></div>
-      
+
       <div className={cn("flex items-center", gap.xs)}>
-         <Text variant="bodySmall" color="muted" as="span">{date}</Text>
-         <span className="text-gray-300 dark:text-gray-600">•</span>
-         <Text variant="bodySmall" color="muted" as="span" className="flex items-center gap-1">
-             {readTime}
-         </Text>
-         <div className="flex items-center ml-1 text-yellow-500">
-             <Star size={12} className="fill-current" />
-         </div>
+        <Text variant="bodySmall" color="muted" as="span">{date}</Text>
+        <span className="text-gray-300 dark:text-gray-600">•</span>
+        <Text variant="bodySmall" color="muted" as="span" className="flex items-center gap-1">
+          {readTime}
+        </Text>
+        <div className="flex items-center ml-1 text-yellow-500">
+          <Star size={12} className="fill-current" />
+        </div>
       </div>
     </div>
   );

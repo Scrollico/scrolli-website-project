@@ -503,3 +503,62 @@ export const PlayIcon: React.FC<ScrolliIconProps> = (props) => (
     <path d="M5 3L19 12L5 21V3Z" fill={props.accentColor || "#374152"} />
   </DefaultIcon>
 );
+
+export const MailIcon: React.FC<ScrolliIconProps> = (props) => (
+  <DefaultIcon {...props}>
+    <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" strokeWidth={props.strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M22 6L12 13L2 6" stroke="currentColor" strokeWidth={props.strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+    {/* Meaningful fill: Mail interior */}
+    <path d="M4 6L12 11.5L20 6V18H4V6Z" fill={props.accentColor || "#374152"} fillOpacity="0.2" />
+  </DefaultIcon>
+);
+
+export const CalendarIcon: React.FC<ScrolliIconProps> = (props) => (
+  <DefaultIcon {...props}>
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" strokeWidth={props.strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+    <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" strokeWidth={props.strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+    <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" strokeWidth={props.strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+    <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" strokeWidth={props.strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+    {/* Meaningful fill: Header area of the calendar */}
+    <rect x="3" y="4" width="18" height="6" rx="2" fill={props.accentColor || "#374152"} />
+  </DefaultIcon>
+);
+
+export const LogOutIcon: React.FC<ScrolliIconProps> = (props) => (
+  <DefaultIcon {...props}>
+    <path d="M9 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H9" stroke="currentColor" strokeWidth={props.strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+    <polyline points="16 17 21 12 16 7" stroke="currentColor" strokeWidth={props.strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+    <line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" strokeWidth={props.strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+    {/* Meaningful fill: Door/Out area */}
+    <path d="M3 5H9V19H3V5Z" fill={props.accentColor || "#374152"} fillOpacity="0.1" />
+  </DefaultIcon>
+);
+
+// Flag Icons (circular, to fit round button)
+export const TurkishFlagIcon: React.FC<ScrolliIconProps> = (props) => (
+  <DefaultIcon {...props}>
+    {/* Circular red background */}
+    <circle cx="12" cy="12" r="11" fill="#E30A17" />
+    {/* Crescent */}
+    <circle cx="10" cy="12" r="5" fill="#ffffff" />
+    <circle cx="11.5" cy="12" r="4" fill="#E30A17" />
+    {/* Star */}
+    <path
+      d="M15.5 9.5L16.2 11.2L18 11.4L16.6 12.5L17 14.3L15.5 13.3L14 14.3L14.4 12.5L13 11.4L14.8 11.2L15.5 9.5Z"
+      fill="#ffffff"
+    />
+  </DefaultIcon>
+);
+
+export const EnglishFlagIcon: React.FC<ScrolliIconProps> = (props) => (
+  <DefaultIcon {...props}>
+    {/* Circular navy background */}
+    <circle cx="12" cy="12" r="11" fill="#012169" />
+    {/* White cross */}
+    <path d="M7 11H17V13H7V11Z" fill="#ffffff" />
+    <path d="M11 7H13V17H11V7Z" fill="#ffffff" />
+    {/* Red cross */}
+    <path d="M8.5 11.5H15.5V12.5H8.5V11.5Z" fill="#C8102E" />
+    <path d="M11.5 8.5H12.5V15.5H11.5V8.5Z" fill="#C8102E" />
+  </DefaultIcon>
+);

@@ -1,0 +1,75 @@
+
+> scrolli-nextjs@1.0.0 build
+> next build
+
+   ▲ Next.js 15.5.9
+   - Environments: .env.local
+   - Experiments (use with caution):
+     · optimizePackageImports
+
+   Creating an optimized production build ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+ ✓ Compiled successfully in 10.2s
+   Skipping validation of types
+   Skipping linting
+   Collecting page data ...
+Failed to set Next.js data cache for https://cms.scrolli.co/api/hikayeler?locale=tr&draft=false&trash=false&limit=100, items over 2MB can not be cached (7823845 bytes)
+Failed to set Next.js data cache for https://cms.scrolli.co/api/gundem?locale=tr&draft=false&trash=false&limit=100, items over 2MB can not be cached (2760498 bytes)
+   Generating static pages (0/234) ...
+   Generating static pages (58/234) 
+   Generating static pages (116/234) 
+   Generating static pages (175/234) 
+ ✓ Generating static pages (234/234)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                                                                Size  First Load JS
+┌ ƒ /                                                                                     12 kB         462 kB
+├ ƒ /_not-found                                                                           160 B         103 kB
+├ ● /[slug]                                                                             1.87 kB         488 kB
+├   ├ /devlerin-yapay-zeka-ortakligi-100-milyar-dolar-kaynak-olusturacak-1767482252353
+├   ├ /siddet-adaletsizlik-kutuplasma-curuyen-bir-toplumda-ayakta-kalmak-1767482252096
+├   ├ /kaos-caginda-tek-guvenli-liman-altin-yukselise-devam-ediyor-1767482251843
+├   └ [+197 more paths]
+├ ƒ /about-us                                                                           12.2 kB         446 kB
+├ ƒ /api/contact                                                                          160 B         103 kB
+├ ƒ /api/gift-article                                                                     160 B         103 kB
+├ ƒ /api/payload/auto-assign-images                                                       160 B         103 kB
+├ ƒ /api/payload/find-articles-without-images                                             160 B         103 kB
+├ ƒ /api/payload/list-media                                                               160 B         103 kB
+├ ƒ /api/payload/update-featured-image                                                    160 B         103 kB
+├ ƒ /api/redeem-gift                                                                      160 B         103 kB
+├ ƒ /api/revenuecat/offerings                                                             160 B         103 kB
+├ ƒ /archive                                                                            2.65 kB         442 kB
+├ ƒ /auth/callback                                                                        160 B         103 kB
+├ ƒ /author                                                                             4.06 kB         438 kB
+├ ƒ /categories                                                                         2.27 kB         442 kB
+├ ƒ /contact                                                                            4.75 kB         439 kB
+├ ƒ /design-system                                                                       234 kB         416 kB
+├ ƒ /gift/[token]                                                                       4.32 kB         125 kB
+├ ƒ /kullanim-kosullari                                                                 10.6 kB         445 kB
+├ ƒ /kunye                                                                              2.01 kB         436 kB
+├ ƒ /onboarding                                                                         6.74 kB         175 kB
+├ ƒ /pricing                                                                            13.4 kB         447 kB
+├ ƒ /profile                                                                            2.08 kB         436 kB
+├ ƒ /profile-demo                                                                       24.7 kB         150 kB
+├ ƒ /search                                                                             4.18 kB         444 kB
+├ ƒ /sign-in                                                                            8.07 kB         222 kB
+├ ƒ /single                                                                               237 B         486 kB
+├ ○ /sitemap.xml                                                                          160 B         103 kB
+├ ƒ /subscribe                                                                          5.23 kB         439 kB
+├ ƒ /test-hikaye                                                                          682 B         435 kB
+├ ƒ /test-paywall                                                                       4.94 kB         328 kB
+└ ƒ /typography                                                                           228 B         434 kB
++ First Load JS shared by all                                                            102 kB
+  ├ chunks/1255-37fdc005f9321e44.js                                                     45.6 kB
+  ├ chunks/4bd1b696-100b9d70ed4e49c1.js                                                 54.2 kB
+  └ other shared chunks (total)                                                         2.68 kB
+
+
+ƒ Middleware                                                                            77.5 kB
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

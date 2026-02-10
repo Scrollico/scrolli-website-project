@@ -5,49 +5,18 @@ import { Heading, Text } from "@/components/ui/typography";
 import { colors, sectionPadding, containerPadding } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 import ShowcaseNav from "./ShowcaseNav";
-import DarkModeToggle from "./DarkModeToggle";
+import CinematicThemeSwitcher from "@/components/ui/cinematic-theme-switcher";
 
 interface ShowcaseLayoutProps {
   children: ReactNode;
 }
 
 export default function ShowcaseLayout({ children }: ShowcaseLayoutProps) {
-  const [isDark, setIsDark] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    // Check initial dark mode state
-    const checkDarkMode = () => {
-      const hasDarkMode = document.body.classList.contains("dark-mode") || 
-                         document.documentElement.classList.contains("dark");
-      setIsDark(hasDarkMode);
-    };
-    checkDarkMode();
-
-    // Watch for changes
-    const observer = new MutationObserver(checkDarkMode);
-    observer.observe(document.body, { attributes: true, attributeFilter: ["class"] });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-
-    return () => observer.disconnect();
   }, []);
-
-  const handleThemeToggle = () => {
-    const newDarkState = !isDark;
-    setIsDark(newDarkState);
-    
-    if (newDarkState) {
-      document.body.classList.add("dark-mode");
-      document.documentElement.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark-mode");
-      document.documentElement.classList.remove("dark");
-    }
-    
-    // Also update localStorage for persistence
-    localStorage.setItem("theme", newDarkState ? "dark" : "light");
-  };
 
   if (!mounted) {
     return null;
@@ -70,7 +39,7 @@ export default function ShowcaseLayout({ children }: ShowcaseLayoutProps) {
               Scrolli Component Library
             </Text>
           </div>
-          <DarkModeToggle isDark={isDark} onToggle={handleThemeToggle} />
+          <CinematicThemeSwitcher />
         </div>
       </header>
 

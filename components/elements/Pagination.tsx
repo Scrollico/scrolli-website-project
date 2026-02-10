@@ -2,13 +2,13 @@
 
 import { cn } from "@/lib/utils";
 import {
-  colors,
-  borderRadius,
-  border,
-  componentPadding,
-  typography,
-  transition,
-  button
+    colors,
+    borderRadius,
+    border,
+    componentPadding,
+    typography,
+    transition,
+    button
 } from "@/lib/design-tokens";
 import { ChevronRight } from "lucide-react";
 import { useRef, useEffect } from "react";
@@ -47,22 +47,22 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
     const handlePageChange = (page: number, e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         e.stopPropagation();
-        
+
         // Save current scroll position
         scrollPositionRef.current = window.scrollY;
         isChangingPageRef.current = true;
-        
+
         // Prevent any default scroll behavior
         const savedPosition = scrollPositionRef.current;
-        
+
         onPageChange?.(page);
-        
+
         // Immediately restore scroll position
         window.scrollTo({
             top: savedPosition,
             behavior: 'instant' as ScrollBehavior
         });
-        
+
         // Restore again after render
         requestAnimationFrame(() => {
             window.scrollTo({
@@ -88,8 +88,8 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
         if (startPage > 1) {
             pages.push(
                 <li key="1">
-                    <button 
-                        type="button" 
+                    <button
+                        type="button"
                         onClick={(e) => handlePageChange(1, e)}
                         className={cn(
                             button.padding.sm,
@@ -127,9 +127,10 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
                             className={cn(
                                 button.padding.sm,
                                 borderRadius.md,
-                                colors.primary.bg,
-                                colors.foreground.onDark,
-                                "font-normal",
+                                "bg-gray-900 dark:bg-white", // Solid sharp color
+                                "text-white dark:text-black",
+                                "font-medium",
+                                "shadow-sm",
                                 "inline-flex items-center justify-center",
                                 "min-w-[2.5rem]"
                             )}
@@ -170,8 +171,8 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
             }
             pages.push(
                 <li key={totalPages}>
-                    <button 
-                        type="button" 
+                    <button
+                        type="button"
                         onClick={(e) => handlePageChange(totalPages, e)}
                         className={cn(
                             button.padding.sm,

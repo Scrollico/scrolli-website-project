@@ -6,49 +6,143 @@ import { Container } from "@/components/responsive";
 import { Heading } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { sectionPadding, containerPadding, gap, colors, typography, borderRadius, margin, marginBottom } from "@/lib/design-tokens";
-import blogData from "@/data/blog.json";
+import { gap, colors } from "@/lib/design-tokens";
+import { Article } from "@/types/content";
+import { useEffect, useRef } from "react";
 
-export default function HeroSection() {
-  const featuredArticle = blogData.featured.mainArticle;
+interface HeroSectionProps {
+  article: Article | null;
+}
+
+export default function HeroSection({ article }: HeroSectionProps) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const imageContainerRef = useRef<HTMLDivElement>(null);
+  const gradientRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!sectionRef.current || !imageContainerRef.current || !gradientRef.current) return;
+
+    // Protect hero section from Instorier scroll-jacking
+    const protectHeroSection = () => {
+      if (!sectionRef.current) return;
+
+      const computedStyle = window.getComputedStyle(sectionRef.current);
+      const top = computedStyle.top;
+
+      // If Instorier has applied negative positioning, reset it
+      if (top && (top.includes('-') || parseFloat(top) < 0)) {
+        sectionRef.current.style.setProperty('top', 'auto', 'important');
+        sectionRef.current.style.setProperty('position', 'relative', 'important');
+        sectionRef.current.style.setProperty('transform', 'none', 'important');
+      }
+    };
+
+    // Initial protection
+    protectHeroSection();
+
+    // Monitor for changes (Instorier might apply changes after initial load)
+    const observer = new MutationObserver(() => {
+      protectHeroSection();
+    });
+
+    observer.observe(sectionRef.current, {
+      attributes: true,
+      attributeFilter: ['style', 'class'],
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  if (!article) {
+    return null;
+  }
 
   return (
-    <section className="relative w-full min-h-[70vh] md:h-[70vh] flex items-end overflow-hidden">
+    <section
+      ref={sectionRef}
+      data-hero-section="true"
+      className="relative w-full min-h-[70vh] md:h-[70vh] flex items-end justify-center overflow-hidden hero-full-height"
+      style={{
+        position: 'relative',
+        top: '0px',
+        marginTop: '0px',
+        paddingTop: '0px',
+        zIndex: 10
+      } as React.CSSProperties}
+    >
       {/* Background Image */}
-      <div className="absolute inset-0 z-10">
-        {featuredArticle.image && (
-          <Image
-            src={featuredArticle.image}
-            alt={featuredArticle.title}
-            fill
-            className="object-cover object-center"
-            priority
-            fetchPriority="high"
-            sizes="100vw"
-            quality={85}
-          />
+      <div ref={imageContainerRef} className="absolute inset-0 z-10">
+        {article.image && (
+          <>
+            {article.mobileImage ? (
+              <>
+                {/* Mobile image */}
+                <Image
+                  src={article.mobileImage}
+                  alt={article.title}
+                  fill
+                  className="object-cover object-center md:hidden"
+                  priority
+                  fetchPriority="high"
+                  sizes="100vw"
+                  quality={80}
+                />
+                {/* Desktop image */}
+                <Image
+                  src={article.image}
+                  alt={article.title}
+                  fill
+                  className="object-cover object-center hidden md:block"
+                  priority
+                  fetchPriority="high"
+                  sizes="100vw"
+                  quality={80}
+                />
+              </>
+            ) : (
+              <Image
+                src={article.image}
+                alt={article.title}
+                fill
+                className="object-cover object-center"
+                priority
+                fetchPriority="high"
+                sizes="100vw"
+                quality={80}
+              />
+            )}
+          </>
         )}
-        {/* Overlay gradient - Responsive with varying opacity */}
+        {/* Overlay gradient across entire hero */}
         <div className="absolute inset-0 z-20 hero-gradient-overlay" />
-        {/* Bottom gradient transition - Responsive height */}
-        <div className={cn(`absolute bottom-0 left-0 w-full z-20
-          h-[85%]
-          md:h-[90%]
-          lg:h-[95%]
-          xl:h-[100%]
-        `, "hero-bottom-gradient")} />
+        {/* Bottom gradient for above-the-fold text readability (matches live hero) */}
+        <div
+          ref={gradientRef}
+          className={cn(
+            "absolute bottom-0 left-0 w-full z-20",
+            "h-[85%] md:h-[90%] lg:h-[95%] xl:h-[100%]",
+            "hero-bottom-gradient"
+          )}
+        />
       </div>
 
-      {/* Content */}
-      <Container className={cn("relative z-30", marginBottom.lg)} padding="lg">
-        <div className={cn("max-w-2xl", "flex flex-col", gap.lg)}>
+      {/* Content - matches live hero layout (bottom-left, above the fold) */}
+      <Container className={cn("relative z-30 w-full")} padding="lg">
+        <div
+          className={cn(
+            "max-w-2xl",
+            "flex flex-col",
+            gap.lg,
+            "mb-8 md:mb-12 lg:mb-16"
+          )}
+        >
           {/* Featured Label */}
           <div>
             <Badge
-              variant="secondary"
-              appearance="ghost"
-              size="sm"
-              className={cn("!px-3 !py-2 uppercase tracking-wide backdrop-blur-sm opacity-90 shadow-sm cursor-default", colors.surface.overlay, borderRadius.md)}
+              variant="subtle"
+              className="tracking-wide backdrop-blur-sm opacity-90 shadow-sm cursor-default border-transparent dark:border-transparent"
             >
               Featured
             </Badge>
@@ -59,20 +153,20 @@ export default function HeroSection() {
             level={1}
             variant="h1"
             className="max-w-full"
-            style={{ textShadow: '0 1px 1px rgba(0, 0, 0, 0.1)' }}
+            style={{ textShadow: "0 1px 1px rgba(0, 0, 0, 0.1)" }}
           >
-            {featuredArticle.title}
+            {article.title}
           </Heading>
 
           {/* Read More Link */}
           <Link
-            href={`/article/${featuredArticle.id}`}
+            href={`/${article.id}`}
             className={cn(
               "inline-flex items-center gap-2 no-underline transition-colors duration-300",
               colors.foreground.primary,
               colors.foreground.interactive
             )}
-            style={{ textShadow: '0 1px 1px rgba(0, 0, 0, 0.1)' }}
+            style={{ textShadow: "0 1px 1px rgba(0, 0, 0, 0.1)" }}
           >
             Read in-depth
             <svg

@@ -11,9 +11,9 @@
  * 2. NO WHITE LEFTOVERS: Never use bg-white without dark:bg-* equivalent
  * 3. ALWAYS USE TOKENS: Use design tokens instead of hardcoded colors
  * 4. VERIFY EVERYTHING: Test all components in both modes before completion
- * 5. FONT ADAPTATION: All text colors must adapt properly
+ * 5. FONT ADAPTATION: All text colors must adapt properly (Newsreader site-wide)
  * 6. BUTTON ADAPTATION: All button variants must work in dark mode
- * 7. COMPONENT ADAPTATION: All interactive states must work in dark mode
+ * 7. BRAND TRIO: Primary Charcoal (#374152), Navbar (#F4F5FA), Success Green (#16A34A)
  *
  * When implementing any component:
  * - Import colors from @/lib/design-tokens
@@ -66,14 +66,15 @@ export const componentPadding = {
 
 /**
  * Gap System - Spacing between flex/grid items
+ * Following strict 4px grid: 4, 8, 12, 16, 24, 32
  */
 export const gap = {
-  xs: "gap-1 md:gap-2",
-  sm: "gap-2 md:gap-4",
-  md: "gap-4 md:gap-6",
-  lg: "gap-6 md:gap-8",
-  xl: "gap-8 md:gap-12",
-  "2xl": "gap-12 md:gap-16",
+  xs: "gap-1", // 4px
+  sm: "gap-2", // 8px
+  md: "gap-3", // 12px
+  lg: "gap-4", // 16px
+  xl: "gap-6", // 24px
+  "2xl": "gap-8", // 32px
 } as const;
 
 /**
@@ -101,18 +102,25 @@ export const marginBottom = {
   "2xl": "mb-20 md:mb-24 lg:mb-32",
 } as const;
 
+/**
+ * Top Margin System - Top-only external spacing
+ * Extracted from sectionPadding values for consistency
+ */
+export const marginTop = {
+  xs: "mt-4 md:mt-6",
+  sm: "mt-6 md:mt-8",
+  md: "mt-8 md:mt-12 lg:mt-16",
+  lg: "mt-12 md:mt-16 lg:mt-20",
+  xl: "mt-16 md:mt-20 lg:mt-24",
+  "2xl": "mt-20 md:mt-24 lg:mt-32",
+} as const;
+
 // ============================================================================
 // TYPOGRAPHY TOKENS
 // ============================================================================
 
 /**
  * Font Families
- * - heading: Newsreader (serif display font) for all headings
- * - body: Newsreader (serif) for body text site-wide (header, footer, navigation, general content)
- * - mono: Monospace for code/technical content
- *
- * NOTE: Instrument Sans is ONLY used for article detail page body content (`.article-content` class)
- * and is applied via CSS in globals.css, not through these design tokens.
  */
 export const fontFamily = {
   heading: "font-display", // Newsreader for headings/display text
@@ -171,21 +179,17 @@ export const letterSpacing = {
 
 /**
  * Typography Variants - Pre-composed typography styles
- * Headings use Newsreader (font-display), body text uses Newsreader (font-sans) site-wide
- *
- * NOTE: Instrument Sans is ONLY used for article detail page body content (`.article-content` class)
- * and is applied via CSS in globals.css, not through these typography tokens.
  */
 export const typography = {
   // Headings - Following Arc Publishing guidelines (H1: ~42px, H2: 32px, H3: ~26px)
   // Responsive scale: mobile → tablet → desktop
   // All headings use Newsreader display font
-  h1: `${fontFamily.heading} text-2xl md:text-3xl lg:text-4xl ${fontWeight.bold} ${lineHeight.tight}`, // 24px → 30px → 36px (Arc: ~42px, using smaller for readability)
-  h2: `${fontFamily.heading} text-xl md:text-2xl lg:text-3xl ${fontWeight.bold} ${lineHeight.tight}`, // 20px → 24px → 30px (Arc: 32px, using smaller for readability)
-  h3: `${fontFamily.heading} text-lg md:text-xl lg:text-2xl ${fontWeight.semibold} ${lineHeight.tight}`, // 18px → 20px → 24px (Arc: ~26px, using smaller for readability)
-  h4: `${fontFamily.heading} ${fontSize["2xl"]} ${fontWeight.semibold} ${lineHeight.normal}`,
-  h5: `${fontFamily.heading} ${fontSize.lg} ${fontWeight.semibold} ${lineHeight.normal}`, // text-lg md:text-xl (one size smaller)
-  h6: `${fontFamily.heading} ${fontSize.lg} ${fontWeight.medium} ${lineHeight.normal}`,
+  h1: `${fontFamily.heading} text-2xl md:text-3xl lg:text-4xl ${fontWeight.bold} ${lineHeight.tight} tracking-tight`, // -0.02em tracking
+  h2: `${fontFamily.heading} text-xl md:text-2xl lg:text-3xl ${fontWeight.bold} ${lineHeight.tight} tracking-tight`,
+  h3: `${fontFamily.heading} text-lg md:text-xl lg:text-2xl ${fontWeight.semibold} ${lineHeight.tight} tracking-tight`,
+  h4: `${fontFamily.heading} ${fontSize["2xl"]} ${fontWeight.semibold} ${lineHeight.normal} tracking-tight`,
+  h5: `${fontFamily.heading} ${fontSize.lg} ${fontWeight.semibold} ${lineHeight.normal} tracking-tight`,
+  h6: `${fontFamily.heading} ${fontSize.lg} ${fontWeight.medium} ${lineHeight.normal} tracking-tight`,
 
   // Body text - uses Newsreader (font-sans) for site-wide body text (header, footer, navigation, general content)
   body: `${fontFamily.body} ${fontSize.base} ${fontWeight.normal} ${lineHeight.relaxed}`,
@@ -203,8 +207,6 @@ export const typography = {
  */
 export const headingDecor = {
   underline: "inline-flex items-baseline border-b-2 pb-2",
-  underlinePrimary:
-    "inline-flex items-baseline border-b-2 pb-2 border-primary dark:border-primary",
 } as const;
 
 // ============================================================================
@@ -279,8 +281,8 @@ export const colors = {
 
   // Status colors
   success: {
-    DEFAULT: "text-green-600 dark:text-green-400",
-    bg: "bg-green-50 dark:bg-green-900/20",
+    DEFAULT: "text-success dark:text-success",
+    bg: "bg-success dark:bg-success",
   },
   warning: {
     DEFAULT: "text-yellow-600 dark:text-yellow-400",
@@ -291,49 +293,49 @@ export const colors = {
     bg: "bg-red-50 dark:bg-red-900/20",
   },
 
-  // Neutral colors - Following Arc Publishing standards (gray700 baseline)
+  // Neutral colors - Linked to CSS variables for instant theme switching
   background: {
-    base: "bg-white dark:bg-[#374152]", // Exact Scrolli dark mode color #374152
-    elevated: "bg-gray-50 dark:bg-gray-800", // Elevated surfaces
-    overlay: "bg-white/90 dark:bg-[#374152]/90 backdrop-blur-sm",
-    navbar: "bg-[#F8F5E4] dark:bg-[#374152]", // Navbar beige - Scrolli brand color, exact dark mode color
+    base: "bg-background",
+    elevated: "bg-muted",
+    overlay: "bg-background/80 backdrop-blur-md",
+    navbar: "bg-navbar dark:bg-background",
   },
 
   // Navbar beige - Scrolli brand color for header, footer, and components
   navbarBeige: {
-    DEFAULT: "bg-[#F8F5E4] dark:bg-[#374152]", // Exact Scrolli dark mode color #374152
-    text: "text-gray-900 dark:text-gray-100", // Arc: gray text (not pure white)
-    border: "border-gray-200 dark:border-gray-600", // Arc: gray-600 borders
-    hover: "hover:bg-[#F8F5E4]/90 dark:hover:bg-[#374152]/90",
+    DEFAULT: "bg-navbarBeige dark:bg-background",
+    text: "text-foreground",
+    border: "border-border",
+    hover: "hover:bg-navbarBeige/90 dark:hover:bg-background/90",
   },
 
-  // Foreground colors - Arc Publishing "on" colors (semantic text colors)
+  // Foreground colors - Linked to CSS variables
   foreground: {
-    primary: "text-gray-900 dark:text-gray-100", // Arc: onBackground (gray-100, not pure white)
-    secondary: "text-gray-700 dark:text-gray-200", // Arc: onBackground-subtle
-    muted: "text-gray-500 dark:text-gray-300", // Arc: onBackground-subtle
-    disabled: "text-gray-400 dark:text-gray-500", // Arc: disabled state
-    inverse: "text-gray-100 dark:text-gray-900", // For dark overlays/light surfaces
-    inverseHover: "hover:text-gray-200 dark:hover:text-gray-200", // Hover state for inverse text on dark overlays
-    interactive: "hover:opacity-80 dark:hover:opacity-80", // Hover state with opacity decrease
-    // Button text colors - ensures white text on dark backgrounds
-    onDark: "text-white dark:text-white", // White text for buttons with dark backgrounds (primary, etc.)
+    primary: "text-foreground",
+    secondary: "text-muted-foreground",
+    muted: "text-muted-foreground/80",
+    disabled: "text-gray-400 dark:text-gray-500",
+    inverse: "text-background dark:text-foreground",
+    inverseHover: "hover:text-gray-200 dark:hover:text-gray-200",
+    interactive: "hover:opacity-80 dark:hover:opacity-80",
+    onDark: "text-white dark:text-white",
+    onLight: "text-gray-900 dark:text-gray-900",
   },
 
-  // Surface colors - Arc Publishing semantic surfaces
+  // Surface colors
   surface: {
-    base: "bg-white dark:bg-[#374152]", // Exact Scrolli dark mode color #374152
-    elevated: "bg-gray-50 dark:bg-gray-800", // Arc: Surface-highest (elevated)
-    onSurface: "text-gray-900 dark:text-gray-100", // Arc: onSurface (gray-100, not pure white)
-    onSurfaceSubtle: "text-gray-700 dark:text-gray-200", // Arc: onSurface-subtle
+    base: "bg-card",
+    elevated: "bg-muted",
+    onSurface: "text-card-foreground",
+    onSurfaceSubtle: "text-muted-foreground",
   },
 
   border: {
-    DEFAULT: "border-gray-200 dark:border-gray-600", // Arc: outline (gray-600, not gray-700)
-    light: "border-gray-100 dark:border-gray-700", // Arc: outline-subtle
-    medium: "border-gray-300 dark:border-gray-500",
+    DEFAULT: "border-border",
+    light: "border-border/50",
+    medium: "border-border",
     strong: "border-gray-400 dark:border-gray-400",
-    hover: "hover:border-gray-300 dark:hover:border-gray-500",
+    hover: "hover:border-border/80",
   },
 } as const;
 
@@ -351,6 +353,34 @@ export const states = {
       "data-[state=inactive]:text-gray-700 dark:data-[state=inactive]:text-gray-200",
     base: "transition-colors data-[state=inactive]:opacity-80",
   },
+} as const;
+
+// Precise Interaction Tokens
+// Minimalist, premium feedback without layout shifts or drastic color changes.
+export const interactions = {
+  // Minimalist hover: subtle opacity reduction (keeps colors consistent)
+  hover: "hover:opacity-80 transition-opacity duration-200 ease-out",
+  // Minimalist active/click: micro-scale press (tactile feel without shifting)
+  press: "active:scale-[0.96] transition-transform duration-100",
+  // Precise focus: clean ring with offset (does not affect dimensions)
+  focus:
+    "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none",
+  // Standard combination for most interactive elements
+  standard:
+    "transition-all duration-200 hover:opacity-80 active:scale-[0.96] focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none",
+} as const;
+
+/**
+ * Link styling - No underline by default (Bootstrap/legacy override is in globals.css).
+ * Use for article titles, nav links, card links, "Read it" links, etc.
+ */
+export const link = {
+  /** Default: no underline, foreground color, opacity hover */
+  default:
+    "no-underline text-foreground hover:opacity-80 transition-opacity duration-200 ease-out",
+  /** Same as default, explicit for use with colors.foreground.primary */
+  title:
+    "no-underline hover:opacity-80 transition-opacity duration-200 ease-out",
 } as const;
 
 // ============================================================================
@@ -395,15 +425,16 @@ export const border = {
 // ============================================================================
 
 /**
- * Elevation Levels - Material Design inspired elevation system
+ * Elevation Levels - Minimal/Crafted elevation system
+ * Focuses on borders and very subtle shadows
  */
 export const elevation = {
   0: "shadow-none",
-  1: "shadow-sm",
-  2: "shadow-md",
-  3: "shadow-lg",
-  4: "shadow-xl",
-  5: "shadow-2xl",
+  1: "shadow-[0_1px_2px_rgba(0,0,0,0.05)] border-gray-200 dark:border-gray-800",
+  2: "shadow-[0_2px_4px_rgba(0,0,0,0.05)] border-gray-200 dark:border-gray-800",
+  3: "shadow-[0_4px_8px_rgba(0,0,0,0.05)]",
+  4: "shadow-[0_8px_16px_rgba(0,0,0,0.05)]",
+  5: "shadow-[0_16px_32px_rgba(0,0,0,0.05)]",
 } as const;
 
 /**
@@ -458,10 +489,10 @@ export const transition = {
 } as const;
 
 /**
- * Transition Easing
+ * Transition Easing - Precision-focused transitions
  */
 export const easing = {
-  default: "ease-in-out",
+  default: "cubic-bezier(0.25, 1, 0.5, 1)", // Standard for high-quality UI
   in: "ease-in",
   out: "ease-out",
   bounce: "ease-bounce",
@@ -493,10 +524,216 @@ export const button = {
 } as const;
 
 /**
+ * Badge/Pill styles - Labels, tags, status badges
+ * Symmetric vertical padding (py-1.5) for balanced top/bottom; horizontal from 4px grid.
+ */
+export const badge = {
+  padding: "px-3 py-1.5",
+} as const;
+
+/**
  * Input Styles - Pre-composed input styles
  */
 export const input = {
   base: `${fontSize.base} ${borderRadius.md} ${border.thin} ${componentPadding.sm} ${transition.normal} focus:ring-2 focus:ring-primary`,
+} as const;
+
+// ============================================================================
+// SEMANTIC COLOR PAIRS - GUARANTEED ACCESSIBLE COMBINATIONS
+// ============================================================================
+
+/**
+ * SURFACE PAIRS - Guaranteed accessible background + text combinations
+ *
+ * These pairs ALWAYS work together with proper contrast ratios (WCAG AA/AAA).
+ * Use these instead of separate bg-* and text-* classes to prevent contrast issues.
+ *
+ * @example
+ * // ❌ BAD - separate colors, might break in dark mode
+ * <div className="bg-white text-gray-600">
+ *
+ * // ✅ GOOD - guaranteed accessible pair
+ * <div className={surfacePairs.card.base}>
+ */
+export const surfacePairs = {
+  // Card surfaces - for content containers
+  card: {
+    /** Main card surface - light bg/dark text, inverts in dark mode */
+    base: "bg-background text-foreground",
+    /** Elevated/muted surface */
+    elevated: "bg-muted text-foreground",
+    /** High contrast text on card */
+    contrast: "bg-background text-gray-900 dark:text-gray-50",
+  },
+
+  // Inverse surfaces - dark bg with light text (stays dark in both modes)
+  inverse: {
+    /** Dark background with light text - good for headers, CTAs */
+    base: "bg-gray-900 text-gray-100 dark:bg-gray-800 dark:text-gray-100",
+    /** Charcoal brand inverse */
+    brand: "bg-[#374152] text-gray-100",
+  },
+
+  // Brand surfaces - Scrolli brand colors
+  brand: {
+    /** Primary charcoal brand */
+    primary: "bg-primary text-primary-foreground",
+    /** Navbar beige - cream in light, charcoal in dark */
+    beige: "bg-[#F8F5E4] text-gray-800 dark:bg-[#374152] dark:text-gray-100",
+    /** Beige with muted text */
+    beigeMuted:
+      "bg-[#F8F5E4] text-gray-600 dark:bg-[#374152] dark:text-gray-300",
+  },
+
+  // Overlay surfaces - for modals, popovers, dropdowns
+  overlay: {
+    /** Standard overlay */
+    base: "bg-background/95 text-foreground backdrop-blur-md",
+    /** Dark overlay */
+    dark: "bg-gray-900/95 text-gray-100 backdrop-blur-md",
+  },
+} as const;
+
+/**
+ * BUTTON COLOR PAIRS - Guaranteed accessible button color combinations
+ *
+ * Each variant includes default state + hover + disabled styling.
+ * Use these to ensure buttons are always readable.
+ *
+ * @example
+ * <button className={cn(buttonPairs.primary.default, buttonPairs.primary.hover)}>
+ */
+export const buttonPairs = {
+  /** Primary brand button - charcoal bg, light text (text stays light on hover) */
+  primary: {
+    default: "bg-primary text-primary-foreground border-transparent",
+    hover: "hover:bg-primary/90 hover:text-primary-foreground",
+    disabled:
+      "disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed",
+    /** All states combined */
+    all: "bg-primary text-primary-foreground border-transparent hover:bg-primary/90 hover:text-primary-foreground disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed",
+  },
+  /** Secondary button */
+  secondary: {
+    default: "bg-secondary text-secondary-foreground border-transparent",
+    hover: "hover:bg-secondary/80",
+    all: "bg-secondary text-secondary-foreground border-transparent hover:bg-secondary/80",
+  },
+  /** Outline button - transparent bg with border */
+  outline: {
+    default: "bg-transparent text-foreground border border-border",
+    hover: "hover:bg-muted",
+    all: "bg-transparent text-foreground border border-border hover:bg-muted",
+  },
+  /** Ghost button - no bg, no border */
+  ghost: {
+    default: "bg-transparent text-foreground",
+    hover: "hover:bg-muted",
+    all: "bg-transparent text-foreground hover:bg-muted",
+  },
+  /** Beige button - cream bg, dark text (STRICT: NO COLOR CHANGE) */
+  beige: {
+    default: "bg-[#F8F5E4] text-gray-900 dark:bg-gray-600 dark:text-gray-100",
+    hover: "hover:bg-[#F3F0DE] dark:hover:bg-gray-500",
+    all: "bg-[#F8F5E4] text-gray-900 dark:bg-gray-600 dark:text-gray-100 hover:bg-[#F3F0DE] dark:hover:bg-gray-500",
+  },
+  /** Charcoal button - dark bg, light text */
+  charcoal: {
+    default: "bg-[#374152] text-white",
+    hover: "hover:bg-[#1F2937]",
+    all: "bg-[#374152] text-white hover:bg-[#1F2937]",
+  },
+  /** Success/green button */
+  success: {
+    default: "bg-success text-white",
+    hover: "hover:bg-success/90",
+    all: "bg-success text-white hover:bg-success/90",
+  },
+  /** Destructive/red button (white text stays white on hover) */
+  destructive: {
+    default: "bg-red-600 text-white border-red-600",
+    hover: "hover:bg-red-700 hover:text-white",
+    all: "bg-red-600 text-white border-red-600 hover:bg-red-700 hover:text-white",
+  },
+} as const;
+
+/**
+ * PILL/BADGE COLOR PAIRS - For category tags, labels, status badges
+ *
+ * Three variants:
+ * - filled: Opaque colored background
+ * - subtle: Semi-transparent background (softer look)
+ * - outline: Transparent with colored border
+ *
+ * @example
+ * <span className={pillPairs.filled.success}>Premium</span>
+ * <span className={pillPairs.subtle.primary}>Category</span>
+ */
+export const pillPairs = {
+  /** Filled pills - opaque background, guaranteed contrast */
+  filled: {
+    /** Primary charcoal pill */
+    primary: "bg-primary text-primary-foreground",
+    /** Secondary/neutral pill */
+    secondary: "bg-muted text-foreground",
+    /** Success green pill */
+    success: "bg-green-600 text-white",
+    /** Warning yellow pill - dark text for contrast */
+    warning: "bg-yellow-500 text-gray-900",
+    /** Error red pill */
+    error: "bg-red-600 text-white",
+    /** Info blue pill */
+    info: "bg-blue-600 text-white",
+    /** Beige brand pill */
+    beige: "bg-[#F8F5E4] text-gray-800 dark:bg-gray-600 dark:text-gray-100",
+  },
+
+  /** Subtle pills - semi-transparent background, softer look */
+  subtle: {
+    /** Primary subtle - 10-20% opacity bg */
+    primary:
+      "bg-primary/10 text-gray-800 dark:bg-primary/20 dark:text-gray-200",
+    /** Secondary subtle */
+    secondary: "bg-muted text-muted-foreground",
+    /** Success subtle */
+    success:
+      "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+    /** Warning subtle */
+    warning:
+      "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400",
+    /** Error subtle */
+    error: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400",
+    /** Info subtle */
+    info: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400",
+    /** Beige subtle - for light cream pills on beige backgrounds */
+    beige: "bg-[#EDE9D5] text-gray-700 dark:bg-gray-700 dark:text-gray-200",
+  },
+
+  /** Outline pills - transparent bg with colored border */
+  outline: {
+    primary:
+      "bg-transparent text-primary border border-primary dark:text-primary-foreground dark:border-primary-foreground",
+    secondary: "bg-transparent text-foreground border border-border",
+    success:
+      "bg-transparent text-green-700 border border-green-600 dark:text-green-400",
+    warning:
+      "bg-transparent text-yellow-700 border border-yellow-600 dark:text-yellow-400",
+    error:
+      "bg-transparent text-red-700 border border-red-600 dark:text-red-400",
+  },
+} as const;
+
+/**
+ * TEXT ON IMAGE PAIRS - For text overlaid on images/gradients
+ * Includes text shadow and high contrast combinations
+ */
+export const textOnImagePairs = {
+  /** White text with shadow for dark images */
+  light: "text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]",
+  /** Dark text with shadow for light images */
+  dark: "text-gray-900 drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)]",
+  /** White text with stronger shadow */
+  lightStrong: "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]",
 } as const;
 
 // ============================================================================
@@ -511,3 +748,61 @@ export type FontSize = keyof typeof fontSize;
 export type FontWeight = keyof typeof fontWeight;
 export type BorderRadius = keyof typeof borderRadius;
 export type Elevation = keyof typeof elevation;
+
+// ============================================================================
+// TYPE-SAFE HELPER FUNCTIONS
+// ============================================================================
+
+/**
+ * Type-safe spacing helper - use instead of hardcoded py-*, px-*
+ * @example spacing('section', 'md') => "py-8 md:py-12 lg:py-16"
+ */
+export function spacing(
+  type: "section" | "container" | "component" | "gap",
+  size: SectionPadding | ContainerPadding | ComponentPadding | Gap
+): string {
+  switch (type) {
+    case "section":
+      return sectionPadding[size as SectionPadding] ?? sectionPadding.md;
+    case "container":
+      return containerPadding[size as ContainerPadding] ?? containerPadding.md;
+    case "component":
+      return componentPadding[size as ComponentPadding] ?? componentPadding.md;
+    case "gap":
+      return gap[size as Gap] ?? gap.md;
+    default:
+      return "";
+  }
+}
+
+/**
+ * Type-safe background helper - use instead of hardcoded bg-*
+ * @example bg('base') => "bg-white dark:bg-[#0a0a0a]"
+ */
+export function bg(variant: keyof typeof colors.background): string {
+  return colors.background[variant] ?? colors.background.base;
+}
+
+/**
+ * Type-safe text color helper - use instead of hardcoded text-*
+ * @example text('primary') => "text-gray-900 dark:text-gray-50"
+ */
+export function text(variant: keyof typeof colors.foreground): string {
+  return colors.foreground[variant] ?? colors.foreground.primary;
+}
+
+/**
+ * Type-safe border radius helper - use instead of hardcoded rounded-*
+ * @example radius('lg') => "rounded-lg"
+ */
+export function radius(size: BorderRadius): string {
+  return borderRadius[size] ?? borderRadius.md;
+}
+
+/**
+ * Type-safe elevation helper - use instead of hardcoded shadow-*
+ * @example shadow(2) => "shadow-md"
+ */
+export function shadow(level: Elevation): string {
+  return elevation[level] ?? elevation[1];
+}

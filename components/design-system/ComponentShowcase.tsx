@@ -137,7 +137,7 @@ export default function ComponentShowcase({
         {/* Code */}
         {code && (
           <div>
-            <Text variant="bodySmall" color="muted" className="mb-2 font-semibold uppercase tracking-wider">
+            <Text variant="bodySmall" color="muted" className="mb-2 font-semibold tracking-wider">
               Code Example
             </Text>
             <CodeBlock code={code} language={codeLanguage} />

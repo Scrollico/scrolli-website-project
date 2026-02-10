@@ -11,16 +11,20 @@
 export interface Article {
   id: string;
   title: string;
+  subtitle?: string; // Article subtitle (from Payload CMS)
   author: string;
   category: string;
   date: string;
   readTime: string;
-  image?: string;
+  image?: string; // Desktop/primary (featured) image — hero, single page
+  thumbnail?: string; // Thumbnail for grids/lists (from CMS thumbnail, fallback featured)
+  mobileImage?: string; // Mobile/vertical image variant (for responsive display)
   excerpt?: string;
   tag?: string;
   number?: string;
   isPremium?: boolean;
   content?: string; // HTML content for article body
+  inlineScriptHtml?: string; // Inline script HTML from external CMS (e.g., Instorier stories)
   seoTitle?: string; // SEO title override
   seoDescription?: string; // SEO description override
 }

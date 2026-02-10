@@ -54,7 +54,7 @@ export function SectionHeader({
         {showUnderline && (
           <div
             className={cn(
-              "w-12 h-0.5 bg-primary mt-4",
+              "w-12 h-0.5 bg-[#8080FF] mt-4",
               underlineClassName
             )}
           />

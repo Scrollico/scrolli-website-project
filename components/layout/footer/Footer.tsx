@@ -5,9 +5,12 @@ import { Globe } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { Container } from '@/components/responsive';
-import { Heading, Text } from '@/components/ui/typography';
-import { colors, sectionPadding, gap, typography } from '@/lib/design-tokens';
+import {
+  colors,
+  containerPadding,
+  gap,
+  typography
+} from '@/lib/design-tokens';
 
 export default function Footer() {
   const [mounted, setMounted] = useState(false);
@@ -20,304 +23,136 @@ export default function Footer() {
   // Only calculate isDark after hydration to prevent mismatch
   const isDark = mounted && (theme === 'dark' || resolvedTheme === 'dark');
 
+  // Light: Primary-alternative.svg; dark: Primary.svg
+  const logoSrc = mounted && isDark
+    ? "/assets/images/Standart/Primary.svg"
+    : "/assets/images/Standart/Primary-alternative.svg";
+
+  // Navigation Links
+  const categories = [
+    { label: 'Archive', href: '/archive' },
+    { label: 'Categories', href: '/categories' },
+    { label: 'About Us', href: '/about-us' },
+    { label: 'Author', href: '/author' },
+  ];
+
+  const info = [
+    { label: 'Contact', href: '/contact' },
+    { label: 'Terms of Use', href: '/kullanim-kosullari' },
+    { label: 'Imprint', href: '/kunye' },
+    { label: 'Sign in', href: '/sign-in' },
+    { label: 'Subscribe', href: '/pricing', highlight: true },
+  ];
+
   return (
-    <footer className={cn("footer-modern", colors.navbarBeige.DEFAULT)}>
-      <Container>
-        <div className={cn("footer-content", "grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr]", gap.xl, "mb-10")}>
+    <footer
+      className={cn(
+        "w-full mt-20 md:mt-32 pt-16 pb-10 border-t",
+        colors.navbarBeige.DEFAULT,
+        colors.navbarBeige.text,
+        colors.border.light,
+        // Override border-t color directly for cleaner look
+        "border-white/10 dark:border-white/10"
+      )}
+      suppressHydrationWarning
+    >
+      <div className={cn("mx-auto w-full max-w-7xl", containerPadding.md)}>
+        <div className={cn("grid grid-cols-1 lg:grid-cols-[2fr_1fr_1fr] mb-12", gap.xl)}>
+
           {/* Left Section - Brand */}
-          <div className={cn("footer-brand", "flex flex-col", gap.md)}>
-            <Link href="/" prefetch={true} className="footer-logo">
+          <div className="flex flex-col items-start gap-4">
+            <Link href="/" prefetch={true} className="inline-block hover:opacity-80 transition-opacity duration-300">
               <NextImage
-                src={mounted && isDark ? "/assets/images/Standart/Primary-alternative3.svg" : "/assets/images/Standart/Primary-alternative2.svg"}
+                src={logoSrc}
                 alt="Scrolli Logo"
                 width={120}
                 height={40}
                 unoptimized
-                className="logo-image"
+                className="h-auto w-auto object-contain max-w-[120px]"
+                key={mounted ? 'mounted' : 'unmounted'} // Force re-render after mount
               />
             </Link>
-            <p className="footer-tagline">
+            <p className={cn(typography.bodySmall, colors.foreground.muted)}>
               In-depth media experience
             </p>
-            <div className="footer-language">
-              <div className="globe-wrapper">
-                <Globe size={20} className="globe-icon" />
+
+            <div className="relative inline-block mt-2 group">
+              <div className={cn("flex items-center gap-2 cursor-pointer transition-colors duration-300", colors.foreground.muted, colors.foreground.interactive)}>
+                <Globe size={20} />
               </div>
-              <div className="lang-dropdown">
-                <button className="lang-btn">tr</button>
-                <button className="lang-btn active">Global</button>
+
+              <div className={cn(
+                "absolute bottom-full left-0 mb-2 min-w-[100px] p-2 rounded-lg shadow-lg opacity-0 invisible translate-y-2 transition-all duration-300 z-50 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 flex flex-col gap-1",
+                colors.surface.base,
+                colors.border.light
+              )}>
+                <button className={cn(
+                  "w-full px-4 py-2 text-left text-sm font-medium rounded transition-colors bg-transparent",
+                  colors.foreground.primary,
+                  "hover:bg-black/5 dark:hover:bg-white/5"
+                )}>
+                  tr
+                </button>
+                <button className={cn(
+                  "w-full px-4 py-2 text-left text-sm font-medium rounded transition-colors",
+                  "bg-green-600/10 text-green-600 font-semibold dark:bg-green-600/20 dark:text-green-500"
+                )}>
+                  Global
+                </button>
               </div>
             </div>
           </div>
 
           {/* Middle Section - Categories */}
-          <div className={cn("footer-column", "flex flex-col", gap.md)}>
-            <Heading level={4} variant="h6" className={cn(typography.caption, "uppercase tracking-wider", colors.foreground.secondary)}>CATEGORIES</Heading>
-            <ul className={cn("footer-links", "list-none p-0 m-0 flex flex-col", gap.sm)}>
-              <li><Link href="/archive">Archive</Link></li>
-              <li><Link href="/categories">Categories</Link></li>
-              <li><Link href="/about-us">About Us</Link></li>
-              <li><Link href="/author">Author</Link></li>
+          <div className="flex flex-col gap-4">
+            <h4 className={cn("text-xs font-bold tracking-widest", colors.foreground.muted)}>CATEGORIES</h4>
+            <ul className="flex flex-col gap-3 p-0 m-0 list-none">
+              {categories.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className={cn(
+                      "text-[0.95rem] transition-colors duration-300 decoration-0",
+                      colors.foreground.primary,
+                      "hover:text-green-600 dark:hover:text-green-500"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Right Section - Info */}
-          <div className={cn("footer-column", "flex flex-col", gap.md)}>
-            <Heading level={4} variant="h6" className={cn(typography.caption, "uppercase tracking-wider", colors.foreground.secondary)}>INFO</Heading>
-            <ul className={cn("footer-links", "list-none p-0 m-0 flex flex-col", gap.sm)}>
-              <li><Link href="/contact">Contact</Link></li>
-              <li><Link href="/kullanim-kosullari">Terms of Use</Link></li>
-              <li><Link href="/kunye">Imprint</Link></li>
-              <li><Link href="/pricing" className="footer-link-highlight">ScrolliPlus</Link></li>
+          <div className="flex flex-col gap-4">
+            <h4 className={cn("text-xs font-bold tracking-widest", colors.foreground.muted)}>INFO</h4>
+            <ul className="flex flex-col gap-3 p-0 m-0 list-none">
+              {info.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className={cn(
+                      "text-[0.95rem] transition-colors duration-300 decoration-0",
+                      link.highlight ? "text-amber-500 font-medium hover:text-amber-600" : colors.foreground.primary,
+                      !link.highlight && "hover:text-green-600 dark:hover:text-green-500"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
         {/* Bottom Copyright */}
-        <div className={cn("footer-bottom", "pt-8 border-t", colors.border.DEFAULT)}>
-          <Text variant="caption" color="muted" className="m-0">
+        <div className={cn("pt-8 border-t border-white/10 dark:border-white/10 text-center md:text-left")}>
+          <p className={cn("text-sm", colors.foreground.muted)}>
             ©2025 Scrolli. All Rights Reserved. Scrolli Media Inc.
-          </Text>
+          </p>
         </div>
-      </Container>
-
-      <style jsx>{`
-        .footer-modern {
-          background: #F8F5E4;
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
-          padding: 60px 0 40px;
-          margin-top: 80px;
-          color: var(--text-color);
-        }
-
-        .dark-mode .footer-modern {
-          background: rgba(55, 65, 82, 0.878) !important; /* #374152e0 - gray-700 with opacity - same as navbar dark mode */
-          color: #ffffff !important; /* white text */
-        }
-
-        .footer-content {
-          display: grid;
-          grid-template-columns: 2fr 1fr 1fr;
-          gap: 60px;
-          margin-bottom: 40px;
-        }
-
-        .footer-brand {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
-
-        .footer-logo {
-          display: inline-block;
-          transition: opacity 0.3s ease;
-        }
-
-        .footer-logo:hover {
-          opacity: 0.8;
-        }
-
-        .logo-image {
-          height: auto;
-          max-width: 120px;
-          object-fit: contain;
-        }
-
-        .footer-tagline {
-          color: rgba(243, 244, 246, 0.75);
-          font-size: 0.95rem;
-          line-height: 1.5;
-          margin: 0;
-        }
-
-        .dark-mode .footer-tagline {
-          color: #ffffff !important; /* white text */
-        }
-
-        .footer-language {
-          position: relative;
-          display: inline-block;
-          margin-top: 8px;
-        }
-
-        .globe-wrapper {
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          color: rgba(0, 0, 0, 0.6);
-          transition: color 0.3s ease;
-          padding: 8px 0;
-        }
-        
-        .dark-mode .globe-wrapper {
-          color: rgba(255, 255, 255, 0.6);
-        }
-
-        .globe-wrapper:hover {
-          color: #8b5cf6;
-        }
-
-        .lang-dropdown {
-          position: absolute;
-          bottom: 100%; /* Float above the icon */
-          left: 0;
-          background: white;
-          border-radius: 8px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-          padding: 8px;
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-          min-width: 100px;
-          opacity: 0;
-          visibility: hidden;
-          transform: translateY(10px);
-          transition: all 0.3s ease;
-          z-index: 50;
-          margin-bottom: 8px;
-        }
-
-        .dark-mode .lang-dropdown {
-          background: #1f2937;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
-
-        .footer-language:hover .lang-dropdown {
-          opacity: 1;
-          visibility: visible;
-          transform: translateY(0);
-        }
-
-        .lang-btn {
-          padding: 8px 16px;
-          border-radius: 4px;
-          font-size: 0.875rem;
-          font-weight: 500;
-          border: none;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          background: transparent !important;
-          color: #111827 !important;
-          text-align: left;
-          width: 100%;
-        }
-
-        .dark-mode .lang-btn {
-          color: #f3f4f6 !important;
-        }
-
-        .lang-btn:hover {
-          background: rgba(0, 0, 0, 0.05) !important;
-          color: #111827 !important;
-        }
-
-        .dark-mode .lang-btn:hover {
-          background: rgba(255, 255, 255, 0.05) !important;
-          color: #f3f4f6 !important;
-        }
-
-        .lang-btn.active {
-          background: rgba(139, 92, 246, 0.1);
-          color: #8b5cf6;
-          font-weight: 600;
-        }
-
-        .dark-mode .lang-btn.active {
-          background: rgba(139, 92, 246, 0.2);
-          color: #8b5cf6;
-        }
-
-        .footer-column {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
-
-        .footer-title {
-          font-size: 0.75rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          color: rgba(243, 244, 246, 0.85);
-          margin: 0;
-        }
-
-        .dark-mode .footer-title {
-          color: #ffffff !important; /* white text */
-        }
-
-        .footer-links {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-        }
-
-        .footer-links li {
-          margin: 0;
-        }
-
-        .footer-links a {
-          color: var(--text-color);
-          font-size: 0.95rem;
-          text-decoration: none;
-          transition: color 0.3s ease;
-        }
-
-        .dark-mode .footer-links a {
-          color: #ffffff !important; /* white text */
-        }
-
-        .footer-links a:hover {
-          color: #8b5cf6;
-        }
-
-        .footer-link-highlight {
-          color: #fbbf24 !important;
-          font-weight: 500;
-        }
-
-        .footer-link-highlight:hover {
-          color: #f59e0b !important;
-          font-weight: 500;
-        }
-
-        .footer-bottom {
-          padding-top: 30px;
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .copyright-text {
-          color: rgba(243, 244, 246, 0.65);
-          font-size: 0.875rem;
-          margin: 0;
-        }
-
-        .dark-mode .copyright-text {
-          color: #ffffff !important; /* white text */
-        }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-          .footer-content {
-            grid-template-columns: 1fr;
-            gap: 40px;
-          }
-        }
-
-        @media (max-width: 768px) {
-          .footer-modern {
-            padding: 40px 0 30px;
-            margin-top: 40px;
-          }
-
-          .footer-content {
-            gap: 30px;
-          }
-        }
-      `}</style>
+      </div>
     </footer>
   );
 }

@@ -86,9 +86,9 @@ export default function PillMorphTabs({
   }, [value, onValueChange]);
 
   return (
-    <div className={cn("w-full", className)}>
-      <Tabs value={value} onValueChange={(v) => setValue(v)}>
-        <div className="flex justify-center mb-4 md:mb-6">
+    <div className={cn("w-full min-w-0", className)}>
+      <Tabs value={value} onValueChange={(v) => setValue(v)} className="w-full">
+        <div className="flex justify-center mb-6 md:mb-8">
           <div
             ref={listRef}
             data-tabs-container="true"
@@ -144,11 +144,13 @@ export default function PillMorphTabs({
           </div>
         </div>
 
-        {/* Panels */}
-        <div className="mt-4">
+        {/* Panels - ensure proper width and positioning */}
+        <div className="mt-0 w-full relative left-0">
           {items.map((it) => (
-            <TabsContent key={it.value} value={it.value} className="p-0">
-              {it.panel ?? null}
+            <TabsContent key={it.value} value={it.value} className="p-0 w-full relative left-0">
+              <div className="w-full min-w-0">
+                {it.panel ?? null}
+              </div>
             </TabsContent>
           ))}
         </div>

@@ -6,6 +6,7 @@ import {
   sectionPadding,
   gap,
   colors,
+  interactions,
 } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -81,7 +82,7 @@ export default function ImprintSection() {
           >
             {/* Publisher */}
             <div className={cn("flex flex-col", gap.sm)}>
-              <Text variant="bodySmall" color="muted" className="uppercase tracking-wide">
+              <Text variant="bodySmall" color="muted" className="tracking-wide">
                 {imprintData.publisher.title}
               </Text>
               <Text variant="body" color="primary">
@@ -91,7 +92,7 @@ export default function ImprintSection() {
 
             {/* Management Place */}
             <div className={cn("flex flex-col", gap.sm)}>
-              <Text variant="bodySmall" color="muted" className="uppercase tracking-wide">
+              <Text variant="bodySmall" color="muted" className="tracking-wide">
                 {imprintData.managementPlace.title}
               </Text>
               <Text variant="body" color="primary">
@@ -101,7 +102,7 @@ export default function ImprintSection() {
 
             {/* Editor-in-Chief */}
             <div className={cn("flex flex-col", gap.sm)}>
-              <Text variant="bodySmall" color="muted" className="uppercase tracking-wide">
+              <Text variant="bodySmall" color="muted" className="tracking-wide">
                 {imprintData.editorInChief.title}
               </Text>
               <Text variant="body" color="primary">
@@ -111,7 +112,7 @@ export default function ImprintSection() {
 
             {/* Board of Directors */}
             <div className={cn("flex flex-col", gap.sm)}>
-              <Text variant="bodySmall" color="muted" className="uppercase tracking-wide">
+              <Text variant="bodySmall" color="muted" className="tracking-wide">
                 {imprintData.boardOfDirectors.title}
               </Text>
               <div className={cn("flex flex-col", gap.md)}>
@@ -130,7 +131,7 @@ export default function ImprintSection() {
 
             {/* Legal Entity Representatives */}
             <div className={cn("flex flex-col", gap.sm)}>
-              <Text variant="bodySmall" color="muted" className="uppercase tracking-wide">
+              <Text variant="bodySmall" color="muted" className="tracking-wide">
                 {imprintData.legalEntityRepresentatives.title}
               </Text>
               <div className={cn("flex flex-col", gap.xs)}>
@@ -144,13 +145,13 @@ export default function ImprintSection() {
 
             {/* Corporate Email */}
             <div className={cn("flex flex-col", gap.sm)}>
-              <Text variant="bodySmall" color="muted" className="uppercase tracking-wide">
+              <Text variant="bodySmall" color="muted" className="tracking-wide">
                 {imprintData.corporateEmail.title}
               </Text>
               <Text variant="body" color="primary">
                 <a 
                   href={`mailto:${imprintData.corporateEmail.value}`}
-                  className="hover:text-primary transition-colors"
+                  className={interactions.hover}
                 >
                   {imprintData.corporateEmail.value}
                 </a>

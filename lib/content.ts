@@ -3,13 +3,20 @@
  *
  * Functions for fetching, filtering, and searching content
  * Following Arc Publishing principles for content architecture
+ * 
+ * Now uses Payload CMS as the data source instead of static blog.json
  */
 
-import { BlogData, Article } from "@/types/content";
-import blogData from "@/data/blog.json";
-
-// Type assertion for blog data
-const typedBlogData = blogData as BlogData;
+import { Article } from "@/types/content";
+import {
+  getArticleBySlug,
+  getArticlesByCategory as getPayloadArticlesByCategory,
+  getRecentArticles as getPayloadRecentArticles,
+  getFeaturedArticles as getPayloadFeaturedArticles,
+  fetchArticles,
+} from "./payload/client";
+import { mapGundemToArticle, mapHikayelerToArticle } from "./payload/types";
+// Note: serializeRichText import removed - content is already HTML string when using locale=tr
 
 /**
  * Remove Mailchimp forms and all script tags from article content
@@ -103,345 +110,304 @@ function removeMailchimpForms(content: string): string {
 }
 
 /**
- * If an article doesn't carry body content, try to hydrate it with the
- * richer version stored in the Gündem CSV feed.
- * This function uses dynamic imports to avoid client-side fs errors.
+ * Find an article by ID (slug) from Payload CMS
+ * Supports both gundem and hikayeler collections
  */
-function enrichWithGundemContent(article: Article, articleId: string): Article {
-  const hasBody =
-    typeof article.content === "string" && article.content.trim().length > 0;
+export async function findArticleById(articleId: string): Promise<Article | null> {
+  try {
+    // Try to find article by slug in Payload CMS
+    const article = await getArticleBySlug(articleId);
+    
+    if (!article) {
+      return null;
+    }
 
-  if (hasBody) {
-    // Still clean Mailchimp forms from existing content
-    // removeMailchimpForms already normalizes whitespace deterministically
-    return {
-      ...article,
-      content: removeMailchimpForms(article.content || ''),
-    };
-  }
+    // Map Payload article to Article interface
+    // Content is already handled in mapping functions (HTML string or serialized)
+    const mappedArticle = article.source === "Gündem"
+      ? mapGundemToArticle(article)
+      : mapHikayelerToArticle(article);
 
-  // On server-side, try to load Gündem content dynamically
-  // This is only called from server-side functions (findArticleById)
-  if (typeof window === 'undefined') {
-    try {
-      // Dynamic import for server-side only
-      // Use a try-catch with explicit path resolution
-      let gundemModule;
-      try {
-        gundemModule = require("./gundem-content");
-      } catch (requireError) {
-        // If require fails, return article with empty content
-        return {
-          ...article,
-          content: article.content || '',
-        };
-      }
+    // Clean Mailchimp forms from content (content is already HTML string)
+    // BUT: Skip cleaning for hikayeler articles with inline scripts (instorier.com)
+    // These scripts are intentional external story content
+    if (mappedArticle.content && typeof mappedArticle.content === "string") {
+      const isHikayelerWithInlineScript = 
+        article.source === "Hikayeler" && 
+        mappedArticle.content.includes('instorier.com');
       
-      const gundemArticle = gundemModule?.getGundemArticleById?.(articleId);
-      if (gundemArticle && gundemArticle.content) {
-        // removeMailchimpForms already normalizes whitespace deterministically
-        return {
-          ...article,
-          content: removeMailchimpForms(gundemArticle.content || article.content || ''),
-          excerpt: article.excerpt || gundemArticle.excerpt,
-          image: article.image || gundemArticle.image,
-          readTime: article.readTime || gundemArticle.readTime,
-          seoTitle: article.seoTitle || gundemArticle.seoTitle,
-          seoDescription: article.seoDescription || gundemArticle.seoDescription,
-        };
+      if (!isHikayelerWithInlineScript) {
+        mappedArticle.content = removeMailchimpForms(mappedArticle.content);
       }
-    } catch (error) {
-      // Silently fail and return article with existing content (or empty)
-      console.warn(`Failed to enrich article ${articleId} with Gündem content:`, error);
     }
-  }
 
-  // Always return article with content (even if empty string)
-  return {
-    ...article,
-    content: article.content || '',
-  };
+    return mappedArticle;
+  } catch (error) {
+    console.error(`Error fetching article ${articleId} from Payload:`, error);
+    // Return null for graceful degradation
+    return null;
+  }
 }
 
 /**
- * Find an article by ID across all sections
- */
-export function findArticleById(articleId: string): Article | null {
-  // Search in featured section
-  if (typedBlogData.featured.mainArticle.id === articleId) {
-    return enrichWithGundemContent(
-      typedBlogData.featured.mainArticle,
-      articleId
-    );
-  }
-  const featuredSideArticle = typedBlogData.featured.sideArticles.find(
-    (article) => article.id === articleId
-  );
-  if (featuredSideArticle)
-    return enrichWithGundemContent(featuredSideArticle, articleId);
-
-  // Search in trending section
-  const trendingArticle = typedBlogData.trending.articles.find(
-    (article) => article.id === articleId
-  );
-  if (trendingArticle)
-    return enrichWithGundemContent(trendingArticle, articleId);
-
-  // Search in featuredSlider section
-  const sliderArticle = typedBlogData.featuredSlider.articles.find(
-    (article) => article.id === articleId
-  );
-  if (sliderArticle)
-    return enrichWithGundemContent(sliderArticle, articleId);
-
-  // Search in todayHighlights section
-  const highlightArticle = typedBlogData.todayHighlights.articles.find(
-    (article) => article.id === articleId
-  );
-  if (highlightArticle)
-    return enrichWithGundemContent(highlightArticle, articleId);
-
-  // Search in mostRecent section
-  const mostRecentMainArticle = typedBlogData.mostRecent.mainArticles.find(
-    (article) => article.id === articleId
-  );
-  if (mostRecentMainArticle)
-    return enrichWithGundemContent(mostRecentMainArticle, articleId);
-  const mostRecentSideArticle = typedBlogData.mostRecent.sideArticles.find(
-    (article) => article.id === articleId
-  );
-  if (mostRecentSideArticle)
-    return enrichWithGundemContent(mostRecentSideArticle, articleId);
-
-  // Search in Culture section
-  if (typedBlogData.Culture.mainArticle.id === articleId) {
-    return enrichWithGundemContent(
-      typedBlogData.Culture.mainArticle,
-      articleId
-    );
-  }
-  const cultureArticle = typedBlogData.Culture.articles.find(
-    (article) => article.id === articleId
-  );
-  if (cultureArticle)
-    return enrichWithGundemContent(cultureArticle, articleId);
-  const cultureSideArticle = typedBlogData.Culture.sideArticles.find(
-    (article) => article.id === articleId
-  );
-  if (cultureSideArticle)
-    return enrichWithGundemContent(cultureSideArticle, articleId);
-
-  // Search in theStartup section
-  if (typedBlogData.theStartup.mainArticle.id === articleId) {
-    return enrichWithGundemContent(
-      typedBlogData.theStartup.mainArticle,
-      articleId
-    );
-  }
-  const startupArticle = typedBlogData.theStartup.articles.find(
-    (article) => article.id === articleId
-  );
-  if (startupArticle)
-    return enrichWithGundemContent(startupArticle, articleId);
-
-  // Search in RyanMarkPosts section
-  const ryanMarkArticle = typedBlogData.RyanMarkPosts.articles.find(
-    (article) => article.id === articleId
-  );
-  if (ryanMarkArticle)
-    return enrichWithGundemContent(ryanMarkArticle, articleId);
-
-  // Search in hightlightPosts section
-  const highlightPostArticle = typedBlogData.hightlightPosts.articles.find(
-    (article) => article.id === articleId
-  );
-  if (highlightPostArticle)
-    return enrichWithGundemContent(highlightPostArticle, articleId);
-
-  // Search in relatedPosts section
-  const relatedPost = typedBlogData.relatedPosts.articles.find(
-    (article) => article.id === articleId
-  );
-  if (relatedPost) return enrichWithGundemContent(relatedPost, articleId);
-
-  // Search in Gündem articles (server-side only, using dynamic require)
-  if (typeof window === 'undefined') {
-    try {
-      const gundemModule = require("./gundem-content");
-      const gundemArticle = gundemModule.getGundemArticleById(articleId);
-      if (gundemArticle) {
-        return {
-          ...gundemArticle,
-          content: removeMailchimpForms(gundemArticle.content || ''),
-        };
-      }
-    } catch (error) {
-      // Silently fail if module not available (client-side)
-    }
-  }
-
-  return null;
-}
-
-/**
- * Get all articles from all sections (client-safe, excludes Gündem articles)
- * For server-side use with Gündem articles, use getAllArticlesWithGundem()
+ * Get all articles from Payload CMS (both gundem and hikayeler collections)
  * Deduplicates articles by ID to prevent duplicate keys in React
  */
-export function getAllArticles(): Article[] {
-  const articles: Article[] = [];
-  const seenIds = new Set<string>();
+export async function getAllArticles(limit = 24): Promise<Article[]> {
+  try {
+    const payloadArticles = await fetchArticles({
+      sort: "-publishedAt",
+      limit,
+      depth: 2,
+    });
 
-  // Helper to add article if not seen
-  const addIfUnique = (article: Article) => {
-    if (article && article.id && !seenIds.has(article.id)) {
+    // Map Payload articles to Article interface
+    // Content is already HTML string when using locale=tr, no serialization needed
+    const articles: Article[] = payloadArticles.map((article) => {
+      return article.source === "Gündem"
+        ? mapGundemToArticle(article)
+        : mapHikayelerToArticle(article);
+    });
+
+    // Deduplicate by ID
+    const seenIds = new Set<string>();
+    return articles.filter((article) => {
+      if (seenIds.has(article.id)) {
+        return false;
+      }
       seenIds.add(article.id);
-      articles.push(article);
-    }
-  };
-
-  // Featured
-  addIfUnique(typedBlogData.featured.mainArticle);
-  typedBlogData.featured.sideArticles.forEach(addIfUnique);
-
-  // Trending
-  typedBlogData.trending.articles.forEach(addIfUnique);
-
-  // Featured Slider
-  typedBlogData.featuredSlider.articles.forEach(addIfUnique);
-
-  // Today Highlights
-  typedBlogData.todayHighlights.articles.forEach(addIfUnique);
-
-  // Most Recent
-  typedBlogData.mostRecent.mainArticles.forEach(addIfUnique);
-  typedBlogData.mostRecent.sideArticles.forEach(addIfUnique);
-
-  // Culture
-  addIfUnique(typedBlogData.Culture.mainArticle);
-  typedBlogData.Culture.articles.forEach(addIfUnique);
-  typedBlogData.Culture.sideArticles.forEach(addIfUnique);
-
-  // The Startup
-  addIfUnique(typedBlogData.theStartup.mainArticle);
-  typedBlogData.theStartup.articles.forEach(addIfUnique);
-
-  // Ryan Mark Posts
-  typedBlogData.RyanMarkPosts.articles.forEach(addIfUnique);
-
-  // Highlight Posts
-  typedBlogData.hightlightPosts.articles.forEach(addIfUnique);
-
-  // Related Posts
-  typedBlogData.relatedPosts.articles.forEach(addIfUnique);
-
-  // Note: Gündem articles excluded for client-side compatibility
-  // They are only available server-side via findArticleById()
-
-  return articles;
+      return true;
+    });
+  } catch (error) {
+    console.error("Error fetching all articles from Payload:", error);
+    return [];
+  }
 }
 
 /**
- * Get articles by category
+ * Get articles by category from Payload CMS
+ * Note: Categories are only on gundem collection
  */
-export function getArticlesByCategory(category: string): Article[] {
-  return getAllArticles().filter(
-    (article) => article.category.toLowerCase() === category.toLowerCase()
-  );
+export async function getArticlesByCategory(category: string): Promise<Article[]> {
+  try {
+    const response = await getPayloadArticlesByCategory(category);
+    
+    // Content is already HTML string when using locale=tr, no serialization needed
+    return response.docs.map((article) => mapGundemToArticle(article));
+  } catch (error) {
+    console.error(`Error fetching articles for category ${category}:`, error);
+    return [];
+  }
 }
 
 /**
- * Get articles by author
+ * Get articles by author from Payload CMS
  */
-export function getArticlesByAuthor(author: string): Article[] {
-  return getAllArticles().filter(
-    (article) => article.author.toLowerCase() === author.toLowerCase()
-  );
+export async function getArticlesByAuthor(author: string): Promise<Article[]> {
+  try {
+    // Fetch articles and filter by author name
+    const payloadArticles = await fetchArticles({
+      sort: "-publishedAt",
+      limit: 24,
+      depth: 2,
+    });
+
+      // Content is already HTML string when using locale=tr, handled in mapping functions
+      // Content is already HTML string when using locale=tr, handled in mapping functions
+      const articles = payloadArticles
+        .filter((article) => {
+          const authorName = typeof article.author === "object"
+            ? article.author?.name
+            : article.author;
+          return authorName?.toLowerCase() === author.toLowerCase();
+        })
+        .map((article) => {
+          return article.source === "Gündem"
+            ? mapGundemToArticle(article)
+            : mapHikayelerToArticle(article);
+        });
+
+    return articles;
+  } catch (error) {
+    console.error(`Error fetching articles for author ${author}:`, error);
+    return [];
+  }
 }
 
 /**
- * Get related articles (by category, excluding current article)
+ * Get related articles using Payload relationships, with fallback to category-based matching
  * Ensures no duplicate articles are returned
  */
-export function getRelatedArticles(
+export async function getRelatedArticles(
   currentArticle: Article,
   limit: number = 6
-): Article[] {
-  const allArticles = getAllArticles();
-  const seenIds = new Set<string>([currentArticle.id]);
-  const result: Article[] = [];
-  
-  // First, get articles from same category
-  for (const article of allArticles) {
-    if (result.length >= limit) break;
+): Promise<Article[]> {
+  try {
+    // First, try to get the original Payload article to access relationships
+    const { getArticleBySlug } = await import("@/lib/payload/client");
+    const payloadArticle = await getArticleBySlug(currentArticle.id);
     
-    if (
-      !seenIds.has(article.id) &&
-      article.category === currentArticle.category
-    ) {
-      seenIds.add(article.id);
-      result.push(article);
-    }
-  }
+    const seenIds = new Set<string>([currentArticle.id]);
+    const result: Article[] = [];
 
-  // If not enough articles in same category, fill with other articles
-  if (result.length < limit) {
-    for (const article of allArticles) {
-      if (result.length >= limit) break;
+    // Step 1: Use explicit relationships from Payload if available
+    if (payloadArticle) {
+      let relatedItems: Array<any> = [];
       
-      if (!seenIds.has(article.id)) {
-        seenIds.add(article.id);
-        result.push(article);
+      if (payloadArticle.source === "Gündem" && payloadArticle.relatedArticles) {
+        // Gündem has polymorphic relatedArticles (can be gundem or hikayeler)
+        relatedItems = payloadArticle.relatedArticles
+          .map(rel => {
+            if (typeof rel.value === "string") {
+              // If it's just an ID string, we'd need to fetch it
+              // But with depth=2, it should be populated
+              return null;
+            }
+            return rel.value;
+          })
+          .filter(Boolean);
+      } else if (payloadArticle.source === "Hikayeler" && payloadArticle.relatedStories) {
+        // Hikayeler has relatedStories (only hikayeler)
+        relatedItems = payloadArticle.relatedStories
+          .map(rel => {
+            if (typeof rel.value === "string") {
+              return null;
+            }
+            return rel.value;
+          })
+          .filter(Boolean);
+      }
+
+      // Map related items to Article interface
+      for (const relatedItem of relatedItems) {
+        if (result.length >= limit) break;
+        if (!relatedItem || seenIds.has(relatedItem.slug || relatedItem.id)) continue;
+
+        const mapped = relatedItem.source === "Gündem"
+          ? mapGundemToArticle(relatedItem)
+          : mapHikayelerToArticle(relatedItem);
+
+        if (!seenIds.has(mapped.id)) {
+          seenIds.add(mapped.id);
+          result.push(mapped);
+        }
       }
     }
-  }
 
-  // Final safety check: ensure no duplicates by ID
-  const finalResult: Article[] = [];
-  const finalSeenIds = new Set<string>();
-  
-  for (const article of result) {
-    if (!finalSeenIds.has(article.id)) {
-      finalSeenIds.add(article.id);
-      finalResult.push(article);
+    // Step 2: If not enough related articles from relationships, use category-based fallback
+    if (result.length < limit) {
+      const allArticles = await getAllArticles(50);
+      
+      // First, get articles from same category
+      for (const article of allArticles) {
+        if (result.length >= limit) break;
+        
+        if (
+          !seenIds.has(article.id) &&
+          article.category === currentArticle.category
+        ) {
+          seenIds.add(article.id);
+          result.push(article);
+        }
+      }
+
+      // If still not enough, fill with other articles
+      if (result.length < limit) {
+        for (const article of allArticles) {
+          if (result.length >= limit) break;
+          
+          if (!seenIds.has(article.id)) {
+            seenIds.add(article.id);
+            result.push(article);
+          }
+        }
+      }
     }
+
+    // Final safety check: ensure no duplicates by ID
+    const finalResult: Article[] = [];
+    const finalSeenIds = new Set<string>();
+    
+    for (const article of result) {
+      if (!finalSeenIds.has(article.id)) {
+        finalSeenIds.add(article.id);
+        finalResult.push(article);
+      }
+    }
+
+    return finalResult.slice(0, limit);
+  } catch (error) {
+    console.error("Error fetching related articles:", error);
+    return [];
   }
-
-  return finalResult;
 }
 
 /**
- * Get recent articles
+ * Get recent articles from Payload CMS
  */
-export function getRecentArticles(limit: number = 10): Article[] {
-  return getAllArticles()
-    .sort((a, b) => {
-      // Simple date comparison (in production, use proper date parsing)
-      return b.date.localeCompare(a.date);
-    })
-    .slice(0, limit);
+export async function getRecentArticles(limit: number = 10): Promise<Article[]> {
+  try {
+    const payloadArticles = await getPayloadRecentArticles(limit);
+    
+    // Content is already HTML string when using locale=tr, handled in mapping functions
+    return payloadArticles.map((article) =>
+      article.source === "Gündem"
+        ? mapGundemToArticle(article)
+        : mapHikayelerToArticle(article)
+    );
+  } catch (error) {
+    console.error("Error fetching recent articles:", error);
+    return [];
+  }
 }
 
 /**
- * Get featured articles
+ * Get featured articles from Payload CMS
  */
-export function getFeaturedArticles(): Article[] {
-  return [
-    typedBlogData.featured.mainArticle,
-    ...typedBlogData.featured.sideArticles,
-  ];
+export async function getFeaturedArticles(): Promise<Article[]> {
+  try {
+    const payloadArticles = await getPayloadFeaturedArticles();
+    
+    // Content is already HTML string when using locale=tr, handled in mapping functions
+    return payloadArticles.map((article) =>
+      article.source === "Gündem"
+        ? mapGundemToArticle(article)
+        : mapHikayelerToArticle(article)
+    );
+  } catch (error) {
+    console.error("Error fetching featured articles:", error);
+    return [];
+  }
 }
 
 /**
- * Get trending articles
+ * Get trending articles from Payload CMS
+ * For now, returns recent featured articles as trending
+ * Can be enhanced with actual trending logic later
  */
-export function getTrendingArticles(): Article[] {
-  return typedBlogData.trending.articles;
+export async function getTrendingArticles(): Promise<Article[]> {
+  // Use featured articles as trending for now
+  return getFeaturedArticles();
 }
 
 /**
- * Export typed blog data
+ * Get blog data structure (deprecated - use Payload API directly)
+ * This function is kept for backward compatibility but returns empty structure
+ * Components should be updated to use Payload API functions directly
+ * @deprecated Use Payload API functions instead
  */
-export function getBlogData(): BlogData {
-  return typedBlogData;
+export function getBlogData(): any {
+  console.warn("getBlogData() is deprecated. Use Payload API functions instead.");
+  return {
+    featured: { mainArticle: null, sideArticles: [] },
+    trending: { articles: [] },
+    featuredSlider: { articles: [] },
+    todayHighlights: { articles: [] },
+    mostRecent: { mainArticles: [], sideArticles: [] },
+    Culture: { mainArticle: null, articles: [], sideArticles: [] },
+    theStartup: { mainArticle: null, articles: [], sideArticles: [] },
+    RyanMarkPosts: { articles: [] },
+    hightlightPosts: { articles: [] },
+    relatedPosts: { articles: [] },
+  };
 }

@@ -35,9 +35,9 @@ export default function ScrollIndicator() {
       <span className={cn(
         "text-xs",
         colors.foreground.muted,
-        "uppercase tracking-[0.15em] font-medium"
+        "tracking-[0.15em] font-medium"
       )}>
-        SCROLL
+        Scroll
       </span>
       <motion.div
         animate={{

@@ -1,0 +1,27 @@
+#!/bin/sh
+# Scrolli Design System Pre-commit Hook
+# Validates design token usage before allowing commits
+
+echo "🎨 Running Scrolli Design System validation..."
+
+# Run the design audit on staged .tsx files only
+STAGED_TSX=$(git diff --cached --name-only --diff-filter=ACM | grep '\.tsx$' | tr '\n' ' ')
+
+if [ -n "$STAGED_TSX" ]; then
+    echo "📁 Checking files: $STAGED_TSX"
+    
+    # Run the design audit script on staged files
+    for file in $STAGED_TSX; do
+        echo "  → Auditing $file..."
+        npm run audit:design -- --path="./$file" 2>/dev/null | grep -E '🔴|📊' || true
+    done
+    
+    echo ""
+    echo "✅ Design validation complete!"
+    echo "💡 TIP: Run 'npm run audit:design' for full codebase audit"
+else
+    echo "ℹ️  No .tsx files staged, skipping design audit"
+fi
+
+# Also run standard linting
+npm run lint

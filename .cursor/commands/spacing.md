@@ -1,4 +1,8 @@
-# Spacing Token Reference
+# /sc:spacing - Spacing Token Reference
+
+## Purpose
+
+Spacing tokens for consistent layout and responsive design.
 
 ## Section Padding
 
@@ -11,6 +15,7 @@ import { sectionPadding } from "@/lib/design-tokens";
 ```
 
 **Available Sizes:**
+
 - `xs`: `py-4 md:py-6` - Minimal spacing
 - `sm`: `py-6 md:py-8` - Small sections
 - `md`: `py-8 md:py-12 lg:py-16` - Standard sections (default)
@@ -36,6 +41,7 @@ Spacing between flex/grid items.
 
 ```typescript
 import { gap } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
 <div className={cn("flex", gap.md)}>
 ```
@@ -54,35 +60,34 @@ import { componentPadding } from "@/lib/design-tokens";
 
 **Available Sizes:** `xs`, `sm`, `md`, `lg`, `xl`
 
+## Margin System
+
+External spacing.
+
+```typescript
+import { margin } from "@/lib/design-tokens";
+
+<div className={margin.md}>
+```
+
+**Available Sizes:** `none`, `xs`, `sm`, `md`, `lg`, `xl`
+
 ## Usage Example
 
 ```typescript
 import { sectionPadding, containerPadding, gap } from "@/lib/design-tokens";
 import { Container } from "@/components/responsive";
+import { cn } from "@/lib/utils";
 
 <section className={sectionPadding.md}>
   <Container padding="lg">
-    <div className={cn("flex flex-col", gap.lg)}>
-      {/* Content */}
-    </div>
+    <div className={cn("flex flex-col", gap.lg)}>{/* Content */}</div>
   </Container>
-</section>
+</section>;
 ```
 
+## Related Commands
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- `/sc:component` - Component templates
+- `/sc:design` - Design system reference
+- `/sc:audit` - Design system audit

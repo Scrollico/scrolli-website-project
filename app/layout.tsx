@@ -2,35 +2,59 @@
 // Newsreader font for display text (headings) - loaded via Next.js font optimization
 import { Newsreader } from "next/font/google"
 import { Instrument_Sans } from "next/font/google"
-import "/public/assets/css/bootstrap.css"
-import "/public/assets/css/widgets.css"
-import "/public/assets/css/color-default.css"
-import "/public/assets/css/fontello.css"
-import "/public/assets/css/style.css"
-import "/public/assets/css/responsive.css"
 import "./globals.css"
+
+// Legacy CSS loaded asynchronously so they don't block first paint (media trick)
+const LEGACY_CSS = [
+  "/assets/css/bootstrap.css",
+  "/assets/css/widgets.css",
+  "/assets/css/color-default.css",
+  "/assets/css/fontello.css",
+]
+const CRITICAL_CSS = [
+  "/assets/css/style.css",
+  "/assets/css/responsive.css",
+]
 import type { Metadata } from "next"
 import { cookies } from "next/headers"
-import NextTopLoader from "nextjs-toploader"
+import NextTopLoaderClient from "@/components/providers/NextTopLoaderClient"
 import { generateSiteMetadata } from "@/lib/seo"
 import Script from "next/script"
 import { generateOrganizationStructuredData, generateWebsiteStructuredData } from "@/lib/structured-data"
 import { ThemeProvider } from "@/components/providers/theme-provider"
+import { AuthProvider } from "@/components/providers/auth-provider"
+import { RevenueCatProvider } from "@/components/providers/revenuecat-provider"
+import { getSiteSettings } from "@/lib/payload/client"
+import { validateEnvVars } from "@/lib/env-validation"
+
+// Validate environment variables on server startup
+// This will throw an error if critical variables are missing
+if (typeof window === 'undefined') {
+  try {
+    validateEnvVars();
+  } catch (error) {
+    console.error('❌ Environment variable validation failed:', error);
+    // In production, we might want to fail fast, but for now just log
+    if (process.env.NODE_ENV === 'production') {
+      throw error;
+    }
+  }
+}
 
 // Configure Newsreader font for display text (headings)
 const newsreader = Newsreader({
-	subsets: ['latin'],
-	display: 'swap',
-	weight: ['400', '500', '600', '700'],
-	variable: '--font-newsreader',
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-newsreader',
 })
 
 // Configure Instrument Sans font for body text
 const instrumentSans = Instrument_Sans({
-	subsets: ['latin'],
-	display: 'swap',
-	weight: ['400', '500', '600', '700'],
-	variable: '--font-instrument-sans',
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-instrument-sans',
 })
 
 const THEME_COOKIE_KEY = 'theme';
@@ -53,28 +77,6 @@ const themeInitScript = `
     const isDark = selectedTheme === 'dark' || (selectedTheme === 'system' && systemPrefersDark);
     const root = document.documentElement;
 
-    /* #region agent log */
-    fetch('http://127.0.0.1:7242/ingest/25c500f4-9175-49cc-869e-0ae52ea13b91', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sessionId: 'debug-session',
-        runId: 'pre-fix',
-        hypothesisId: 'H1',
-        location: 'app/layout.tsx:themeInitScript',
-        message: 'theme init start',
-        data: {
-          storedTheme,
-          defaultTheme,
-          selectedTheme,
-          systemPrefersDark,
-          isDark,
-          htmlClasses: Array.from(root.classList),
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    /* #endregion */
 
     if (isDark) {
       root.classList.add('dark', 'dark-mode');
@@ -100,27 +102,8 @@ const themeInitScript = `
       applyBodyClass();
     }
 
-    /* #region agent log */
-    fetch('http://127.0.0.1:7242/ingest/25c500f4-9175-49cc-869e-0ae52ea13b91', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sessionId: 'debug-session',
-        runId: 'pre-fix',
-        hypothesisId: 'H1',
-        location: 'app/layout.tsx:themeInitScript',
-        message: 'theme init after apply',
-        data: {
-          isDark,
-          htmlClasses: Array.from(root.classList),
-          bodyClasses: Array.from(document.body?.classList || []),
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    /* #endregion */
   } catch (error) {
-    // Fail silently to avoid blocking render
+    /* Fail silently to avoid blocking render */
   }
 })();
 `
@@ -137,105 +120,123 @@ const themeInitScript = `
 // 	variable: '--font-b612-mono',
 // })
 
-export const metadata: Metadata = {
-	...generateSiteMetadata(),
-	icons: {
-		icon: [
-			{ url: '/assets/images/Standart/primary-icon.png', sizes: 'any' },
-			{ url: '/assets/images/Standart/primary-icon.png', type: 'image/png' },
-		],
-		apple: [
-			{ url: '/assets/images/Standart/primary-icon.png' },
-		],
-	},
+// getSiteSettings() now returns null on error instead of throwing
+export async function generateMetadata(): Promise<Metadata> {
+  const siteSettings = await getSiteSettings();
+
+  return {
+    ...generateSiteMetadata(siteSettings || undefined),
+    icons: {
+      icon: [
+        { url: '/assets/images/Standart/primary-icon.png', sizes: 'any' },
+        { url: '/assets/images/Standart/primary-icon.png', type: 'image/png' },
+      ],
+      apple: [
+        { url: '/assets/images/Standart/primary-icon.png' },
+      ],
+    },
+  };
 }
 
-export default function RootLayout({
-	children,
+export default async function RootLayout({
+  children,
 }: Readonly<{
-	children: React.ReactNode
+  children: React.ReactNode
 }>) {
-	const cookieStore = cookies()
-	const themeCookie = cookieStore.get(THEME_COOKIE_KEY)?.value
-	const initialIsDark = themeCookie === 'dark'
-	const initialHtmlClass = initialIsDark ? 'dark dark-mode' : themeCookie === 'light' ? 'light' : ''
-	const initialBodyClass = initialIsDark ? 'home dark-mode' : 'home'
-	const organizationData = generateOrganizationStructuredData()
-	const websiteData = generateWebsiteStructuredData()
+  const cookieStore = await cookies()
+  const themeCookie = cookieStore.get(THEME_COOKIE_KEY)?.value
+  const initialIsDark = themeCookie === 'dark'
+  const initialHtmlClass = initialIsDark ? 'dark dark-mode' : themeCookie === 'light' ? 'light' : ''
+  const initialBodyClass = initialIsDark ? 'home dark-mode' : 'home'
+  const organizationData = generateOrganizationStructuredData()
+  const websiteData = generateWebsiteStructuredData()
 
-	return (
-		<html lang="tr" suppressHydrationWarning className={`${newsreader.variable} ${instrumentSans.variable} ${initialHtmlClass}`}>
-			<head>
-				<style
-					id="theme-inline-style"
-					dangerouslySetInnerHTML={{
-						__html: `
-              /* Prepaint guard matching dark-mode/light tokens in public/assets/css/style.css */
-              html.dark, body.dark-mode {
-                --body-bg: #374151;
+  return (
+    <html lang="tr" suppressHydrationWarning className={`${newsreader.variable} ${instrumentSans.variable} ${initialHtmlClass}`}>
+      <head>
+        <style
+          id="theme-prepaint-guard"
+          dangerouslySetInnerHTML={{
+            __html: `
+              :root { color-scheme: light; }
+              html.dark { color-scheme: dark; }
+              
+              /* Prepaint guard matching dark-mode/light tokens */
+              html.dark, html.dark body, body.dark-mode {
+                --body-bg: #374152;
                 --text-color: #f3f4f6;
-                --link-color: #f3f4f6;
-                --border-color: #4b5563;
-                --card-bg: #374151;
-                --header-bg: #374151;
-                background-color: var(--body-bg);
-                color: var(--text-color);
+                background-color: #374152;
+                color: #f3f4f6;
               }
-              html.light, body {
+              
+              /* Force navbar to be dark immediately */
+              html.dark header, html.dark .sticky, html.dark [role="banner"],
+              html.dark .entry-wraper, html.dark .hikayeler-content {
+                background-color: #374152 !important;
+              }
+              
+              html.light, html.light body, body:not(.dark-mode):not(.dark) {
                 --body-bg: #ffffff;
                 --text-color: #111827;
-                --link-color: #0f172a;
-                --border-color: #ddd;
-                --card-bg: #ffffff;
-                --header-bg: #ffffff;
-                background-color: var(--body-bg);
-                color: var(--text-color);
+                background-color: #ffffff;
+                color: #111827;
               }
             `,
-					}}
-				/>
-				<Script
-					id="theme-preload"
-					strategy="beforeInteractive"
-					dangerouslySetInnerHTML={{ __html: themeInitScript }}
-				/>
-				<Script
-					id="organization-structured-data"
-					type="application/ld+json"
-					dangerouslySetInnerHTML={{
-						__html: JSON.stringify(organizationData),
-					}}
-				/>
-				<Script
-					id="website-structured-data"
-					type="application/ld+json"
-					dangerouslySetInnerHTML={{
-						__html: JSON.stringify(websiteData),
-					}}
-				/>
-			</head>
-			<body className={initialBodyClass} suppressHydrationWarning>
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="light"
-					enableSystem
-					disableTransitionOnChange
-				>
-					<NextTopLoader
-						color="#3500FD"
-						initialPosition={0.08}
-						crawlSpeed={500}
-						height={2}
-						crawl={true}
-						showSpinner={false}
-						easing="ease"
-						speed={500}
-						shadow="0 0 10px #3500FD,0 0 5px #3500FD"
-						zIndex={1600}
-					/>
-					{children}
-				</ThemeProvider>
-			</body>
-		</html>
-	)
+          }}
+        />
+        {CRITICAL_CSS.map((href) => (
+          <link key={href} rel="stylesheet" href={href} />
+        ))}
+        {LEGACY_CSS.map((href) => (
+          <link key={href} rel="stylesheet" href={href} media="print" data-deferred-css />
+        ))}
+        <noscript>
+          {LEGACY_CSS.map((href) => (
+            <link key={href} rel="stylesheet" href={href} />
+          ))}
+        </noscript>
+        <Script
+          id="deferred-css-apply"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(){document.querySelectorAll('link[data-deferred-css]').forEach(function(l){l.media='all';});})();`,
+          }}
+        />
+        <Script
+          id="theme-preload"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{ __html: themeInitScript }}
+        />
+        <Script
+          id="organization-structured-data"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationData),
+          }}
+        />
+        <Script
+          id="website-structured-data"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteData),
+          }}
+        />
+      </head>
+      <body className={initialBodyClass} suppressHydrationWarning>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AuthProvider>
+            <RevenueCatProvider>
+              <NextTopLoaderClient />
+              {children}
+            </RevenueCatProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+  )
 }

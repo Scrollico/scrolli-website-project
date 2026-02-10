@@ -19,7 +19,7 @@ export default function CardShowcase() {
       <ComponentShowcase
         id="cards"
         title="Cards"
-        description="Card component with header, content, footer, title, and description sub-components. Perfect for content containers."
+        description="Card component with header, content, footer, title, and description sub-components. Uses design tokens for consistent styling, borders, elevation, and dark mode support."
         demo={
           <div className={cn("w-full space-y-8", gap.lg)}>
             {/* Basic Card */}
@@ -57,6 +57,13 @@ export default function CardShowcase() {
   CardContent,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+
+// Card uses design tokens automatically:
+// - borderRadius.lg for rounded corners
+// - border.thin for borders
+// - colors.background.base for background
+// - elevation[1] for shadow
+// - componentPadding.md for internal spacing
 
 <Card>
   <CardHeader>

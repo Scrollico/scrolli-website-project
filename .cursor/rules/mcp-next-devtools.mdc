@@ -1,0 +1,29 @@
+---
+alwaysApply: true
+---
+
+# Next.js DevTools MCP
+
+**Role:** Next.js 15 Development & Migration Specialist
+
+**Always active** for this Next.js 15.5.7 project.
+
+## When to Use
+
+- Runtime diagnostics and error detection
+- Route analysis and build diagnostics
+- Next.js version migrations
+- React 19 compatibility checks
+- Cache Components setup
+
+## Key Tools
+
+- `nextjs_index` - Discover running dev servers
+- `nextjs_call` - Execute Next.js MCP tools
+- `nextjs_docs` - Fetch Next.js documentation
+- `upgrade_nextjs_16` - Version upgrade codemod
+- `enable_cache_components` - Cache Components migration
+
+## Project Context
+
+Next.js 15.5.7 with App Router, TypeScript, Payload CMS integration.

@@ -83,16 +83,11 @@ const PricingSwitch = ({
               <motion.span
                 layoutId={switchLayoutId}
                 className={cn(
-                  "absolute top-0 left-0 sm:h-14 h-10 w-full rounded-full border-4 shadow-sm z-0 pricing-switch-indicator",
+                  "absolute top-0 left-0 sm:h-14 h-10 w-full rounded-full border-4 shadow-sm z-0",
                   isDark
                     ? "bg-gradient-to-t from-[#F8F5E4] via-[#F8F5E4] to-[#F8F5E4] border-[#F8F5E4] shadow-[#F8F5E4]/20"
                     : "bg-gradient-to-t from-[#374152] via-[#374152] to-[#374152] border-[#374152] shadow-[#374152]/30"
                 )}
-                style={{
-                  borderColor: isDark ? '#F8F5E4' : '#374152',
-                  borderWidth: '4px',
-                  borderStyle: 'solid',
-                }}
                 transition={{ type: "spring", stiffness: 500, damping: 30 }}
               />
             )}
@@ -307,6 +302,17 @@ export default function PricingSection1() {
                   )}
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0">
+                  <Link
+                    href="/log-in"
+                    className={cn(
+                      typography.body,
+                      colors.foreground.secondary,
+                      "hover:" + colors.foreground.interactive.split(" ")[0],
+                      "transition-colors underline whitespace-nowrap"
+                    )}
+                  >
+                    Log in
+                  </Link>
                   <Link href="/pricing" className="inline-block">
                     <SmartButton
                       size="lg"

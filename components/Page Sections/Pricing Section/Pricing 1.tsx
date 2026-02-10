@@ -118,8 +118,8 @@ export function Pricing() {
             }}
           />
           <span>Annual</span>
-          <span className="inline-block whitespace-nowrap rounded-full bg-black px-2.5 py-1 text-[11px] font-semibold uppercase leading-5 tracking-wide text-white dark:bg-white dark:text-black">
-            2 MONTHS FREE ?
+          <span className="inline-block whitespace-nowrap rounded-full bg-black px-2.5 py-1 text-[11px] font-semibold leading-5 tracking-wide text-white dark:bg-white dark:text-black">
+            2 Months Free ?
           </span>
         </div>
 

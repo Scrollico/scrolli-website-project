@@ -3,17 +3,18 @@
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { colors, componentPadding, gap, borderRadius, transition } from "@/lib/design-tokens";
+import { colors, interactions } from "@/lib/design-tokens";
 import { Heading, Text, Caption } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 
-import { FreeContentBadgeIcon, PremiumContentBadgeIcon } from "@/components/icons/ScrolliIcons";
+import { FreeContentBadgeIcon, PremiumContentBadgeIcon } from "@/components/icons/scrolli-icons";
 
 interface Article {
   id: string;
   title: string;
+  subtitle?: string;
   excerpt?: string;
-  image: string;
+  image?: string; // Optional - article may not have an image
   category?: string;
   date?: string;
   sponsor?: string;
@@ -43,11 +44,13 @@ export default function ArticleCard({
       className={cn(
         "group w-full",
         isHorizontal && "flex flex-col md:flex-row gap-3 md:gap-6",
-        componentPadding.sm,
-        borderRadius.xl,
-        transition.normal,
+        "py-3 px-2 md:py-6 md:px-4",
         // Premium Styling - background only, no border
-        isPremium ? colors.warning.bg : "",
+        isPremium
+          ? "bg-amber-50/40 dark:bg-amber-950/20 rounded-xl transition-colors duration-300"
+          : "rounded-xl transition-colors duration-300",
+        // Ensure proper width constraints
+        "min-w-0",
         className
       )}
     >
@@ -55,20 +58,15 @@ export default function ArticleCard({
       <div
         className={cn(
           "flex flex-col justify-center",
-          isHorizontal && imageOnRight && "md:order-1 flex-1",
-          isHorizontal && !imageOnRight && "md:order-2 flex-1",
+          isHorizontal && imageOnRight && "md:order-1 flex-1 min-w-0 md:max-w-[600px]",
+          isHorizontal && !imageOnRight && "md:order-2 flex-1 min-w-0 md:max-w-[600px]",
           !isHorizontal && "order-2"
         )}
       >
         {/* Category Badge */}
         {article.category && (
-          <div className={cn(gap.sm, "flex justify-start")}>
-            <Badge
-              variant="secondary"
-              appearance="outline"
-              size="sm"
-              className="uppercase tracking-wide"
-            >
+          <div className="mb-2 flex justify-start">
+            <Badge className="tracking-wide">
               {article.category}
             </Badge>
           </div>
@@ -79,7 +77,7 @@ export default function ArticleCard({
           <Caption
             as="time"
             dateTime={article.date}
-            className={gap.sm}
+            className="mb-2"
             color="muted"
           >
             {article.date}
@@ -87,20 +85,29 @@ export default function ArticleCard({
         )}
 
         {/* Title */}
-        <Heading level={3} variant="h5" className={gap.md}>
+        <Heading level={3} variant="h5" className="mb-2 break-words">
           <Link
-            href={`/article/${article.id}`}
+            href={`/${article.id}`}
             prefetch={true}
-            className={cn("transition-colors", colors.foreground.interactive, "focus:outline-none")}
+            className={cn(interactions.hover, "focus:outline-none break-words")}
           >
             {article.title}
           </Link>
         </Heading>
 
+        {/* Subtitle */}
+        {article.subtitle && (
+          <div className="mb-2 break-words">
+            <Text variant="body" color="secondary" className="line-clamp-2 break-words">
+              {article.subtitle}
+            </Text>
+          </div>
+        )}
+
         {/* Excerpt */}
-        {article.excerpt && (
-          <div className={gap.sm}>
-            <Text variant="body" color="secondary" className="line-clamp-2">
+        {article.excerpt && !article.subtitle && (
+          <div className="mb-2 break-words">
+            <Text variant="body" color="secondary" className="line-clamp-2 break-words">
               {article.excerpt}
             </Text>
           </div>
@@ -108,7 +115,7 @@ export default function ArticleCard({
 
         {/* Sponsor Tag */}
         {article.sponsor && (
-          <div className={gap.sm}>
+          <div className="mt-2">
             <Caption
               as="span"
               className={cn("inline-block px-2 py-1 font-medium rounded", colors.success.bg)}
@@ -127,27 +134,33 @@ export default function ArticleCard({
           isHorizontal && !imageOnRight && "md:order-1",
           !isHorizontal && "order-1",
           isHorizontal
-            ? "w-full md:w-48 md:flex-shrink-0 aspect-[4/3] md:aspect-[4/3]"
+            ? "w-full md:w-48 md:min-w-[192px] md:max-w-[192px] md:flex-shrink-0 aspect-[4/3] md:aspect-[4/3]"
             : "w-full aspect-video"
         )}
       >
         <Link
-          href={`/article/${article.id}`}
+          href={`/${article.id}`}
           prefetch={true}
           className="block w-full h-full focus:outline-none rounded-lg"
           aria-label={`Read article: ${article.title}`}
         >
-          <Image
-            src={article.image}
-            alt={article.title}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-            sizes={
-              isHorizontal
-                ? "(max-width: 768px) 100vw, 192px"
-                : "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            }
-          />
+          {article.image ? (
+            <Image
+              src={article.image}
+              alt={article.title}
+              fill
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              sizes={
+                isHorizontal
+                  ? "(max-width: 768px) 100vw, 192px"
+                  : "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              }
+            />
+          ) : (
+            <div className="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+              <span className="text-gray-400 dark:text-gray-500 text-sm">No image</span>
+            </div>
+          )}
         </Link>
 
         {/* Content Badge (Free/Premium) */}

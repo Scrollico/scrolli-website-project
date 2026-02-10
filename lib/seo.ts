@@ -6,11 +6,13 @@
  */
 
 import { Article, ArticleMetadata } from "@/types/content";
+import { PayloadSiteSettings } from "@/lib/payload/types";
 
 /**
  * Site configuration
+ * Can be overridden by Payload Site Settings
  */
-const SITE_CONFIG = {
+const DEFAULT_SITE_CONFIG = {
   name: "Scrolli",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://scrolli.com",
   description: "Modern news and blog magazine platform",
@@ -19,6 +21,9 @@ const SITE_CONFIG = {
   locale: "tr_TR",
   type: "website",
 } as const;
+
+// For backward compatibility
+const SITE_CONFIG = DEFAULT_SITE_CONFIG;
 
 /**
  * Generate page title
@@ -136,8 +141,9 @@ export function generateArticleMetadata(
 
 /**
  * Generate default site metadata
+ * Optionally accepts Payload Site Settings to override defaults
  */
-export function generateSiteMetadata(): {
+export function generateSiteMetadata(siteSettings?: PayloadSiteSettings): {
   metadataBase: URL;
   title: {
     default: string;
@@ -175,30 +181,41 @@ export function generateSiteMetadata(): {
     };
   };
 } {
+  // Use Payload settings if available, otherwise use defaults
+  const siteName = siteSettings?.siteName || SITE_CONFIG.name;
+  const siteDescription = siteSettings?.siteDescription || SITE_CONFIG.description;
+  const siteUrl = SITE_CONFIG.url;
+  const twitterHandle = siteSettings?.socialLinks?.twitter 
+    ? `@${siteSettings.socialLinks.twitter.split('/').pop() || 'scrolli'}`
+    : SITE_CONFIG.twitterHandle;
+  const keywords = siteSettings?.defaultSEO?.keywords 
+    ? siteSettings.defaultSEO.keywords.split(',').map(k => k.trim())
+    : ["news", "blog", "magazine", "articles", "content"];
+
   return {
-    metadataBase: new URL(SITE_CONFIG.url),
+    metadataBase: new URL(siteUrl),
     title: {
-      default: SITE_CONFIG.name,
-      template: `%s | ${SITE_CONFIG.name}`,
+      default: siteName,
+      template: `%s | ${siteName}`,
     },
-    description: SITE_CONFIG.description,
-    keywords: ["news", "blog", "magazine", "articles", "content"],
-    authors: [{ name: SITE_CONFIG.name }],
-    creator: SITE_CONFIG.name,
+    description: siteDescription,
+    keywords,
+    authors: [{ name: siteName }],
+    creator: siteName,
     openGraph: {
       type: "website",
       locale: SITE_CONFIG.locale,
-      url: SITE_CONFIG.url,
-      siteName: SITE_CONFIG.name,
-      title: SITE_CONFIG.name,
-      description: SITE_CONFIG.description,
+      url: siteUrl,
+      siteName,
+      title: siteName,
+      description: siteDescription,
       images: [{ url: generateImageUrl() }],
     },
     twitter: {
       card: "summary_large_image",
-      title: SITE_CONFIG.name,
-      description: SITE_CONFIG.description,
-      creator: SITE_CONFIG.twitterHandle,
+      title: siteName,
+      description: siteDescription,
+      creator: twitterHandle,
       images: [generateImageUrl()],
     },
     robots: {

@@ -1,4 +1,8 @@
-# Shadow/Elevation Token Reference
+# /sc:shadows - Shadow/Elevation Token Reference
+
+## Purpose
+
+Elevation tokens for depth and visual hierarchy.
 
 ## Elevation Levels
 
@@ -7,7 +11,7 @@ Material Design inspired elevation system.
 ```typescript
 import { elevation } from "@/lib/design-tokens";
 
-<div className={elevation[2]}>Elevated card</div>
+<div className={elevation[2]}>Elevated card</div>;
 ```
 
 **Available Levels:** `0`, `1`, `2`, `3`, `4`, `5`
@@ -15,11 +19,10 @@ import { elevation } from "@/lib/design-tokens";
 ## Elevation Hover States
 
 ```typescript
-import { elevationHover } from "@/lib/design-tokens";
+import { elevation, elevationHover } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
-<div className={cn(elevation[1], elevationHover[2])}>
-  Hover to elevate
-</div>
+<div className={cn(elevation[1], elevationHover[2])}>Hover to elevate</div>;
 ```
 
 ## Surface Styles
@@ -57,11 +60,13 @@ import { cn } from "@/lib/utils";
 </div>
 
 // Interactive card with hover
-<div className={cn(
-  elevation[1],
-  elevationHover[3],
-  "transition-shadow duration-200"
-)}>
+<div
+  className={cn(
+    elevation[1],
+    elevationHover[3],
+    "transition-shadow duration-200"
+  )}
+>
   Hover me
 </div>
 ```
@@ -73,20 +78,8 @@ import { cn } from "@/lib/utils";
 - **Modals**: `elevation[4]` or `surface.modal`
 - **Buttons**: `elevation[0]` (no shadow) or `elevation[1]` on hover
 
+## Related Commands
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- `/sc:component` - Component templates
+- `/sc:design` - Design system reference
+- `/sc:audit` - Design system audit

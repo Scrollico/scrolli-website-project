@@ -1,6 +1,14 @@
-# Design System Audit Checklist
+# /sc:audit - Design System Audit Checklist
 
-Use this checklist to audit components for design system compliance.
+## Purpose
+
+Audit components for design system compliance, including automatic dark mode text adaptation.
+
+## Usage
+
+```
+/sc:audit [component-path]
+```
 
 ## ✅ Spacing Audit
 
@@ -10,12 +18,15 @@ Use this checklist to audit components for design system compliance.
 - [ ] Uses `componentPadding` for internal component padding
 - [ ] No manual responsive spacing (tokens handle it)
 
-## ✅ Typography Audit
+## ✅ Typography Audit (CRITICAL)
 
-- [ ] Uses `typography` variants or typography components (Heading, Text)
+- [ ] Uses Typography components (`Heading`, `Text`, `Label`, `Caption`) - PREFERRED
+- [ ] OR uses `colors.foreground.*` tokens if Typography components can't be used
+- [ ] NO hardcoded text colors (`text-black`, `text-gray-900`, etc.)
+- [ ] NO manual `dark:text-*` classes (Typography components handle this automatically)
+- [ ] Uses `typography` variants or typography components
 - [ ] No hardcoded font sizes (`text-*` classes)
 - [ ] No hardcoded font weights (`font-*` classes)
-- [ ] Uses semantic color tokens for text colors
 - [ ] Proper heading hierarchy (h1-h6)
 
 ## ✅ Color Audit
@@ -25,6 +36,7 @@ Use this checklist to audit components for design system compliance.
 - [ ] Uses semantic color names (primary, secondary, not blue, gray)
 - [ ] Dark mode handled automatically (no manual `dark:` prefixes)
 - [ ] Status colors use semantic tokens (success, warning, error)
+- [ ] Scrolli brand colors used where appropriate (`#3500FD`, `#8080FF`)
 
 ## ✅ Border Audit
 
@@ -44,13 +56,14 @@ Use this checklist to audit components for design system compliance.
 
 - [ ] Uses `Container` component for layout
 - [ ] Uses `Stack` or `gap` tokens for spacing between items
-- [ ] Uses typography components (Heading, Text, etc.)
+- [ ] Uses Typography components (`Heading`, `Text`, etc.)
 - [ ] Uses `cn()` utility for class composition
 - [ ] Imports tokens from `@/lib/design-tokens`
 
 ## Common Issues to Fix
 
 ### ❌ Before (Non-compliant)
+
 ```typescript
 <section className="py-8 md:py-12 lg:py-16">
   <div className="px-4 sm:px-6 lg:px-8">
@@ -65,8 +78,17 @@ Use this checklist to audit components for design system compliance.
 ```
 
 ### ✅ After (Compliant)
+
 ```typescript
-import { sectionPadding, containerPadding, typography, colors, borderRadius, border, elevation, gap } from "@/lib/design-tokens";
+import {
+  sectionPadding,
+  containerPadding,
+  colors,
+  borderRadius,
+  border,
+  elevation,
+  gap,
+} from "@/lib/design-tokens";
 import { Container } from "@/components/responsive";
 import { Heading } from "@/components/ui/typography";
 
@@ -75,35 +97,29 @@ import { Heading } from "@/components/ui/typography";
     <Heading level={2} variant="h2">
       Title
     </Heading>
-    <div className={cn("flex", gap.md, borderRadius.lg, border.thin, elevation[2])}>
+    <div
+      className={cn("flex", gap.md, borderRadius.lg, border.thin, elevation[2])}
+    >
       Content
     </div>
   </Container>
-</section>
+</section>;
 ```
 
 ## Migration Steps
 
 1. **Identify hardcoded values** - Look for direct Tailwind classes
 2. **Replace with tokens** - Use appropriate design tokens
-3. **Test responsive** - Verify breakpoints work correctly
-4. **Test dark mode** - Ensure dark mode renders properly
-5. **Document changes** - Note any customizations needed
+3. **Replace text elements** - Use Typography components or `colors.foreground.*`
+4. **Remove manual dark mode** - Typography components handle it automatically
+5. **Test responsive** - Verify breakpoints work correctly
+6. **Test dark mode** - Ensure dark mode renders properly
+7. **Document changes** - Note any customizations needed
 
+## Related Commands
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- `/sc:component` - Component templates
+- `/sc:design` - Design system reference
+- `/sc:spacing` - Spacing tokens
+- `/sc:typography` - Typography tokens
+- `/sc:colors` - Color tokens
