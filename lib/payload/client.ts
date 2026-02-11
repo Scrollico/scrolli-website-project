@@ -62,11 +62,13 @@ interface FetchParams {
 function buildQueryString(params: FetchParams): string {
   const queryParams = new URLSearchParams();
 
-  // CRITICAL: Always add Turkish locale for Turkish content
-  queryParams.append("locale", "tr");
+  // CRITICAL: Always add Turkish locale for Turkish content (can be overridden by env var)
+  const locale = process.env.PAYLOAD_LOCALE || "tr";
+  queryParams.append("locale", locale);
 
-  // Always exclude drafts and trashed items
-  queryParams.append("draft", "false");
+  // Exclude drafts by default, but allow enabling for preview/test purposes
+  const fetchDrafts = process.env.PAYLOAD_FETCH_DRAFTS === "true";
+  queryParams.append("draft", fetchDrafts ? "true" : "false");
   queryParams.append("trash", "false");
 
   // Handle layoutPosition as direct parameter (converts to where clause)
@@ -425,10 +427,13 @@ export async function getArticleById(
       return null;
     }
 
+    const locale = process.env.PAYLOAD_LOCALE || "tr";
+    const fetchDrafts = process.env.PAYLOAD_FETCH_DRAFTS === "true";
+
     const queryString = new URLSearchParams({
       depth: "2",
-      draft: "false",
-      locale: "tr",
+      draft: fetchDrafts ? "true" : "false",
+      locale: locale,
       trash: "false",
     }).toString();
 

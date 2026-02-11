@@ -6,10 +6,12 @@ The following environment variables **MUST** be configured in your production de
 
 ### Payload CMS Configuration
 
-| Variable          | Description                            | Example                      |
-| ----------------- | -------------------------------------- | ---------------------------- |
-| `PAYLOAD_API_URL` | Base URL for Payload CMS API           | `https://cms.scrolli.co/api` |
-| `PAYLOAD_API_KEY` | API authentication key for Payload CMS | `your-api-key-here`          |
+| Variable               | Description                                             | Example                      |
+| ---------------------- | ------------------------------------------------------- | ---------------------------- |
+| `PAYLOAD_API_URL`      | Base URL for Payload CMS API                            | `https://cms.scrolli.co/api` |
+| `PAYLOAD_API_KEY`      | API authentication key for Payload CMS                  | `your-api-key-here`          |
+| `PAYLOAD_FETCH_DRAFTS` | Whether to fetch draft articles (useful for previewing) | `true` or `false` (default)  |
+| `PAYLOAD_LOCALE`       | The locale to fetch content for                         | `tr` (default) or `en`       |
 
 > [!IMPORTANT]
 > Without these environment variables, the application will not be able to fetch articles from Payload CMS, resulting in empty content sections on the homepage.
