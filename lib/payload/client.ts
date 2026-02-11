@@ -184,8 +184,9 @@ export async function fetchArticles(
     if (gundemRes.ok) {
       try {
         const gundem = await gundemRes.json();
-        // Ensure source field is set correctly for Gündem articles
-        const gundemWithSource = gundem.docs.map((doc: any) => ({
+        // Defensive check: Ensure docs exists and is an array
+        const docs = Array.isArray(gundem?.docs) ? gundem.docs : [];
+        const gundemWithSource = docs.map((doc: any) => ({
           ...doc,
           source: "Gündem" as const,
         }));
@@ -202,8 +203,9 @@ export async function fetchArticles(
     if (hikayelerRes.ok) {
       try {
         const hikayeler = await hikayelerRes.json();
-        // Ensure source field is set correctly for Hikayeler articles
-        const hikayelerWithSource = hikayeler.docs.map((doc: any) => ({
+        // Defensive check: Ensure docs exists and is an array
+        const docs = Array.isArray(hikayeler?.docs) ? hikayeler.docs : [];
+        const hikayelerWithSource = docs.map((doc: any) => ({
           ...doc,
           source: "Hikayeler" as const,
         }));
@@ -221,16 +223,6 @@ export async function fetchArticles(
     // Only throw if both requests actually failed (not OK status)
     // If both are OK but results is empty, that's fine (no articles available)
     if (results.length === 0 && (!gundemRes.ok || !hikayelerRes.ok)) {
-      // Check if responses are actual Response objects before calling .text()
-      const errorMessages = await Promise.all([
-        gundemRes instanceof Response && gundemRes.text ?
-          gundemRes.text().catch(() => `Status: ${gundemRes.status}`)
-        : Promise.resolve(`Status: ${gundemRes.status || "Network Error"}`),
-        hikayelerRes instanceof Response && hikayelerRes.text ?
-          hikayelerRes.text().catch(() => `Status: ${hikayelerRes.status}`)
-        : Promise.resolve(`Status: ${hikayelerRes.status || "Network Error"}`),
-      ]);
-
       // Don't throw if Payload CMS is just unavailable - return empty array instead
       // This allows the page to still render (e.g., pricing page doesn't need articles)
       console.warn(
@@ -345,12 +337,22 @@ async function fetchPayload<T>(
         statusText: response.statusText,
         body: errorText.substring(0, 500), // Limit error text length
       });
-      throw new Error(
-        `Failed to fetch ${collection}: ${response.status} ${response.statusText}`,
-      );
+
+      // Instead of throwing, return an empty response to prevent server-side crashes
+      return emptyPayloadResponse<T>();
     }
 
-    return response.json();
+    const data = await response.json();
+    // Safety check for malformed JSON that doesn't follow Payload structure
+    if (!data || !Array.isArray(data.docs)) {
+      console.warn(
+        `Payload API for ${collection} returned malformed data:`,
+        data,
+      );
+      return emptyPayloadResponse<T>();
+    }
+
+    return data;
   } catch (error) {
     // Retry on network errors if retries remaining
     if (
