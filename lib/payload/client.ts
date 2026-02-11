@@ -19,6 +19,14 @@ export function getPayloadConfig() {
   const PAYLOAD_API_KEY = process.env.PAYLOAD_API_KEY;
 
   if (!PAYLOAD_API_URL || !PAYLOAD_API_KEY) {
+    // Enhanced logging for debugging production issues
+    // This helps identify when environment variables are not set in production
+    console.error("❌ Payload CMS Configuration Missing:", {
+      hasUrl: !!PAYLOAD_API_URL,
+      hasKey: !!PAYLOAD_API_KEY,
+      nodeEnv: process.env.NODE_ENV,
+      // Don't log actual values for security
+    });
     return null;
   }
 
@@ -97,12 +105,12 @@ function buildQueryString(params: FetchParams): string {
             // For arrays, Payload expects comma-separated or JSON array
             queryParams.append(
               `where[${normalizedKey}][${operator}]`,
-              val.join(",")
+              val.join(","),
             );
           } else {
             queryParams.append(
               `where[${normalizedKey}][${operator}]`,
-              String(val)
+              String(val),
             );
           }
         });
@@ -122,7 +130,7 @@ function buildQueryString(params: FetchParams): string {
  * This is the primary function for getting articles
  */
 export async function fetchArticles(
-  params: FetchParams = {}
+  params: FetchParams = {},
 ): Promise<Array<PayloadGundem | PayloadHikayeler>> {
   try {
     const config = getPayloadConfig();
@@ -151,16 +159,16 @@ export async function fetchArticles(
     const gundemRes:
       | Response
       | { ok: false; status: number; statusText: string } =
-      gundemResult.status === "fulfilled"
-        ? gundemResult.value
-        : { ok: false, status: 500, statusText: "Network Error" };
+      gundemResult.status === "fulfilled" ?
+        gundemResult.value
+      : { ok: false, status: 500, statusText: "Network Error" };
 
     const hikayelerRes:
       | Response
       | { ok: false; status: number; statusText: string } =
-      hikayelerResult.status === "fulfilled"
-        ? hikayelerResult.value
-        : { ok: false, status: 500, statusText: "Network Error" };
+      hikayelerResult.status === "fulfilled" ?
+        hikayelerResult.value
+      : { ok: false, status: 500, statusText: "Network Error" };
 
     // Log errors if any
     if (gundemResult.status === "rejected") {
@@ -187,7 +195,7 @@ export async function fetchArticles(
       }
     } else {
       console.warn(
-        `Failed to fetch Gündem: ${gundemRes.status} ${gundemRes.statusText}`
+        `Failed to fetch Gündem: ${gundemRes.status} ${gundemRes.statusText}`,
       );
     }
 
@@ -205,7 +213,7 @@ export async function fetchArticles(
       }
     } else {
       console.warn(
-        `Failed to fetch Hikayeler: ${hikayelerRes.status} ${hikayelerRes.statusText}`
+        `Failed to fetch Hikayeler: ${hikayelerRes.status} ${hikayelerRes.statusText}`,
       );
     }
 
@@ -215,14 +223,12 @@ export async function fetchArticles(
     if (results.length === 0 && (!gundemRes.ok || !hikayelerRes.ok)) {
       // Check if responses are actual Response objects before calling .text()
       const errorMessages = await Promise.all([
-        gundemRes instanceof Response && gundemRes.text
-          ? gundemRes.text().catch(() => `Status: ${gundemRes.status}`)
-          : Promise.resolve(`Status: ${gundemRes.status || "Network Error"}`),
-        hikayelerRes instanceof Response && hikayelerRes.text
-          ? hikayelerRes.text().catch(() => `Status: ${hikayelerRes.status}`)
-          : Promise.resolve(
-              `Status: ${hikayelerRes.status || "Network Error"}`
-            ),
+        gundemRes instanceof Response && gundemRes.text ?
+          gundemRes.text().catch(() => `Status: ${gundemRes.status}`)
+        : Promise.resolve(`Status: ${gundemRes.status || "Network Error"}`),
+        hikayelerRes instanceof Response && hikayelerRes.text ?
+          hikayelerRes.text().catch(() => `Status: ${hikayelerRes.status}`)
+        : Promise.resolve(`Status: ${hikayelerRes.status || "Network Error"}`),
       ]);
 
       // Don't throw if Payload CMS is just unavailable - return empty array instead
@@ -230,7 +236,7 @@ export async function fetchArticles(
       console.warn(
         `Payload CMS unavailable: Gündem (${
           gundemRes.status || "Network Error"
-        }), Hikayeler (${hikayelerRes.status || "Network Error"})`
+        }), Hikayeler (${hikayelerRes.status || "Network Error"})`,
       );
 
       // Return empty array instead of throwing - allows page to render
@@ -240,7 +246,7 @@ export async function fetchArticles(
     // Merge and sort by publishedAt descending
     const articles = results.sort(
       (a, b) =>
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
     );
 
     // Client-side deduplication: Filter duplicates by slug (primary) or id (fallback)
@@ -272,7 +278,7 @@ export async function fetchArticles(
  * Fetch articles specifically from the Hikayeler collection
  */
 export async function fetchHikayeler(
-  params: FetchParams = {}
+  params: FetchParams = {},
 ): Promise<PayloadHikayeler[]> {
   try {
     const response = await fetchPayload<PayloadHikayeler>("hikayeler", {
@@ -280,8 +286,8 @@ export async function fetchHikayeler(
       sort: params.sort || "-publishedAt",
       depth: params.depth || 2,
     });
-    
-    return response.docs.map(doc => ({
+
+    return response.docs.map((doc) => ({
       ...doc,
       source: "Hikayeler" as const,
     }));
@@ -305,7 +311,7 @@ function emptyPayloadResponse<T>(): PayloadResponse<T> {
 async function fetchPayload<T>(
   collection: string,
   query?: FetchParams,
-  retries = 2
+  retries = 2,
 ): Promise<PayloadResponse<T>> {
   const config = getPayloadConfig();
   if (!config) {
@@ -327,7 +333,7 @@ async function fetchPayload<T>(
       // Retry on server errors (5xx) if retries remaining
       if (response.status >= 500 && retries > 0) {
         console.warn(
-          `Payload API error for ${collection} (${response.status}), retrying... (${retries} attempts left)`
+          `Payload API error for ${collection} (${response.status}), retrying... (${retries} attempts left)`,
         );
         await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait 1 second before retry
         return fetchPayload<T>(collection, query, retries - 1);
@@ -340,7 +346,7 @@ async function fetchPayload<T>(
         body: errorText.substring(0, 500), // Limit error text length
       });
       throw new Error(
-        `Failed to fetch ${collection}: ${response.status} ${response.statusText}`
+        `Failed to fetch ${collection}: ${response.status} ${response.statusText}`,
       );
     }
 
@@ -353,7 +359,7 @@ async function fetchPayload<T>(
       error.message.includes("fetch")
     ) {
       console.warn(
-        `Network error fetching ${collection}, retrying... (${retries} attempts left)`
+        `Network error fetching ${collection}, retrying... (${retries} attempts left)`,
       );
       await new Promise((resolve) => setTimeout(resolve, 1000));
       return fetchPayload<T>(collection, query, retries - 1);
@@ -373,7 +379,7 @@ function stripArticleTimestamp(slug: string): string {
 
 // Primary function - fetch from both collections
 export async function getArticleBySlug(
-  slug: string
+  slug: string,
 ): Promise<PayloadGundem | PayloadHikayeler | null> {
   try {
     // 1. Try exact match first
@@ -409,7 +415,7 @@ export async function getArticleBySlug(
  */
 export async function getArticleById(
   collection: "gundem" | "hikayeler",
-  id: string
+  id: string,
 ): Promise<PayloadGundem | PayloadHikayeler | null> {
   try {
     const config = getPayloadConfig();
@@ -429,12 +435,12 @@ export async function getArticleById(
       {
         headers: config.headers,
         next: { revalidate: 30 },
-      }
+      },
     );
 
     if (!response.ok) {
       console.error(
-        `Failed to fetch ${collection} article ${id}: ${response.status} ${response.statusText}`
+        `Failed to fetch ${collection} article ${id}: ${response.status} ${response.statusText}`,
       );
       return null;
     }
@@ -473,7 +479,7 @@ export async function getArticlesByCategory(categorySlug: string) {
  * Used for Section3 which should only show Gündem articles
  */
 export async function getAllGundemArticles(
-  limit: number = 24
+  limit: number = 24,
 ): Promise<PayloadGundem[]> {
   try {
     const response = await fetchPayload<PayloadGundem>("gundem", {
@@ -501,7 +507,7 @@ export async function getRecentArticles(limit = 10) {
  */
 export async function getArticlesByAuthorId(
   authorId: string,
-  limit = 50
+  limit = 50,
 ): Promise<Array<PayloadGundem | PayloadHikayeler>> {
   return fetchArticles({
     where: { author: { equals: authorId } },
@@ -549,7 +555,7 @@ export async function getAuthors() {
  * Fetch a single author by slug (for author page)
  */
 export async function getAuthorBySlug(
-  slug: string
+  slug: string,
 ): Promise<PayloadAuthor | null> {
   const res = await fetchPayload<PayloadAuthor>("authors", {
     where: { slug: { equals: slug } },
@@ -589,7 +595,7 @@ export async function getSiteSettings(): Promise<PayloadSiteSettings | null> {
 
     if (!response.ok) {
       console.error(
-        `Failed to fetch site settings: ${response.status} ${response.statusText}`
+        `Failed to fetch site settings: ${response.status} ${response.statusText}`,
       );
       return null; // Return null instead of throwing for graceful degradation
     }
@@ -615,7 +621,7 @@ export async function getNavigation(): Promise<PayloadNavigation | null> {
 
     if (!response.ok) {
       console.error(
-        `Failed to fetch navigation: ${response.status} ${response.statusText}`
+        `Failed to fetch navigation: ${response.status} ${response.statusText}`,
       );
       return null; // Return null instead of throwing for graceful degradation
     }
@@ -629,7 +635,7 @@ export async function getNavigation(): Promise<PayloadNavigation | null> {
 
 // Additional Content Types
 export async function fetchPodcasts(
-  params: FetchParams = {}
+  params: FetchParams = {},
 ): Promise<PayloadResponse<PayloadPodcast>> {
   return fetchPayload<PayloadPodcast>("podcasts", {
     ...params,
@@ -639,7 +645,7 @@ export async function fetchPodcasts(
 }
 
 export async function fetchDailyBriefings(
-  params: FetchParams = {}
+  params: FetchParams = {},
 ): Promise<PayloadResponse<PayloadDailyBriefing>> {
   return fetchPayload<PayloadDailyBriefing>("daily-briefings", {
     ...params,

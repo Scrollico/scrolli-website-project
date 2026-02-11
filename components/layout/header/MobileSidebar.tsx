@@ -9,12 +9,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
-import { Heading, Text } from "@/components/ui/typography";
-import { SmartButton } from "@/components/ui/smart-button";
+import { Text } from "@/components/ui/typography";
 import { UserMenu } from "./UserMenu";
 import CinematicThemeSwitcher from "@/components/ui/cinematic-theme-switcher";
 import { NavbarUsageMeter } from "@/components/paywall";
-import { colors, typography, elevation, borderRadius, componentPadding } from "@/lib/design-tokens";
+import { elevation } from "@/lib/design-tokens";
 
 interface Category {
     slug: string;
@@ -47,14 +46,6 @@ export default function MobileSidebar({
 
     // Only calculate isDark after hydration to prevent mismatch
     const isDark = mounted && (theme === 'dark' || resolvedTheme === 'dark');
-
-    // #region agent log
-    useEffect(() => {
-        if (mounted) {
-            fetch('http://127.0.0.1:7244/ingest/146da770-4a69-4ea0-9f3a-c8d3db6921c4', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'MobileSidebar.tsx:49', message: 'Dark mode state', data: { theme, resolvedTheme, isDark, mounted, htmlClasses: document.documentElement.className }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'C' }) }).catch(() => { });
-        }
-    }, [mounted, theme, resolvedTheme, isDark]);
-    // #endregion
 
     // Auto-focus search on open
     useEffect(() => {
@@ -185,17 +176,6 @@ export default function MobileSidebar({
                                 <Link
                                     href="/"
                                     onClick={onClose}
-                                    ref={(el) => {
-                                        // #region agent log
-                                        if (el) {
-                                            const span = el.querySelector('span');
-                                            if (span) {
-                                                const computed = window.getComputedStyle(span);
-                                                fetch('http://127.0.0.1:7244/ingest/146da770-4a69-4ea0-9f3a-c8d3db6921c4', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'MobileSidebar.tsx:190', message: 'Span color debug', data: { isDark, computedColor: computed.color, computedClasses: span.className, parentColor: window.getComputedStyle(el).color, hasDarkMode: document.documentElement.classList.contains('dark') || document.documentElement.classList.contains('dark-mode') }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'run1', hypothesisId: 'A' }) }).catch(() => { });
-                                            }
-                                        }
-                                        // #endregion
-                                    }}
                                     className={cn(
                                         "flex-1 flex items-center justify-center gap-2 h-11",
                                         "bg-white dark:bg-gray-800",
@@ -208,15 +188,6 @@ export default function MobileSidebar({
                                     <Home className="h-4 w-4 text-gray-900 dark:text-gray-100" />
                                     <span
                                         className="text-sm font-medium text-black dark:text-gray-100 mobile-sidebar-anasayfa-text"
-                                        ref={(el) => {
-                                            // #region agent log
-                                            if (el) {
-                                                const computed = window.getComputedStyle(el);
-                                                const parent = el.parentElement;
-                                                fetch('http://127.0.0.1:7244/ingest/146da770-4a69-4ea0-9f3a-c8d3db6921c4', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ location: 'MobileSidebar.tsx:190', message: 'Span element debug POST-FIX', data: { computedColor: computed.color, actualClasses: el.className, parentComputedColor: parent ? window.getComputedStyle(parent).color : null, isDarkMode: document.documentElement.classList.contains('dark') || document.documentElement.classList.contains('dark-mode'), hasImportant: computed.getPropertyValue('color').includes('important'), inlineStyle: el.style.color }, timestamp: Date.now(), sessionId: 'debug-session', runId: 'post-fix', hypothesisId: 'B' }) }).catch(() => { });
-                                            }
-                                            // #endregion
-                                        }}
                                     >
                                         Ana Sayfa
                                     </span>
