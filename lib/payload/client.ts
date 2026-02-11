@@ -22,8 +22,11 @@ export function getPayloadConfig() {
     return null;
   }
 
+  // Normalize URL: no trailing slash (avoid double slashes in path, e.g. /api//gundem)
+  const baseUrl = PAYLOAD_API_URL.replace(/\/+$/, "");
+
   return {
-    url: PAYLOAD_API_URL,
+    url: baseUrl,
     key: PAYLOAD_API_KEY,
     headers: {
       Authorization: `Bearer ${PAYLOAD_API_KEY}`,

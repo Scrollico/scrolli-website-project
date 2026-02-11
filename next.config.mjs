@@ -58,7 +58,7 @@ const nextConfig = {
               "font-src 'self' data: *.instorier-cdn.com https://fonts.gstatic.com https://files.instorier.com",
               "img-src 'self' data: blob: *.instorier.com *.instorier-cdn.com https: scrollimedia.blob.core.windows.net *.maptiler.com *.openstreetmap.org *.stadiamaps.com *.flourish.studio",
               "media-src 'self' *.instorier.com *.instorier-cdn.com https://www.youtube.com https://*.youtube.com https://www.youtube-nocookie.com",
-              "connect-src 'self' *.instorier.com *.instorier-cdn.com https://vitals.vercel-insights.com https://*.supabase.co wss://*.supabase.co https://*.revenue.cat https://api.revenuecat.com https://e.revenue.cat https://*.maptiler.com https://*.openstreetmap.org https://*.stadiamaps.com https://public.flourish.studio",
+              "connect-src 'self' *.instorier.com *.instorier-cdn.com https://vitals.vercel-insights.com https://*.supabase.co wss://*.supabase.co https://*.revenue.cat https://api.revenuecat.com https://e.revenue.cat https://*.maptiler.com https://*.openstreetmap.org https://*.stadiamaps.com https://public.flourish.studio http://127.0.0.1:7244 http://localhost:7244",
               "frame-src 'self' https://js.stripe.com https://*.revenue.cat https://api.revenuecat.com https://e.revenue.cat https://www.youtube.com https://*.youtube.com https://www.youtube-nocookie.com https://flo.uri.sh https://public.flourish.studio",
               "worker-src 'self' blob:",
               "child-src 'self' blob:",

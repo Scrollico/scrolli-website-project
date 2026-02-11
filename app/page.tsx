@@ -4,8 +4,11 @@ import Section1 from '@/components/sections/home/Section1';
 import ExclusiveStoriesSection from '@/components/sections/home/ExclusiveStoriesSection';
 import LazySections from '@/components/sections/home/LazySections';
 import Section3Wrapper from '@/components/sections/home/Section3Wrapper';
-// Force rebuild 1
 import { getHomepageContent } from "@/lib/homepage";
+
+// Always fetch from Payload on the server (no static cache) so articles show after env vars are set
+export const dynamic = "force-dynamic";
+export const revalidate = 30;
 import { getNavigation } from "@/lib/payload/client";
 import { getAuthorsWithLatestArticles } from "@/lib/payload/authors";
 import { mapGundemToArticle, mapHikayelerToArticle } from "@/lib/payload/types";
