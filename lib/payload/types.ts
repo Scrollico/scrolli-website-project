@@ -270,6 +270,7 @@ export interface PayloadHikayeler {
   title: string; // Bilingual field
   subtitle?: string; // Bilingual field
   content?: any; // RichText/HTML - Bilingual field
+  inlineScript?: string | { tr?: string; en?: string }; // Incoming field from CMS
   inlineScriptHtml?: string | { tr?: string; en?: string }; // Inline script HTML from external CMS system (localized)
   summary?: string; // Bilingual field (HTML format)
   source: "Hikayeler";
@@ -436,25 +437,28 @@ export function mapHikayelerToArticle(post: PayloadHikayeler): Article {
   const mobileImage = getMediaUrl(post.verticalImage); // Hikayeler uses verticalImage
 
   // Extract inlineScriptHtml separately - this is the primary way to show hikayeler articles
+  // Handle legacy field "inlineScript" if "inlineScriptHtml" is missing
   let inlineScriptHtml: string | undefined;
-  if (post.inlineScriptHtml) {
+  const rawScript = post.inlineScriptHtml || post.inlineScript;
+
+  if (rawScript) {
     // Handle both localized object format {tr: string} and plain string
-    if (typeof post.inlineScriptHtml === "string") {
-      inlineScriptHtml = post.inlineScriptHtml.trim() || undefined;
+    if (typeof rawScript === "string") {
+      inlineScriptHtml = rawScript.trim() || undefined;
     } else if (
-      typeof post.inlineScriptHtml === "object" &&
-      post.inlineScriptHtml !== null
+      typeof rawScript === "object" &&
+      rawScript !== null
     ) {
       // Handle localized object format {tr?: string, en?: string}
-      if ("tr" in post.inlineScriptHtml && post.inlineScriptHtml.tr) {
+      if ("tr" in rawScript && rawScript.tr) {
         inlineScriptHtml =
-          typeof post.inlineScriptHtml.tr === "string"
-            ? post.inlineScriptHtml.tr.trim()
+          typeof rawScript.tr === "string"
+            ? rawScript.tr.trim()
             : undefined;
-      } else if ("en" in post.inlineScriptHtml && post.inlineScriptHtml.en) {
+      } else if ("en" in rawScript && rawScript.en) {
         inlineScriptHtml =
-          typeof post.inlineScriptHtml.en === "string"
-            ? post.inlineScriptHtml.en.trim()
+          typeof rawScript.en === "string"
+            ? rawScript.en.trim()
             : undefined;
       }
     }
