@@ -4,15 +4,10 @@
  */
 
 const requiredEnvVars = {
-  // Supabase (required)
-  NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
-  
   // Payload CMS (required for CMS operations)
   PAYLOAD_API_URL: process.env.PAYLOAD_API_URL,
   PAYLOAD_API_KEY: process.env.PAYLOAD_API_KEY,
-  
+
   // Optional but recommended
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   CONTACT_EMAIL: process.env.CONTACT_EMAIL,
@@ -22,9 +17,8 @@ const requiredEnvVars = {
 } as const;
 
 const criticalEnvVars = [
-  'NEXT_PUBLIC_SUPABASE_URL',
-  'NEXT_PUBLIC_SUPABASE_ANON_KEY',
-  'SUPABASE_SERVICE_ROLE_KEY',
+  'PAYLOAD_API_URL',
+  'PAYLOAD_API_KEY',
 ] as const;
 
 /**
@@ -41,20 +35,20 @@ export function validateEnvVars(): void {
   }
 
   const missing: string[] = [];
-  
+
   for (const varName of criticalEnvVars) {
     if (!requiredEnvVars[varName]) {
       missing.push(varName);
     }
   }
-  
+
   if (missing.length > 0) {
     throw new Error(
       `Missing required environment variables: ${missing.join(', ')}\n` +
       'Please check your .env.local file or deployment environment variables.'
     );
   }
-  
+
   // Warn about optional but recommended variables
   const warnings: string[] = [];
   if (!requiredEnvVars.RESEND_API_KEY) {
@@ -63,7 +57,7 @@ export function validateEnvVars(): void {
   if (!requiredEnvVars.PAYLOAD_API_KEY) {
     warnings.push('PAYLOAD_API_KEY (Payload CMS API routes will not work)');
   }
-  
+
   if (warnings.length > 0 && process.env.NODE_ENV !== 'production') {
     console.warn('⚠️  Optional environment variables not set:', warnings.join(', '));
   }

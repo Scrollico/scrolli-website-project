@@ -11,8 +11,14 @@ export const dynamic = "force-dynamic";
 export const revalidate = 30;
 import { getNavigation } from "@/lib/payload/client";
 import { getAuthorsWithLatestArticles } from "@/lib/payload/authors";
-import { mapGundemToArticle, mapHikayelerToArticle } from "@/lib/payload/types";
+import {
+  mapGundemToArticle,
+  mapHikayelerToArticle,
+  mapCurationToArticle,
+  mapDailyBriefingToArticle,
+} from "@/lib/payload/types";
 import { Article } from "@/types/content";
+import DailyBriefingSection from "@/components/sections/home/DailyBriefingSection";
 
 export default async function Home() {
   try {
@@ -22,23 +28,41 @@ export default async function Home() {
       getNavigation(),
       getAuthorsWithLatestArticles(5),
     ]).then((results) => [
-      results[0].status === 'fulfilled' ? (results[0] as PromiseFulfilledResult<any>).value : { hero: null, editorsPicks: [], verticalList: [], articleList: [], hikayeler: [] },
-      results[1].status === 'fulfilled' ? (results[1] as PromiseFulfilledResult<any>).value : null,
-      results[2].status === 'fulfilled' ? (results[2] as PromiseFulfilledResult<any>).value : [],
+      results[0].status === "fulfilled"
+        ? (results[0] as PromiseFulfilledResult<any>).value
+        : {
+          hero: null,
+          editorsPicks: [],
+          verticalList: [],
+          articleList: [],
+          hikayeler: [],
+          dailyBriefing: null,
+        },
+      results[1].status === "fulfilled"
+        ? (results[1] as PromiseFulfilledResult<any>).value
+        : null,
+      results[2].status === "fulfilled"
+        ? (results[2] as PromiseFulfilledResult<any>).value
+        : [],
     ]) as [any, any, any];
 
     // Map Payload articles to Article interface for components
     const heroArticle: Article | null = homepageContent.hero
-      ? (homepageContent.hero.source === "Gündem"
+      ? homepageContent.hero.source === "Gündem"
         ? mapGundemToArticle(homepageContent.hero)
-        : mapHikayelerToArticle(homepageContent.hero))
+        : mapHikayelerToArticle(homepageContent.hero)
       : null;
 
     const editorsPicksArticles: Article[] = homepageContent.editorsPicks.map(
-      (article) =>
-        article.source === "Gündem"
-          ? mapGundemToArticle(article)
-          : mapHikayelerToArticle(article)
+      (article) => {
+        if ("source" in article) {
+          return article.source === "Gündem"
+            ? mapGundemToArticle(article)
+            : mapHikayelerToArticle(article);
+        } else {
+          return mapCurationToArticle(article);
+        }
+      }
     );
 
     const verticalListArticles: Article[] = homepageContent.verticalList.map(
@@ -55,14 +79,31 @@ export default async function Home() {
           : mapHikayelerToArticle(article)
     );
 
-    const hikayelerArticles: Article[] = (homepageContent.hikayeler || []).map(mapHikayelerToArticle);
+    const hikayelerArticles: Article[] = (homepageContent.hikayeler || []).map(
+      mapHikayelerToArticle
+    );
+
+    const dailyBriefingArticle: Article | null = homepageContent.dailyBriefing
+      ? mapDailyBriefingToArticle(homepageContent.dailyBriefing)
+      : null;
 
     return (
       <Layout classList="home" navigation={navigation}>
         <HeroSection article={heroArticle} />
-        <Section1 title="Editor's Picks" articles={editorsPicksArticles} articleListArticles={articleListArticles} authors={authors} />
+        {dailyBriefingArticle && (
+          <DailyBriefingSection briefing={dailyBriefingArticle} />
+        )}
+        <Section1
+          title="Editor's Picks"
+          articles={editorsPicksArticles}
+          articleListArticles={articleListArticles}
+          authors={authors}
+        />
         <ExclusiveStoriesSection articles={hikayelerArticles} />
-        <LazySections articles={verticalListArticles} hikayeler={hikayelerArticles} />
+        <LazySections
+          articles={verticalListArticles}
+          hikayeler={hikayelerArticles}
+        />
         <Section3Wrapper />
       </Layout>
     );

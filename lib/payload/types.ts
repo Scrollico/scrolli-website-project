@@ -121,6 +121,69 @@ export interface PayloadDailyBriefing {
   updatedAt: string;
 }
 
+// Curation collection
+export interface PayloadCuration {
+  id: string;
+  slug: string;
+  title: string; // Made required based on typical usage, though marked optional in previous read
+  content?: any;
+  seoDescription?: string;
+  mergedArticles?: string;
+  mainImageLandscape?: PayloadMedia | string;
+  tags?: string;
+
+  // Business Analysis
+  keyHighlights?: string;
+  businessImplications?: string;
+  strategicRecommendations?: string;
+  riskFactors?: string;
+  classificationSector?: string;
+  classificationGeography?: string;
+  metrics?: any;
+  competitiveIntelligence?: any;
+  fourPillarClassification?: any;
+
+  // Podcast
+  podcastUrl?: string;
+
+  // News Digest
+  newsSummary?: string;
+  keyPoints?: any;
+  whyItMatters?: string;
+  dailyDigestGeneratedAt?: string;
+  dailyDigestVersion?: string;
+  newsPodcastUrl?: string;
+
+  // Executive Daily Digest
+  executiveDailyDigest?: string;
+  executiveDigest?: string;
+  newsKeyPoints?: any;
+  heroTitle?: string;
+  heroSubtitle?: string;
+
+  // Scoring
+  impactScoreSkor?: number;
+  opportunityScore?: number;
+  confidenceScore?: number;
+  riskLevel?: 'low' | 'medium' | 'high' | 'critical';
+  trendStrength?: number;
+  relevanceCategory?: string;
+  newsletterSection?: string;
+  includeInNewsletter?: 'yes' | 'no' | 'pending';
+  scoringRationale?: string;
+  scoringDate?: string;
+
+  // Additional
+  imageUrl?: string;
+  name?: string;
+  companyId?: 'yildiz-ventures' | 'scrolli' | 'alaraai';
+  status?: 'draft' | 'published' | 'sent' | 'archived';
+  publishedAt?: string;
+
+  createdAt: string;
+  updatedAt: string;
+}
+
 // Site Settings global structure
 export interface PayloadSiteSettings {
   id: string;
@@ -455,5 +518,85 @@ export function mapHikayelerToArticle(post: PayloadHikayeler): Article {
     isPremium: false,
     content: content, // Full article body (always set when post.content exists)
     inlineScriptHtml: inlineScriptHtml, // Inline script HTML from external CMS (primary for hikayeler)
+  };
+}
+
+// Map Payload Curation to Article
+export function mapCurationToArticle(curation: PayloadCuration): Article {
+  const image = getMediaUrl(curation.mainImageLandscape);
+
+  // Process content similar to Gundem if needed, but for now assuming it might be string or simple
+  let content: string | undefined;
+  if (curation.content) {
+    if (typeof curation.content === "string") {
+      content = curation.content;
+    } else {
+      // Fallback for complex content if needed, leveraging serialize like others
+      try {
+        const { serializeRichText } = require("./serialize");
+        content = serializeRichText(curation.content);
+      } catch (e) {
+        console.warn("Failed to serialize curation content", e);
+      }
+    }
+  }
+
+  return {
+    id: curation.slug || curation.id,
+    title: curation.title || "Untitled Curation",
+    subtitle: curation.heroSubtitle,
+    author: "Editor", // Curations are usually by the editor/platform
+    category: "Curation",
+    date: curation.publishedAt
+      ? new Date(curation.publishedAt).toLocaleDateString("tr-TR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+      : "",
+    readTime: "3 min read", // Estimate or fallback
+    image: image || undefined,
+    thumbnail: image || undefined,
+    excerpt: curation.newsSummary || curation.seoDescription,
+    isPremium: false,
+    content: content,
+  };
+}
+
+// Map Payload DailyBriefing to Article
+export function mapDailyBriefingToArticle(
+  briefing: PayloadDailyBriefing
+): Article {
+  let content: string | undefined;
+  if (briefing.content) {
+    if (typeof briefing.content === "string") {
+      content = briefing.content;
+    } else {
+      try {
+        const { serializeRichText } = require("./serialize");
+        content = serializeRichText(briefing.content);
+      } catch (e) {
+        console.warn("Failed to serialize daily briefing content", e);
+      }
+    }
+  }
+
+  return {
+    id: briefing.slug || briefing.id,
+    title: briefing.title,
+    subtitle: briefing.subtitle,
+    author: "Scrolli Daily",
+    category: "Daily Briefing",
+    date: new Date(briefing.briefingDate).toLocaleDateString("tr-TR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }),
+    readTime: briefing.readTime ? `${briefing.readTime} min read` : "5 min read",
+    image: briefing.imageUrl,
+    thumbnail: briefing.imageUrl,
+    excerpt: briefing.executiveSummary,
+    isPremium: false,
+    content: content,
   };
 }

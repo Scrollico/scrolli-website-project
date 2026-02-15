@@ -9,6 +9,7 @@ import {
   PayloadSiteSettings,
   PayloadPodcast,
   PayloadDailyBriefing,
+  PayloadCuration,
 } from "./types";
 
 // Get environment variables - only available on server
@@ -163,14 +164,14 @@ export async function fetchArticles(
       | { ok: false; status: number; statusText: string } =
       gundemResult.status === "fulfilled" ?
         gundemResult.value
-      : { ok: false, status: 500, statusText: "Network Error" };
+        : { ok: false, status: 500, statusText: "Network Error" };
 
     const hikayelerRes:
       | Response
       | { ok: false; status: number; statusText: string } =
       hikayelerResult.status === "fulfilled" ?
         hikayelerResult.value
-      : { ok: false, status: 500, statusText: "Network Error" };
+        : { ok: false, status: 500, statusText: "Network Error" };
 
     // Log errors if any
     if (gundemResult.status === "rejected") {
@@ -228,8 +229,7 @@ export async function fetchArticles(
       // Don't throw if Payload CMS is just unavailable - return empty array instead
       // This allows the page to still render (e.g., pricing page doesn't need articles)
       console.warn(
-        `Payload CMS unavailable: Gündem (${
-          gundemRes.status || "Network Error"
+        `Payload CMS unavailable: Gündem (${gundemRes.status || "Network Error"
         }), Hikayeler (${hikayelerRes.status || "Network Error"})`,
       );
 
@@ -587,7 +587,9 @@ export async function getSiteSettings(): Promise<PayloadSiteSettings | null> {
       return null;
     }
 
-    const response = await fetch(`${config.url}/globals/settings?locale=tr`, {
+    // Try fetching with "site-settings" slug first (correct one based on schema)
+    // If that fails, we could try "settings", but site-settings is the one with the fields we need
+    const response = await fetch(`${config.url}/globals/site-settings?locale=tr`, {
       headers: config.headers,
       next: { revalidate: 3600 }, // Cache for 1 hour
     }).catch((error) => {
@@ -604,6 +606,17 @@ export async function getSiteSettings(): Promise<PayloadSiteSettings | null> {
       console.error(
         `Failed to fetch site settings: ${response.status} ${response.statusText}`,
       );
+      // Try fallback to "settings" if "site-settings" fails (backward compatibility)
+      if (response.status === 404) {
+        console.log("Retrying with legacy 'settings' slug...");
+        const fallbackResponse = await fetch(`${config.url}/globals/settings?locale=tr`, {
+          headers: config.headers,
+          next: { revalidate: 3600 },
+        });
+        if (fallbackResponse.ok) {
+          return fallbackResponse.json();
+        }
+      }
       return null; // Return null instead of throwing for graceful degradation
     }
 
@@ -657,6 +670,16 @@ export async function fetchDailyBriefings(
   return fetchPayload<PayloadDailyBriefing>("daily-briefings", {
     ...params,
     sort: params.sort || "-briefingDate",
+    depth: params.depth || 2,
+  });
+}
+
+export async function fetchCurations(
+  params: FetchParams = {},
+): Promise<PayloadResponse<PayloadCuration>> {
+  return fetchPayload<PayloadCuration>("curations", {
+    ...params,
+    sort: params.sort || "-publishedAt",
     depth: params.depth || 2,
   });
 }
