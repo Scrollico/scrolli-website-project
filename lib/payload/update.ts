@@ -43,7 +43,7 @@ export async function updateArticle(
       } catch {
         // Not JSON, ignore
       }
-      
+
       // Always log 403 errors with details for debugging
       if (response.status === 403) {
         console.error(`❌ 403 Forbidden updating ${collection} article ${id}:`, {
@@ -105,7 +105,7 @@ export async function updateFeaturedImagesBulk(
   // Process updates in batches to avoid rate limiting and timeouts
   for (let i = 0; i < updates.length; i += batchSize) {
     const batch = updates.slice(i, i + batchSize);
-    
+
     const batchResults = await Promise.allSettled(
       batch.map(({ id, mediaId }) =>
         updateFeaturedImage(collection, id, mediaId)
@@ -121,8 +121,8 @@ export async function updateFeaturedImagesBulk(
           result.status === "rejected"
             ? result.reason?.message || "Unknown error"
             : result.value === null
-            ? "Update returned null"
-            : undefined,
+              ? "Update returned null"
+              : undefined,
       });
     });
 
@@ -168,6 +168,12 @@ export async function findArticlesWithoutFeaturedImage(
     }
 
     const data = await response.json();
+
+    // Handle wrapped response format: { success: true, data: [...] }
+    if (data.success && Array.isArray(data.data)) {
+      return data.data;
+    }
+
     return data.docs || [];
   } catch (error) {
     console.error(`Error finding ${collection} articles without images:`, error);
@@ -203,6 +209,12 @@ export async function getAllMedia(limit: number = 1000): Promise<any[]> {
     }
 
     const data = await response.json();
+
+    // Handle wrapped response format: { success: true, data: [...] }
+    if (data.success && Array.isArray(data.data)) {
+      return data.data;
+    }
+
     return data.docs || [];
   } catch (error) {
     console.error("Error fetching media:", error);

@@ -187,8 +187,14 @@ export async function fetchArticles(
     if (gundemRes.ok) {
       try {
         const gundem = await gundemRes.json();
-        // Defensive check: Ensure docs exists and is an array
-        const docs = Array.isArray(gundem?.docs) ? gundem.docs : [];
+        // Handle wrapped response format: { success: true, data: [...] }
+        let docs = [];
+        if (gundem.success && Array.isArray(gundem.data)) {
+          docs = gundem.data;
+        } else if (Array.isArray(gundem?.docs)) {
+          docs = gundem.docs;
+        }
+
         const gundemWithSource = docs.map((doc: any) => ({
           ...doc,
           source: "Gündem" as const,
@@ -206,8 +212,14 @@ export async function fetchArticles(
     if (hikayelerRes.ok) {
       try {
         const hikayeler = await hikayelerRes.json();
-        // Defensive check: Ensure docs exists and is an array
-        const docs = Array.isArray(hikayeler?.docs) ? hikayeler.docs : [];
+        // Handle wrapped response format: { success: true, data: [...] }
+        let docs = [];
+        if (hikayeler.success && Array.isArray(hikayeler.data)) {
+          docs = hikayeler.data;
+        } else if (Array.isArray(hikayeler?.docs)) {
+          docs = hikayeler.docs;
+        }
+
         const hikayelerWithSource = docs.map((doc: any) => ({
           ...doc,
           source: "Hikayeler" as const,
@@ -345,6 +357,15 @@ async function fetchPayload<T>(
     }
 
     const data = await response.json();
+
+    // Handle wrapped response format: { success: true, data: [...], meta: { ... } }
+    if (data.success && Array.isArray(data.data) && data.meta) {
+      return {
+        docs: data.data,
+        ...data.meta,
+      };
+    }
+
     // Safety check for malformed JSON that doesn't follow Payload structure
     if (!data || !Array.isArray(data.docs)) {
       console.warn(
@@ -452,7 +473,15 @@ export async function getArticleById(
       return null;
     }
 
-    return await response.json();
+    const data = await response.json();
+
+    // Handle wrapped response format: { success: true, data: { ... } }
+    // Note: Single item fetch returns data as object, not array
+    if (data.success && data.data) {
+      return data.data;
+    }
+
+    return data;
   } catch (error) {
     console.error(`Error fetching ${collection} article by ID "${id}":`, error);
     return null;
@@ -620,7 +649,11 @@ export async function getSiteSettings(): Promise<PayloadSiteSettings | null> {
       return null; // Return null instead of throwing for graceful degradation
     }
 
-    return response.json();
+    const data = await response.json();
+    if (data.success && data.data) {
+      return data.data;
+    }
+    return data;
   } catch (error) {
     console.error("Error fetching site settings:", error);
     return null; // Return null to allow fallback to defaults
@@ -646,7 +679,11 @@ export async function getNavigation(): Promise<PayloadNavigation | null> {
       return null; // Return null instead of throwing for graceful degradation
     }
 
-    return response.json();
+    const data = await response.json();
+    if (data.success && data.data) {
+      return data.data;
+    }
+    return data;
   } catch (error) {
     console.error("Error fetching navigation:", error);
     return null; // Return null to allow fallback to static navigation
