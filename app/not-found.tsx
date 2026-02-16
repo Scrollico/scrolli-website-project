@@ -1,4 +1,5 @@
 export const runtime = "edge";
+export const dynamic = "force-static";
 
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
@@ -7,9 +8,10 @@ import { typography, colors, spacing } from "@/lib/design-tokens";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-export default async function NotFound() {
+export default function NotFound() {
     // Fetch navigation data for the header/footer
-    const navigation = await getNavigation().catch(() => null);
+    // const navigation = await getNavigation().catch(() => null);
+    const navigation = null;
 
     return (
         <Layout classList="single page-404" navigation={navigation}>

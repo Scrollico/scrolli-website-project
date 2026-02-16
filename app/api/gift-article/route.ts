@@ -1,10 +1,8 @@
-export const runtime = "edge";
 
 export const runtime = "edge";
 
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
-import { randomBytes } from "crypto";
 import { giftArticleSchema } from "@/lib/api/validation";
 import { getSafeErrorMessage, logError } from "@/lib/api/errors";
 
@@ -15,7 +13,7 @@ import { getSafeErrorMessage, logError } from "@/lib/api/errors";
 export async function POST(request: Request) {
     try {
         const supabase = await createClient();
-        
+
         // Debug logging for auth
         const {
             data: { user },
@@ -28,13 +26,13 @@ export async function POST(request: Request) {
 
         if (!user) {
             console.log("Gift API: Cookie auth failed. Checking Authorization header...");
-            
+
             // Fallback: Check Authorization header
             const authHeader = request.headers.get("Authorization");
             if (authHeader && authHeader.startsWith("Bearer ")) {
                 const token = authHeader.split(" ")[1];
                 const { data: { user: headerUser }, error: headerError } = await supabase.auth.getUser(token);
-                
+
                 if (headerUser) {
                     console.log("Gift API: Auth successful via header token");
                     // Use Admin Client for DB operations since cookie client is unauthenticated
@@ -74,7 +72,7 @@ export async function POST(request: Request) {
 async function handleGiftCreation(request: Request, user: any, supabase: any) {
     try {
         const body = await request.json();
-        
+
         // Validate with Zod schema
         const validationResult = giftArticleSchema.safeParse(body);
         if (!validationResult.success) {
@@ -90,7 +88,7 @@ async function handleGiftCreation(request: Request, user: any, supabase: any) {
         // Check user's gift quota - use admin client to bypass RLS
         // supabase parameter is already the admin client passed from the route handler
         let profile = null;
-        
+
         const { data: existingProfile, error: profileError } = await supabase
             .from("profiles")
             .select("gifts_sent_this_month, gifts_reset_date")
@@ -104,7 +102,7 @@ async function handleGiftCreation(request: Request, user: any, supabase: any) {
                 { status: 500 }
             );
         }
-        
+
         // If profile doesn't exist, create it
         if (!existingProfile) {
             console.log("Profile not found for user:", user.id, "- Creating profile...");
@@ -118,7 +116,7 @@ async function handleGiftCreation(request: Request, user: any, supabase: any) {
                 })
                 .select("gifts_sent_this_month, gifts_reset_date")
                 .single();
-                
+
             if (createError) {
                 logError("gift-article-profile-create", createError);
                 return NextResponse.json(
@@ -166,8 +164,12 @@ async function handleGiftCreation(request: Request, user: any, supabase: any) {
             );
         }
 
-        // Generate unique gift token
-        const giftToken = randomBytes(32).toString("hex");
+        // Generate unique gift token using Web Crypto API (Edge compatible)
+        const randomBuffer = new Uint8Array(32);
+        crypto.getRandomValues(randomBuffer);
+        const giftToken = Array.from(randomBuffer)
+            .map(b => b.toString(16).padStart(2, '0'))
+            .join('');
 
         // Set expiration (7 days from now)
         const expiresAt = new Date();
@@ -184,7 +186,7 @@ async function handleGiftCreation(request: Request, user: any, supabase: any) {
             expires_at: expiresAt.toISOString(),
             share_method: shareMethod,
         };
-        
+
         const { data: gift, error: giftError } = await supabase
             .from("article_gifts")
             .insert(giftInsert)
@@ -193,21 +195,21 @@ async function handleGiftCreation(request: Request, user: any, supabase: any) {
 
         if (giftError) {
             logError("gift-article-create", giftError);
-            
+
             // Check if error is due to missing column (migration not run)
             // Only expose this in development
             const isDev = process.env.NODE_ENV !== "production";
             if (giftError.message?.includes('column') && giftError.message?.includes('does not exist')) {
                 return NextResponse.json(
-                    { 
-                        error: isDev 
+                    {
+                        error: isDev
                             ? "Database migration missing. Please run migration 012_enhance_gift_system.sql"
                             : "Service temporarily unavailable"
                     },
                     { status: 500 }
                 );
             }
-            
+
             return NextResponse.json(
                 { error: "Failed to create gift" },
                 { status: 500 }
@@ -258,13 +260,13 @@ async function handleGiftCreation(request: Request, user: any, supabase: any) {
             // Using QR Server API for QR code generation
             const qrData = encodeURIComponent(giftUrl);
             qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${qrData}`;
-            
+
             // Store QR code URL in database (if column exists - migration 012)
             const { error: qrUpdateError } = await supabase
                 .from("article_gifts")
                 .update({ qr_code_url: qrCodeUrl })
                 .eq("id", gift.id);
-            
+
             if (qrUpdateError) {
                 // Column might not exist if migration hasn't been run
                 console.warn("Could not update qr_code_url:", qrUpdateError.message);
@@ -346,7 +348,7 @@ Scrolli Ekibi
                 giftUrl,
             });
         }
-        
+
         return NextResponse.json({
             success: true,
             giftId: gift.id,

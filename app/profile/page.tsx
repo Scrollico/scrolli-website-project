@@ -1,6 +1,6 @@
-export const runtime = "edge";
-
 "use client";
+
+export const runtime = "edge";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -94,7 +94,7 @@ export default function ProfilePage() {
                     {/* Subscription & Billing Card */}
                     <div className="antialiased body bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded p-4 md:p-6 lg:p-8">
                         <h2 className="text-lg font-semibold mb-4">Abonelik & Faturalama</h2>
-                        
+
                         <div className="space-y-4">
                             {/* Current Plan */}
                             <div>
@@ -107,7 +107,7 @@ export default function ProfilePage() {
                                             <span className={cn(
                                                 "inline-flex items-center gap-1.5 rounded-full text-xs font-bold tracking-wider",
                                                 badgeTokens.padding,
-                                                isPremium 
+                                                isPremium
                                                     ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800"
                                                     : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600"
                                             )}>
@@ -120,8 +120,8 @@ export default function ProfilePage() {
                                     </div>
                                     {!isPremium && (
                                         <Link href="/pricing">
-                                            <Button 
-                                                size="sm" 
+                                            <Button
+                                                size="sm"
                                                 className="h-8 text-xs font-semibold"
                                             >
                                                 Premium'a Geç
@@ -146,9 +146,9 @@ export default function ProfilePage() {
                             {/* Manage Subscription */}
                             <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
                                 <Link href="/pricing">
-                                    <Button 
-                                        variant="outline" 
-                                        size="sm" 
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
                                         className="h-8 text-xs font-semibold"
                                     >
                                         {isPremium ? "Aboneliği Yönet veya İptal Et" : "Paketi Yükselt"}
@@ -203,7 +203,7 @@ export default function ProfilePage() {
                                 Sınırsız içerik, özel bültenler ve reklamsız deneyim.
                             </p>
                             <Link href="/pricing">
-                                <Button 
+                                <Button
                                     className="bg-green-600 hover:bg-green-700 text-white"
                                 >
                                     Hemen Yükselt

@@ -1,6 +1,6 @@
-export const runtime = "edge";
-
 "use client";
+
+export const runtime = "edge";
 
 import { useEffect, useRef, useState } from "react";
 import { initializeRevenueCat, getOfferings, purchasePackage } from "@/lib/revenuecat/client";
