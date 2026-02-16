@@ -9,10 +9,10 @@ import { resolve } from "path";
 // Load environment variables from .env.local
 config({ path: resolve(process.cwd(), ".env.local") });
 
-import { 
-  getPayloadConfig, 
-  fetchArticles, 
-  getArticleBySlug, 
+import {
+  getPayloadConfig,
+  fetchArticles,
+  getArticleBySlug,
   getNavigation,
   getAllGundemArticles,
   getGundemBySlug,
@@ -56,7 +56,7 @@ async function testCMSAPI() {
       console.log(`   Slug: ${firstGundem.slug}`);
       console.log(`   Has category: ${!!firstGundem.category}`);
       console.log(`   Has content: ${!!firstGundem.content}`);
-      
+
       // Test getting a specific Gündem article by slug
       const gundemSlug = firstGundem.slug;
       const gundemBySlug = await getGundemBySlug(gundemSlug);
@@ -100,9 +100,12 @@ async function testCMSAPI() {
       throw new Error(`Failed to fetch Hikayeler: ${hikayelerResponse.status} ${hikayelerResponse.statusText}`);
     }
 
-    const hikayelerData: PayloadResponse<PayloadHikayeler> = await hikayelerResponse.json();
-    const hikayelerArticles = hikayelerData.docs;
-    
+    const hikayelerData: any = await hikayelerResponse.json();
+    // Handle wrapped response format
+    const hikayelerArticles = hikayelerData.success && Array.isArray(hikayelerData.data)
+      ? hikayelerData.data
+      : (hikayelerData.docs || []);
+
     console.log(`✅ Successfully fetched ${hikayelerArticles.length} Hikayeler articles`);
     if (hikayelerArticles.length > 0) {
       const firstHikayeler = hikayelerArticles[0];
@@ -110,7 +113,7 @@ async function testCMSAPI() {
       console.log(`   Slug: ${firstHikayeler.slug}`);
       console.log(`   Has content: ${!!firstHikayeler.content}`);
       console.log(`   Has inlineScriptHtml: ${!!firstHikayeler.inlineScriptHtml}`);
-      
+
       // Test getting a specific Hikayeler article by slug
       const hikayelerSlug = firstHikayeler.slug;
       const hikayelerBySlug = await getHikayelerBySlug(hikayelerSlug);

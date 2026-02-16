@@ -2,10 +2,10 @@
 import { TimelineContent } from "@/components/ui/timeline-animation";
 import { VerticalCutReveal } from "@/components/ui/vertical-cut-reveal";
 import { cn } from "@/lib/utils";
-import { 
-  sectionPadding, 
-  containerPadding, 
-  colors, 
+import {
+  sectionPadding,
+  containerPadding,
+  colors,
   typography,
   gap
 } from "@/lib/design-tokens";
@@ -91,7 +91,7 @@ const PricingSwitch = ({
                 transition={{ type: "spring", stiffness: 500, damping: 30 }}
               />
             )}
-            <span 
+            <span
               className={cn(
                 "relative z-10",
                 isSelected
@@ -326,9 +326,8 @@ export default function PricingSection1() {
               </TimelineContent>
             </div>
           </div>
-          
+
           {/* Scroll Indicator */}
-          // YOOO!!
           <div className="flex justify-center pt-0 pb-2 mt-[-40px] relative z-20">
             <ScrollIndicator />
           </div>

@@ -28,7 +28,8 @@ export async function GET() {
     // Construct URL
     const baseUrl = PAYLOAD_API_URL.replace(/\/+$/, "");
     // Try to fetch a single item from 'hikayeler' collection to verify connectivity
-    const endpoint = `${baseUrl}/api/hikayeler?limit=1&depth=0`;
+    // Match client.ts behavior: assume PAYLOAD_API_URL includes '/api' path if needed
+    const endpoint = `${baseUrl}/hikayeler?limit=1&depth=0`;
 
     try {
         const start = Date.now();
