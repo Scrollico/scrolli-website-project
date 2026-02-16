@@ -111,13 +111,14 @@ export default async function ArticlePage({ params, searchParams }: ArticlePageP
 }
 
 // Generate static paths for all articles (optional, for ISR)
-export async function generateStaticParams() {
-  try {
-    const { fetchArticles } = await import("@/lib/payload/client");
-    const articles = await fetchArticles({ limit: 100 });
-    return articles.map((article) => ({ slug: article.slug }));
-  } catch (error) {
-    console.error("Error generating static params:", error);
-    return [];
-  }
-}
+// Commented out to prevent 429 Too Many Requests errors during Cloudflare build
+// export async function generateStaticParams() {
+//   try {
+//     const { fetchArticles } = await import("@/lib/payload/client");
+//     const articles = await fetchArticles({ limit: 100 });
+//     return articles.map((article) => ({ slug: article.slug }));
+//   } catch (error) {
+//     console.error("Error generating static params:", error);
+//     return [];
+//   }
+// }
