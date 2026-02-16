@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 /**
  * API Route to list all media items from Payload CMS
  * 

@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 /**
  * API Route to automatically assign featured images to articles
  * 

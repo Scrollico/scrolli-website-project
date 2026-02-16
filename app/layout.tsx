@@ -16,6 +16,8 @@ const CRITICAL_CSS = [
   "/assets/css/responsive.css",
 ]
 import type { Metadata } from "next"
+export const runtime = 'edge';
+
 import { cookies } from "next/headers"
 import NextTopLoaderClient from "@/components/providers/NextTopLoaderClient"
 import { generateSiteMetadata } from "@/lib/seo"

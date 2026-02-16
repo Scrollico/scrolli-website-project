@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import { Suspense } from "react"
 import Layout from "@/components/layout/Layout"
 import RevenueCatPricing from '@/components/premium/RevenueCatPricing'

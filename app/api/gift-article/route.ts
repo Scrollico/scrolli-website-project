@@ -1,3 +1,7 @@
+export const runtime = "edge";
+
+export const runtime = "edge";
+
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 import { randomBytes } from "crypto";

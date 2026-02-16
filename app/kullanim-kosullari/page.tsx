@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import Layout from "@/components/layout/Layout"
 import TermsOfUseSection from '@/components/sections/terms-of-use/TermsOfUseSection'
 

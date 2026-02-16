@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 /**
  * API Route to find articles without featured images
  * 

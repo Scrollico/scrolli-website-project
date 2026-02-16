@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 /**
  * API Route to update featured images in Payload CMS
  * 

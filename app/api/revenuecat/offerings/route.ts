@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 /**
  * Server-side API route to fetch RevenueCat offerings
  * This bypasses ad blockers by proxying requests through our own domain

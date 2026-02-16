@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import Layout from "@/components/layout/Layout"
 import HeroSection from '@/components/sections/about-us/HeroSection'
 import AboutSection2 from '@/components/sections/about-us/AboutSection2'

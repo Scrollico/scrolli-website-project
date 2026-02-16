@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import { findArticleById } from "@/lib/content";
 import { notFound, redirect } from "next/navigation";
 import GiftRedemptionClient from "./GiftRedemptionClient";

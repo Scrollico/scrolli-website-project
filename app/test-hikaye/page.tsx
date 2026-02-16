@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import Layout from "@/components/layout/Layout";
 import InlineScriptRenderer from '@/components/sections/single/InlineScriptRenderer';
 import { getNavigation } from "@/lib/payload/client";

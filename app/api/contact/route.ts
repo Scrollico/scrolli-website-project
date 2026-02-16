@@ -1,3 +1,7 @@
+export const runtime = "edge";
+
+export const runtime = "edge";
+
 import { NextResponse } from 'next/server';
 import { sanitizeText, sanitizeEmail, sanitizeAttribute } from '@/lib/api/sanitize';
 import { contactFormSchema } from '@/lib/api/validation';

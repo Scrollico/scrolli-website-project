@@ -1,3 +1,7 @@
+export const runtime = "edge";
+
+export const runtime = "edge";
+
 /**
  * Environment Variable Check Endpoint
  * GET /api/env-check

@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 import Layout from "@/components/layout/Layout"
 import ImprintSection from '@/components/sections/kunye/ImprintSection'
 

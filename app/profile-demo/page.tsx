@@ -1,3 +1,5 @@
+export const runtime = "edge";
+
 "use client"
 
 import { AccountSettings } from "@/components/ui/account-settings";

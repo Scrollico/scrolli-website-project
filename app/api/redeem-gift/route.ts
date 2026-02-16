@@ -1,3 +1,7 @@
+export const runtime = "edge";
+
+export const runtime = "edge";
+
 import { NextRequest, NextResponse } from "next/server";
 import { redeemGiftSchema } from "@/lib/api/validation";
 import { getSafeErrorMessage, logError } from "@/lib/api/errors";
