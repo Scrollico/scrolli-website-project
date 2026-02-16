@@ -21,12 +21,11 @@ export function getPayloadConfig() {
 
   if (!PAYLOAD_API_URL || !PAYLOAD_API_KEY) {
     // Enhanced logging for debugging production issues
-    // This helps identify when environment variables are not set in production
     console.error("❌ Payload CMS Configuration Missing:", {
       hasUrl: !!PAYLOAD_API_URL,
       hasKey: !!PAYLOAD_API_KEY,
       nodeEnv: process.env.NODE_ENV,
-      // Don't log actual values for security
+      urlLength: PAYLOAD_API_URL ? PAYLOAD_API_URL.length : 0,
     });
     return null;
   }
@@ -149,11 +148,11 @@ export async function fetchArticles(
     // Use Promise.allSettled to handle failures gracefully without breaking the page
     const [gundemResult, hikayelerResult] = await Promise.allSettled([
       fetch(`${config.url}/gundem?${queryString}`, {
-        ...config.headers,
+        headers: config.headers,
         next: { revalidate: 30 },
       }),
       fetch(`${config.url}/hikayeler?${queryString}`, {
-        ...config.headers,
+        headers: config.headers,
         next: { revalidate: 30 },
       }),
     ]);
@@ -329,7 +328,7 @@ async function fetchPayload<T>(
 
   try {
     const response = await fetch(url, {
-      ...config.headers,
+      headers: config.headers,
       next: {
         revalidate: 60,
       },
