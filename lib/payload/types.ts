@@ -354,9 +354,10 @@ function getAuthorName(author: PayloadAuthor | string | undefined): string {
 }
 
 // Helper function to extract category slug
-function getCategorySlug(category: PayloadCategory | string): string {
+function getCategorySlug(category?: PayloadCategory | string | null): string {
+  if (!category) return "news";
   if (typeof category === "string") return category;
-  return category.slug;
+  return category.slug || "news";
 }
 
 // Map Payload Gündem to existing Article interface
