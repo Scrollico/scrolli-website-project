@@ -26,21 +26,23 @@ interface ArticlePageProps {
 function isGundem(
   article: PayloadGundem | PayloadHikayeler | PayloadAlaraai
 ): article is PayloadGundem | PayloadAlaraai {
-  // Use collection field for precise identification (added recently)
+  // 1. Check collection field (most reliable)
   const col = (article as any).collection;
   if (col) {
-    return col === "gundem" || col === "alaraai";
+    if (col === "hikayeler") return false;
+    return true; // gundem, alaraai or other future gundem-like collections
   }
 
-  // Fallback for cached data or documents without collection field
+  // 2. Check source field (fallback for cache)
   const source = ((article as any).source || "").toLowerCase();
-  return (
-    source === "gündem" ||
-    source === "gundem" ||
-    source === "alara ai" ||
-    source === "alaraai" ||
-    source === "alara-ai"
-  );
+  if (source) {
+    if (source === "hikayeler") return false;
+    return true; // gündem, alara ai, etc.
+  }
+
+  // 3. Default to true (Gundem mapping) for maximum robustness
+  // Most collections follow the Gundem structure, only hikayeler is special.
+  return true;
 }
 
 // Generate metadata for SEO
