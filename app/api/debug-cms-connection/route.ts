@@ -53,8 +53,9 @@ export async function GET() {
         if (contentType && contentType.includes('application/json')) {
             data = await res.json();
             // Simplify the response but show keys for first item
-            if (data.docs && Array.isArray(data.docs) && data.docs.length > 0) {
-                const firstItem = data.docs[0];
+            const articles = data.data || data.docs || [];
+            if (Array.isArray(articles) && articles.length > 0) {
+                const firstItem = articles[0];
                 data.keys = Object.keys(firstItem);
                 data.sample = {
                     id: firstItem.id,
@@ -68,7 +69,7 @@ export async function GET() {
                     bodyPreview: firstItem.body ? (typeof firstItem.body === 'string' ? firstItem.body.substring(0, 100) : JSON.stringify(firstItem.body).substring(0, 100)) : null,
                     source: firstItem.source,
                 };
-                data.docs = `[${data.docs.length} items returned]`;
+                data.docs_info = `[${articles.length} items returned]`;
             }
         } else {
             const text = await res.text();
