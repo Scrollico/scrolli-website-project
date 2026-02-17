@@ -68,6 +68,12 @@ export async function generateMetadata({
 
 export default async function ArticlePage({ params, searchParams }: ArticlePageProps) {
   const { slug } = await params;
+
+  // Safety: If for some reason an /api route reaches here, skip it
+  if (slug === "api" || slug.startsWith("api/")) {
+    notFound();
+  }
+
   const payloadArticle = await getArticleBySlug(slug);
 
   if (!payloadArticle) {
