@@ -593,7 +593,6 @@ export function mapDailyBriefingToArticle(
       content = briefing.content;
     } else {
       try {
-        const { serializeRichText } = require("./serialize");
         content = serializeRichText(briefing.content);
       } catch (e) {
         console.warn("Failed to serialize daily briefing content", e);

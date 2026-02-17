@@ -61,7 +61,11 @@ export async function GET() {
                     slug: firstItem.slug,
                     title: firstItem.title,
                     hasContent: !!firstItem.content,
-                    hasBody: !!firstItem.body, // Check alternative field
+                    contentType: typeof firstItem.content,
+                    contentPreview: firstItem.content ? (typeof firstItem.content === 'string' ? firstItem.content.substring(0, 100) : JSON.stringify(firstItem.content).substring(0, 100)) : null,
+                    hasBody: !!firstItem.body,
+                    bodyType: typeof firstItem.body,
+                    bodyPreview: firstItem.body ? (typeof firstItem.body === 'string' ? firstItem.body.substring(0, 100) : JSON.stringify(firstItem.body).substring(0, 100)) : null,
                     source: firstItem.source,
                 };
                 data.docs = `[${data.docs.length} items returned]`;
