@@ -1,4 +1,5 @@
 import { Article } from "@/types/content";
+import { serializeRichText } from "./serialize";
 
 // Payload API Response Types
 export interface PayloadResponse<T> {
@@ -373,14 +374,12 @@ export function mapGundemToArticle(post: PayloadGundem): Article {
           !Array.isArray(trContent)
         ) {
           if ("root" in trContent || Array.isArray(trContent)) {
-            const { serializeRichText } = require("./serialize");
             const serialized = serializeRichText(trContent);
             content = serialized.trim() || undefined;
           }
         }
         // If tr is an array (Lexical format), serialize it
         else if (Array.isArray(trContent) && trContent.length > 0) {
-          const { serializeRichText } = require("./serialize");
           const serialized = serializeRichText(trContent);
           content = serialized.trim() || undefined;
         }
@@ -388,7 +387,6 @@ export function mapGundemToArticle(post: PayloadGundem): Article {
         content = post.content.en.trim() || undefined;
       } else if ("root" in post.content || Array.isArray(post.content)) {
         // Handle Lexical format with root.children structure (direct format)
-        const { serializeRichText } = require("./serialize");
         const serialized = serializeRichText(post.content);
         content = serialized.trim() || undefined;
       }
@@ -397,7 +395,6 @@ export function mapGundemToArticle(post: PayloadGundem): Article {
       content = post.content.trim() || undefined;
     } else if (Array.isArray(post.content) && post.content.length > 0) {
       // Import serializeRichText to handle Lexical format
-      const { serializeRichText } = require("./serialize");
       const serialized = serializeRichText(post.content);
       content = serialized.trim() || undefined;
     }
@@ -486,7 +483,6 @@ export function mapHikayelerToArticle(post: PayloadHikayeler): Article {
         content = post.content.en.trim() || undefined;
       } else if ("root" in post.content || Array.isArray(post.content)) {
         // Handle Lexical format with root.children structure
-        const { serializeRichText } = require("./serialize");
         const serialized = serializeRichText(post.content, post.title);
         content = serialized.trim() || undefined;
       }
@@ -495,7 +491,6 @@ export function mapHikayelerToArticle(post: PayloadHikayeler): Article {
       content = post.content.trim() || undefined;
     } else if (Array.isArray(post.content) && post.content.length > 0) {
       // Import serializeRichText to handle Lexical format
-      const { serializeRichText } = require("./serialize");
       const serialized = serializeRichText(post.content, post.title);
       content = serialized.trim() || undefined;
     }
@@ -537,7 +532,6 @@ export function mapCurationToArticle(curation: PayloadCuration): Article {
     } else {
       // Fallback for complex content if needed, leveraging serialize like others
       try {
-        const { serializeRichText } = require("./serialize");
         content = serializeRichText(curation.content);
       } catch (e) {
         console.warn("Failed to serialize curation content", e);
