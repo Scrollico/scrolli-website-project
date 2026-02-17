@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 import { useTheme } from "next-themes";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Heading } from "@/components/ui/typography/Heading";
 
 export function useScrollY(containerRef: React.RefObject<HTMLElement>) {
   const [scrollY, setScrollY] = useState(0);

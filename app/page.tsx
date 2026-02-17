@@ -1,6 +1,7 @@
 export const runtime = "edge";
 
 import Layout from "@/components/layout/Layout";
+import Link from "next/link";
 import HeroSection from '@/components/sections/home/HeroSection';
 import Section1 from '@/components/sections/home/Section1';
 import ExclusiveStoriesSection from '@/components/sections/home/ExclusiveStoriesSection';
@@ -122,12 +123,12 @@ export default async function Home() {
           <p className="text-gray-600 dark:text-gray-400 mb-8">
             We're having trouble loading the homepage content. Please try again later.
           </p>
-          <a
+          <Link
             href="/"
             className="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >
             Retry
-          </a>
+          </Link>
         </div>
       </Layout>
     );

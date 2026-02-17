@@ -119,7 +119,7 @@ export function Footer() {
                 <p className="mt-2">
                   Start your 7-day free trial. No credit card required.
                 </p>
-                <a
+                <Link
                   href="/signup"
                   className={cn(
                     buttonVariants({
@@ -131,7 +131,7 @@ export function Footer() {
                 >
                   Start free trial
                   <ChevronRightIcon className="ml-1 size-4 transition-all duration-300 ease-out group-hover:translate-x-1" />
-                </a>
+                </Link>
               </div>
             </div>
           </div>

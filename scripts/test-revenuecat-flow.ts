@@ -268,7 +268,7 @@ async function createTestUser(): Promise<{
   console.log("\n👤 Creating test user...");
 
   const testEmail = `test-${Date.now()}@scrolli.co`;
-  const testPassword = "TestPassword123!";
+  const testPassword = process.env.TEST_USER_PASSWORD || "demo-test-password-123!";
 
   try {
     const { data, error } = await supabaseAdmin.auth.admin.createUser({

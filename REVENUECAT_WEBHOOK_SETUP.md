@@ -10,7 +10,7 @@
 ### 2. Edge Function Deployed ✅
 
 - `revenuecat-webhook` Edge Function has been deployed with the correct implementation
-- Function URL: `https://mylxytrdxvkjvijiegds.supabase.co/functions/v1/revenuecat-webhook`
+- Function URL: `https://YOUR_SUPABASE_PROJECT_REF.supabase.co/functions/v1/revenuecat-webhook`
 
 ## 🔧 Required Setup Steps
 
@@ -50,7 +50,7 @@
 3. Go to **Settings** → **Integrations** → **Webhooks**
 4. Click **Add Webhook** or edit existing webhook
 5. Configure:
-   - **Webhook URL**: `https://mylxytrdxvkjvijiegds.supabase.co/functions/v1/revenuecat-webhook`
+   - **Webhook URL**: `https://YOUR_SUPABASE_PROJECT_REF.supabase.co/functions/v1/revenuecat-webhook`
    - **Authorization Header**: Set this to the same value as `RC_WEBHOOK_SECRET` from Step 1
    - **Events to Send**: Select all relevant events:
      - `INITIAL_PURCHASE`
@@ -67,7 +67,7 @@ Test the webhook endpoint:
 
 ```bash
 # Replace YOUR_SECRET with your actual RC_WEBHOOK_SECRET
-curl -X POST https://mylxytrdxvkjvijiegds.supabase.co/functions/v1/revenuecat-webhook \
+curl -X POST https://YOUR_SUPABASE_PROJECT_REF.supabase.co/functions/v1/revenuecat-webhook \
   -H "Authorization: YOUR_SECRET" \
   -H "Content-Type: application/json" \
   -d '{
@@ -258,7 +258,7 @@ Invalid API key. Use your Web Billing API key.
 
 ## 🔗 Useful Links
 
-- [Supabase Dashboard](https://supabase.com/dashboard/project/mylxytrdxvkjvijiegds)
+- [Supabase Dashboard](https://supabase.com/dashboard)
 - [RevenueCat Dashboard](https://app.revenuecat.com/)
-- [Edge Function Logs](https://supabase.com/dashboard/project/mylxytrdxvkjvijiegds/functions/revenuecat-webhook/logs)
-- [Database Tables](https://supabase.com/dashboard/project/mylxytrdxvkjvijiegds/editor)
+- [Edge Function Logs](https://supabase.com/dashboard)
+- [Database Tables](https://supabase.com/dashboard)

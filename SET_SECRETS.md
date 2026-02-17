@@ -26,8 +26,8 @@ The **create-subscription-user** Edge Function uses `SITE_URL` for the auth call
 
 **Secrets to add:**
 
-- **ONESIGNAL_APP_ID**: `abaa0673-fdc6-4dc4-bba6-9e389f56fb5b`
-- **ONESIGNAL_REST_API_KEY**: `nwrgjndndejsema6cp6pwsbq5`
+- **ONESIGNAL_APP_ID**: `YOUR_ONESIGNAL_APP_ID`
+- **ONESIGNAL_REST_API_KEY**: `YOUR_ONESIGNAL_REST_API_KEY`
 
 ## Option 2: Via Supabase CLI
 
@@ -35,8 +35,8 @@ If you have Supabase CLI logged in:
 
 ```bash
 # Set secrets for newsletter-subscribe
-supabase secrets set ONESIGNAL_APP_ID=abaa0673-fdc6-4dc4-bba6-9e389f56fb5b --project-ref mylxytrdxvkjvijiegds
-supabase secrets set ONESIGNAL_REST_API_KEY=nwrgjndndejsema6cp6pwsbq5 --project-ref mylxytrdxvkjvijiegds
+supabase secrets set ONESIGNAL_APP_ID=YOUR_ONESIGNAL_APP_ID --project-ref YOUR_SUPABASE_PROJECT_REF
+supabase secrets set ONESIGNAL_REST_API_KEY=YOUR_ONESIGNAL_REST_API_KEY --project-ref YOUR_SUPABASE_PROJECT_REF
 
 # Note: Secrets are project-wide, so they'll be available to all Edge Functions
 ```
