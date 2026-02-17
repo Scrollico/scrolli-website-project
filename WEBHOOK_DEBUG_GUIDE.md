@@ -29,7 +29,7 @@ The webhook expects `app_user_id` from RevenueCat to match Supabase `user.id`.
 2. Navigate to **Settings** → **Integrations** → **Webhooks**
 3. Update webhook URL to:
    ```
-   https://mylxytrdxvkjvijiegds.supabase.co/functions/v1/revenuecat-webhook
+   https://YOUR_SUPABASE_PROJECT_REF.supabase.co/functions/v1/revenuecat-webhook
    ```
 4. Verify Authorization Header matches `RC_WEBHOOK_SECRET`
 
@@ -74,7 +74,7 @@ The new webhook includes:
 ### Test Webhook Manually
 
 ```bash
-curl -X POST https://mylxytrdxvkjvijiegds.supabase.co/functions/v1/revenuecat-webhook \
+curl -X POST https://YOUR_SUPABASE_PROJECT_REF.supabase.co/functions/v1/revenuecat-webhook \
   -H "Authorization: YOUR_RC_WEBHOOK_SECRET" \
   -H "Content-Type: application/json" \
   -d '{

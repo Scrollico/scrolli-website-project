@@ -9,7 +9,7 @@
 
 2. Project linked:
    ```bash
-   supabase link --project-ref mylxytrdxvkjvijiegds
+   supabase link --project-ref YOUR_SUPABASE_PROJECT_REF
    ```
 
 ## Deploy Commands
@@ -33,10 +33,10 @@ After deploying, set the OneSignal secrets:
 
 ```bash
 # Set OneSignal App ID
-supabase secrets set ONESIGNAL_APP_ID=abaa0673-fdc6-4dc4-bba6-9e389f56fb5b
+supabase secrets set ONESIGNAL_APP_ID=YOUR_ONESIGNAL_APP_ID
 
 # Set OneSignal REST API Key
-supabase secrets set ONESIGNAL_REST_API_KEY=nwrgjndndejsema6cp6pwsbq5
+supabase secrets set ONESIGNAL_REST_API_KEY=YOUR_ONESIGNAL_REST_API_KEY
 ```
 
 **Note:** Your OneSignal credentials are already in `.env.local`. Use the same values above.
@@ -54,9 +54,9 @@ supabase secrets set ONESIGNAL_REST_API_KEY=nwrgjndndejsema6cp6pwsbq5
 
 After deployment, your functions will be available at:
 
-- `https://mylxytrdxvkjvijiegds.supabase.co/functions/v1/newsletter-subscribe`
-- `https://mylxytrdxvkjvijiegds.supabase.co/functions/v1/onesignal-sync`
-- `https://mylxytrdxvkjvijiegds.supabase.co/functions/v1/onesignal-webhook`
+- `https://YOUR_SUPABASE_PROJECT_REF.supabase.co/functions/v1/newsletter-subscribe`
+- `https://YOUR_SUPABASE_PROJECT_REF.supabase.co/functions/v1/onesignal-sync`
+- `https://YOUR_SUPABASE_PROJECT_REF.supabase.co/functions/v1/onesignal-webhook`
 
 ## Next Steps
 

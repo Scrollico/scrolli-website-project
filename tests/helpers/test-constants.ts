@@ -7,7 +7,7 @@
 export const TEST_USER_EMAIL =
   process.env.TEST_USER_EMAIL || "test-paywall@scrolli.co";
 export const TEST_USER_PASSWORD =
-  process.env.TEST_USER_PASSWORD || "TestPassword123!";
+  process.env.TEST_USER_PASSWORD || "demo-test-password-123!";
 
 // Stripe test card details
 export const STRIPE_TEST_CARD = {

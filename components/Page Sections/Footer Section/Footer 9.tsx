@@ -1,4 +1,5 @@
 import { ChevronRightIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
 
 type Link = {
   text: string;
@@ -36,13 +37,13 @@ export function Footer() {
             </li>
           ))}
         </ul>
-        <a
+        <Link
           href="/pricing"
           className="inline-flex w-fit items-center justify-center gap-x-1 rounded-md bg-neutral-800 px-6 py-2 text-sm font-semibold tracking-tighter text-white ring-1 transition duration-200 hover:ring-2 hover:ring-neutral-900 hover:ring-offset-2 dark:bg-white dark:text-black dark:hover:ring-white dark:hover:ring-offset-black lg:h-12 lg:text-base"
         >
           Start free trial
           <ChevronRightIcon className="ml-1 size-4 transition-all duration-300 ease-out group-hover:translate-x-1" />
-        </a>
+        </Link>
       </div>
     </footer>
   );

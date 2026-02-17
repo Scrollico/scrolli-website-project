@@ -41,7 +41,7 @@ async function main() {
   } = await import("../tests/helpers/revenuecat-helpers");
 
   const testEmail = `test-backend-${Date.now()}@scrolli.co`;
-  const testPassword = process.env.TEST_USER_PASSWORD || "TestPassword123!";
+  const testPassword = process.env.TEST_USER_PASSWORD || "demo-test-password-123!";
 
   let testUserId: string | null = null;
 
