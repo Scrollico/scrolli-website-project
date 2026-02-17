@@ -143,20 +143,23 @@ export async function fetchArticles(
     }
 
     const queryString = buildQueryString(params);
+    const cacheBuster = `cb=${Date.now()}`;
+    const sep = queryString ? "&" : "";
+    const fullQuery = `${queryString}${sep}${cacheBuster}`;
 
     // Revalidation strategy: 30 seconds for articles (faster new article discovery)
     // Navigation and site settings use longer revalidation (1 hour) as they change less frequently
     // Use Promise.allSettled to handle failures gracefully without breaking the page
     const [gundemResult, hikayelerResult, alaraaiResult] = await Promise.allSettled([
-      fetch(`${config.url}/gundem?${queryString}`, {
+      fetch(`${config.url}/gundem?${fullQuery}`, {
         headers: config.headers,
         next: { revalidate: 30 },
       }),
-      fetch(`${config.url}/hikayeler?${queryString}`, {
+      fetch(`${config.url}/hikayeler?${fullQuery}`, {
         headers: config.headers,
         next: { revalidate: 30 },
       }),
-      fetch(`${config.url}/alaraai?${queryString}`, {
+      fetch(`${config.url}/alaraai?${fullQuery}`, {
         headers: config.headers,
         next: { revalidate: 30 },
       }),

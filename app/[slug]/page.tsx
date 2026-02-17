@@ -26,9 +26,21 @@ interface ArticlePageProps {
 function isGundem(
   article: PayloadGundem | PayloadHikayeler | PayloadAlaraai
 ): article is PayloadGundem | PayloadAlaraai {
-  // Use collection field for precise identification
+  // Use collection field for precise identification (added recently)
   const col = (article as any).collection;
-  return col === "gundem" || col === "alaraai";
+  if (col) {
+    return col === "gundem" || col === "alaraai";
+  }
+
+  // Fallback for cached data or documents without collection field
+  const source = ((article as any).source || "").toLowerCase();
+  return (
+    source === "gündem" ||
+    source === "gundem" ||
+    source === "alara ai" ||
+    source === "alaraai" ||
+    source === "alara-ai"
+  );
 }
 
 // Generate metadata for SEO
