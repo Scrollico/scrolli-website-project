@@ -371,8 +371,13 @@ export function mapGundemToArticle(post: PayloadGundem | PayloadAlaraai): Articl
       post.content !== null &&
       !Array.isArray(post.content)
     ) {
-      // Check if it's a localized object with nested content
-      if ("tr" in post.content) {
+      // 1. Direct Lexical format (root object) - check this FIRST for collections like alaraai
+      if ("root" in post.content) {
+        const serialized = serializeRichText(post.content);
+        content = serialized.trim() || undefined;
+      }
+      // 2. Localized content object (e.g., {tr: {...}, en: {...}})
+      else if ("tr" in post.content) {
         const trContent = post.content.tr;
         // If tr is a string, use it directly
         if (typeof trContent === "string") {
@@ -404,10 +409,12 @@ export function mapGundemToArticle(post: PayloadGundem | PayloadAlaraai): Articl
     } else if (typeof post.content === "string") {
       // Direct HTML string (when using locale=tr)
       content = post.content.trim() || undefined;
-    } else if (Array.isArray(post.content) && post.content.length > 0) {
-      // Import serializeRichText to handle Lexical format
-      const serialized = serializeRichText(post.content);
-      content = serialized.trim() || undefined;
+    } else if (Array.isArray(post.content)) {
+      // Direct array (Slate/Lexical array format)
+      if (post.content.length > 0) {
+        const serialized = serializeRichText(post.content);
+        content = serialized.trim() || undefined;
+      }
     }
   }
 
