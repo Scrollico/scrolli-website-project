@@ -46,6 +46,11 @@ export default function CardNav({
 
   useEffect(() => {
     setMounted(true);
+    // Initialize language from cookie
+    const match = document.cookie.match(new RegExp('(^| )NEXT_LOCALE=([^;]+)'));
+    if (match) {
+      setCurrentLanguage(match[2] as 'tr' | 'en');
+    }
   }, []);
 
   // Only calculate isDark after hydration to prevent mismatch
@@ -66,8 +71,12 @@ export default function CardNav({
   };
 
   const toggleLanguage = () => {
-    setCurrentLanguage(currentLanguage === 'tr' ? 'en' : 'tr');
-    // TODO: Implement actual language switching logic
+    const newLang = currentLanguage === 'tr' ? 'en' : 'tr';
+    setCurrentLanguage(newLang);
+    // Set cookie for 1 year
+    document.cookie = `NEXT_LOCALE=${newLang}; path=/; max-age=31536000`;
+    // Reload to apply changes server-side
+    window.location.reload();
   };
 
   return (

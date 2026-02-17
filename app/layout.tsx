@@ -147,6 +147,7 @@ export default async function RootLayout({
 }>) {
   const cookieStore = await cookies()
   const themeCookie = cookieStore.get(THEME_COOKIE_KEY)?.value
+  const locale = cookieStore.get("NEXT_LOCALE")?.value || "tr"
   const initialIsDark = themeCookie === 'dark'
   const initialHtmlClass = initialIsDark ? 'dark dark-mode' : themeCookie === 'light' ? 'light' : ''
   const initialBodyClass = initialIsDark ? 'home dark-mode' : 'home'
@@ -154,7 +155,7 @@ export default async function RootLayout({
   const websiteData = generateWebsiteStructuredData()
 
   return (
-    <html lang="tr" suppressHydrationWarning className={`${newsreader.variable} ${instrumentSans.variable} ${initialHtmlClass}`}>
+    <html lang={locale} suppressHydrationWarning className={`${newsreader.variable} ${instrumentSans.variable} ${initialHtmlClass}`}>
       <head>
         <style
           id="theme-prepaint-guard"
