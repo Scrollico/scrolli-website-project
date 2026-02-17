@@ -7,6 +7,7 @@ import ExclusiveStoriesSection from '@/components/sections/home/ExclusiveStories
 import LazySections from '@/components/sections/home/LazySections';
 import Section3Wrapper from '@/components/sections/home/Section3Wrapper';
 import { getHomepageContent } from "@/lib/homepage";
+import { getDictionary, getLocale } from "@/lib/dictionaries";
 
 // Always fetch from Payload on the server (no static cache) so articles show after env vars are set
 export const dynamic = "force-dynamic";
@@ -24,6 +25,8 @@ import DailyBriefingSection from "@/components/sections/home/DailyBriefingSectio
 
 export default async function Home() {
   try {
+    const dictionary = await getDictionary();
+    const locale = await getLocale();
     // Fetch navigation, homepage content, and authors from Payload CMS
     const [homepageContent, navigation, authors] = await Promise.allSettled([
       getHomepageContent(),
@@ -51,18 +54,18 @@ export default async function Home() {
     // Map Payload articles to Article interface for components
     const heroArticle: Article | null = homepageContent.hero
       ? homepageContent.hero.source === "Gündem"
-        ? mapGundemToArticle(homepageContent.hero)
-        : mapHikayelerToArticle(homepageContent.hero)
+        ? mapGundemToArticle(homepageContent.hero, locale)
+        : mapHikayelerToArticle(homepageContent.hero, locale)
       : null;
 
     const editorsPicksArticles: Article[] = homepageContent.editorsPicks.map(
       (article) => {
         if ("source" in article) {
           return article.source === "Gündem"
-            ? mapGundemToArticle(article)
-            : mapHikayelerToArticle(article);
+            ? mapGundemToArticle(article, locale)
+            : mapHikayelerToArticle(article, locale);
         } else {
-          return mapCurationToArticle(article);
+          return mapCurationToArticle(article, locale);
         }
       }
     );
@@ -70,23 +73,23 @@ export default async function Home() {
     const verticalListArticles: Article[] = homepageContent.verticalList.map(
       (article) =>
         article.source === "Gündem"
-          ? mapGundemToArticle(article)
-          : mapHikayelerToArticle(article)
+          ? mapGundemToArticle(article, locale)
+          : mapHikayelerToArticle(article, locale)
     );
 
     const articleListArticles: Article[] = homepageContent.articleList.map(
       (article) =>
         article.source === "Gündem"
-          ? mapGundemToArticle(article)
-          : mapHikayelerToArticle(article)
+          ? mapGundemToArticle(article, locale)
+          : mapHikayelerToArticle(article, locale)
     );
 
     const hikayelerArticles: Article[] = (homepageContent.hikayeler || []).map(
-      mapHikayelerToArticle
+      (article) => mapHikayelerToArticle(article, locale)
     );
 
     const dailyBriefingArticle: Article | null = homepageContent.dailyBriefing
-      ? mapDailyBriefingToArticle(homepageContent.dailyBriefing)
+      ? mapDailyBriefingToArticle(homepageContent.dailyBriefing, locale)
       : null;
 
     return (
@@ -96,7 +99,7 @@ export default async function Home() {
           <DailyBriefingSection briefing={dailyBriefingArticle} />
         )}
         <Section1
-          title="Editor's Picks"
+          title={dictionary.home.editorsPicks}
           articles={editorsPicksArticles}
           articleListArticles={articleListArticles}
           authors={authors}

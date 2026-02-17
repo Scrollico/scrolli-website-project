@@ -13,6 +13,7 @@ import {
     typography,
 } from "@/lib/design-tokens";
 import { Loader2, X } from "lucide-react";
+import { useDictionary } from "@/components/providers/dictionary-provider";
 
 interface PaywallSlideUpProps {
     onClose?: () => void;
@@ -29,6 +30,7 @@ export function PaywallSlideUp({
     articlesRead = 3,
     limit = 3
 }: PaywallSlideUpProps) {
+    const dictionary = useDictionary();
     const router = useRouter();
     const { user } = useAuth();
     const { isInitialized, refreshCustomerInfo } = useRevenueCat();
@@ -67,13 +69,13 @@ export function PaywallSlideUp({
 
         // CRITICAL: Ensure user is authenticated and RevenueCat is configured
         if (!user) {
-            setPurchaseError("Lütfen önce giriş yapın veya hesap oluşturun.");
+            setPurchaseError(dictionary.paywall.loginRequired);
             router.push("/sign-in?next=" + encodeURIComponent(window.location.pathname));
             return;
         }
 
         if (!isInitialized) {
-            setPurchaseError("Ödeme sistemi hazırlanıyor... Lütfen birkaç saniye bekleyin ve tekrar deneyin.");
+            setPurchaseError(dictionary.paywall.preparingPayment);
             return;
         }
 
@@ -120,11 +122,11 @@ export function PaywallSlideUp({
 
             // Handle user cancellation gracefully
             if (err?.userCancelled || err?.message?.includes("cancelled")) {
-                setPurchaseError("Satın alma iptal edildi.");
+                setPurchaseError(dictionary.paywall.purchaseCancelled);
             } else {
                 setPurchaseError(
                     err?.message ||
-                    "Satın alma sırasında bir hata oluştu. Lütfen tekrar deneyin."
+                    dictionary.paywall.purchaseError
                 );
             }
         } finally {
@@ -211,10 +213,10 @@ export function PaywallSlideUp({
                         </svg>
                     </div>
                     <h2 className={cn(typography.h3, colors.foreground.primary)}>
-                        Sınırsız Erişimin Kilidini Aç
+                        {dictionary.paywall.unlockUnlimited}
                     </h2>
                     <p className={cn(typography.bodySmall, colors.foreground.muted, "mt-2")}>
-                        Bu ay {articlesRead} ücretsiz makalenin tamamını okudun.
+                        {dictionary.paywall.limitReached.replace("{articlesRead}", articlesRead.toString())}
                     </p>
                 </div>
 
@@ -263,7 +265,7 @@ export function PaywallSlideUp({
                                     )}
                                 </div>
                                 <span className={cn("font-semibold", colors.foreground.primary)}>
-                                    Aylık
+                                    {dictionary.paywall.monthly}
                                 </span>
                             </div>
                             <span className={cn("font-bold", colors.foreground.primary)}>
@@ -305,10 +307,10 @@ export function PaywallSlideUp({
                                 </div>
                                 <div className="text-left">
                                     <span className={cn("font-semibold", colors.foreground.primary)}>
-                                        Yıllık
+                                        {dictionary.paywall.yearly}
                                     </span>
                                     <span className={cn("ml-2", badgeTokens.padding, fontSize.xs, "font-medium bg-green-600 text-white rounded-full")}>
-                                        EN POPÜLER
+                                        {dictionary.paywall.mostPopular}
                                     </span>
                                 </div>
                             </div>
@@ -351,10 +353,10 @@ export function PaywallSlideUp({
                                 </div>
                                 <div className="text-left">
                                     <span className={cn("font-semibold", colors.foreground.primary)}>
-                                        Lifetime
+                                        {dictionary.paywall.lifetime}
                                     </span>
                                     <span className={cn("ml-2", badgeTokens.padding, fontSize.xs, "font-medium bg-yellow-600 text-white rounded-full")}>
-                                        EN İYİ DEĞERsend
+                                        {dictionary.paywall.bestValue}
                                     </span>
                                 </div>
                             </div>
@@ -388,29 +390,24 @@ export function PaywallSlideUp({
                     {purchasing ? (
                         <>
                             <Loader2 className="h-5 w-5 animate-spin" />
-                            <span>İşleniyor...</span>
+                            <span>{dictionary.common.loading}</span>
                         </>
                     ) : (
-                        "Şimdi Abone Ol"
+                        dictionary.paywall.subscribeNow
                     )}
                 </button>
 
                 <p className={cn("mt-3 text-center text-xs", colors.foreground.muted)}>
-                    İstediğiniz zaman iptal edebilirsiniz.
+                    {dictionary.paywall.cancelAnytime}
                 </p>
 
                 {/* What you get */}
                 <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                     <p className={cn("text-sm font-medium mb-3", colors.foreground.secondary)}>
-                        Premium ile neler kazanırsın:
+                        {dictionary.paywall.benefitsTitle}
                     </p>
                     <ul className="space-y-2">
-                        {[
-                            "Sınırsız makale erişimi",
-                            "Reklamsız deneyim",
-                            "Özel içerikler ve analizler",
-                            "Erken erişim ve arşiv",
-                        ].map((benefit, i) => (
+                        {dictionary.paywall.benefits.map((benefit, i) => (
                             <li key={i} className="flex items-center gap-2 text-sm">
                                 <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                     <path

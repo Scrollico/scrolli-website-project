@@ -8,6 +8,7 @@ import Layout from "@/components/layout/Layout";
 import Section1 from "@/components/sections/single/Section1";
 import { getArticleBySlug, getNavigation } from "@/lib/payload/client";
 import { PayloadGundem, PayloadHikayeler, PayloadAlaraai, mapGundemToArticle, mapHikayelerToArticle } from "@/lib/payload/types";
+import { getLocale } from "@/lib/dictionaries";
 import { generateArticleMetadata, formatDateForSEO } from "@/lib/seo";
 import { getRelatedArticles } from "@/lib/content";
 import {
@@ -51,6 +52,7 @@ export async function generateMetadata({
 }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
   const payloadArticle = await getArticleBySlug(slug);
+  const locale = await getLocale();
 
   if (!payloadArticle) {
     return {
@@ -60,14 +62,15 @@ export async function generateMetadata({
   }
 
   const article = isGundem(payloadArticle)
-    ? mapGundemToArticle(payloadArticle)
-    : mapHikayelerToArticle(payloadArticle);
+    ? mapGundemToArticle(payloadArticle, locale)
+    : mapHikayelerToArticle(payloadArticle, locale);
 
   return generateArticleMetadata(article);
 }
 
 export default async function ArticlePage({ params, searchParams }: ArticlePageProps) {
   const { slug } = await params;
+  const locale = await getLocale();
 
   // Safety: If for some reason an /api route reaches here, skip it
   if (slug === "api" || slug.startsWith("api/")) {
@@ -81,8 +84,8 @@ export default async function ArticlePage({ params, searchParams }: ArticlePageP
   }
 
   const article = isGundem(payloadArticle)
-    ? mapGundemToArticle(payloadArticle)
-    : mapHikayelerToArticle(payloadArticle);
+    ? mapGundemToArticle(payloadArticle, locale)
+    : mapHikayelerToArticle(payloadArticle, locale);
 
   const search = searchParams ? await searchParams : undefined;
   const giftToken = search?.gift

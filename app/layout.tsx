@@ -28,6 +28,8 @@ import { AuthProvider } from "@/components/providers/auth-provider"
 import { RevenueCatProvider } from "@/components/providers/revenuecat-provider"
 import { getSiteSettings } from "@/lib/payload/client"
 import { validateEnvVars } from "@/lib/env-validation"
+import { getDictionary } from "@/lib/dictionaries"
+import { DictionaryProvider } from "@/components/providers/dictionary-provider"
 
 // Validate environment variables on server startup
 // This will throw an error if critical variables are missing
@@ -148,6 +150,7 @@ export default async function RootLayout({
   const cookieStore = await cookies()
   const themeCookie = cookieStore.get(THEME_COOKIE_KEY)?.value
   const locale = cookieStore.get("NEXT_LOCALE")?.value || "tr"
+  const dictionary = await getDictionary()
   const initialIsDark = themeCookie === 'dark'
   const initialHtmlClass = initialIsDark ? 'dark dark-mode' : themeCookie === 'light' ? 'light' : ''
   const initialBodyClass = initialIsDark ? 'home dark-mode' : 'home'
@@ -226,19 +229,21 @@ export default async function RootLayout({
         />
       </head>
       <body className={initialBodyClass} suppressHydrationWarning>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AuthProvider>
-            <RevenueCatProvider>
-              <NextTopLoaderClient />
-              {children}
-            </RevenueCatProvider>
-          </AuthProvider>
-        </ThemeProvider>
+        <DictionaryProvider dictionary={dictionary}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <AuthProvider>
+              <RevenueCatProvider>
+                <NextTopLoaderClient />
+                {children}
+              </RevenueCatProvider>
+            </AuthProvider>
+          </ThemeProvider>
+        </DictionaryProvider>
       </body>
     </html>
   )

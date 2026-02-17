@@ -6,6 +6,7 @@ import Layout from "@/components/layout/Layout";
 import { getAuthorBySlug, getArticlesByAuthorId } from "@/lib/payload/client";
 import { getNavigation } from "@/lib/payload/client";
 import { mapGundemToArticle, mapHikayelerToArticle, getMediaUrl } from "@/lib/payload/types";
+import { getLocale } from "@/lib/dictionaries";
 import { Article } from "@/types/content";
 import AuthorBySlugSection from "@/components/sections/author/AuthorBySlugSection";
 
@@ -30,6 +31,7 @@ export default async function AuthorSlugPage({
 }) {
   const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);
+  const locale = await getLocale();
 
   const author = await getAuthorBySlug(decodedSlug);
   if (!author) {
@@ -42,8 +44,8 @@ export default async function AuthorSlugPage({
   ]);
   const articles: Article[] = payloadArticles.map((post) =>
     post.source === "Gündem"
-      ? mapGundemToArticle(post)
-      : mapHikayelerToArticle(post)
+      ? mapGundemToArticle(post, locale)
+      : mapHikayelerToArticle(post, locale)
   );
 
   const avatarUrl = author.avatar ? getMediaUrl(author.avatar) : undefined;

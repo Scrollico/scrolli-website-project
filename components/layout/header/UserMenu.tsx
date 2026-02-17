@@ -23,8 +23,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "next-themes";
+import { useDictionary } from "@/components/providers/dictionary-provider";
 
 export function UserMenu() {
+  const dictionary = useDictionary();
   const { user, profile, isPremium, loading, signOut } = useAuth();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -63,10 +65,10 @@ export function UserMenu() {
     return (
       <div className="flex items-center gap-2">
         <Button asChild variant="ghost" size="sm" className="hidden sm:flex">
-          <Link href="/sign-in">Sign in</Link>
+          <Link href="/sign-in">{dictionary.common.signIn}</Link>
         </Button>
         <Button asChild variant="default" size="sm">
-          <Link href="/pricing">Subscribe</Link>
+          <Link href="/pricing">{dictionary.common.subscribe}</Link>
         </Button>
       </div>
     );
@@ -119,7 +121,7 @@ export function UserMenu() {
               ? '2px solid rgba(51, 65, 85, 0.6)'
               : '2px solid rgba(203, 213, 225, 0.6)',
           }}
-          aria-label="Kullanıcı menüsü"
+          aria-label={dictionary.nav.menu}
         >
           {/* Inner effects to match the cinematic look */}
           <div
@@ -187,7 +189,7 @@ export function UserMenu() {
                   "border border-green-200 dark:border-green-800"
                 )}
               >
-                Premium
+                {dictionary.common.premium}
               </span>
             )}
             <Text
@@ -207,7 +209,7 @@ export function UserMenu() {
 
         {/* Account Section */}
         <DropdownMenuLabel className={cn("px-3 py-2 text-xs font-bold tracking-wider", colors.foreground.muted)}>
-          Hesap
+          {dictionary.nav.account}
         </DropdownMenuLabel>
 
         <DropdownMenuGroup>
@@ -223,7 +225,7 @@ export function UserMenu() {
               )}
             >
               <User className={cn("h-4 w-4", colors.foreground.secondary)} />
-              <span>Profilim</span>
+              <span>{dictionary.nav.profile}</span>
             </Link>
           </DropdownMenuItem>
 
@@ -239,7 +241,7 @@ export function UserMenu() {
               )}
             >
               <span>
-                {isPremium ? "Üyelik Yönetimi" : "Premium'a Geç"}
+                {isPremium ? dictionary.nav.membership : dictionary.nav.upgrade}
               </span>
             </Link>
           </DropdownMenuItem>
@@ -249,7 +251,7 @@ export function UserMenu() {
 
         {/* Preferences Section */}
         <DropdownMenuLabel className={cn("px-3 py-2 text-xs font-bold tracking-wider", colors.foreground.muted)}>
-          Tercihler
+          {dictionary.nav.preferences}
         </DropdownMenuLabel>
 
         {/* Theme Submenu - Simplified */}
@@ -266,7 +268,7 @@ export function UserMenu() {
             ) : (
               <Sun className={cn("h-4 w-4", colors.foreground.secondary)} />
             )}
-            <span>Tema</span>
+            <span>{dictionary.nav.theme}</span>
           </DropdownMenuSubTrigger>
           <DropdownMenuPortal>
             <DropdownMenuSubContent className={cn(
@@ -287,7 +289,7 @@ export function UserMenu() {
                   )}
                 >
                   <Sun className="h-4 w-4 text-amber-500" />
-                  <span>Aydınlık</span>
+                  <span>{dictionary.nav.light}</span>
                 </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem
                   value="dark"
@@ -299,7 +301,7 @@ export function UserMenu() {
                   )}
                 >
                   <Moon className="h-4 w-4 text-indigo-500" />
-                  <span>Karanlık</span>
+                  <span>{dictionary.nav.dark}</span>
                 </DropdownMenuRadioItem>
                 <DropdownMenuRadioItem
                   value="system"
@@ -311,7 +313,7 @@ export function UserMenu() {
                   )}
                 >
                   <Monitor className={cn("h-4 w-4", colors.foreground.secondary)} />
-                  <span>Sistem</span>
+                  <span>{dictionary.nav.system}</span>
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuSubContent>
@@ -334,7 +336,7 @@ export function UserMenu() {
           )}
         >
           <LogOut className="h-4 w-4" />
-          <span>Çıkış Yap</span>
+          <span>{dictionary.nav.logout}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

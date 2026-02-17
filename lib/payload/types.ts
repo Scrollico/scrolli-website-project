@@ -361,7 +361,7 @@ function getCategorySlug(category?: PayloadCategory | string | null): string {
 }
 
 // Map Payload Gündem to existing Article interface
-export function mapGundemToArticle(post: PayloadGundem | PayloadAlaraai): Article {
+export function mapGundemToArticle(post: PayloadGundem | PayloadAlaraai, locale: "tr" | "en" = "tr"): Article {
   const desktopImage = getMediaUrl(post.featuredImage || post.thumbnail);
   const mobileImage = getMediaUrl(post.mobileImage);
 
@@ -424,18 +424,21 @@ export function mapGundemToArticle(post: PayloadGundem | PayloadAlaraai): Articl
 
   const thumbnailImage = getMediaUrl(post.thumbnail || post.featuredImage);
 
+  const dateLocale = locale === "en" ? "en-US" : "tr-TR";
+  const minReadText = locale === "en" ? "min read" : "dk okuma";
+
   const article = {
     id: post.slug || post.id,
     title: post.title,
     subtitle: post.subtitle, // Subtitle from Payload CMS
     author: getAuthorName(post.author),
     category: getCategorySlug(post.category),
-    date: new Date(post.publishedAt).toLocaleDateString("tr-TR", {
+    date: new Date(post.publishedAt).toLocaleDateString(dateLocale, {
       year: "numeric",
       month: "long",
       day: "numeric",
     }),
-    readTime: post.readTime ? `${post.readTime} min read` : "5 min read",
+    readTime: post.readTime ? `${post.readTime} ${minReadText}` : `5 ${minReadText}`,
     image: desktopImage || undefined, // Desktop/primary (featured) image — hero, single
     thumbnail: thumbnailImage || undefined, // Thumbnail for grids (thumbnail first, fallback featured)
     mobileImage: mobileImage || undefined, // Mobile image variant
@@ -451,7 +454,7 @@ export function mapGundemToArticle(post: PayloadGundem | PayloadAlaraai): Articl
 }
 
 // Map Payload Hikayeler to existing Article interface
-export function mapHikayelerToArticle(post: PayloadHikayeler): Article {
+export function mapHikayelerToArticle(post: PayloadHikayeler, locale: "tr" | "en" = "tr"): Article {
   const desktopImage = getMediaUrl(post.featuredImage || post.thumbnail);
   const mobileImage = getMediaUrl(post.verticalImage); // Hikayeler uses verticalImage
 
@@ -519,6 +522,8 @@ export function mapHikayelerToArticle(post: PayloadHikayeler): Article {
   }
 
   const thumbnailImage = getMediaUrl(post.thumbnail || post.featuredImage);
+  const dateLocale = locale === "en" ? "en-US" : "tr-TR";
+  const minReadText = locale === "en" ? "min read" : "dk okuma";
 
   return {
     id: post.slug || post.id,
@@ -526,12 +531,12 @@ export function mapHikayelerToArticle(post: PayloadHikayeler): Article {
     subtitle: post.subtitle, // Subtitle from Payload CMS
     author: getAuthorName(post.author),
     category: "hikayeler", // Stories category
-    date: new Date(post.publishedAt).toLocaleDateString("tr-TR", {
+    date: new Date(post.publishedAt).toLocaleDateString(dateLocale, {
       year: "numeric",
       month: "long",
       day: "numeric",
     }),
-    readTime: post.readTime ? `${post.readTime} min read` : "5 min read",
+    readTime: post.readTime ? `${post.readTime} ${minReadText}` : `5 ${minReadText}`,
     image: desktopImage || undefined, // Desktop/primary (featured) image — hero, single
     thumbnail: thumbnailImage || undefined, // Thumbnail for grids (thumbnail first, fallback featured)
     mobileImage: mobileImage || undefined, // Mobile/vertical image variant
@@ -543,8 +548,10 @@ export function mapHikayelerToArticle(post: PayloadHikayeler): Article {
 }
 
 // Map Payload Curation to Article
-export function mapCurationToArticle(curation: PayloadCuration): Article {
+export function mapCurationToArticle(curation: PayloadCuration, locale: "tr" | "en" = "tr"): Article {
   const image = getMediaUrl(curation.mainImageLandscape);
+  const dateLocale = locale === "en" ? "en-US" : "tr-TR";
+  const minReadText = locale === "en" ? "min read" : "dk okuma";
 
   // Process content similar to Gundem if needed, but for now assuming it might be string or simple
   let content: string | undefined;
@@ -568,13 +575,13 @@ export function mapCurationToArticle(curation: PayloadCuration): Article {
     author: "Editor", // Curations are usually by the editor/platform
     category: "Curation",
     date: curation.publishedAt
-      ? new Date(curation.publishedAt).toLocaleDateString("tr-TR", {
+      ? new Date(curation.publishedAt).toLocaleDateString(dateLocale, {
         year: "numeric",
         month: "long",
         day: "numeric",
       })
       : "",
-    readTime: "3 min read", // Estimate or fallback
+    readTime: `3 ${minReadText}`, // Estimate or fallback
     image: image || undefined,
     thumbnail: image || undefined,
     excerpt: curation.newsSummary || curation.seoDescription,
@@ -585,8 +592,12 @@ export function mapCurationToArticle(curation: PayloadCuration): Article {
 
 // Map Payload DailyBriefing to Article
 export function mapDailyBriefingToArticle(
-  briefing: PayloadDailyBriefing
+  briefing: PayloadDailyBriefing,
+  locale: "tr" | "en" = "tr"
 ): Article {
+  const dateLocale = locale === "en" ? "en-US" : "tr-TR";
+  const minReadText = locale === "en" ? "min read" : "dk okuma";
+
   let content: string | undefined;
   if (briefing.content) {
     if (typeof briefing.content === "string") {
@@ -606,12 +617,12 @@ export function mapDailyBriefingToArticle(
     subtitle: briefing.subtitle,
     author: "Scrolli Daily",
     category: "Daily Briefing",
-    date: new Date(briefing.briefingDate).toLocaleDateString("tr-TR", {
+    date: new Date(briefing.briefingDate).toLocaleDateString(dateLocale, {
       year: "numeric",
       month: "long",
       day: "numeric",
     }),
-    readTime: briefing.readTime ? `${briefing.readTime} min read` : "5 min read",
+    readTime: briefing.readTime ? `${briefing.readTime} ${minReadText}` : `5 ${minReadText}`,
     image: briefing.imageUrl,
     thumbnail: briefing.imageUrl,
     excerpt: briefing.executiveSummary,

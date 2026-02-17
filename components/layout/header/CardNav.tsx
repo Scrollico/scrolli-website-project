@@ -9,6 +9,7 @@ import CityClockRow from './CityClockRow';
 import CinematicThemeSwitcher from '@/components/ui/cinematic-theme-switcher';
 import { UserMenu } from './UserMenu';
 import { NavbarUsageMeter } from '@/components/paywall';
+import { useDictionary } from "@/components/providers/dictionary-provider";
 
 interface MenuLink {
   label: string;
@@ -38,6 +39,7 @@ export default function CardNav({
   items,
   handleSearch
 }: CardNavProps) {
+  const dictionary = useDictionary();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -194,7 +196,7 @@ export default function CardNav({
                   <motion.input
                     type="text"
                     className="card-nav-search-input"
-                    placeholder="Search..."
+                    placeholder={dictionary.common.search}
                     name="q"
                     autoFocus
                     initial={{ opacity: 0, width: 0 }}

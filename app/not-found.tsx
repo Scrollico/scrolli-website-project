@@ -7,11 +7,13 @@ import { getNavigation } from "@/lib/payload/client";
 import { typography, colors, spacing } from "@/lib/design-tokens";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { getDictionary } from "@/lib/dictionaries";
 
-export default function NotFound() {
+export default async function NotFound() {
     // Fetch navigation data for the header/footer
     // const navigation = await getNavigation().catch(() => null);
     const navigation = null;
+    const dictionary = await getDictionary();
 
     return (
         <Layout classList="single page-404" navigation={navigation}>
@@ -29,12 +31,11 @@ export default function NotFound() {
                     </div>
 
                     <h1 className={cn(typography.h1, "mb-4 -mt-10 md:-mt-16", colors.foreground.primary)}>
-                        Aradığınız sayfa bulunamadı.
+                        {dictionary.common.notFoundTitle}
                     </h1>
 
                     <p className={cn(typography.bodyLarge, "mb-10 max-w-lg mx-auto", colors.foreground.secondary)}>
-                        Tıkladığınız bağlantı bozulmuş olabilir veya sayfa kaldırılmış olabilir.
-                        En güncel içeriklerimize göz atmak için ana sayfaya dönebilirsiniz.
+                        {dictionary.common.notFoundDesc}
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -45,7 +46,7 @@ export default function NotFound() {
                             className="rounded-full px-10 text-lg"
                         >
                             <Link href="/">
-                                Ana Sayfaya Dön
+                                {dictionary.common.backHome}
                             </Link>
                         </Button>
                         <Button
@@ -55,7 +56,7 @@ export default function NotFound() {
                             className="rounded-full px-10 text-lg"
                         >
                             <Link href="/search">
-                                Arama Yap
+                                {dictionary.common.backSearch}
                             </Link>
                         </Button>
                     </div>
