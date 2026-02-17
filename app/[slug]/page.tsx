@@ -26,11 +26,15 @@ interface ArticlePageProps {
 function isGundem(
   article: PayloadGundem | PayloadHikayeler | PayloadAlaraai
 ): article is PayloadGundem | PayloadAlaraai {
-  // Handle both "Gündem", "gundem" and "Alara AI" from API
-  return "source" in article && (
-    (article.source as string) === "Gündem" ||
-    (article.source as string) === "gundem" ||
-    article.source === "Alara AI"
+  // Handle various source names from API/CMS
+  if (!("source" in article)) return false;
+  const source = (article.source as string || "").toLowerCase();
+  return (
+    source === "gündem" ||
+    source === "gundem" ||
+    source === "alara ai" ||
+    source === "alaraai" ||
+    source === "alara-ai"
   );
 }
 
