@@ -11,8 +11,10 @@ import {
   gap,
   typography
 } from '@/lib/design-tokens';
+import { useDictionary } from "@/components/providers/dictionary-provider";
 
 export default function Footer() {
+  const dictionary = useDictionary();
   const [mounted, setMounted] = useState(false);
   const { theme, resolvedTheme } = useTheme();
 
@@ -30,18 +32,18 @@ export default function Footer() {
 
   // Navigation Links
   const categories = [
-    { label: 'Archive', href: '/archive' },
-    { label: 'Categories', href: '/categories' },
-    { label: 'About Us', href: '/about-us' },
-    { label: 'Author', href: '/author' },
+    { label: dictionary.footer.links.archive, href: '/archive' },
+    { label: dictionary.footer.links.categories, href: '/categories' },
+    { label: dictionary.footer.links.about, href: '/about-us' },
+    { label: dictionary.footer.links.author, href: '/author' },
   ];
 
   const info = [
-    { label: 'Contact', href: '/contact' },
-    { label: 'Terms of Use', href: '/kullanim-kosullari' },
-    { label: 'Imprint', href: '/kunye' },
-    { label: 'Sign in', href: '/sign-in' },
-    { label: 'Subscribe', href: '/pricing', highlight: true },
+    { label: dictionary.footer.links.contact, href: '/contact' },
+    { label: dictionary.footer.links.terms, href: '/kullanim-kosullari' },
+    { label: dictionary.footer.links.imprint, href: '/kunye' },
+    { label: dictionary.common.signIn, href: '/sign-in' },
+    { label: dictionary.common.subscribe, href: '/pricing', highlight: true },
   ];
 
   return (
@@ -64,7 +66,7 @@ export default function Footer() {
             <Link href="/" prefetch={true} className="inline-block hover:opacity-80 transition-opacity duration-300">
               <NextImage
                 src={logoSrc}
-                alt="Scrolli Logo"
+                alt={dictionary.common.logoAlt}
                 width={120}
                 height={40}
                 unoptimized
@@ -73,7 +75,7 @@ export default function Footer() {
               />
             </Link>
             <p className={cn(typography.bodySmall, colors.foreground.muted)}>
-              In-depth media experience
+              {dictionary.footer.tagline}
             </p>
 
             <div className="relative inline-block mt-2 group">
@@ -105,7 +107,7 @@ export default function Footer() {
 
           {/* Middle Section - Categories */}
           <div className="flex flex-col gap-4">
-            <h4 className={cn("text-xs font-bold tracking-widest", colors.foreground.muted)}>CATEGORIES</h4>
+            <h4 className={cn("text-xs font-bold tracking-widest", colors.foreground.muted)}>{dictionary.footer.categories}</h4>
             <ul className="flex flex-col gap-3 p-0 m-0 list-none">
               {categories.map((link) => (
                 <li key={link.href}>
@@ -126,7 +128,7 @@ export default function Footer() {
 
           {/* Right Section - Info */}
           <div className="flex flex-col gap-4">
-            <h4 className={cn("text-xs font-bold tracking-widest", colors.foreground.muted)}>INFO</h4>
+            <h4 className={cn("text-xs font-bold tracking-widest", colors.foreground.muted)}>{dictionary.footer.info}</h4>
             <ul className="flex flex-col gap-3 p-0 m-0 list-none">
               {info.map((link) => (
                 <li key={link.href}>
@@ -149,7 +151,7 @@ export default function Footer() {
         {/* Bottom Copyright */}
         <div className={cn("pt-8 border-t border-white/10 dark:border-white/10 text-center md:text-left")}>
           <p className={cn("text-sm", colors.foreground.muted)}>
-            ©2025 Scrolli. All Rights Reserved. Scrolli Media Inc.
+            {dictionary.footer.copyright}
           </p>
         </div>
       </div>

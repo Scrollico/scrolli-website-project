@@ -11,12 +11,14 @@ import { cn } from "@/lib/utils";
 import { colors, borderRadius } from "@/lib/design-tokens";
 import { PayloadNavigation } from "@/lib/payload/types";
 import { NavbarUsageMeter } from "@/components/paywall";
+import { useDictionary } from "@/components/providers/dictionary-provider";
 
 interface HeaderProps {
   navigation?: PayloadNavigation | null;
 }
 
 export default function Header({ navigation }: HeaderProps) {
+  const dictionary = useDictionary();
   const [isSearch, setIsSearch] = useState<number | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, resolvedTheme } = useTheme();
@@ -40,33 +42,33 @@ export default function Header({ navigation }: HeaderProps) {
   // CardNav menu items configuration
   const cardNavItems = [
     {
-      label: "Discover",
+      label: dictionary.nav.discover,
       bgColor: "#0D0716",
       textColor: "#fff",
       links: [
-        { label: "Explore Content", ariaLabel: "Discover new content" },
-        { label: "Latest Articles", ariaLabel: "Read latest articles" },
-        { label: "Trending Topics", ariaLabel: "See trending topics" }
+        { label: dictionary.nav.exploreContent, ariaLabel: "Discover new content" },
+        { label: dictionary.nav.latestArticles, ariaLabel: "Read latest articles" },
+        { label: dictionary.nav.trendingTopics, ariaLabel: "See trending topics" }
       ]
     },
     {
-      label: "Alara AI",
+      label: dictionary.nav.alaraAi,
       bgColor: "#170D27",
       textColor: "#fff",
       links: [
-        { label: "AI Features", ariaLabel: "Explore AI capabilities" },
-        { label: "Smart Assistant", ariaLabel: "Meet our AI assistant" },
-        { label: "Integration", ariaLabel: "API integration" }
+        { label: dictionary.nav.aiFeatures, ariaLabel: "Explore AI capabilities" },
+        { label: dictionary.nav.smartAssistant, ariaLabel: "Meet our AI assistant" },
+        { label: dictionary.nav.integration, ariaLabel: "API integration" }
       ]
     },
     {
-      label: "Business",
+      label: dictionary.nav.business,
       bgColor: "#271E37",
       textColor: "#fff",
       links: [
-        { label: "Solutions", ariaLabel: "Business solutions" },
-        { label: "Enterprise", ariaLabel: "Enterprise services" },
-        { label: "Contact Sales", ariaLabel: "Get in touch with sales" }
+        { label: dictionary.nav.solutions, ariaLabel: "Business solutions" },
+        { label: dictionary.nav.enterprise, ariaLabel: "Enterprise services" },
+        { label: dictionary.nav.contactSales, ariaLabel: "Get in touch with sales" }
       ]
     }
   ];
@@ -107,9 +109,9 @@ export default function Header({ navigation }: HeaderProps) {
 
   // Sidebar links
   const sidebarLinks = [
-    { label: "Newsletter", href: "/newsletter" },
-    { label: "About", href: "/about" },
-    { label: "Contact", href: "/contact" },
+    { label: dictionary.nav.newsletter, href: "/newsletter" },
+    { label: dictionary.nav.about, href: "/about" },
+    { label: dictionary.nav.contact, href: "/contact" },
   ];
 
   // Prevent body scroll when menu is open
@@ -186,7 +188,7 @@ export default function Header({ navigation }: HeaderProps) {
         <div className="hidden md:block">
           <CardNav
             logo="/assets/images/Standart/Primary-alternative.svg"
-            logoAlt="Scrolli Logo"
+            logoAlt={dictionary.common.logoAlt}
             items={cardNavItems}
             {...headerProps}
           />

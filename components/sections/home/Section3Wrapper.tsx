@@ -1,5 +1,6 @@
 import { getAllGundemArticles } from "@/lib/payload/client";
 import { mapGundemToArticle } from "@/lib/payload/types";
+import { getLocale } from "@/lib/dictionaries";
 import { Article } from "@/types/content";
 import Section3Dynamic from "./Section3Dynamic";
 
@@ -26,11 +27,12 @@ export default async function Section3Wrapper() {
   };
 
   try {
+    const locale = await getLocale();
     // Fetch all Gündem articles from Payload CMS
     const gundemArticles = await getAllGundemArticles(50);
 
     // Map Payload articles to Article interface
-    const mappedArticles = gundemArticles.map(mapGundemToArticle);
+    const mappedArticles = gundemArticles.map((article) => mapGundemToArticle(article, locale));
 
     // Group articles by category slug
     const grouped: ArticlesByCategory = {

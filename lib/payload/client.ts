@@ -55,6 +55,36 @@ interface FetchParams {
   page?: number;
   where?: Record<string, any>;
   depth?: number;
+  locale?: string;
+}
+
+/**
+ * Helper function to determine the locale
+ * Prioritizes:
+ * 1. Explicitly passed locale
+ * 2. NEXT_LOCALE cookie (if available)
+ * 3. PAYLOAD_LOCALE environment variable
+ * 4. Default 'tr'
+ */
+async function getLocale(explicitLocale?: string): Promise<string> {
+  if (explicitLocale) return explicitLocale;
+
+  try {
+    // Dynamically import next/headers to avoid build errors in non-Next.js environments (like scripts)
+    const { cookies } = await import("next/headers");
+    // In Next.js 15, cookies() is async
+    const cookieStore = await cookies();
+    const localeCookie = cookieStore.get("NEXT_LOCALE");
+
+    if (localeCookie?.value === "en" || localeCookie?.value === "tr") {
+      return localeCookie.value;
+    }
+  } catch (error) {
+    // Ignore error - likely running in script or build time without request context
+    // or next/headers is not available
+  }
+
+  return process.env.PAYLOAD_LOCALE || "tr";
 }
 
 /**
@@ -63,8 +93,8 @@ interface FetchParams {
 function buildQueryString(params: FetchParams): string {
   const queryParams = new URLSearchParams();
 
-  // CRITICAL: Always add Turkish locale for Turkish content (can be overridden by env var)
-  const locale = process.env.PAYLOAD_LOCALE || "tr";
+  // CRITICAL: Always add Turkish locale for Turkish content (can be overridden by env var or param)
+  const locale = params.locale || process.env.PAYLOAD_LOCALE || "tr";
   queryParams.append("locale", locale);
 
   // Exclude drafts by default, but allow enabling for preview/test purposes
@@ -142,7 +172,10 @@ export async function fetchArticles(
       return [];
     }
 
-    const queryString = buildQueryString(params);
+    const locale = await getLocale(params.locale);
+    const paramsWithLocale = { ...params, locale };
+    const queryString = buildQueryString(paramsWithLocale);
+
     const cacheBuster = `cb=${Date.now()}`;
     const sep = queryString ? "&" : "";
     const fullQuery = `${queryString}${sep}${cacheBuster}`;
@@ -369,7 +402,9 @@ async function fetchPayload<T>(
     return emptyPayloadResponse<T>();
   }
 
-  const queryString = buildQueryString(query || {});
+  const locale = await getLocale(query?.locale);
+  const queryWithLocale = { ...(query || {}), locale };
+  const queryString = buildQueryString(queryWithLocale);
   const url = `${config.url}/${collection}?${queryString}`;
 
   try {
@@ -493,7 +528,7 @@ export async function getArticleById(
       return null;
     }
 
-    const locale = process.env.PAYLOAD_LOCALE || "tr";
+    const locale = await getLocale();
     const fetchDrafts = process.env.PAYLOAD_FETCH_DRAFTS === "true";
 
     const queryString = new URLSearchParams({
@@ -661,9 +696,11 @@ export async function getSiteSettings(): Promise<PayloadSiteSettings | null> {
       return null;
     }
 
+    const locale = await getLocale();
+
     // Try fetching with "site-settings" slug first (correct one based on schema)
     // If that fails, we could try "settings", but site-settings is the one with the fields we need
-    const response = await fetch(`${config.url}/globals/site-settings?locale=tr`, {
+    const response = await fetch(`${config.url}/globals/site-settings?locale=${locale}`, {
       headers: config.headers,
       next: { revalidate: 3600 }, // Cache for 1 hour
     }).catch((error) => {
@@ -683,7 +720,7 @@ export async function getSiteSettings(): Promise<PayloadSiteSettings | null> {
       // Try fallback to "settings" if "site-settings" fails (backward compatibility)
       if (response.status === 404) {
         console.log("Retrying with legacy 'settings' slug...");
-        const fallbackResponse = await fetch(`${config.url}/globals/settings?locale=tr`, {
+        const fallbackResponse = await fetch(`${config.url}/globals/settings?locale=${locale}`, {
           headers: config.headers,
           next: { revalidate: 3600 },
         });
@@ -712,7 +749,9 @@ export async function getNavigation(): Promise<PayloadNavigation | null> {
       return null;
     }
 
-    const response = await fetch(`${config.url}/globals/navigation?locale=tr`, {
+    const locale = await getLocale();
+
+    const response = await fetch(`${config.url}/globals/navigation?locale=${locale}`, {
       headers: config.headers,
       next: { revalidate: 3600 }, // Cache for 1 hour
     });

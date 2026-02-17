@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 // import ScrolliPremiumBanner from "@/components/sections/home/ScrolliPremiumBanner"; // unused
 import { CheckCircle2, Gift } from "lucide-react";
 import { Text } from "@/components/ui/typography";
+import { useDictionary } from "@/components/providers/dictionary-provider";
 
 interface ArticleGateWrapperProps {
     articleId: string;
@@ -28,6 +29,7 @@ interface SubscriptionStatus {
  * Wraps article content and shows gates based on user's subscription status.
  */
 function ArticleGateWrapperInner({ articleId, children }: ArticleGateWrapperProps) {
+    const dictionary = useDictionary();
     const { user, isLoading: authLoading } = useAuth();
     const searchParams = useSearchParams();
     const giftToken = searchParams?.get("gift");
@@ -250,11 +252,11 @@ function ArticleGateWrapperInner({ articleId, children }: ArticleGateWrapperProp
                             <Gift className="h-5 w-5 text-green-400" />
                             <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-center sm:text-left">
                                 <span className="font-semibold text-sm sm:text-base text-white">
-                                    {senderName} sana bu makaleyi hediye etti!
+                                    {dictionary.gift.received.replace("{senderName}", senderName || "")}
                                 </span>
                                 <span className="text-xs sm:text-sm text-gray-400 hidden sm:inline">•</span>
                                 <span className="text-xs sm:text-sm text-gray-400">
-                                    İyi okumalar
+                                    {dictionary.gift.enjoy}
                                 </span>
                             </div>
                             <button
@@ -282,7 +284,7 @@ function ArticleGateWrapperInner({ articleId, children }: ArticleGateWrapperProp
                     "text-center"
                 )}>
                     <Text variant="body" className="text-red-800 dark:text-red-300">
-                        Bu hediye linki geçersiz veya süresi dolmuş.
+                        {dictionary.gift.invalid}
                     </Text>
                 </div>
                 {children}

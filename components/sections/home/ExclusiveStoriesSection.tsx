@@ -11,6 +11,7 @@ import {
 } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 import { Article } from "@/types/content";
+import { useDictionary } from "@/components/providers/dictionary-provider";
 
 interface ExclusiveStoriesSectionProps {
   articles: Article[];
@@ -52,6 +53,8 @@ function ScrolliPlusLogo({ className }: { className?: string }) {
 export default function ExclusiveStoriesSection({
   articles: _articles,
 }: ExclusiveStoriesSectionProps) {
+  const dictionary = useDictionary();
+
   return (
     <section
       className={cn(
@@ -77,7 +80,7 @@ export default function ExclusiveStoriesSection({
           variant="h1"
           className={cn("text-center", colors.foreground.primary, marginBottom.sm)}
         >
-          Abonelere özel hikâyeler
+          {dictionary.home.exclusiveStories}
         </Heading>
 
         {/* Description - bodyLarge typography token for bigger body text */}
@@ -90,8 +93,7 @@ export default function ExclusiveStoriesSection({
             marginBottom.lg
           )}
         >
-          Özel dosyalardan oluşan, birinci sınıf gazetecilik çalışmalarımız
-          etkileşimli hikâyeleri içeriyor
+          {dictionary.home.exclusiveDesc}
         </Text>
 
         {/* CTA button - always dark text on beige background */}
@@ -101,7 +103,7 @@ export default function ExclusiveStoriesSection({
             size="lg"
             asChild
           >
-            <Link href="/archive">Tümü</Link>
+            <Link href="/archive">{dictionary.common.all}</Link>
           </Button>
         </div>
 

@@ -16,6 +16,7 @@ import {
   fetchArticles,
 } from "./payload/client";
 import { mapGundemToArticle, mapHikayelerToArticle } from "./payload/types";
+import { getLocale } from "./dictionaries";
 // Note: serializeRichText import removed - content is already HTML string when using locale=tr
 
 /**
@@ -122,11 +123,13 @@ export async function findArticleById(articleId: string): Promise<Article | null
       return null;
     }
 
+    const locale = await getLocale();
+
     // Map Payload article to Article interface
     // Content is already handled in mapping functions (HTML string or serialized)
     const mappedArticle = article.source === "Gündem"
-      ? mapGundemToArticle(article)
-      : mapHikayelerToArticle(article);
+      ? mapGundemToArticle(article, locale)
+      : mapHikayelerToArticle(article, locale);
 
     // Clean Mailchimp forms from content (content is already HTML string)
     // BUT: Skip cleaning for hikayeler articles with inline scripts (instorier.com)
@@ -161,12 +164,14 @@ export async function getAllArticles(limit = 24): Promise<Article[]> {
       depth: 2,
     });
 
+    const locale = await getLocale();
+
     // Map Payload articles to Article interface
     // Content is already HTML string when using locale=tr, no serialization needed
     const articles: Article[] = payloadArticles.map((article) => {
       return article.source === "Gündem"
-        ? mapGundemToArticle(article)
-        : mapHikayelerToArticle(article);
+        ? mapGundemToArticle(article, locale)
+        : mapHikayelerToArticle(article, locale);
     });
 
     // Deduplicate by ID
@@ -191,9 +196,10 @@ export async function getAllArticles(limit = 24): Promise<Article[]> {
 export async function getArticlesByCategory(category: string): Promise<Article[]> {
   try {
     const response = await getPayloadArticlesByCategory(category);
+    const locale = await getLocale();
     
     // Content is already HTML string when using locale=tr, no serialization needed
-    return response.docs.map((article) => mapGundemToArticle(article));
+    return response.docs.map((article) => mapGundemToArticle(article, locale));
   } catch (error) {
     console.error(`Error fetching articles for category ${category}:`, error);
     return [];
@@ -212,6 +218,8 @@ export async function getArticlesByAuthor(author: string): Promise<Article[]> {
       depth: 2,
     });
 
+    const locale = await getLocale();
+
       // Content is already HTML string when using locale=tr, handled in mapping functions
       // Content is already HTML string when using locale=tr, handled in mapping functions
       const articles = payloadArticles
@@ -223,8 +231,8 @@ export async function getArticlesByAuthor(author: string): Promise<Article[]> {
         })
         .map((article) => {
           return article.source === "Gündem"
-            ? mapGundemToArticle(article)
-            : mapHikayelerToArticle(article);
+            ? mapGundemToArticle(article, locale)
+            : mapHikayelerToArticle(article, locale);
         });
 
     return articles;
@@ -246,6 +254,7 @@ export async function getRelatedArticles(
     // First, try to get the original Payload article to access relationships
     const { getArticleBySlug } = await import("@/lib/payload/client");
     const payloadArticle = await getArticleBySlug(currentArticle.id);
+    const locale = await getLocale();
     
     const seenIds = new Set<string>([currentArticle.id]);
     const result: Article[] = [];
@@ -284,8 +293,8 @@ export async function getRelatedArticles(
         if (!relatedItem || seenIds.has(relatedItem.slug || relatedItem.id)) continue;
 
         const mapped = relatedItem.source === "Gündem"
-          ? mapGundemToArticle(relatedItem)
-          : mapHikayelerToArticle(relatedItem);
+          ? mapGundemToArticle(relatedItem, locale)
+          : mapHikayelerToArticle(relatedItem, locale);
 
         if (!seenIds.has(mapped.id)) {
           seenIds.add(mapped.id);
@@ -348,12 +357,13 @@ export async function getRelatedArticles(
 export async function getRecentArticles(limit: number = 10): Promise<Article[]> {
   try {
     const payloadArticles = await getPayloadRecentArticles(limit);
+    const locale = await getLocale();
     
     // Content is already HTML string when using locale=tr, handled in mapping functions
     return payloadArticles.map((article) =>
       article.source === "Gündem"
-        ? mapGundemToArticle(article)
-        : mapHikayelerToArticle(article)
+        ? mapGundemToArticle(article, locale)
+        : mapHikayelerToArticle(article, locale)
     );
   } catch (error) {
     console.error("Error fetching recent articles:", error);
@@ -367,12 +377,13 @@ export async function getRecentArticles(limit: number = 10): Promise<Article[]> 
 export async function getFeaturedArticles(): Promise<Article[]> {
   try {
     const payloadArticles = await getPayloadFeaturedArticles();
+    const locale = await getLocale();
     
     // Content is already HTML string when using locale=tr, handled in mapping functions
     return payloadArticles.map((article) =>
       article.source === "Gündem"
-        ? mapGundemToArticle(article)
-        : mapHikayelerToArticle(article)
+        ? mapGundemToArticle(article, locale)
+        : mapHikayelerToArticle(article, locale)
     );
   } catch (error) {
     console.error("Error fetching featured articles:", error);

@@ -9,6 +9,7 @@ import CityClockRow from './CityClockRow';
 import CinematicThemeSwitcher from '@/components/ui/cinematic-theme-switcher';
 import { UserMenu } from './UserMenu';
 import { NavbarUsageMeter } from '@/components/paywall';
+import { useDictionary } from "@/components/providers/dictionary-provider";
 
 interface MenuLink {
   label: string;
@@ -38,6 +39,7 @@ export default function CardNav({
   items,
   handleSearch
 }: CardNavProps) {
+  const dictionary = useDictionary();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -46,6 +48,11 @@ export default function CardNav({
 
   useEffect(() => {
     setMounted(true);
+    // Initialize language from cookie
+    const match = document.cookie.match(new RegExp('(^| )NEXT_LOCALE=([^;]+)'));
+    if (match) {
+      setCurrentLanguage(match[2] as 'tr' | 'en');
+    }
   }, []);
 
   // Only calculate isDark after hydration to prevent mismatch
@@ -66,8 +73,12 @@ export default function CardNav({
   };
 
   const toggleLanguage = () => {
-    setCurrentLanguage(currentLanguage === 'tr' ? 'en' : 'tr');
-    // TODO: Implement actual language switching logic
+    const newLang = currentLanguage === 'tr' ? 'en' : 'tr';
+    setCurrentLanguage(newLang);
+    // Set cookie for 1 year
+    document.cookie = `NEXT_LOCALE=${newLang}; path=/; max-age=31536000`;
+    // Reload to apply changes server-side
+    window.location.reload();
   };
 
   return (
@@ -185,7 +196,7 @@ export default function CardNav({
                   <motion.input
                     type="text"
                     className="card-nav-search-input"
-                    placeholder="Search..."
+                    placeholder={dictionary.common.search}
                     name="q"
                     autoFocus
                     initial={{ opacity: 0, width: 0 }}
