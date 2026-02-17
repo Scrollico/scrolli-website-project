@@ -241,6 +241,7 @@ export interface PayloadGundem {
   summary?: string; // Bilingual field
   category: PayloadCategory | string;
   source: "Gündem";
+  collection: "gundem";
   featuredImage?: PayloadMedia | string;
   mobileImage?: PayloadMedia | string;
   thumbnail?: PayloadMedia | string;
@@ -267,8 +268,9 @@ export interface PayloadGundem {
 /**
  * Alara AI Collection Article
  */
-export interface PayloadAlaraai extends Omit<PayloadGundem, "source" | "relatedArticles"> {
+export interface PayloadAlaraai extends Omit<PayloadGundem, "source" | "collection" | "relatedArticles"> {
   source: "Alara AI";
+  collection: "alaraai";
   relatedArticles?: Array<{
     relationTo: "gundem" | "hikayeler" | "alaraai";
     value: string | PayloadGundem | PayloadHikayeler | PayloadAlaraai;
@@ -286,6 +288,7 @@ export interface PayloadHikayeler {
   inlineScriptHtml?: string | { tr?: string; en?: string }; // Inline script HTML from external CMS system (localized)
   summary?: string; // Bilingual field (HTML format)
   source: "Hikayeler";
+  collection: "hikayeler";
   featuredImage?: PayloadMedia | string;
   thumbnail?: PayloadMedia | string;
   verticalImage?: PayloadMedia | string;

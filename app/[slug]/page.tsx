@@ -26,16 +26,9 @@ interface ArticlePageProps {
 function isGundem(
   article: PayloadGundem | PayloadHikayeler | PayloadAlaraai
 ): article is PayloadGundem | PayloadAlaraai {
-  // Handle various source names from API/CMS
-  if (!("source" in article)) return false;
-  const source = (article.source as string || "").toLowerCase();
-  return (
-    source === "gündem" ||
-    source === "gundem" ||
-    source === "alara ai" ||
-    source === "alaraai" ||
-    source === "alara-ai"
-  );
+  // Use collection field for precise identification
+  const col = (article as any).collection;
+  return col === "gundem" || col === "alaraai";
 }
 
 // Generate metadata for SEO
@@ -75,7 +68,7 @@ export default async function ArticlePage({ params, searchParams }: ArticlePageP
   const giftToken = search?.gift
     ? (Array.isArray(search.gift) ? search.gift[0] : search.gift)
     : null;
-  const redeemed = search?.redeemed === "true" || search?.redeemed === true;
+  const redeemed = search?.redeemed === "true";
   const { article: paywalledArticle, isPaywalled } = await getPaywalledArticle(article, giftToken ?? undefined, redeemed);
 
   const isHikayeler = paywalledArticle.category === "hikayeler";

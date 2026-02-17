@@ -212,6 +212,7 @@ export async function fetchArticles(
         const gundemWithSource = docs.map((doc: any) => ({
           ...doc,
           source: "Gündem" as const,
+          collection: "gundem" as const,
         }));
         results.push(...gundemWithSource);
       } catch (error) {
@@ -237,6 +238,7 @@ export async function fetchArticles(
         const hikayelerWithSource = docs.map((doc: any) => ({
           ...doc,
           source: "Hikayeler" as const,
+          collection: "hikayeler" as const,
         }));
         results.push(...hikayelerWithSource);
       } catch (error) {
@@ -262,6 +264,7 @@ export async function fetchArticles(
         const alaraaiWithSource = docs.map((doc: any) => ({
           ...doc,
           source: "Alara AI" as const,
+          collection: "alaraai" as const,
         }));
         results.push(...alaraaiWithSource);
       } catch (error) {
