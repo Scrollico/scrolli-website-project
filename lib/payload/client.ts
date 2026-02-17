@@ -10,6 +10,7 @@ import {
   PayloadPodcast,
   PayloadDailyBriefing,
   PayloadCuration,
+  PayloadAlaraai,
 } from "./types";
 
 // Get environment variables - only available on server
@@ -133,7 +134,7 @@ function buildQueryString(params: FetchParams): string {
  */
 export async function fetchArticles(
   params: FetchParams = {},
-): Promise<Array<PayloadGundem | PayloadHikayeler>> {
+): Promise<Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai>> {
   try {
     const config = getPayloadConfig();
     if (!config) {
@@ -146,12 +147,16 @@ export async function fetchArticles(
     // Revalidation strategy: 30 seconds for articles (faster new article discovery)
     // Navigation and site settings use longer revalidation (1 hour) as they change less frequently
     // Use Promise.allSettled to handle failures gracefully without breaking the page
-    const [gundemResult, hikayelerResult] = await Promise.allSettled([
+    const [gundemResult, hikayelerResult, alaraaiResult] = await Promise.allSettled([
       fetch(`${config.url}/gundem?${queryString}`, {
         headers: config.headers,
         next: { revalidate: 30 },
       }),
       fetch(`${config.url}/hikayeler?${queryString}`, {
+        headers: config.headers,
+        next: { revalidate: 30 },
+      }),
+      fetch(`${config.url}/alaraai?${queryString}`, {
         headers: config.headers,
         next: { revalidate: 30 },
       }),
@@ -172,6 +177,13 @@ export async function fetchArticles(
         hikayelerResult.value
         : { ok: false, status: 500, statusText: "Network Error" };
 
+    const alaraaiRes:
+      | Response
+      | { ok: false; status: number; statusText: string } =
+      alaraaiResult.status === "fulfilled" ?
+        alaraaiResult.value
+        : { ok: false, status: 500, statusText: "Network Error" };
+
     // Log errors if any
     if (gundemResult.status === "rejected") {
       console.warn("Failed to fetch Gündem:", gundemResult.reason);
@@ -179,9 +191,12 @@ export async function fetchArticles(
     if (hikayelerResult.status === "rejected") {
       console.warn("Failed to fetch Hikayeler:", hikayelerResult.reason);
     }
+    if (alaraaiResult.status === "rejected") {
+      console.warn("Failed to fetch Alara AI:", alaraaiResult.reason);
+    }
 
     // Handle partial failures gracefully - return what we can get
-    const results: Array<PayloadGundem | PayloadHikayeler> = [];
+    const results: Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai> = [];
 
     if (gundemRes.ok) {
       try {
@@ -233,10 +248,35 @@ export async function fetchArticles(
       );
     }
 
-    // If both failed, throw error
-    // Only throw if both requests actually failed (not OK status)
-    // If both are OK but results is empty, that's fine (no articles available)
-    if (results.length === 0 && (!gundemRes.ok || !hikayelerRes.ok)) {
+    if (alaraaiRes.ok) {
+      try {
+        const alaraai = await alaraaiRes.json();
+        // Handle wrapped response format: { success: true, data: [...] }
+        let docs = [];
+        if (alaraai.success && Array.isArray(alaraai.data)) {
+          docs = alaraai.data;
+        } else if (Array.isArray(alaraai?.docs)) {
+          docs = alaraai.docs;
+        }
+
+        const alaraaiWithSource = docs.map((doc: any) => ({
+          ...doc,
+          source: "Alara AI" as const,
+        }));
+        results.push(...alaraaiWithSource);
+      } catch (error) {
+        console.error("Error parsing Alara AI response:", error);
+      }
+    } else {
+      console.warn(
+        `Failed to fetch Alara AI: ${alaraaiRes.status} ${alaraaiRes.statusText}`,
+      );
+    }
+
+    // If all failed, throw error
+    // Only throw if all requests actually failed (not OK status)
+    // If some are OK but results is empty, that's fine (no articles available)
+    if (results.length === 0 && (!gundemRes.ok || !hikayelerRes.ok || !alaraaiRes.ok)) {
       // Don't throw if Payload CMS is just unavailable - return empty array instead
       // This allows the page to still render (e.g., pricing page doesn't need articles)
       console.warn(
@@ -256,7 +296,7 @@ export async function fetchArticles(
 
     // Client-side deduplication: Filter duplicates by slug (primary) or id (fallback)
     // Keep the most recent article if duplicates exist
-    const uniqueArticles = new Map<string, PayloadGundem | PayloadHikayeler>();
+    const uniqueArticles = new Map<string, PayloadGundem | PayloadHikayeler | PayloadAlaraai>();
 
     for (const article of articles) {
       const key = article.slug || article.id;
@@ -404,7 +444,7 @@ function stripArticleTimestamp(slug: string): string {
 // Primary function - fetch from both collections
 export async function getArticleBySlug(
   slug: string,
-): Promise<PayloadGundem | PayloadHikayeler | null> {
+): Promise<PayloadGundem | PayloadHikayeler | PayloadAlaraai | null> {
   try {
     // 1. Try exact match first
     const articles = await fetchArticles({
@@ -438,9 +478,9 @@ export async function getArticleBySlug(
  * This is more efficient than searching by slug
  */
 export async function getArticleById(
-  collection: "gundem" | "hikayeler",
+  collection: "gundem" | "hikayeler" | "alaraai",
   id: string,
-): Promise<PayloadGundem | PayloadHikayeler | null> {
+): Promise<PayloadGundem | PayloadHikayeler | PayloadAlaraai | null> {
   try {
     const config = getPayloadConfig();
     if (!config) {
@@ -488,7 +528,7 @@ export async function getArticleById(
 }
 
 export async function getFeaturedArticles(): Promise<
-  Array<PayloadGundem | PayloadHikayeler>
+  Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai>
 > {
   return fetchArticles({
     where: { isFeatured: { equals: true } },
@@ -543,7 +583,7 @@ export async function getRecentArticles(limit = 10) {
 export async function getArticlesByAuthorId(
   authorId: string,
   limit = 50,
-): Promise<Array<PayloadGundem | PayloadHikayeler>> {
+): Promise<Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai>> {
   return fetchArticles({
     where: { author: { equals: authorId } },
     sort: "-publishedAt",

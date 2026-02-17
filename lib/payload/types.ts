@@ -249,8 +249,8 @@ export interface PayloadGundem {
   galleryImages?: Array<{ image: PayloadMedia }>;
   tags?: Array<{ tag: PayloadTag }>;
   relatedArticles?: Array<{
-    relationTo: "gundem" | "hikayeler";
-    value: string | PayloadGundem | PayloadHikayeler;
+    relationTo: "gundem" | "hikayeler" | "alaraai";
+    value: string | PayloadGundem | PayloadHikayeler | PayloadAlaraai;
   }>;
   seoTitle?: string;
   seoDescription?: string;
@@ -262,6 +262,17 @@ export interface PayloadGundem {
   layoutPosition?: "auto" | "hero" | "editors-picks" | "exclude"; // Manual homepage positioning
   createdAt: string;
   updatedAt: string;
+}
+
+/**
+ * Alara AI Collection Article
+ */
+export interface PayloadAlaraai extends Omit<PayloadGundem, "source" | "relatedArticles"> {
+  source: "Alara AI";
+  relatedArticles?: Array<{
+    relationTo: "gundem" | "hikayeler" | "alaraai";
+    value: string | PayloadGundem | PayloadHikayeler | PayloadAlaraai;
+  }>;
 }
 
 // Hikayeler (Stories) Article
@@ -346,7 +357,7 @@ function getCategorySlug(category: PayloadCategory | string): string {
 }
 
 // Map Payload Gündem to existing Article interface
-export function mapGundemToArticle(post: PayloadGundem): Article {
+export function mapGundemToArticle(post: PayloadGundem | PayloadAlaraai): Article {
   const desktopImage = getMediaUrl(post.featuredImage || post.thumbnail);
   const mobileImage = getMediaUrl(post.mobileImage);
 

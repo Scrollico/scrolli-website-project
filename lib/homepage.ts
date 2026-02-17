@@ -1,11 +1,11 @@
 import { fetchArticles, fetchHikayeler, fetchCurations, fetchDailyBriefings } from "./payload/client";
-import { PayloadGundem, PayloadHikayeler, PayloadCuration, PayloadDailyBriefing } from "./payload/types";
+import { PayloadGundem, PayloadHikayeler, PayloadCuration, PayloadDailyBriefing, PayloadAlaraai } from "./payload/types";
 
 export interface HomepageContent {
-  hero: PayloadGundem | PayloadHikayeler | null;
-  editorsPicks: Array<PayloadGundem | PayloadHikayeler | PayloadCuration>;
-  verticalList: Array<PayloadGundem | PayloadHikayeler>;
-  articleList: Array<PayloadGundem | PayloadHikayeler>;
+  hero: PayloadGundem | PayloadHikayeler | PayloadAlaraai | null;
+  editorsPicks: Array<PayloadGundem | PayloadHikayeler | PayloadCuration | PayloadAlaraai>;
+  verticalList: Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai>;
+  articleList: Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai>;
   hikayeler: Array<PayloadHikayeler>; // Dedicated hikayeler section
   dailyBriefing: PayloadDailyBriefing | null;
 }
@@ -64,7 +64,7 @@ export async function getHomepageContent(): Promise<HomepageContent> {
       const usedSlugs = hero ? [hero.slug] : [];
 
       // Editors Picks: Pinned picks + fill with topHikayeler
-      const editorsPicks: Array<PayloadGundem | PayloadHikayeler | PayloadCuration> = [...pinnedEditorsPicks];
+      const editorsPicks: Array<PayloadGundem | PayloadHikayeler | PayloadCuration | PayloadAlaraai> = [...pinnedEditorsPicks];
       usedSlugs.push(...editorsPicks.map(a => a.slug));
 
       for (const article of topHikayeler) {
@@ -173,7 +173,7 @@ export async function getHomepageContent(): Promise<HomepageContent> {
       // 4. Finally Recent
 
       const usedSlugs = hero ? [hero.slug] : [];
-      const editorsPicks: Array<PayloadGundem | PayloadHikayeler | PayloadCuration> = [];
+      const editorsPicks: Array<PayloadGundem | PayloadHikayeler | PayloadCuration | PayloadAlaraai> = [];
 
       // 1. Add Curations
       if (curations && curations.docs) {

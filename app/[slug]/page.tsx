@@ -7,8 +7,7 @@ import Script from "next/script";
 import Layout from "@/components/layout/Layout";
 import Section1 from "@/components/sections/single/Section1";
 import { getArticleBySlug, getNavigation } from "@/lib/payload/client";
-import { mapGundemToArticle, mapHikayelerToArticle } from "@/lib/payload/types";
-// Note: serializeRichText import removed - content is already HTML string when using locale=tr
+import { PayloadGundem, PayloadHikayeler, PayloadAlaraai, mapGundemToArticle, mapHikayelerToArticle } from "@/lib/payload/types";
 import { generateArticleMetadata, formatDateForSEO } from "@/lib/seo";
 import { getRelatedArticles } from "@/lib/content";
 import {
@@ -17,7 +16,6 @@ import {
   generateArticleBreadcrumbs,
 } from "@/lib/structured-data";
 import { Article } from "@/types/content";
-import { PayloadGundem, PayloadHikayeler } from "@/lib/payload/types";
 import { getPaywalledArticle } from "@/lib/paywall-server";
 
 interface ArticlePageProps {
@@ -26,10 +24,14 @@ interface ArticlePageProps {
 }
 
 function isGundem(
-  article: PayloadGundem | PayloadHikayeler
-): article is PayloadGundem {
-  // Handle both "Gündem" and "gundem" (lowercase) from API
-  return "source" in article && (article.source === "Gündem" || article.source === "gundem");
+  article: PayloadGundem | PayloadHikayeler | PayloadAlaraai
+): article is PayloadGundem | PayloadAlaraai {
+  // Handle both "Gündem", "gundem" and "Alara AI" from API
+  return "source" in article && (
+    (article.source as string) === "Gündem" ||
+    (article.source as string) === "gundem" ||
+    article.source === "Alara AI"
+  );
 }
 
 // Generate metadata for SEO
