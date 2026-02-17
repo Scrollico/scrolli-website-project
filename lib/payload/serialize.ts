@@ -5,18 +5,28 @@
 export function serializeRichText(richText: any, articleTitle?: string): string {
   if (!richText) return "";
 
-  // If already HTML string, return as-is
+  // 1. If already HTML string, return as-is
   if (typeof richText === "string") {
     return richText;
   }
 
-  // If Lexical editor format (has root.children structure)
+  // 2. Handle Lexical format
+  // Case A: The whole object with a 'root' property is passed
   if (richText.root && Array.isArray(richText.root.children)) {
     return serializeLexicalToHTML(richText.root.children, articleTitle);
   }
 
-  // If RichText (Slate.js format), serialize to HTML
+  // Case B: The 'root' object itself is passed
+  if (Array.isArray(richText.children)) {
+    return serializeLexicalToHTML(richText.children, articleTitle);
+  }
+
+  // Case C: An array of nodes is passed (Lexical children or Slate.js nodes)
   if (Array.isArray(richText)) {
+    // Determine if it's Lexical or Slate (they are similar but we'll try Lexical first)
+    if (richText.length > 0 && richText[0].type) {
+      return serializeLexicalToHTML(richText, articleTitle) || serializeSlateToHTML(richText);
+    }
     return serializeSlateToHTML(richText);
   }
 
@@ -110,7 +120,7 @@ function serializeLexicalChildren(children: any[]): string {
       // Handle text nodes
       if (child.type === "text") {
         let text = child.text || "";
-        
+
         // Apply formatting (bitwise flags)
         // Format is a number representing bit flags for text formatting
         if (child.format && typeof child.format === "number") {
@@ -121,7 +131,7 @@ function serializeLexicalChildren(children: any[]): string {
           if (format & 8) text = `<code>${text}</code>`; // code
           if (format & 16) text = `<s>${text}</s>`; // strikethrough
         }
-        
+
         return text;
       }
 
