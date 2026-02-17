@@ -32,7 +32,8 @@ export async function GET() {
     const baseUrl = PAYLOAD_API_URL.replace(/\/+$/, "");
     // Try to fetch a single item from 'hikayeler' collection to verify connectivity
     // Match client.ts behavior: assume PAYLOAD_API_URL includes '/api' path if needed
-    const endpoint = `${baseUrl}/hikayeler?limit=1&depth=0`;
+    // Try to fetch from 'alaraai' collection to verify connectivity and schema
+    const endpoint = `${baseUrl}/alaraai?limit=1&depth=1`;
 
     try {
         const start = Date.now();
@@ -42,7 +43,6 @@ export async function GET() {
                 'Authorization': `Bearer ${PAYLOAD_API_KEY}`,
                 'Content-Type': 'application/json',
             },
-            // Set a timeout to avoid hanging indefinitely if connection is blocked
             signal: AbortSignal.timeout(10000),
         });
         const duration = Date.now() - start;
@@ -52,8 +52,18 @@ export async function GET() {
 
         if (contentType && contentType.includes('application/json')) {
             data = await res.json();
-            // Simplify the response for the debug view
-            if (data.docs && Array.isArray(data.docs)) {
+            // Simplify the response but show keys for first item
+            if (data.docs && Array.isArray(data.docs) && data.docs.length > 0) {
+                const firstItem = data.docs[0];
+                data.keys = Object.keys(firstItem);
+                data.sample = {
+                    id: firstItem.id,
+                    slug: firstItem.slug,
+                    title: firstItem.title,
+                    hasContent: !!firstItem.content,
+                    hasBody: !!firstItem.body, // Check alternative field
+                    source: firstItem.source,
+                };
                 data.docs = `[${data.docs.length} items returned]`;
             }
         } else {
