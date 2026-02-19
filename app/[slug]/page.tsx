@@ -2,12 +2,21 @@ export const runtime = "edge";
 
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import Script from "next/script";
 import Layout from "@/components/layout/Layout";
 import Section1 from "@/components/sections/single/Section1";
 import { getArticleBySlug, getNavigation } from "@/lib/payload/client";
-import { PayloadGundem, PayloadHikayeler, PayloadAlaraai, mapGundemToArticle, mapHikayelerToArticle } from "@/lib/payload/types";
+import {
+  PayloadGundem,
+  PayloadHikayeler,
+  PayloadAlaraai,
+  PayloadCollab,
+  PayloadStory,
+  mapGundemToArticle,
+  mapHikayelerToArticle,
+  mapCollabToArticle,
+  mapStoryToArticle
+} from "@/lib/payload/types";
 import { generateArticleMetadata, formatDateForSEO } from "@/lib/seo";
 import { getRelatedArticles } from "@/lib/content";
 import {
@@ -23,26 +32,23 @@ interface ArticlePageProps {
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-function isGundem(
-  article: PayloadGundem | PayloadHikayeler | PayloadAlaraai
-): article is PayloadGundem | PayloadAlaraai {
-  // 1. Check collection field (most reliable)
-  const col = (article as any).collection;
-  if (col) {
-    if (col === "hikayeler") return false;
-    return true; // gundem, alaraai or other future gundem-like collections
-  }
+function mapPayloadToArticle(
+  payloadArticle: PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory
+): Article {
+  const collection = (payloadArticle as any).collection;
+  const source = (payloadArticle as any).source;
 
-  // 2. Check source field (fallback for cache)
-  const source = ((article as any).source || "").toLowerCase();
-  if (source) {
-    if (source === "hikayeler") return false;
-    return true; // gündem, alara ai, etc.
+  if (collection === 'collabs' || source === 'Collabs') {
+    return mapCollabToArticle(payloadArticle as PayloadCollab);
   }
-
-  // 3. Default to true (Gundem mapping) for maximum robustness
-  // Most collections follow the Gundem structure, only hikayeler is special.
-  return true;
+  if (collection === 'stories' || source === 'Stories') {
+    return mapStoryToArticle(payloadArticle as PayloadStory);
+  }
+  if (collection === 'hikayeler' || source === 'Hikayeler') {
+    return mapHikayelerToArticle(payloadArticle as PayloadHikayeler);
+  }
+  // Default to Gundem (includes AlaraAI)
+  return mapGundemToArticle(payloadArticle as PayloadGundem | PayloadAlaraai);
 }
 
 // Generate metadata for SEO
@@ -59,9 +65,7 @@ export async function generateMetadata({
     };
   }
 
-  const article = isGundem(payloadArticle)
-    ? mapGundemToArticle(payloadArticle)
-    : mapHikayelerToArticle(payloadArticle);
+  const article = mapPayloadToArticle(payloadArticle);
 
   return generateArticleMetadata(article);
 }
@@ -80,9 +84,7 @@ export default async function ArticlePage({ params, searchParams }: ArticlePageP
     notFound();
   }
 
-  const article = isGundem(payloadArticle)
-    ? mapGundemToArticle(payloadArticle)
-    : mapHikayelerToArticle(payloadArticle);
+  const article = mapPayloadToArticle(payloadArticle);
 
   const search = searchParams ? await searchParams : undefined;
   const giftToken = search?.gift
@@ -91,7 +93,7 @@ export default async function ArticlePage({ params, searchParams }: ArticlePageP
   const redeemed = search?.redeemed === "true";
   const { article: paywalledArticle, isPaywalled } = await getPaywalledArticle(article, giftToken ?? undefined, redeemed);
 
-  const isHikayeler = paywalledArticle.category === "hikayeler";
+  const isHikayeler = paywalledArticle.category === "hikayeler" || paywalledArticle.category === "stories";
   const isHikayelerWithScript = isHikayeler && !!paywalledArticle.inlineScriptHtml && paywalledArticle.inlineScriptHtml.trim().length > 0;
 
   const [relatedArticles, navigation] = await Promise.all([

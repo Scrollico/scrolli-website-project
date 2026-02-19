@@ -83,8 +83,8 @@ export default function Section1({ article, relatedArticles = [], isPaywalled = 
     window.open(linkedInUrl, '_blank', 'width=600,height=400');
   };
 
-  // Check if this is a hikayeler article
-  const isHikayeler = article.category === "hikayeler";
+  // Check if this is a hikayeler or stories article (both use scrollytelling)
+  const isHikayeler = article.category === "hikayeler" || article.category === "stories";
 
   // For hikayeler articles, delegate to the specialized component
   if (isHikayeler) {
@@ -95,256 +95,256 @@ export default function Section1({ article, relatedArticles = [], isPaywalled = 
     <>
       <PaywallGateWrapper articleId={article.id}>
         <ArticleGateWrapper isPremium={article.isPremium}>
-        <article itemScope itemType="https://schema.org/Article">
-          <Container>
-            {/* Article Header */}
-            <header className="entry-header">
-              <div className={cn("flex flex-col items-center justify-center text-center", "py-10 md:py-14", "gap-6")}>
-                {/* Premium/Free Badge - Centered above title */}
-                <div className="mb-2">
-                  {article.isPremium ? (
-                    <div className={cn("inline-flex items-center gap-1.5", componentPadding.xs, borderRadius.full, colors.warning.bg, colors.warning.DEFAULT)}>
-                      <PremiumContentBadgeIcon size={14} className={colors.warning.DEFAULT} />
-                      <span className={cn(typography.caption, "font-semibold tracking-wider")}>Premium Story</span>
-                    </div>
-                  ) : (
-                    <div className={cn("inline-flex items-center gap-1.5", componentPadding.xs, borderRadius.full, colors.background.elevated, colors.foreground.secondary)}>
-                      <FreeContentBadgeIcon size={14} />
-                      <span className={cn(typography.caption, "font-semibold tracking-wider")}>Free Read</span>
-                    </div>
+          <article itemScope itemType="https://schema.org/Article">
+            <Container>
+              {/* Article Header */}
+              <header className="entry-header">
+                <div className={cn("flex flex-col items-center justify-center text-center", "py-10 md:py-14", "gap-6")}>
+                  {/* Premium/Free Badge - Centered above title */}
+                  <div className="mb-2">
+                    {article.isPremium ? (
+                      <div className={cn("inline-flex items-center gap-1.5", componentPadding.xs, borderRadius.full, colors.warning.bg, colors.warning.DEFAULT)}>
+                        <PremiumContentBadgeIcon size={14} className={colors.warning.DEFAULT} />
+                        <span className={cn(typography.caption, "font-semibold tracking-wider")}>Premium Story</span>
+                      </div>
+                    ) : (
+                      <div className={cn("inline-flex items-center gap-1.5", componentPadding.xs, borderRadius.full, colors.background.elevated, colors.foreground.secondary)}>
+                        <FreeContentBadgeIcon size={14} />
+                        <span className={cn(typography.caption, "font-semibold tracking-wider")}>Free Read</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <Heading level={1} variant="h1" className={cn("entry-title max-w-4xl mx-auto", colors.foreground.primary)} itemProp="headline">{article.title}</Heading>
+                  {article.subtitle && (
+                    <Text className="entry-subtitle text-lg md:text-xl text-gray-600 dark:text-gray-400 mt-2 max-w-3xl mx-auto" itemProp="alternativeHeadline">
+                      {article.subtitle}
+                    </Text>
                   )}
                 </div>
-
-                <Heading level={1} variant="h1" className={cn("entry-title max-w-4xl mx-auto", colors.foreground.primary)} itemProp="headline">{article.title}</Heading>
-                {article.subtitle && (
-                  <Text className="entry-subtitle text-lg md:text-xl text-gray-600 dark:text-gray-400 mt-2 max-w-3xl mx-auto" itemProp="alternativeHeadline">
-                    {article.subtitle}
-                  </Text>
-                )}
-              </div>
-            </header>
-            {/*end single header*/}
-            {article.image && (
-              <figure className={cn("relative w-[70%] mx-auto", gap.lg, "featured-image overflow-hidden", borderRadius.lg, "aspect-video md:aspect-[16/9]")}>
-                {article.mobileImage ? (
-                  <>
-                    {/* Mobile image */}
-                    <Image
-                      src={article.mobileImage}
-                      alt={article.title}
-                      fill
-                      className="object-cover object-center md:hidden"
-                      sizes="70vw"
-                      priority
-                    />
-                    {/* Desktop image */}
+              </header>
+              {/*end single header*/}
+              {article.image && (
+                <figure className={cn("relative w-[70%] mx-auto", gap.lg, "featured-image overflow-hidden", borderRadius.lg, "aspect-video md:aspect-[16/9]")}>
+                  {article.mobileImage ? (
+                    <>
+                      {/* Mobile image */}
+                      <Image
+                        src={article.mobileImage}
+                        alt={article.title}
+                        fill
+                        className="object-cover object-center md:hidden"
+                        sizes="70vw"
+                        priority
+                      />
+                      {/* Desktop image */}
+                      <Image
+                        src={article.image}
+                        alt={article.title}
+                        fill
+                        className="object-cover object-center hidden md:block"
+                        sizes="(max-width: 1200px) 63vw, 840px"
+                        priority
+                      />
+                    </>
+                  ) : (
                     <Image
                       src={article.image}
                       alt={article.title}
                       fill
-                      className="object-cover object-center hidden md:block"
-                      sizes="(max-width: 1200px) 63vw, 840px"
+                      className="object-cover object-center"
+                      sizes="(max-width: 768px) 70vw, (max-width: 1200px) 63vw, 840px"
                       priority
                     />
-                  </>
-                ) : (
-                  <Image
-                    src={article.image}
-                    alt={article.title}
-                    fill
-                    className="object-cover object-center"
-                    sizes="(max-width: 768px) 70vw, (max-width: 1200px) 63vw, 840px"
-                    priority
-                  />
-                )}
-              </figure>
-            )}
-            {/*figure*/}
-            <article className={cn("entry-wraper", gap.lg)}>
-              <div className="entry-left-col">
-                <div className="social-sticky">
-                  <button
-                    onClick={handleTwitterShare}
-                    aria-label="Share on Twitter"
-                    className="social-share-btn"
-                  >
-                    <svg
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                    </svg>
-                  </button>
-                  <button
-                    onClick={handleLinkedInShare}
-                    aria-label="Share on LinkedIn"
-                    className="social-share-btn"
-                  >
-                    <i className="icon-linkedin" />
-                  </button>
-                </div>
-              </div>
-              {/* Author Meta - After Image, Before Content, Aligned with Article Content */}
-              <div className={cn("entry-meta align-items-center", gap.md, "py-6")} itemProp="author" itemScope itemType="https://schema.org/Person">
-                <Link className="author-avatar" href={`/author/${article.author.toLowerCase().replace(/\s+/g, "-")}`}>
-                  <Image
-                    src={getAuthorAvatar(article.author) || "/assets/images/author-avata-2.jpg"}
-                    alt={getAuthorName(article.author)}
-                    width={40}
-                    height={40}
-                  />
-                </Link>
-                <div className="entry-meta-line line-height-1">
-                  <Link href={`/author/${article.author.toLowerCase().replace(/\s+/g, "-")}`}>{getAuthorName(article.author)}</Link> in <Link href="/archive">
-                    <Badge className="ml-1 cursor-pointer">
-                      {article.category}
-                    </Badge>
-                  </Link>
-                </div>
-                <div className="entry-meta-line">
-                  <span>{article.date}</span>
-                  <span className="middotDivider" />
-                  <span className="readingTime" title={article.readTime}>
-                    {article.readTime}
-                  </span>
-                </div>
-
-                {/* Gift Button - Visible in header */}
-                <div className="ml-auto md:ml-4">
-                  <ArticleGiftButton
-                    articleId={article.id}
-                    articleTitle={article.title}
-                    variant="outline"
-                    className="ml-2"
-                  />
-                </div>
-              </div>
-              {article.excerpt && (
-                <div
-                  className={cn(
-                    "excerpt prose prose-sm max-w-none",
-                    gap.md,
-                    "text-gray-700 dark:text-gray-300 leading-relaxed"
                   )}
-                >
-                  <div dangerouslySetInnerHTML={{ __html: cleanHtmlContent(article.excerpt) }} />
-                </div>
+                </figure>
               )}
-              <div className="entry-main-content dropcap article-content">
-                {article.content ? (
-                  <ContentWithButton
-                    content={article.content}
-                    className="article-content prose prose-lg max-w-none dark:prose-invert"
-                    isPaywalled={isPaywalled}
-                    articleId={article.id}
-                  />
-                ) : (
-                  <p className="text-gray-500 dark:text-gray-400">Content not available</p>
-                )}
-              </div>
-              <div className="entry-bottom">
-                <div className="tags-wrap heading">
-                  <div className="tags flex flex-wrap gap-2">
-                    <Link href="/categories/fashion" rel="tag">
-                      <Badge className="cursor-pointer">
-                        fashion
-                      </Badge>
-                    </Link>
-                    <Link href="/categories/lifestyle" rel="tag">
-                      <Badge className="cursor-pointer">
-                        lifestyle
-                      </Badge>
-                    </Link>
-                    <Link href="/categories/news" rel="tag">
-                      <Badge className="cursor-pointer">
-                        news
-                      </Badge>
-                    </Link>
-                    <Link href="/categories/style" rel="tag">
-                      <Badge className="cursor-pointer">
-                        style
+              {/*figure*/}
+              <article className={cn("entry-wraper", gap.lg)}>
+                <div className="entry-left-col">
+                  <div className="social-sticky">
+                    <button
+                      onClick={handleTwitterShare}
+                      aria-label="Share on Twitter"
+                      className="social-share-btn"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={handleLinkedInShare}
+                      aria-label="Share on LinkedIn"
+                      className="social-share-btn"
+                    >
+                      <i className="icon-linkedin" />
+                    </button>
+                  </div>
+                </div>
+                {/* Author Meta - After Image, Before Content, Aligned with Article Content */}
+                <div className={cn("entry-meta align-items-center", gap.md, "py-6")} itemProp="author" itemScope itemType="https://schema.org/Person">
+                  <Link className="author-avatar" href={`/author/${article.author.toLowerCase().replace(/\s+/g, "-")}`}>
+                    <Image
+                      src={getAuthorAvatar(article.author) || "/assets/images/author-avata-2.jpg"}
+                      alt={getAuthorName(article.author)}
+                      width={40}
+                      height={40}
+                    />
+                  </Link>
+                  <div className="entry-meta-line line-height-1">
+                    <Link href={`/author/${article.author.toLowerCase().replace(/\s+/g, "-")}`}>{getAuthorName(article.author)}</Link> in <Link href="/archive">
+                      <Badge className="ml-1 cursor-pointer">
+                        {article.category}
                       </Badge>
                     </Link>
                   </div>
+                  <div className="entry-meta-line">
+                    <span>{article.date}</span>
+                    <span className="middotDivider" />
+                    <span className="readingTime" title={article.readTime}>
+                      {article.readTime}
+                    </span>
+                  </div>
+
+                  {/* Gift Button - Visible in header */}
+                  <div className="ml-auto md:ml-4">
+                    <ArticleGiftButton
+                      articleId={article.id}
+                      articleTitle={article.title}
+                      variant="outline"
+                      className="ml-2"
+                    />
+                  </div>
                 </div>
-              </div>
-            </article>
-            {/*entry-content*/}
-            {/*Begin post related*/}
-            {relatedArticles.length > 0 && (
-              <div className={cn("related-posts", gap.lg)}>
-                <Heading level={4} variant="h4" className={cn("spanborder text-center", gap.md)}>
-                  <span>İlgili Makaleler</span>
-                </Heading>
-                <Swiper
-                  modules={[Autoplay, Navigation, Pagination]}
-                  spaceBetween={16}
-                  slidesPerView={4}
-                  navigation={false}
-                  pagination={{ clickable: true }}
-                  loop={relatedArticles.length > 4}
-                  grabCursor={true}
-                  resistance={true}
-                  resistanceRatio={0.85}
-                  autoplay={{
-                    delay: 5000,
-                    disableOnInteraction: false,
-                  }}
-                  breakpoints={{
-                    320: {
-                      slidesPerView: 1,
-                      spaceBetween: 16
-                    },
-                    640: {
-                      slidesPerView: 2,
-                      spaceBetween: 16
-                    },
-                    768: {
-                      slidesPerView: 3,
-                      spaceBetween: 16
-                    },
-                    1024: {
-                      slidesPerView: 4,
-                      spaceBetween: 16
-                    },
-                    1280: {
-                      slidesPerView: 4,
-                      spaceBetween: 16
-                    }
-                  }}
-                  className="related-posts-slider"
-                >
-                  {relatedArticles.map((post) => (
-                    <SwiperSlide key={post.id} className="related-post-slide">
-                      <article className="group related-post-card">
-                        <Link href={post.slug ? `/${post.slug}` : `/${post.id}`} prefetch={true} className="block h-full related-post-link">
-                          {post.image && (
-                            <figure className="relative w-full aspect-[16/9] overflow-hidden bg-gray-200">
-                              <Image
-                                className="lazy !object-cover !object-center transition-transform duration-300 group-hover:scale-105"
-                                src={post.image}
-                                alt={post.title}
-                                fill
-                                sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
-                                style={{ objectFit: 'cover' }}
-                              />
-                            </figure>
-                          )}
-                          <div className="entry-content flex-1">
-                            <Heading level={5} variant="h6" color="primary" className="news-card-headline text-gray-900 dark:text-white">
-                              {post.title}
-                            </Heading>
-                          </div>
-                        </Link>
-                      </article>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </div>
-            )}
-            {/*End post related*/}
-          </Container>
-        </article>
+                {article.excerpt && (
+                  <div
+                    className={cn(
+                      "excerpt prose prose-sm max-w-none",
+                      gap.md,
+                      "text-gray-700 dark:text-gray-300 leading-relaxed"
+                    )}
+                  >
+                    <div dangerouslySetInnerHTML={{ __html: cleanHtmlContent(article.excerpt) }} />
+                  </div>
+                )}
+                <div className="entry-main-content dropcap article-content">
+                  {article.content ? (
+                    <ContentWithButton
+                      content={article.content}
+                      className="article-content prose prose-lg max-w-none dark:prose-invert"
+                      isPaywalled={isPaywalled}
+                      articleId={article.id}
+                    />
+                  ) : (
+                    <p className="text-gray-500 dark:text-gray-400">Content not available</p>
+                  )}
+                </div>
+                <div className="entry-bottom">
+                  <div className="tags-wrap heading">
+                    <div className="tags flex flex-wrap gap-2">
+                      <Link href="/categories/fashion" rel="tag">
+                        <Badge className="cursor-pointer">
+                          fashion
+                        </Badge>
+                      </Link>
+                      <Link href="/categories/lifestyle" rel="tag">
+                        <Badge className="cursor-pointer">
+                          lifestyle
+                        </Badge>
+                      </Link>
+                      <Link href="/categories/news" rel="tag">
+                        <Badge className="cursor-pointer">
+                          news
+                        </Badge>
+                      </Link>
+                      <Link href="/categories/style" rel="tag">
+                        <Badge className="cursor-pointer">
+                          style
+                        </Badge>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </article>
+              {/*entry-content*/}
+              {/*Begin post related*/}
+              {relatedArticles.length > 0 && (
+                <div className={cn("related-posts", gap.lg)}>
+                  <Heading level={4} variant="h4" className={cn("spanborder text-center", gap.md)}>
+                    <span>İlgili Makaleler</span>
+                  </Heading>
+                  <Swiper
+                    modules={[Autoplay, Navigation, Pagination]}
+                    spaceBetween={16}
+                    slidesPerView={4}
+                    navigation={false}
+                    pagination={{ clickable: true }}
+                    loop={relatedArticles.length > 4}
+                    grabCursor={true}
+                    resistance={true}
+                    resistanceRatio={0.85}
+                    autoplay={{
+                      delay: 5000,
+                      disableOnInteraction: false,
+                    }}
+                    breakpoints={{
+                      320: {
+                        slidesPerView: 1,
+                        spaceBetween: 16
+                      },
+                      640: {
+                        slidesPerView: 2,
+                        spaceBetween: 16
+                      },
+                      768: {
+                        slidesPerView: 3,
+                        spaceBetween: 16
+                      },
+                      1024: {
+                        slidesPerView: 4,
+                        spaceBetween: 16
+                      },
+                      1280: {
+                        slidesPerView: 4,
+                        spaceBetween: 16
+                      }
+                    }}
+                    className="related-posts-slider"
+                  >
+                    {relatedArticles.map((post) => (
+                      <SwiperSlide key={post.id} className="related-post-slide">
+                        <article className="group related-post-card">
+                          <Link href={post.slug ? `/${post.slug}` : `/${post.id}`} prefetch={true} className="block h-full related-post-link">
+                            {post.image && (
+                              <figure className="relative w-full aspect-[16/9] overflow-hidden bg-gray-200">
+                                <Image
+                                  className="lazy !object-cover !object-center transition-transform duration-300 group-hover:scale-105"
+                                  src={post.image}
+                                  alt={post.title}
+                                  fill
+                                  sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                                  style={{ objectFit: 'cover' }}
+                                />
+                              </figure>
+                            )}
+                            <div className="entry-content flex-1">
+                              <Heading level={5} variant="h6" color="primary" className="news-card-headline text-gray-900 dark:text-white">
+                                {post.title}
+                              </Heading>
+                            </div>
+                          </Link>
+                        </article>
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                </div>
+              )}
+              {/*End post related*/}
+            </Container>
+          </article>
         </ArticleGateWrapper>
       </PaywallGateWrapper>
       <style jsx>{`

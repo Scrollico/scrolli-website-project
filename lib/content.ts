@@ -15,8 +15,27 @@ import {
   getFeaturedArticles as getPayloadFeaturedArticles,
   fetchArticles,
 } from "./payload/client";
-import { mapGundemToArticle, mapHikayelerToArticle } from "./payload/types";
+import { mapGundemToArticle, mapHikayelerToArticle, mapStoryToArticle, mapCollabToArticle } from "./payload/types";
 // Note: serializeRichText import removed - content is already HTML string when using locale=tr
+
+/**
+ * Map any Payload article to the Article interface based on its source field.
+ * Centralizes the source-to-mapper dispatch logic.
+ */
+function mapPayloadArticle(article: any): Article {
+  switch (article.source) {
+    case "Stories":
+      return mapStoryToArticle(article);
+    case "Collabs":
+      return mapCollabToArticle(article);
+    case "Hikayeler":
+      return mapHikayelerToArticle(article);
+    case "Gündem":
+    case "Alara AI":
+    default:
+      return mapGundemToArticle(article);
+  }
+}
 
 /**
  * Remove Mailchimp forms and all script tags from article content
@@ -24,73 +43,73 @@ import { mapGundemToArticle, mapHikayelerToArticle } from "./payload/types";
  */
 function removeMailchimpForms(content: string): string {
   if (!content || typeof content !== 'string') return content || '';
-  
+
   let cleaned = content;
-  
+
   // Remove ALL script tags (not just Mailchimp) to prevent hydration issues
   cleaned = cleaned.replace(
     /<script[^>]*>[\s\S]*?<\/script>/gi,
     ''
   );
-  
+
   // Remove Mailchimp embed shell and all its contents (non-greedy, multiline)
   cleaned = cleaned.replace(
     /<div[^>]*id\s*=\s*["']mc_embed_shell["'][^>]*>[\s\S]*?<\/div>/gi,
     ''
   );
-  
+
   // Remove Mailchimp form elements
   cleaned = cleaned.replace(
     /<form[^>]*id\s*=\s*["']mc-embedded-subscribe-form["'][^>]*>[\s\S]*?<\/form>/gi,
     ''
   );
-  
+
   // Remove Mailchimp subscription button
   cleaned = cleaned.replace(
     /<input[^>]*id\s*=\s*["']mc-embedded-subscribe["'][^>]*>/gi,
     ''
   );
-  
+
   // Remove Mailchimp subscription button with value "Ücretsiz abone ol"
   cleaned = cleaned.replace(
     /<input[^>]*value\s*=\s*["']Ücretsiz abone ol["'][^>]*>/gi,
     ''
   );
-  
+
   // Remove Mailchimp link tags
   cleaned = cleaned.replace(
     /<link[^>]*mc-embedcode[^>]*>/gi,
     ''
   );
-  
+
   // Remove any remaining Mailchimp-related divs
   cleaned = cleaned.replace(
     /<div[^>]*mc_embed[^>]*>[\s\S]*?<\/div>/gi,
     ''
   );
-  
+
   // Remove any remaining form elements (safety check)
   cleaned = cleaned.replace(
     /<form[^>]*>[\s\S]*?<\/form>/gi,
     ''
   );
-  
+
   // Remove data-rt-embed-type divs (email subscription forms)
   cleaned = cleaned.replace(
     /<div[^>]*data-rt-embed-type[^>]*>[\s\S]*?<\/div>/gi,
     ''
   );
-  
+
   // Remove divs containing "E-posta Adresiniz" or similar email form text
   cleaned = cleaned.replace(
     /<div[^>]*>[\s\S]*?E-posta Adresiniz[\s\S]*?<\/div>/gi,
     ''
   );
-  
+
   // Clean up any empty paragraphs or divs left behind
   cleaned = cleaned.replace(/<p[^>]*>\s*<\/p>/gi, '');
   cleaned = cleaned.replace(/<div[^>]*>\s*<\/div>/gi, '');
-  
+
   // Normalize whitespace to ensure consistent output (deterministic)
   // This must be done in a specific order to ensure server/client match
   // Step 1: Replace multiple consecutive newlines (2+) with single newline
@@ -105,7 +124,7 @@ function removeMailchimpForms(content: string): string {
   cleaned = cleaned.replace(/^\n+/, '');
   // Step 6: Final trim to ensure no leading/trailing whitespace
   cleaned = cleaned.trim();
-  
+
   return cleaned;
 }
 
@@ -117,26 +136,23 @@ export async function findArticleById(articleId: string): Promise<Article | null
   try {
     // Try to find article by slug in Payload CMS
     const article = await getArticleBySlug(articleId);
-    
+
     if (!article) {
       return null;
     }
 
-    // Map Payload article to Article interface
-    // Content is already handled in mapping functions (HTML string or serialized)
-    const mappedArticle = article.source === "Gündem"
-      ? mapGundemToArticle(article)
-      : mapHikayelerToArticle(article);
+    // Map Payload article to Article interface based on source
+    const mappedArticle = mapPayloadArticle(article);
 
     // Clean Mailchimp forms from content (content is already HTML string)
-    // BUT: Skip cleaning for hikayeler articles with inline scripts (instorier.com)
+    // BUT: Skip cleaning for hikayeler/stories articles with inline scripts (instorier.com)
     // These scripts are intentional external story content
     if (mappedArticle.content && typeof mappedArticle.content === "string") {
-      const isHikayelerWithInlineScript = 
-        article.source === "Hikayeler" && 
+      const isStoryWithInlineScript =
+        (article.source === "Hikayeler" || article.source === "Stories") &&
         mappedArticle.content.includes('instorier.com');
-      
-      if (!isHikayelerWithInlineScript) {
+
+      if (!isStoryWithInlineScript) {
         mappedArticle.content = removeMailchimpForms(mappedArticle.content);
       }
     }
@@ -161,13 +177,8 @@ export async function getAllArticles(limit = 24): Promise<Article[]> {
       depth: 2,
     });
 
-    // Map Payload articles to Article interface
-    // Content is already HTML string when using locale=tr, no serialization needed
-    const articles: Article[] = payloadArticles.map((article) => {
-      return article.source === "Gündem"
-        ? mapGundemToArticle(article)
-        : mapHikayelerToArticle(article);
-    });
+    // Map Payload articles to Article interface using correct mapper per source
+    const articles: Article[] = payloadArticles.map((article) => mapPayloadArticle(article));
 
     // Deduplicate by ID
     const seenIds = new Set<string>();
@@ -191,7 +202,7 @@ export async function getAllArticles(limit = 24): Promise<Article[]> {
 export async function getArticlesByCategory(category: string): Promise<Article[]> {
   try {
     const response = await getPayloadArticlesByCategory(category);
-    
+
     // Content is already HTML string when using locale=tr, no serialization needed
     return response.docs.map((article) => mapGundemToArticle(article));
   } catch (error) {
@@ -212,20 +223,16 @@ export async function getArticlesByAuthor(author: string): Promise<Article[]> {
       depth: 2,
     });
 
-      // Content is already HTML string when using locale=tr, handled in mapping functions
-      // Content is already HTML string when using locale=tr, handled in mapping functions
-      const articles = payloadArticles
-        .filter((article) => {
-          const authorName = typeof article.author === "object"
-            ? article.author?.name
-            : article.author;
-          return authorName?.toLowerCase() === author.toLowerCase();
-        })
-        .map((article) => {
-          return article.source === "Gündem"
-            ? mapGundemToArticle(article)
-            : mapHikayelerToArticle(article);
-        });
+    // Content is already HTML string when using locale=tr, handled in mapping functions
+    // Content is already HTML string when using locale=tr, handled in mapping functions
+    const articles = payloadArticles
+      .filter((article) => {
+        const authorName = typeof article.author === "object"
+          ? article.author?.name
+          : article.author;
+        return authorName?.toLowerCase() === author.toLowerCase();
+      })
+      .map((article) => mapPayloadArticle(article));
 
     return articles;
   } catch (error) {
@@ -246,30 +253,42 @@ export async function getRelatedArticles(
     // First, try to get the original Payload article to access relationships
     const { getArticleBySlug } = await import("@/lib/payload/client");
     const payloadArticle = await getArticleBySlug(currentArticle.id);
-    
+
     const seenIds = new Set<string>([currentArticle.id]);
     const result: Article[] = [];
 
     // Step 1: Use explicit relationships from Payload if available
     if (payloadArticle) {
       let relatedItems: Array<any> = [];
-      
+
       if (payloadArticle.source === "Gündem" && payloadArticle.relatedArticles) {
         // Gündem has polymorphic relatedArticles (can be gundem or hikayeler)
         relatedItems = payloadArticle.relatedArticles
           .map(rel => {
             if (typeof rel.value === "string") {
-              // If it's just an ID string, we'd need to fetch it
-              // But with depth=2, it should be populated
               return null;
             }
             return rel.value;
           })
           .filter(Boolean);
-      } else if (payloadArticle.source === "Hikayeler" && payloadArticle.relatedStories) {
-        // Hikayeler has relatedStories (only hikayeler)
-        relatedItems = payloadArticle.relatedStories
+      } else if (payloadArticle.source === "Collabs" && payloadArticle.relatedArticles) {
+        // Collabs has polymorphic relatedArticles
+        relatedItems = payloadArticle.relatedArticles
           .map(rel => {
+            if (typeof rel.value === "string") {
+              return null;
+            }
+            return rel.value;
+          })
+          .filter(Boolean);
+      } else if (
+        (payloadArticle.source === "Hikayeler" && payloadArticle.relatedStories) ||
+        (payloadArticle.source === "Stories" && (payloadArticle as any).relatedStories)
+      ) {
+        // Hikayeler and Stories have relatedStories
+        const stories = payloadArticle.relatedStories || (payloadArticle as any).relatedStories;
+        relatedItems = (stories || [])
+          .map((rel: any) => {
             if (typeof rel.value === "string") {
               return null;
             }
@@ -283,9 +302,7 @@ export async function getRelatedArticles(
         if (result.length >= limit) break;
         if (!relatedItem || seenIds.has(relatedItem.slug || relatedItem.id)) continue;
 
-        const mapped = relatedItem.source === "Gündem"
-          ? mapGundemToArticle(relatedItem)
-          : mapHikayelerToArticle(relatedItem);
+        const mapped = mapPayloadArticle(relatedItem);
 
         if (!seenIds.has(mapped.id)) {
           seenIds.add(mapped.id);
@@ -297,11 +314,11 @@ export async function getRelatedArticles(
     // Step 2: If not enough related articles from relationships, use category-based fallback
     if (result.length < limit) {
       const allArticles = await getAllArticles(50);
-      
+
       // First, get articles from same category
       for (const article of allArticles) {
         if (result.length >= limit) break;
-        
+
         if (
           !seenIds.has(article.id) &&
           article.category === currentArticle.category
@@ -315,7 +332,7 @@ export async function getRelatedArticles(
       if (result.length < limit) {
         for (const article of allArticles) {
           if (result.length >= limit) break;
-          
+
           if (!seenIds.has(article.id)) {
             seenIds.add(article.id);
             result.push(article);
@@ -327,7 +344,7 @@ export async function getRelatedArticles(
     // Final safety check: ensure no duplicates by ID
     const finalResult: Article[] = [];
     const finalSeenIds = new Set<string>();
-    
+
     for (const article of result) {
       if (!finalSeenIds.has(article.id)) {
         finalSeenIds.add(article.id);
@@ -348,13 +365,8 @@ export async function getRelatedArticles(
 export async function getRecentArticles(limit: number = 10): Promise<Article[]> {
   try {
     const payloadArticles = await getPayloadRecentArticles(limit);
-    
-    // Content is already HTML string when using locale=tr, handled in mapping functions
-    return payloadArticles.map((article) =>
-      article.source === "Gündem"
-        ? mapGundemToArticle(article)
-        : mapHikayelerToArticle(article)
-    );
+
+    return payloadArticles.map((article) => mapPayloadArticle(article));
   } catch (error) {
     console.error("Error fetching recent articles:", error);
     return [];
@@ -367,13 +379,8 @@ export async function getRecentArticles(limit: number = 10): Promise<Article[]> 
 export async function getFeaturedArticles(): Promise<Article[]> {
   try {
     const payloadArticles = await getPayloadFeaturedArticles();
-    
-    // Content is already HTML string when using locale=tr, handled in mapping functions
-    return payloadArticles.map((article) =>
-      article.source === "Gündem"
-        ? mapGundemToArticle(article)
-        : mapHikayelerToArticle(article)
-    );
+
+    return payloadArticles.map((article) => mapPayloadArticle(article));
   } catch (error) {
     console.error("Error fetching featured articles:", error);
     return [];
