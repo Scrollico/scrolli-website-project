@@ -102,7 +102,7 @@ export default function HikayelerArticle({ article }: HikayelerArticleProps) {
     }
 
     return (
-        <div className="hikayeler-article-shell">
+        <div className="hikayeler-article-shell" style={{ minHeight: '100vh' }}>
             {/* Full-screen loading overlay */}
             <HikayeLoader isLoading={loading} progress={progress} />
 
@@ -113,7 +113,8 @@ export default function HikayelerArticle({ article }: HikayelerArticleProps) {
                     'transition-opacity duration-1000',
                     loading ? 'opacity-0' : 'opacity-100'
                 )}
-                style={{ 
+                style={{
+                    minHeight: '100vh',
                     visibility: loading ? 'hidden' : 'visible'
                 }}
             >

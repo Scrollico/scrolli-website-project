@@ -309,6 +309,68 @@ export interface PayloadHikayeler {
   updatedAt: string;
 }
 
+// Collabs Article
+export interface PayloadCollab {
+  id: string;
+  slug: string;
+  title: string;
+  subtitle?: string;
+  content?: any;
+  summary?: string;
+  source: "Collabs";
+  collection: "collabs";
+  featuredImage?: PayloadMedia | string;
+  thumbnail?: PayloadMedia | string;
+  verticalImage?: PayloadMedia | string;
+  galleryImages?: Array<{ image: PayloadMedia }>;
+  tags?: Array<{ tag: PayloadTag }>;
+  relatedArticles?: Array<{
+    relationTo: "gundem" | "hikayeler" | "alaraai" | "collabs" | "stories";
+    value: string | PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory;
+  }>;
+  readTime?: number;
+  author?: PayloadAuthor | string;
+  publishedAt: string;
+  isFeatured?: boolean;
+  isCollab?: boolean; // May still exist for backward compatibility or explicit marking
+  ordering?: number;
+  layoutPosition?: "auto" | "hero" | "editors-picks" | "exclude";
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Stories Article
+export interface PayloadStory {
+  id: string;
+  slug: string;
+  title: string;
+  subtitle?: string;
+  content?: any;
+  inlineScript?: string | { tr?: string; en?: string };
+  inlineScriptHtml?: string | { tr?: string; en?: string };
+  summary?: string;
+  source: "Stories";
+  collection: "stories";
+  featuredImage?: PayloadMedia | string;
+  thumbnail?: PayloadMedia | string;
+  verticalImage?: PayloadMedia | string;
+  galleryImages?: Array<{ image: PayloadMedia }>;
+  tags?: Array<{ tag: PayloadTag }>;
+  relatedStories?: Array<{
+    relationTo: "hikayeler" | "stories";
+    value: string | PayloadHikayeler | PayloadStory;
+  }>;
+  readTime?: number;
+  author?: PayloadAuthor | string;
+  publishedAt: string;
+  isFeatured?: boolean;
+  isCollab?: boolean;
+  ordering?: number;
+  layoutPosition?: "auto" | "hero" | "editors-picks" | "exclude";
+  createdAt: string;
+  updatedAt: string;
+}
+
 // Helper function to extract media URL
 export function getMediaUrl(
   media: PayloadMedia | string | undefined
@@ -316,15 +378,18 @@ export function getMediaUrl(
   if (!media) {
     return undefined;
   }
-  if (typeof media === "string") {
-    return media;
-  }
-  return media.url;
+  const rawUrl = typeof media === "string" ? media : media.url;
+  if (!rawUrl) return undefined;
+
+  // Return the URL as-is from the CMS — do NOT normalize %25 encoding.
+  // Azure Blob Storage filenames may contain literal '%20' characters,
+  // which must remain as '%2520' in the URL (the '%' itself is encoded).
+  return rawUrl;
 }
 
 // Helper function to get responsive image URLs
 // Returns desktop and mobile image URLs for responsive display
-export function getResponsiveImageUrl(post: PayloadGundem | PayloadHikayeler): {
+export function getResponsiveImageUrl(post: PayloadGundem | PayloadHikayeler | PayloadCollab | PayloadStory): {
   desktop: string | undefined;
   mobile: string | undefined;
 } {
@@ -337,6 +402,12 @@ export function getResponsiveImageUrl(post: PayloadGundem | PayloadHikayeler): {
   } else if (post.source === "Hikayeler") {
     // Hikayeler uses verticalImage
     mobile = getMediaUrl((post as PayloadHikayeler).verticalImage);
+  } else if (post.source === "Stories") {
+    // Stories uses verticalImage
+    mobile = getMediaUrl((post as PayloadStory).verticalImage);
+  } else if (post.source === "Collabs") {
+    // Collabs uses verticalImage if available, otherwise mobileImage or fallback
+    mobile = getMediaUrl((post as PayloadCollab).verticalImage) || getMediaUrl(post.featuredImage);
   }
 
   // Fallback to desktop image if mobile variant not available
@@ -360,6 +431,51 @@ function getCategorySlug(category?: PayloadCategory | string | null): string {
   return category.slug || "news";
 }
 
+// Helper function to clean messy content (e.g. raw CSS/HTML from Instorier)
+function cleanMessyContent(contentObj: any): any | undefined {
+  try {
+    if (
+      !contentObj ||
+      !contentObj.root ||
+      !contentObj.root.children ||
+      !Array.isArray(contentObj.root.children)
+    ) {
+      return contentObj;
+    }
+
+    const newChildren = contentObj.root.children.filter((child: any) => {
+      if (child.children && child.children.length > 0) {
+        const firstChild = child.children[0];
+        if (firstChild && typeof firstChild.text === "string") {
+          const text = firstChild.text.trim();
+          if (
+            text.startsWith("@font-face") ||
+            text.includes(".ibG8wLku-container")
+          ) {
+            return false;
+          }
+        }
+      }
+      return true;
+    });
+
+    if (newChildren.length === 0) {
+      return undefined;
+    }
+
+    return {
+      ...contentObj,
+      root: {
+        ...contentObj.root,
+        children: newChildren,
+      },
+    };
+  } catch (e) {
+    console.error("Error cleaning messy content:", e);
+    return contentObj; // Return original if cleaning fails
+  }
+}
+
 // Map Payload Gündem to existing Article interface
 export function mapGundemToArticle(post: PayloadGundem | PayloadAlaraai): Article {
   const desktopImage = getMediaUrl(post.featuredImage || post.thumbnail);
@@ -377,8 +493,11 @@ export function mapGundemToArticle(post: PayloadGundem | PayloadAlaraai): Articl
     ) {
       // 1. Direct Lexical format (root object) - check this FIRST for collections like alaraai
       if ("root" in post.content) {
-        const serialized = serializeRichText(post.content);
-        content = serialized.trim() || undefined;
+        const cleaned = cleanMessyContent(post.content);
+        if (cleaned) {
+          const serialized = serializeRichText(cleaned);
+          content = serialized.trim() || undefined;
+        }
       }
       // 2. Localized content object (e.g., {tr: {...}, en: {...}})
       else if ("tr" in post.content) {
@@ -394,8 +513,11 @@ export function mapGundemToArticle(post: PayloadGundem | PayloadAlaraai): Articl
           !Array.isArray(trContent)
         ) {
           if ("root" in trContent || Array.isArray(trContent)) {
-            const serialized = serializeRichText(trContent);
-            content = serialized.trim() || undefined;
+            const cleaned = cleanMessyContent(trContent);
+            if (cleaned) {
+              const serialized = serializeRichText(cleaned);
+              content = serialized.trim() || undefined;
+            }
           }
         }
         // If tr is an array (Lexical format), serialize it
@@ -403,12 +525,28 @@ export function mapGundemToArticle(post: PayloadGundem | PayloadAlaraai): Articl
           const serialized = serializeRichText(trContent);
           content = serialized.trim() || undefined;
         }
-      } else if ("en" in post.content && typeof post.content.en === "string") {
-        content = post.content.en.trim() || undefined;
+      } else if ("en" in post.content) {
+        const enContent = post.content.en;
+        if (typeof enContent === "string") {
+          content = enContent.trim() || undefined;
+        } else if (
+          enContent &&
+          typeof enContent === "object" &&
+          ("root" in enContent || Array.isArray(enContent))
+        ) {
+          const cleaned = cleanMessyContent(enContent);
+          if (cleaned) {
+            const serialized = serializeRichText(cleaned);
+            content = serialized.trim() || undefined;
+          }
+        }
       } else if ("root" in post.content || Array.isArray(post.content)) {
         // Handle Lexical format with root.children structure (direct format)
-        const serialized = serializeRichText(post.content);
-        content = serialized.trim() || undefined;
+        const cleaned = cleanMessyContent(post.content);
+        if (cleaned) {
+          const serialized = serializeRichText(cleaned);
+          content = serialized.trim() || undefined;
+        }
       }
     } else if (typeof post.content === "string") {
       // Direct HTML string (when using locale=tr)
@@ -480,6 +618,45 @@ export function mapHikayelerToArticle(post: PayloadHikayeler): Article {
             ? rawScript.en.trim()
             : undefined;
       }
+      // Handle Lexical rich text JSON format: { root: { children: [{ children: [{ text: "URL" }] }] } }
+      // The CMS stores the Instorier URL as plain text inside a Lexical paragraph node
+      if (!inlineScriptHtml && "root" in rawScript) {
+        try {
+          const extractedTexts: string[] = [];
+          const extractText = (node: any): void => {
+            if (node.text && typeof node.text === "string") {
+              extractedTexts.push(node.text.trim());
+            }
+            if (Array.isArray(node.children)) {
+              node.children.forEach(extractText);
+            }
+          };
+          extractText(rawScript.root);
+
+          // Join all extracted text and check if it contains an Instorier URL
+          const fullText = extractedTexts.join(" ").trim();
+          if (fullText) {
+            // If it's already HTML (contains script tags), use as-is
+            if (fullText.includes("<script")) {
+              inlineScriptHtml = fullText;
+            }
+            // If it's a plain Instorier CDN URL, wrap it in a script tag
+            else if (fullText.includes("instorier") && fullText.includes(".js")) {
+              // Extract the URL (handle case where text might have extra whitespace)
+              const urlMatch = fullText.match(/(https?:\/\/[^\s]+\.js)/);
+              if (urlMatch) {
+                inlineScriptHtml = `<script src="${urlMatch[1]}"></script>`;
+              }
+            }
+            // If it contains any URL ending in .js, treat it as a script source
+            else if (fullText.match(/^https?:\/\/.*\.js$/)) {
+              inlineScriptHtml = `<script src="${fullText}"></script>`;
+            }
+          }
+        } catch (e) {
+          console.error("Error extracting inlineScript from Lexical JSON:", e);
+        }
+      }
     }
   }
 
@@ -499,14 +676,44 @@ export function mapHikayelerToArticle(post: PayloadHikayeler): Article {
       !Array.isArray(post.content)
     ) {
       // Check if it's a localized object
-      if ("tr" in post.content && typeof post.content.tr === "string") {
-        content = post.content.tr.trim() || undefined;
-      } else if ("en" in post.content && typeof post.content.en === "string") {
-        content = post.content.en.trim() || undefined;
+      if ("tr" in post.content) {
+        const trContent = post.content.tr;
+        if (typeof trContent === "string") {
+          content = trContent.trim() || undefined;
+        } else if (
+          trContent &&
+          typeof trContent === "object" &&
+          ("root" in trContent || Array.isArray(trContent))
+        ) {
+          // Handle Lexical format inside localized field
+          const cleaned = cleanMessyContent(trContent);
+          if (cleaned) {
+            const serialized = serializeRichText(cleaned, post.title);
+            content = serialized.trim() || undefined;
+          }
+        }
+      } else if ("en" in post.content) {
+        const enContent = post.content.en;
+        if (typeof enContent === "string") {
+          content = enContent.trim() || undefined;
+        } else if (
+          enContent &&
+          typeof enContent === "object" &&
+          ("root" in enContent || Array.isArray(enContent))
+        ) {
+          const cleaned = cleanMessyContent(enContent);
+          if (cleaned) {
+            const serialized = serializeRichText(cleaned, post.title);
+            content = serialized.trim() || undefined;
+          }
+        }
       } else if ("root" in post.content || Array.isArray(post.content)) {
         // Handle Lexical format with root.children structure
-        const serialized = serializeRichText(post.content, post.title);
-        content = serialized.trim() || undefined;
+        const cleaned = cleanMessyContent(post.content);
+        if (cleaned) {
+          const serialized = serializeRichText(cleaned, post.title);
+          content = serialized.trim() || undefined;
+        }
       }
     } else if (typeof post.content === "string") {
       // Direct HTML string (when using locale=tr)
@@ -580,6 +787,30 @@ export function mapCurationToArticle(curation: PayloadCuration): Article {
     excerpt: curation.newsSummary || curation.seoDescription,
     isPremium: false,
     content: content,
+  };
+}
+
+// Map Payload Collab to Article
+export function mapCollabToArticle(post: PayloadCollab): Article {
+  // Reuse Hikayeler logic as Collabs structure is similar
+  // Cast to Hikayeler to reuse the function, but override source/category
+  const article = mapHikayelerToArticle(post as unknown as PayloadHikayeler);
+
+  return {
+    ...article,
+    category: "collabs", // Override category
+    isCollab: true,
+  };
+}
+
+// Map Payload Story to Article
+export function mapStoryToArticle(post: PayloadStory): Article {
+  // Reuse Hikayeler logic as Stories structure is identical (with inlineScript)
+  const article = mapHikayelerToArticle(post as unknown as PayloadHikayeler);
+
+  return {
+    ...article,
+    category: "stories", // Override category
   };
 }
 

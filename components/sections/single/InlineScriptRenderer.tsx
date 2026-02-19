@@ -51,15 +51,51 @@ export default function InlineScriptRenderer({ html, onLoadComplete }: InlineScr
         hasExecuted.current = true;
         const container = containerRef.current;
         let completed = false;
-        
+        let relocateInterval: ReturnType<typeof setInterval> | null = null;
+
+        /**
+         * Find and relocate Instorier container from <body> into our mount point.
+         * Instorier script creates its container (e.g. `.iNbpbdiY-container.instorier-player`)
+         * as a direct child of <body>, which places it after the Layout footer.
+         * We need it inside our mount point for correct Header → Content → Footer ordering.
+         */
+        const relocateInstorierContainer = (): boolean => {
+            // Find Instorier containers that are direct children of body
+            const bodyChildren = Array.from(document.body.children);
+            for (const child of bodyChildren) {
+                if (child instanceof HTMLElement) {
+                    const className = typeof child.className === 'string' ? child.className : '';
+                    if (className.includes('instorier-player') ||
+                        (className.includes('-container') && className.match(/^i[A-Za-z0-9]+/))) {
+                        container.appendChild(child);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
+
         const done = () => {
             if (completed) return;
             completed = true;
-            
+
             // Add hikayeler-page class to html/body for overflow:visible (required for sticky)
             document.documentElement.classList.add('hikayeler-page');
             document.body.classList.add('hikayeler-page');
-            
+
+            // Try to relocate immediately
+            if (!relocateInstorierContainer()) {
+                // If not found yet, poll every 200ms for up to 10s
+                let attempts = 0;
+                relocateInterval = setInterval(() => {
+                    attempts++;
+                    if (relocateInstorierContainer() || attempts > 50) {
+                        if (relocateInterval) clearInterval(relocateInterval);
+                        relocateInterval = null;
+                    }
+                }, 200);
+            }
+
             onLoadComplete?.();
         };
 
@@ -79,7 +115,7 @@ export default function InlineScriptRenderer({ html, onLoadComplete }: InlineScr
 
         scripts.forEach((oldScript) => {
             const scriptSrc = oldScript.src;
-            
+
             // Prevent duplicate script loading
             if (scriptSrc && scriptsLoadedRef.current.has(scriptSrc)) {
                 console.warn(`[InlineScriptRenderer] Script already loaded, skipping: ${scriptSrc}`);
@@ -106,7 +142,7 @@ export default function InlineScriptRenderer({ html, onLoadComplete }: InlineScr
             // Handle external script loading
             if (newScript.src) {
                 scriptsLoadedRef.current.add(newScript.src);
-                
+
                 newScript.onload = () => {
                     scriptsLoaded++;
                     if (scriptsLoaded === totalScripts) {
@@ -114,7 +150,7 @@ export default function InlineScriptRenderer({ html, onLoadComplete }: InlineScr
                         done();
                     }
                 };
-                
+
                 newScript.onerror = () => {
                     console.error(`[InlineScriptRenderer] Failed to load script: ${newScript.src}`);
                     scriptsLoaded++;
@@ -138,6 +174,7 @@ export default function InlineScriptRenderer({ html, onLoadComplete }: InlineScr
         // Cleanup: Remove hikayeler-page class when component unmounts
         return () => {
             clearTimeout(safetyTimer);
+            if (relocateInterval) clearInterval(relocateInterval);
             document.documentElement.classList.remove('hikayeler-page');
             document.body.classList.remove('hikayeler-page');
         };
@@ -146,7 +183,7 @@ export default function InlineScriptRenderer({ html, onLoadComplete }: InlineScr
     // Defensive check: Log if Instorier container is not created after injection
     useEffect(() => {
         if (!containerRef.current || !html) return;
-        
+
         const checkInstorierContainer = setTimeout(() => {
             const hasInstorierContainer = containerRef.current?.querySelector('[class*="ibG8wLku-container"], [id*="ibG8wLku"]');
             if (!hasInstorierContainer) {
@@ -163,7 +200,7 @@ export default function InlineScriptRenderer({ html, onLoadComplete }: InlineScr
             ref={containerRef}
             id="hikayeler-story-root"
             className="hikayeler-script-root"
-            // NO width/height/overflow/min-height styles here - Instorier controls everything
+        // NO width/height/overflow/min-height styles here - Instorier controls everything
         />
     );
 }
