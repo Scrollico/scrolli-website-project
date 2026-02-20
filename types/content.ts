@@ -27,6 +27,7 @@ export interface Article {
   inlineScriptHtml?: string; // Inline script HTML from external CMS (e.g., Instorier stories)
   seoTitle?: string; // SEO title override
   seoDescription?: string; // SEO description override
+  isCollab?: boolean; // Whether the article is a collaboration/sponsored content
 }
 
 /**

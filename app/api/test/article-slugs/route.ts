@@ -9,9 +9,9 @@ export const runtime = "edge";
 
 import { NextResponse } from "next/server";
 import { fetchArticles } from "@/lib/payload/client";
-import type { PayloadGundem, PayloadHikayeler } from "@/lib/payload/types";
+import type { PayloadGundem, PayloadHikayeler, PayloadAlaraai, PayloadCollab, PayloadStory } from "@/lib/payload/types";
 
-function isHikayelerDoc(doc: PayloadGundem | PayloadHikayeler): boolean {
+function isHikayelerDoc(doc: PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory): boolean {
   return "source" in doc && doc.source === "Hikayeler";
 }
 

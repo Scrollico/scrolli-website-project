@@ -93,8 +93,8 @@ export default async function ArticlePage({ params, searchParams }: ArticlePageP
   const redeemed = search?.redeemed === "true";
   const { article: paywalledArticle, isPaywalled } = await getPaywalledArticle(article, giftToken ?? undefined, redeemed);
 
-  const isHikayeler = paywalledArticle.category === "hikayeler" || paywalledArticle.category === "stories";
-  const isHikayelerWithScript = isHikayeler && !!paywalledArticle.inlineScriptHtml && paywalledArticle.inlineScriptHtml.trim().length > 0;
+  const hasScript = !!paywalledArticle.inlineScriptHtml && paywalledArticle.inlineScriptHtml.trim().length > 0;
+  const isHikayelerWithScript = hasScript;
 
   const [relatedArticles, navigation] = await Promise.all([
     isHikayelerWithScript ? Promise.resolve([]) : getRelatedArticles(paywalledArticle, 6),

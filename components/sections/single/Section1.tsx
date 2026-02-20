@@ -84,10 +84,12 @@ export default function Section1({ article, relatedArticles = [], isPaywalled = 
   };
 
   // Check if this is a hikayeler or stories article (both use scrollytelling)
+  // Also check if any article has a scrollytelling script (could be a Collab or other collection)
   const isHikayeler = article.category === "hikayeler" || article.category === "stories";
+  const hasScript = !!article.inlineScriptHtml && article.inlineScriptHtml.trim().length > 0;
 
-  // For hikayeler articles, delegate to the specialized component
-  if (isHikayeler) {
+  // For hikayeler articles OR any article with a scrollytelling script, delegate to the specialized component
+  if (isHikayeler || hasScript) {
     return <HikayelerArticle article={article} />;
   }
 

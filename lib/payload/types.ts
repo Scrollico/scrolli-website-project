@@ -371,6 +371,30 @@ export interface PayloadStory {
   updatedAt: string;
 }
 
+/** Payload CMS Video type — maps to the `videos` collection */
+export interface PayloadVideo {
+  id: string;
+  slug: string;
+  title: string;
+  videoUrl: string;
+  thumbnail?: PayloadMedia | string;
+  description?: string;
+  overlayText?: {
+    location?: string;
+    date?: string;
+    quote?: string;
+    source?: string;
+    author?: string;
+    role?: string;
+  };
+  ordering?: number;
+  isFeatured?: boolean;
+  publishedAt: string;
+  tags?: Array<{ tag: string }>;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // Helper function to extract media URL
 export function getMediaUrl(
   media: PayloadMedia | string | undefined

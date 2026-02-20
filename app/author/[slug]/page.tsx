@@ -5,7 +5,15 @@ import type { Metadata } from "next";
 import Layout from "@/components/layout/Layout";
 import { getAuthorBySlug, getArticlesByAuthorId } from "@/lib/payload/client";
 import { getNavigation } from "@/lib/payload/client";
-import { mapGundemToArticle, mapHikayelerToArticle, getMediaUrl } from "@/lib/payload/types";
+import {
+  mapGundemToArticle,
+  mapHikayelerToArticle,
+  mapCollabToArticle,
+  mapStoryToArticle,
+  getMediaUrl,
+  PayloadCollab,
+  PayloadStory
+} from "@/lib/payload/types";
 import { Article } from "@/types/content";
 import AuthorBySlugSection from "@/components/sections/author/AuthorBySlugSection";
 
@@ -40,11 +48,13 @@ export default async function AuthorSlugPage({
     getArticlesByAuthorId(author.id, 50),
     getNavigation(),
   ]);
-  const articles: Article[] = payloadArticles.map((post) =>
-    post.source === "Gündem"
-      ? mapGundemToArticle(post)
-      : mapHikayelerToArticle(post)
-  );
+  const articles: Article[] = payloadArticles.map((post) => {
+    if (post.source === "Gündem") return mapGundemToArticle(post);
+    if (post.source === "Hikayeler") return mapHikayelerToArticle(post);
+    if (post.source === "Collabs") return mapCollabToArticle(post as PayloadCollab);
+    if (post.source === "Stories") return mapStoryToArticle(post as PayloadStory);
+    return mapGundemToArticle(post as any);
+  });
 
   const avatarUrl = author.avatar ? getMediaUrl(author.avatar) : undefined;
 

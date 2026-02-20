@@ -26,7 +26,7 @@ export interface HomepageContent {
 /**
  * Helper to check if an article is valid (has content and valid images)
  */
-function isValidArticle(article: any): boolean {
+export function isValidArticle(article: any): boolean {
   if (!article) return false;
 
   // 1. Check for content
