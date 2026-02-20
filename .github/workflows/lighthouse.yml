@@ -1,0 +1,49 @@
+name: Lighthouse CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Wait for Cloudflare Pages deployment
+        uses: Ross-Edwards/wait-for-cloudflare-pages@v2
+        id: cloudflare
+        with:
+          commit-hash: ${{ github.event.pull_request.head.sha || github.sha }}
+          project-name: scrolli-website-project # MUST MATCH CLOUDFLARE PROJECT NAME
+          # Optional: Cloudflare API Token if private
+          # api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            ${{ steps.cloudflare.outputs.url }}
+            ${{ steps.cloudflare.outputs.url }}/eksen
+            ${{ steps.cloudflare.outputs.url }}/finans
+          budgetPath: ./budget.json # Optional
+          configPath: ./lighthouserc.js
+          uploadArtifacts: true # Save reports as artifacts
+          temporaryPublicStorage: true # Upload to temporary landing page
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // This is a simplified example of how to post a comment
+            // You might want to use a more specialized action for detailed reporting
+            const results = process.env.LHCI_RESULTS;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🚀 Lighthouse Performance Audit Complete for this release!'
+            })
