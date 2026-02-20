@@ -262,11 +262,12 @@ async function fetchArticlesInternal(
       return [];
     }
 
-    // Merge and sort by publishedAt descending
-    const articles = results.sort(
-      (a, b) =>
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
-    );
+    // Merge and sort by publishedAt descending (with defensive check)
+    const articles = results.sort((a, b) => {
+      const dateA = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
+      const dateB = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+      return dateB - dateA;
+    });
 
     // Client-side deduplication
     const uniqueArticles = new Map<string, PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory>();

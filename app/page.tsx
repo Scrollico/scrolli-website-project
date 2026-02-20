@@ -43,6 +43,7 @@ export default async function Home() {
           articleList: [],
           hikayeler: [],
           dailyBriefing: null,
+          gundemSection3Articles: [],
         },
       results[1].status === "fulfilled"
         ? (results[1] as PromiseFulfilledResult<PayloadNavigation | null>).value
