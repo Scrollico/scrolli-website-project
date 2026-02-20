@@ -22,6 +22,45 @@ export interface HomepageContent {
  * 2. Use first featured as hero, next 3 as editors picks
  * 3. Fill remaining with recent articles
  */
+
+/**
+ * Helper to check if an article is valid (has content and valid images)
+ */
+function isValidArticle(article: any): boolean {
+  if (!article) return false;
+
+  // 1. Check for content
+  // Hikayeler and Stories use inlineScriptHtml or inlineScript (Lexical)
+  // Gündem, Alara AI, Collabs use content (Lexical)
+  const hasInlineScript = !!article.inlineScriptHtml || (
+    article.inlineScript &&
+    article.inlineScript.root &&
+    article.inlineScript.root.children &&
+    article.inlineScript.root.children.length > 0 &&
+    article.inlineScript.root.children.some((child: any) => child.children && child.children.length > 0)
+  );
+
+  const hasContent = !!article.content &&
+    typeof article.content === 'object' &&
+    article.content.root &&
+    article.content.root.children &&
+    article.content.root.children.length > 0 &&
+    article.content.root.children.some((child: any) => child.children && child.children.length > 0);
+
+  // General "Zombie" check: If no content and no inline script, it's likely broken
+  if (!hasContent && !hasInlineScript) return false;
+
+  // 2. Check for images
+  // We require at least one valid expanded image object
+  const hasValidImage = !!article.featuredImage && typeof article.featuredImage === 'object' && !!article.featuredImage.url;
+  const hasValidThumbnail = !!article.thumbnail && typeof article.thumbnail === 'object' && !!article.thumbnail.url;
+
+  // All collections (Gündem, Hikayeler, Alara AI, Collabs, etc.) must have at least one valid image to be shown
+  if (!hasValidImage && !hasValidThumbnail) return false;
+
+  return true;
+}
+
 export async function getHomepageContent(): Promise<HomepageContent> {
   try {
     const ENABLE_LAYOUT_POSITION = process.env.ENABLE_LAYOUT_POSITION === "true";
@@ -35,7 +74,14 @@ export async function getHomepageContent(): Promise<HomepageContent> {
         fetchArticles({ layoutPosition: "editors-picks", limit: 3, depth: 2 }),
         fetchArticles({ sort: "-publishedAt", limit: 50, depth: 2 }),
         fetchPayload<PayloadGundem>("gundem", { sort: "-publishedAt", limit: 50, depth: 2 }),
-      ]);
+      ]).then(res => [
+        res[0],
+        res[1].filter(isValidArticle),
+        res[2].filter(isValidArticle),
+        res[3].filter(isValidArticle),
+        res[4].filter(isValidArticle),
+        { ...res[5], docs: res[5].docs.filter(isValidArticle) }
+      ]) as any;
 
       const topHikayeler = allHikayeler.slice(0, 4);
       const dailyBriefing = dailyBriefingRes.docs[0] || null;
@@ -98,7 +144,14 @@ export async function getHomepageContent(): Promise<HomepageContent> {
         }),
         fetchArticles({ sort: "-publishedAt", limit: 50, depth: 2 }),
         fetchPayload<PayloadGundem>("gundem", { sort: "-publishedAt", limit: 50, depth: 2 }),
-      ]);
+      ]).then(res => [
+        res[0],
+        res[1],
+        res[2].filter(isValidArticle),
+        res[3].filter(isValidArticle),
+        res[4].filter(isValidArticle),
+        { ...res[5], docs: res[5].docs.filter(isValidArticle) }
+      ]) as any;
 
       const dailyBriefing = dailyBriefingRes.docs[0] || null;
       const curations = curationsRes.docs || [];

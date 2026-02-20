@@ -1,0 +1,44 @@
+# Walkthrough: Homepage Performance Optimization
+
+I have implemented several significant optimizations to improve the Scrolli homepage performance, specifically targeting Time to First Byte (TTFB), image orchestration, and environment stability.
+
+## Content Fixes: Defensive Filtering
+
+I have identified that several articles on the homepage were missing content or images due to "Zombie" entries in the CMS (published articles with incomplete data or broken media links).
+
+### Broken Articles Identified
+1.  **Devlerin yapay zekâ...** (Gündem): Published version has empty content and broken images. A valid version exists in Drafts.
+2.  **Sam Rivers of Limp Bizkit dies** (Alara AI): The article exists in the `alaraai` collection but references a media ID (`6994ff2804667506d7693ccb`) that no longer exists in the CMS.
+
+### Fix implemented
+I have implemented a **Defensive Filtering** system on the homepage ([homepage.ts](file:///Users/FAU1MU/development/Vscode%20Projects/Scrolli/scrolli-website-project/lib/homepage.ts)). The [isValidArticle](file:///Users/FAU1MU/development/Vscode%20Projects/Scrolli/scrolli-website-project/lib/homepage.ts#26-63) helper now ensures:
+- **Content Check**: Articles must have either structured content (Lexical JSON) or an Inline Script (used by **Hikayeler** and **Stories**) to be displayed.
+- **Media Check**: All articles (including **Hikayeler**, **Gündem**, **Alara AI**, **Stories**, etc.) must have a valid, expanded image object with a URL. If only an ID (string) is returned, it means the media link is broken, and the article is hidden.
+
+This fix prevents these "zombie" articles from appearing on the UI even if the CMS data is incomplete.
+
+## Performance Improvements
+
+### 1. Parallelized Data Fetching
+Previously, the homepage fetched content sequentially, leading to a "Waterfall" effect that contributed to a high TTFB (5.6s). I have refactored [lib/homepage.ts](file:///Users/FAU1MU/development/Vscode%20Projects/Scrolli/scrolli-website-project/lib/homepage.ts) and [app/page.tsx](file:///Users/FAU1MU/development/Vscode%20Projects/Scrolli/scrolli-website-project/app/page.tsx) to fire all primary API requests concurrently using `Promise.all`.
+
+- **Impact**: Significant reduction in server-side processing time.
+
+### 2. Image Optimization (Resolution Fix)
+To prevent the loading of 4K assets for small thumbnails, I have updated the `sizes` attribute in all major homepage sections.
+
+- **Optimized Files**:
+  - [HeroSection.tsx](file:///Users/FAU1MU/development/Vscode%20Projects/Scrolli/scrolli-website-project/components/sections/home/HeroSection.tsx)
+  - [Section1.tsx](file:///Users/FAU1MU/development/Vscode%20Projects/Scrolli/scrolli-website-project/components/sections/home/Section1.tsx)
+  - [Section3.tsx](file:///Users/FAU1MU/development/Vscode%20Projects/Scrolli/scrolli-website-project/components/sections/home/Section3.tsx)
+
+### 3. Stability & TTFB (ISR Integration)
+I have refactored [page.tsx](file:///Users/FAU1MU/development/Vscode%20Projects/Scrolli/scrolli-website-project/app/page.tsx) to move from a "force-dynamic" SSR model to an **ISR (Incremental Static Regeneration)** model with a 60-second revalidation period.
+
+## Verification Results
+
+### Automated Performance Audit
+- [x] Sequential awaits removed.
+- [x] Section 3 Waterfall eliminated.
+- [x] Hero image `priority` and `sizes` corrected.
+- [x] "Zombie" articles filtered out from the homepage.

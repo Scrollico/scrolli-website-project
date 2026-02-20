@@ -24,7 +24,8 @@ interface VideoItem {
   };
 }
 
-const videos: VideoItem[] = [
+/** Hardcoded fallback videos — used when CMS data is unavailable */
+const FALLBACK_VIDEOS: VideoItem[] = [
   {
     id: '1',
     title: "Türkiye'de yasa dışı bahis piyasasında dönen paranın 40 milyar dolar olduğu tahmin ediliyor.",
@@ -61,6 +62,11 @@ const videos: VideoItem[] = [
     videoUrl: "/assets/videos/scrolli7.mp4",
   },
 ];
+
+interface VideoSectionProps {
+  /** CMS video data. Falls back to hardcoded videos if empty or undefined. */
+  videos?: VideoItem[];
+}
 
 function VideoCard({
   video,
@@ -528,7 +534,8 @@ function VideoPlayerModal({
   return createPortal(modalContent, document.body);
 }
 
-export default function VideoSection() {
+export default function VideoSection({ videos: cmsVideos }: VideoSectionProps = {}) {
+  const videos = cmsVideos && cmsVideos.length > 0 ? cmsVideos : FALLBACK_VIDEOS;
   const [selectedVideoIndex, setSelectedVideoIndex] = useState<number | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const firstVideoRef = useRef<HTMLVideoElement>(null);

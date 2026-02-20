@@ -7,6 +7,9 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
+    // Disable Next.js image optimization for Cloudflare Pages compatibility
+    // Using unoptimized: true forces the use of direct Azure/CMS URLs
+    unoptimized: true,
     // Image optimization settings
     formats: ['image/avif', 'image/webp'],
     qualities: [25, 50, 75, 80, 85, 100],
