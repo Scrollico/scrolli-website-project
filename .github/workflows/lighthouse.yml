@@ -13,13 +13,13 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Wait for Cloudflare Pages deployment
-        uses: Ross-Edwards/wait-for-cloudflare-pages@v2
+        uses: WalshyDev/cf-pages-await@v1
         id: cloudflare
         with:
-          commit-hash: ${{ github.event.pull_request.head.sha || github.sha }}
-          project-name: scrolli-website-project # MUST MATCH CLOUDFLARE PROJECT NAME
-          # Optional: Cloudflare API Token if private
-          # api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          project: scrolli-website-project
+          commitHash: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v12
