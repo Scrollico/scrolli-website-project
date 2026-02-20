@@ -86,8 +86,8 @@ export default function HeroSection({ article }: HeroSectionProps) {
                   className="object-cover object-center md:hidden"
                   priority
                   fetchPriority="high"
-                  sizes="100vw"
-                  quality={80}
+                  sizes="(max-width: 768px) 100vw, 100vw"
+                  quality={75}
                 />
                 {/* Desktop image */}
                 <Image
@@ -97,8 +97,8 @@ export default function HeroSection({ article }: HeroSectionProps) {
                   className="object-cover object-center hidden md:block"
                   priority
                   fetchPriority="high"
-                  sizes="100vw"
-                  quality={80}
+                  sizes="(max-width: 1280px) 100vw, 1280px"
+                  quality={75}
                 />
               </>
             ) : (
@@ -109,8 +109,8 @@ export default function HeroSection({ article }: HeroSectionProps) {
                 className="object-cover object-center"
                 priority
                 fetchPriority="high"
-                sizes="100vw"
-                quality={80}
+                sizes="(max-width: 1280px) 100vw, 1280px"
+                quality={75}
               />
             )}
           </>

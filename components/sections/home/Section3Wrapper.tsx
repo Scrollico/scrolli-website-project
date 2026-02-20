@@ -16,7 +16,15 @@ interface ArticlesByCategory {
  * Fetches Gündem articles from Payload CMS and groups them by category
  * Only Gündem articles are shown (Hikayeler are excluded)
  */
-export default async function Section3Wrapper() {
+interface Section3WrapperProps {
+  articles?: any[]; // PayloadGundem articles
+}
+
+/**
+ * Section3Wrapper
+ * Groups pre-fetched Gündem articles by category
+ */
+export default function Section3Wrapper({ articles = [] }: Section3WrapperProps) {
   let articlesByCategory: ArticlesByCategory = {
     tümü: [],
     eksen: [],
@@ -26,11 +34,8 @@ export default async function Section3Wrapper() {
   };
 
   try {
-    // Fetch all Gündem articles from Payload CMS
-    const gundemArticles = await getAllGundemArticles(50);
-
     // Map Payload articles to Article interface
-    const mappedArticles = gundemArticles.map(mapGundemToArticle);
+    const mappedArticles = articles.map(mapGundemToArticle);
 
     // Group articles by category slug
     const grouped: ArticlesByCategory = {
@@ -44,7 +49,7 @@ export default async function Section3Wrapper() {
     // Filter articles by category
     for (const article of mappedArticles) {
       const categorySlug = (article.category || "").toLowerCase().trim();
-      
+
       if (categorySlug === "eksen") {
         grouped.eksen.push(article);
       } else if (categorySlug === "zest") {
@@ -58,8 +63,7 @@ export default async function Section3Wrapper() {
 
     articlesByCategory = grouped;
   } catch (error) {
-    console.error("Error fetching articles for Section3:", error);
-    // Return empty arrays on error for graceful degradation
+    console.error("Error processing articles for Section3:", error);
   }
 
   return <Section3Dynamic articlesByCategory={articlesByCategory} />;

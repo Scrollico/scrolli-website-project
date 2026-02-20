@@ -1,13 +1,14 @@
-import { fetchArticles, fetchHikayeler, fetchCurations, fetchDailyBriefings } from "./payload/client";
-import { PayloadGundem, PayloadHikayeler, PayloadCuration, PayloadDailyBriefing, PayloadAlaraai } from "./payload/types";
+import { fetchArticles, fetchHikayeler, fetchCurations, fetchDailyBriefings, fetchPayload } from "./payload/client";
+import { PayloadGundem, PayloadHikayeler, PayloadCuration, PayloadDailyBriefing, PayloadAlaraai, PayloadCollab, PayloadStory } from "./payload/types";
 
 export interface HomepageContent {
-  hero: PayloadGundem | PayloadHikayeler | PayloadAlaraai | null;
-  editorsPicks: Array<PayloadGundem | PayloadHikayeler | PayloadCuration | PayloadAlaraai>;
-  verticalList: Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai>;
-  articleList: Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai>;
+  hero: PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory | null;
+  editorsPicks: Array<PayloadGundem | PayloadHikayeler | PayloadCuration | PayloadAlaraai | PayloadCollab | PayloadStory>;
+  verticalList: Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory>;
+  articleList: Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory>;
   hikayeler: Array<PayloadHikayeler>; // Dedicated hikayeler section
   dailyBriefing: PayloadDailyBriefing | null;
+  gundemSection3Articles: PayloadGundem[]; // Added for parallelization
 }
 
 /**
@@ -25,47 +26,28 @@ export async function getHomepageContent(): Promise<HomepageContent> {
   try {
     const ENABLE_LAYOUT_POSITION = process.env.ENABLE_LAYOUT_POSITION === "true";
 
-    // Common fetch: Daily Briefing (always needed)
-    const dailyBriefingRes = await fetchDailyBriefings({
-      limit: 1,
-      sort: "-briefingDate"
-    });
-    const dailyBriefing = dailyBriefingRes.docs[0] || null;
-
     if (ENABLE_LAYOUT_POSITION) {
-      // ============================================
-      // LAYOUT POSITION MODE (when field exists)
-      // ============================================
+      // Step 1: Parallelize all initial data fetching
+      const [dailyBriefingRes, allHikayeler, pinnedHero, pinnedEditorsPicks, allRecentArticles, gundemSection3Res] = await Promise.all([
+        fetchDailyBriefings({ limit: 1, sort: "-briefingDate" }),
+        fetchHikayeler({ limit: 12, depth: 2 }),
+        fetchArticles({ layoutPosition: "hero", limit: 1, depth: 2 }),
+        fetchArticles({ layoutPosition: "editors-picks", limit: 3, depth: 2 }),
+        fetchArticles({ sort: "-publishedAt", limit: 50, depth: 2 }),
+        fetchPayload<PayloadGundem>("gundem", { sort: "-publishedAt", limit: 50, depth: 2 }),
+      ]);
 
-      // Step 0: Get Hikayeler articles for top section and dedicated section
-      const allHikayeler = await fetchHikayeler({
-        limit: 12,
-        depth: 2,
-      });
       const topHikayeler = allHikayeler.slice(0, 4);
+      const dailyBriefing = dailyBriefingRes.docs[0] || null;
+      const gundemSection3Articles = gundemSection3Res.docs || [];
 
-      // Step 1: Get manually pinned articles
-      const pinnedHero = await fetchArticles({
-        layoutPosition: "hero",
-        limit: 1,
-        depth: 2,
-      });
-
-      const pinnedEditorsPicks = await fetchArticles({
-        layoutPosition: "editors-picks",
-        limit: 3,
-        depth: 2,
-      });
-
-      // Step 2: Assemble sections
       // Hero: Pinned hero OR first Hikaye
       const hero = pinnedHero[0] || topHikayeler[0] || null;
-
       const usedSlugs = hero ? [hero.slug] : [];
 
       // Editors Picks: Pinned picks + fill with topHikayeler
-      const editorsPicks: Array<PayloadGundem | PayloadHikayeler | PayloadCuration | PayloadAlaraai> = [...pinnedEditorsPicks];
-      usedSlugs.push(...editorsPicks.map(a => a.slug));
+      const editorsPicks: Array<PayloadGundem | PayloadHikayeler | PayloadCuration | PayloadAlaraai | PayloadCollab | PayloadStory> = [...pinnedEditorsPicks];
+      usedSlugs.push(...editorsPicks.map((a: { slug: string }) => a.slug));
 
       for (const article of topHikayeler) {
         if (editorsPicks.length >= 3) break;
@@ -75,118 +57,69 @@ export async function getHomepageContent(): Promise<HomepageContent> {
         }
       }
 
-      // Calculate auto-fill needs
-      const editorsPicksNeeded = 3 - editorsPicks.length;
-
-      // Get auto-fill articles (excluding used)
-      const allRecentArticles = await fetchArticles({
-        sort: "-publishedAt",
-        limit: 50,
-        depth: 2,
-      });
-
       // Fill remaining editors picks with recent articles
-      if (editorsPicksNeeded > 0) {
-        for (const article of allRecentArticles) {
-          if (editorsPicks.length >= 3) break;
-          if (!usedSlugs.includes(article.slug)) {
-            editorsPicks.push(article);
-            usedSlugs.push(article.slug);
-          }
+      for (const article of allRecentArticles) {
+        if (editorsPicks.length >= 3) break;
+        if (!usedSlugs.includes(article.slug)) {
+          editorsPicks.push(article);
+          usedSlugs.push(article.slug);
         }
       }
 
-      const autoArticles = allRecentArticles
-        .filter(
-          (article) =>
-            article.layoutPosition !== "exclude" &&
-            !usedSlugs.includes(article.slug)
-        );
+      const autoArticles = allRecentArticles.filter(
+        (article: { layoutPosition?: string; slug: string }) => article.layoutPosition !== "exclude" && !usedSlugs.includes(article.slug)
+      );
 
       const verticalList = autoArticles.slice(0, 6);
-
-      const usedSlugsAfterVerticalList = [
-        ...usedSlugs,
-        ...verticalList.map((a) => a.slug)
-      ].filter(Boolean);
+      const usedSlugsAfterVerticalList = [...usedSlugs, ...verticalList.map((a: { slug: string }) => a.slug)].filter(Boolean);
 
       const articleList = allRecentArticles
-        .filter((article) => !usedSlugsAfterVerticalList.includes(article.slug))
+        .filter((article: { slug: string }) => !usedSlugsAfterVerticalList.includes(article.slug))
         .slice(0, 3);
 
-      // Dedicated Hikayeler section (excluding those used at the top)
-      const hikayeler = allHikayeler
-        .filter(a => !usedSlugs.includes(a.slug))
-        .slice(0, 8);
+      const hikayeler = allHikayeler.filter((a: { slug: string }) => !usedSlugs.includes(a.slug)).slice(0, 8);
 
-      return {
-        hero,
-        editorsPicks,
-        verticalList,
-        articleList,
-        hikayeler,
-        dailyBriefing
-      };
+      return { hero, editorsPicks, verticalList, articleList, hikayeler, dailyBriefing, gundemSection3Articles };
     } else {
       // ============================================
-      // FALLBACK MODE (using isFeatured + ordering)
+      // FALLBACK MODE (parallelized)
       // ============================================
 
-      // Fetch Curations (Editor's Picks) - Try fetching specifically from Curations collection first
-      // This is a NEW addition to prioritize Curations in Editor's Picks
-      const curations = await fetchCurations({
-        limit: 3,
-        sort: "-publishedAt"
-      });
+      // Step 1: Fire all fetches at once
+      const [dailyBriefingRes, curationsRes, allHikayeler, featuredArticles, allRecentArticles, gundemSection3Res] = await Promise.all([
+        fetchDailyBriefings({ limit: 1, sort: "-briefingDate" }),
+        fetchCurations({ limit: 3, sort: "-publishedAt" }),
+        fetchHikayeler({ limit: 12, depth: 2 }),
+        fetchArticles({
+          where: { isFeatured: { equals: true } },
+          sort: "-ordering,-publishedAt",
+          limit: 10,
+          depth: 2,
+        }),
+        fetchArticles({ sort: "-publishedAt", limit: 50, depth: 2 }),
+        fetchPayload<PayloadGundem>("gundem", { sort: "-publishedAt", limit: 50, depth: 2 }),
+      ]);
 
-      // Step 1: Get Hikayeler articles for top section and dedicated section
-      const allHikayeler = await fetchHikayeler({
-        limit: 12,
-        depth: 2,
-      });
+      const dailyBriefing = dailyBriefingRes.docs[0] || null;
+      const curations = curationsRes.docs || [];
       const topHikayeler = allHikayeler.slice(0, 4);
+      const gundemSection3Articles = gundemSection3Res.docs || [];
 
-      // Step 2: Get featured articles sorted by ordering
-      const featuredArticles = await fetchArticles({
-        where: { isFeatured: { equals: true } },
-        sort: "-ordering,-publishedAt",
-        limit: 10,
-        depth: 2,
-      });
-
-      // Step 3: Get recent articles for auto-fill
-      const allRecentArticles = await fetchArticles({
-        sort: "-publishedAt",
-        limit: 50,
-        depth: 2,
-      });
-
-      // Step 4: Assemble sections
       // Hero: First Hikaye, or first featured, or first recent
       const hero = topHikayeler[0] || featuredArticles[0] || allRecentArticles[0] || null;
-
-      // Editors Picks:
-      // STRATEGY: 
-      // 1. Use Curations if available
-      // 2. If not enough Curations, fill with Featured Hikayeler
-      // 3. If still not enough, fill with Featured Gundem
-      // 4. Finally Recent
-
       const usedSlugs = hero ? [hero.slug] : [];
-      const editorsPicks: Array<PayloadGundem | PayloadHikayeler | PayloadCuration | PayloadAlaraai> = [];
+
+      const editorsPicks: Array<PayloadGundem | PayloadHikayeler | PayloadCuration | PayloadAlaraai | PayloadCollab | PayloadStory> = [];
 
       // 1. Add Curations
-      if (curations && curations.docs) {
-        curations.docs.forEach(curation => {
-          if (editorsPicks.length < 3) {
-            editorsPicks.push(curation);
-            // Curations have slugs too, add to used list just in case of cross-posting (unlikely but safe)
-            if (curation.slug) usedSlugs.push(curation.slug);
-          }
-        });
-      }
+      curations.forEach((curation: PayloadCuration) => {
+        if (editorsPicks.length < 3) {
+          editorsPicks.push(curation);
+          if (curation.slug) usedSlugs.push(curation.slug);
+        }
+      });
 
-      // 2. Fill with remaining topHikayeler (up to 3)
+      // 2. Fill with topHikayeler
       for (const article of topHikayeler) {
         if (editorsPicks.length >= 3) break;
         if (!usedSlugs.includes(article.slug)) {
@@ -213,55 +146,25 @@ export async function getHomepageContent(): Promise<HomepageContent> {
         }
       }
 
-      // Vertical list: Remaining recent articles (excluding used ones)
-      // Note: We need to filter out IDs/Slugs used in editors picks properly.
-      // Since editorsPicks can now contain Curations (which are not in allRecentArticles),
-      // we only filter by slugs present in allRecentArticles or general check.
+      const usedSlugsAfterEditorsPicks = [...usedSlugs, ...editorsPicks.map((a: { slug: string }) => a.slug)].filter(Boolean);
+      const remainingArticles = allRecentArticles.filter((article: { slug: string }) => !usedSlugsAfterEditorsPicks.includes(article.slug));
 
-      const usedSlugsAfterEditorsPicks = [
-        ...usedSlugs,
-        ...editorsPicks.map((a) => a.slug)
-      ].filter(Boolean);
-
-      const remainingArticles = allRecentArticles.filter(
-        (article) => !usedSlugsAfterEditorsPicks.includes(article.slug)
-      );
       const verticalList = remainingArticles.slice(0, 6);
+      const usedSlugsAfterVerticalList = [...usedSlugsAfterEditorsPicks, ...verticalList.map((a: { slug: string }) => a.slug)].filter(Boolean);
 
-      const usedSlugsAfterVerticalList = [
-        ...usedSlugsAfterEditorsPicks,
-        ...verticalList.map((a) => a.slug)
-      ].filter(Boolean);
-
-      // ArticleList: Next 3 articles after verticalList
       const articleList = allRecentArticles
-        .filter((article) => !usedSlugsAfterVerticalList.includes(article.slug))
+        .filter((article: { slug: string }) => !usedSlugsAfterVerticalList.includes(article.slug))
         .slice(0, 3);
 
-      // Dedicated Hikayeler section (excluding those used at the top)
-      const hikayeler = allHikayeler
-        .filter(a => !usedSlugsAfterEditorsPicks.includes(a.slug))
-        .slice(0, 8);
+      const hikayeler = allHikayeler.filter((a: { slug: string }) => !usedSlugsAfterEditorsPicks.includes(a.slug)).slice(0, 8);
 
-      return {
-        hero,
-        editorsPicks,
-        verticalList,
-        articleList,
-        hikayeler,
-        dailyBriefing
-      };
+      return { hero, editorsPicks, verticalList, articleList, hikayeler, dailyBriefing, gundemSection3Articles };
     }
   } catch (error) {
     console.error("Error fetching homepage content:", error);
-    // Return empty structure on error
     return {
-      hero: null,
-      editorsPicks: [],
-      verticalList: [],
-      articleList: [],
-      hikayeler: [],
-      dailyBriefing: null
+      hero: null, editorsPicks: [], verticalList: [], articleList: [], hikayeler: [], dailyBriefing: null, gundemSection3Articles: []
     };
   }
 }
+

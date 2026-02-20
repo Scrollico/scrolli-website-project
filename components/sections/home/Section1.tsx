@@ -49,13 +49,13 @@ export default function Section1({ title = "Editor's Picks", articles, articleLi
                       colors.surface.elevated
                     )}
                   >
-{(article.thumbnail ?? article.image) ? (
-                        <Image
+                    {(article.thumbnail ?? article.image) ? (
+                      <Image
                         src={article.thumbnail ?? article.image ?? ""}
                         alt={article.title}
                         fill
                         className="object-cover object-center w-full h-full"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1280px) 33vw, 420px"
                         style={{ objectFit: 'cover' }}
                       />
                     ) : (

@@ -7,18 +7,21 @@ import Section1 from '@/components/sections/home/Section1';
 import ExclusiveStoriesSection from '@/components/sections/home/ExclusiveStoriesSection';
 import LazySections from '@/components/sections/home/LazySections';
 import Section3Wrapper from '@/components/sections/home/Section3Wrapper';
-import { getHomepageContent } from "@/lib/homepage";
+import { getHomepageContent, HomepageContent } from "@/lib/homepage";
 
-// Always fetch from Payload on the server (no static cache) so articles show after env vars are set
-export const dynamic = "force-dynamic";
-export const revalidate = 30;
+// Use ISR with 60-second revalidation for performance. 
+// force-dynamic was likely causing high TTFB and potential SSR crashes.
+export const revalidate = 60;
 import { getNavigation } from "@/lib/payload/client";
-import { getAuthorsWithLatestArticles } from "@/lib/payload/authors";
+import { getAuthorsWithLatestArticles, AuthorWithLatestArticle } from "@/lib/payload/authors";
+import { PayloadNavigation } from "@/lib/payload/types";
 import {
   mapGundemToArticle,
   mapHikayelerToArticle,
   mapCurationToArticle,
   mapDailyBriefingToArticle,
+  mapCollabToArticle,
+  mapStoryToArticle,
 } from "@/lib/payload/types";
 import { Article } from "@/types/content";
 import DailyBriefingSection from "@/components/sections/home/DailyBriefingSection";
@@ -32,7 +35,7 @@ export default async function Home() {
       getAuthorsWithLatestArticles(5),
     ]).then((results) => [
       results[0].status === "fulfilled"
-        ? (results[0] as PromiseFulfilledResult<any>).value
+        ? (results[0] as PromiseFulfilledResult<HomepageContent>).value
         : {
           hero: null,
           editorsPicks: [],
@@ -42,26 +45,43 @@ export default async function Home() {
           dailyBriefing: null,
         },
       results[1].status === "fulfilled"
-        ? (results[1] as PromiseFulfilledResult<any>).value
+        ? (results[1] as PromiseFulfilledResult<PayloadNavigation | null>).value
         : null,
       results[2].status === "fulfilled"
-        ? (results[2] as PromiseFulfilledResult<any>).value
+        ? (results[2] as PromiseFulfilledResult<AuthorWithLatestArticle[]>).value
         : [],
-    ]) as [any, any, any];
+    ]) as [HomepageContent, PayloadNavigation | null, AuthorWithLatestArticle[]];
 
     // Map Payload articles to Article interface for components
     const heroArticle: Article | null = homepageContent.hero
       ? homepageContent.hero.source === "Gündem"
         ? mapGundemToArticle(homepageContent.hero)
-        : mapHikayelerToArticle(homepageContent.hero)
+        : homepageContent.hero.source === "Alara AI"
+          ? mapGundemToArticle(homepageContent.hero)
+          : homepageContent.hero.source === "Collabs"
+            ? mapCollabToArticle(homepageContent.hero)
+            : homepageContent.hero.source === "Stories"
+              ? mapStoryToArticle(homepageContent.hero)
+              : mapHikayelerToArticle(homepageContent.hero)
       : null;
 
     const editorsPicksArticles: Article[] = homepageContent.editorsPicks.map(
       (article) => {
         if ("source" in article) {
-          return article.source === "Gündem"
-            ? mapGundemToArticle(article)
-            : mapHikayelerToArticle(article);
+          switch (article.source) {
+            case "Gündem":
+              return mapGundemToArticle(article);
+            case "Alara AI":
+              return mapGundemToArticle(article);
+            case "Collabs":
+              return mapCollabToArticle(article);
+            case "Stories":
+              return mapStoryToArticle(article);
+            case "Hikayeler":
+            default:
+              // @ts-ignore - Handle fallback safely
+              return mapHikayelerToArticle(article as any);
+          }
         } else {
           return mapCurationToArticle(article);
         }
@@ -69,17 +89,41 @@ export default async function Home() {
     );
 
     const verticalListArticles: Article[] = homepageContent.verticalList.map(
-      (article) =>
-        article.source === "Gündem"
-          ? mapGundemToArticle(article)
-          : mapHikayelerToArticle(article)
+      (article) => {
+        switch (article.source) {
+          case "Gündem":
+            return mapGundemToArticle(article);
+          case "Alara AI":
+            return mapGundemToArticle(article);
+          case "Collabs":
+            return mapCollabToArticle(article);
+          case "Stories":
+            return mapStoryToArticle(article);
+          case "Hikayeler":
+          default:
+            // @ts-ignore
+            return mapHikayelerToArticle(article as any);
+        }
+      }
     );
 
     const articleListArticles: Article[] = homepageContent.articleList.map(
-      (article) =>
-        article.source === "Gündem"
-          ? mapGundemToArticle(article)
-          : mapHikayelerToArticle(article)
+      (article) => {
+        switch (article.source) {
+          case "Gündem":
+            return mapGundemToArticle(article);
+          case "Alara AI":
+            return mapGundemToArticle(article);
+          case "Collabs":
+            return mapCollabToArticle(article);
+          case "Stories":
+            return mapStoryToArticle(article);
+          case "Hikayeler":
+          default:
+            // @ts-ignore
+            return mapHikayelerToArticle(article as any);
+        }
+      }
     );
 
     const hikayelerArticles: Article[] = (homepageContent.hikayeler || []).map(
@@ -107,7 +151,7 @@ export default async function Home() {
           articles={verticalListArticles}
           hikayeler={hikayelerArticles}
         />
-        <Section3Wrapper />
+        <Section3Wrapper articles={homepageContent.gundemSection3Articles} />
       </Layout>
     );
   } catch (error) {

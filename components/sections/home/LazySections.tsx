@@ -54,12 +54,27 @@ const NewsletterPopup = dynamic(
   { ssr: false }
 );
 
+interface VideoData {
+  id: string;
+  title: string;
+  videoUrl: string;
+  overlayText?: {
+    location?: string;
+    date?: string;
+    quote?: string;
+    source?: string;
+    author?: string;
+    role?: string;
+  };
+}
+
 interface LazySectionsProps {
   articles: Article[];
   hikayeler: Article[];
+  videos?: VideoData[];
 }
 
-export default function LazySections({ articles, hikayeler }: LazySectionsProps) {
+export default function LazySections({ articles, hikayeler, videos }: LazySectionsProps) {
   const hikayelerCardItems = mapArticlesToCardItems(hikayeler);
 
   return (
@@ -106,7 +121,7 @@ export default function LazySections({ articles, hikayeler }: LazySectionsProps)
         <section className={cn(sectionPadding.md, marginBottom.lg, colors.background.base, "relative overflow-hidden")}>
           {/* Background gradient accent */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-3xl -z-10" />
-          
+
           <div className="w-full px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl relative z-10">
             <div className="mb-6">
               <Heading
@@ -153,7 +168,7 @@ export default function LazySections({ articles, hikayeler }: LazySectionsProps)
         </section>
       )}
 
-      <VideoSection />
+      <VideoSection videos={videos} />
       <NewsletterPopup />
     </>
   );

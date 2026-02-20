@@ -2,6 +2,8 @@ import {
   PayloadResponse,
   PayloadGundem,
   PayloadHikayeler,
+  PayloadCollab,
+  PayloadStory,
   PayloadCategory,
   PayloadAuthor,
   PayloadTag,
@@ -11,6 +13,7 @@ import {
   PayloadDailyBriefing,
   PayloadCuration,
   PayloadAlaraai,
+  PayloadVideo,
 } from "./types";
 
 // Get environment variables - only available on server
@@ -134,7 +137,7 @@ function buildQueryString(params: FetchParams): string {
  */
 export async function fetchArticles(
   params: FetchParams = {},
-): Promise<Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai>> {
+): Promise<Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory>> {
   try {
     const config = getPayloadConfig();
     if (!config) {
@@ -150,7 +153,7 @@ export async function fetchArticles(
     // Revalidation strategy: 30 seconds for articles (faster new article discovery)
     // Navigation and site settings use longer revalidation (1 hour) as they change less frequently
     // Use Promise.allSettled to handle failures gracefully without breaking the page
-    const [gundemResult, hikayelerResult, alaraaiResult] = await Promise.allSettled([
+    const [gundemResult, hikayelerResult, alaraaiResult, collabsResult, storiesResult] = await Promise.allSettled([
       fetch(`${config.url}/gundem?${fullQuery}`, {
         headers: config.headers,
         next: { revalidate: 30 },
@@ -163,47 +166,36 @@ export async function fetchArticles(
         headers: config.headers,
         next: { revalidate: 30 },
       }),
+      fetch(`${config.url}/collabs?${fullQuery}`, {
+        headers: config.headers,
+        next: { revalidate: 30 },
+      }),
+      fetch(`${config.url}/stories?${fullQuery}`, {
+        headers: config.headers,
+        next: { revalidate: 30 },
+      }),
     ]);
 
     // Extract responses, handling both fulfilled and rejected promises
-    const gundemRes:
-      | Response
-      | { ok: false; status: number; statusText: string } =
-      gundemResult.status === "fulfilled" ?
-        gundemResult.value
-        : { ok: false, status: 500, statusText: "Network Error" };
-
-    const hikayelerRes:
-      | Response
-      | { ok: false; status: number; statusText: string } =
-      hikayelerResult.status === "fulfilled" ?
-        hikayelerResult.value
-        : { ok: false, status: 500, statusText: "Network Error" };
-
-    const alaraaiRes:
-      | Response
-      | { ok: false; status: number; statusText: string } =
-      alaraaiResult.status === "fulfilled" ?
-        alaraaiResult.value
-        : { ok: false, status: 500, statusText: "Network Error" };
+    const gundemRes = gundemResult.status === "fulfilled" ? gundemResult.value : { ok: false, status: 500, statusText: "Network Error" };
+    const hikayelerRes = hikayelerResult.status === "fulfilled" ? hikayelerResult.value : { ok: false, status: 500, statusText: "Network Error" };
+    const alaraaiRes = alaraaiResult.status === "fulfilled" ? alaraaiResult.value : { ok: false, status: 500, statusText: "Network Error" };
+    const collabsRes = collabsResult.status === "fulfilled" ? collabsResult.value : { ok: false, status: 500, statusText: "Network Error" };
+    const storiesRes = storiesResult.status === "fulfilled" ? storiesResult.value : { ok: false, status: 500, statusText: "Network Error" };
 
     // Log errors if any
-    if (gundemResult.status === "rejected") {
-      console.warn("Failed to fetch Gündem:", gundemResult.reason);
-    }
-    if (hikayelerResult.status === "rejected") {
-      console.warn("Failed to fetch Hikayeler:", hikayelerResult.reason);
-    }
-    if (alaraaiResult.status === "rejected") {
-      console.warn("Failed to fetch Alara AI:", alaraaiResult.reason);
-    }
+    if (gundemResult.status === "rejected") console.warn("Failed to fetch Gündem:", gundemResult.reason);
+    if (hikayelerResult.status === "rejected") console.warn("Failed to fetch Hikayeler:", hikayelerResult.reason);
+    if (alaraaiResult.status === "rejected") console.warn("Failed to fetch Alara AI:", alaraaiResult.reason);
+    if (collabsResult.status === "rejected") console.warn("Failed to fetch Collabs:", collabsResult.reason);
+    if (storiesResult.status === "rejected") console.warn("Failed to fetch Stories:", storiesResult.reason);
 
     // Handle partial failures gracefully - return what we can get
-    const results: Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai> = [];
+    const results: Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory> = [];
 
     if (gundemRes.ok) {
       try {
-        const gundem = await gundemRes.json();
+        const gundem = await (gundemRes as Response).json();
         // Handle wrapped response format: { success: true, data: [...] }
         let docs = [];
         if (gundem.success && Array.isArray(gundem.data)) {
@@ -229,7 +221,7 @@ export async function fetchArticles(
 
     if (hikayelerRes.ok) {
       try {
-        const hikayeler = await hikayelerRes.json();
+        const hikayeler = await (hikayelerRes as Response).json();
         // Handle wrapped response format: { success: true, data: [...] }
         let docs = [];
         if (hikayeler.success && Array.isArray(hikayeler.data)) {
@@ -255,15 +247,8 @@ export async function fetchArticles(
 
     if (alaraaiRes.ok) {
       try {
-        const alaraai = await alaraaiRes.json();
-        // Handle wrapped response format: { success: true, data: [...] }
-        let docs = [];
-        if (alaraai.success && Array.isArray(alaraai.data)) {
-          docs = alaraai.data;
-        } else if (Array.isArray(alaraai?.docs)) {
-          docs = alaraai.docs;
-        }
-
+        const alaraai = await (alaraaiRes as Response).json();
+        let docs = alaraai.success && Array.isArray(alaraai.data) ? alaraai.data : (Array.isArray(alaraai?.docs) ? alaraai.docs : []);
         const alaraaiWithSource = docs.map((doc: any) => ({
           ...doc,
           source: "Alara AI" as const,
@@ -274,23 +259,46 @@ export async function fetchArticles(
         console.error("Error parsing Alara AI response:", error);
       }
     } else {
-      console.warn(
-        `Failed to fetch Alara AI: ${alaraaiRes.status} ${alaraaiRes.statusText}`,
-      );
+      console.warn(`Failed to fetch Alara AI: ${(alaraaiRes as Response).status}`);
+    }
+
+    if (collabsRes.ok) {
+      try {
+        const collabs = await (collabsRes as Response).json();
+        let docs = collabs.success && Array.isArray(collabs.data) ? collabs.data : (Array.isArray(collabs?.docs) ? collabs.docs : []);
+        const collabsWithSource = docs.map((doc: any) => ({
+          ...doc,
+          source: "Collabs" as const,
+          collection: "collabs" as const,
+        }));
+        results.push(...collabsWithSource);
+      } catch (error) {
+        console.error("Error parsing Collabs response:", error);
+      }
+    } else {
+      console.warn(`Failed to fetch Collabs: ${(collabsRes as Response).status}`);
+    }
+
+    if (storiesRes.ok) {
+      try {
+        const stories = await (storiesRes as Response).json();
+        let docs = stories.success && Array.isArray(stories.data) ? stories.data : (Array.isArray(stories?.docs) ? stories.docs : []);
+        const storiesWithSource = docs.map((doc: any) => ({
+          ...doc,
+          source: "Stories" as const,
+          collection: "stories" as const,
+        }));
+        results.push(...storiesWithSource);
+      } catch (error) {
+        console.error("Error parsing Stories response:", error);
+      }
+    } else {
+      console.warn(`Failed to fetch Stories: ${(storiesRes as Response).status}`);
     }
 
     // If all failed, throw error
-    // Only throw if all requests actually failed (not OK status)
-    // If some are OK but results is empty, that's fine (no articles available)
-    if (results.length === 0 && (!gundemRes.ok || !hikayelerRes.ok || !alaraaiRes.ok)) {
-      // Don't throw if Payload CMS is just unavailable - return empty array instead
-      // This allows the page to still render (e.g., pricing page doesn't need articles)
-      console.warn(
-        `Payload CMS unavailable: Gündem (${gundemRes.status || "Network Error"
-        }), Hikayeler (${hikayelerRes.status || "Network Error"})`,
-      );
-
-      // Return empty array instead of throwing - allows page to render
+    if (results.length === 0 && (!gundemRes.ok || !hikayelerRes.ok || !alaraaiRes.ok || !collabsRes.ok || !storiesRes.ok)) {
+      console.warn("Payload CMS unavailable: All collections failed to load");
       return [];
     }
 
@@ -300,9 +308,8 @@ export async function fetchArticles(
         new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
     );
 
-    // Client-side deduplication: Filter duplicates by slug (primary) or id (fallback)
-    // Keep the most recent article if duplicates exist
-    const uniqueArticles = new Map<string, PayloadGundem | PayloadHikayeler | PayloadAlaraai>();
+    // Client-side deduplication
+    const uniqueArticles = new Map<string, PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory>();
 
     for (const article of articles) {
       const key = article.slug || article.id;
@@ -348,6 +355,46 @@ export async function fetchHikayeler(
   }
 }
 
+export async function fetchCollabs(
+  params: FetchParams = {},
+): Promise<PayloadCollab[]> {
+  try {
+    const response = await fetchPayload<PayloadCollab>("collabs", {
+      ...params,
+      sort: params.sort || "-publishedAt",
+      depth: params.depth || 2,
+    });
+
+    return response.docs.map((doc) => ({
+      ...doc,
+      source: "Collabs" as const,
+    }));
+  } catch (error) {
+    console.error("Error fetching Collabs articles:", error);
+    return [];
+  }
+}
+
+export async function fetchStories(
+  params: FetchParams = {},
+): Promise<PayloadStory[]> {
+  try {
+    const response = await fetchPayload<PayloadStory>("stories", {
+      ...params,
+      sort: params.sort || "-publishedAt",
+      depth: params.depth || 2,
+    });
+
+    return response.docs.map((doc) => ({
+      ...doc,
+      source: "Stories" as const,
+    }));
+  } catch (error) {
+    console.error("Error fetching Stories articles:", error);
+    return [];
+  }
+}
+
 /**
  * Fetch from single collection (for collection-specific queries)
  */
@@ -359,7 +406,7 @@ function emptyPayloadResponse<T>(): PayloadResponse<T> {
   return { docs: [], totalDocs: 0, limit: 0, totalPages: 0 };
 }
 
-async function fetchPayload<T>(
+export async function fetchPayload<T>(
   collection: string,
   query?: FetchParams,
   retries = 2,
@@ -447,10 +494,10 @@ function stripArticleTimestamp(slug: string): string {
   return slug.replace(/-\d{13}$/, "");
 }
 
-// Primary function - fetch from both collections
+// Primary function - fetch from all collections
 export async function getArticleBySlug(
   slug: string,
-): Promise<PayloadGundem | PayloadHikayeler | PayloadAlaraai | null> {
+): Promise<PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory | null> {
   try {
     // 1. Try exact match first
     const articles = await fetchArticles({
@@ -484,9 +531,9 @@ export async function getArticleBySlug(
  * This is more efficient than searching by slug
  */
 export async function getArticleById(
-  collection: "gundem" | "hikayeler" | "alaraai",
+  collection: "gundem" | "hikayeler" | "alaraai" | "collabs" | "stories",
   id: string,
-): Promise<PayloadGundem | PayloadHikayeler | PayloadAlaraai | null> {
+): Promise<PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory | null> {
   try {
     const config = getPayloadConfig();
     if (!config) {
@@ -534,7 +581,7 @@ export async function getArticleById(
 }
 
 export async function getFeaturedArticles(): Promise<
-  Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai>
+  Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory>
 > {
   return fetchArticles({
     where: { isFeatured: { equals: true } },
@@ -589,7 +636,7 @@ export async function getRecentArticles(limit = 10) {
 export async function getArticlesByAuthorId(
   authorId: string,
   limit = 50,
-): Promise<Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai>> {
+): Promise<Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory>> {
   return fetchArticles({
     where: { author: { equals: authorId } },
     sort: "-publishedAt",
@@ -610,6 +657,24 @@ export async function getGundemBySlug(slug: string) {
 
 export async function getHikayelerBySlug(slug: string) {
   const response = await fetchPayload<PayloadHikayeler>("hikayeler", {
+    where: { slug: { equals: slug } },
+    limit: 1,
+    depth: 2,
+  });
+  return response.docs[0] || null;
+}
+
+export async function getCollabBySlug(slug: string) {
+  const response = await fetchPayload<PayloadCollab>("collabs", {
+    where: { slug: { equals: slug } },
+    limit: 1,
+    depth: 2,
+  });
+  return response.docs[0] || null;
+}
+
+export async function getStoryBySlug(slug: string) {
+  const response = await fetchPayload<PayloadStory>("stories", {
     where: { slug: { equals: slug } },
     limit: 1,
     depth: 2,
@@ -763,5 +828,18 @@ export async function fetchCurations(
     ...params,
     sort: params.sort || "-publishedAt",
     depth: params.depth || 2,
+  });
+}
+
+/**
+ * Fetch videos from the videos collection
+ */
+export async function fetchVideos(
+  params: FetchParams = {},
+): Promise<PayloadResponse<PayloadVideo>> {
+  return fetchPayload<PayloadVideo>("videos", {
+    ...params,
+    sort: params.sort || "-ordering,-publishedAt",
+    depth: params.depth || 1,
   });
 }
