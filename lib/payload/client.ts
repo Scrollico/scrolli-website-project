@@ -16,6 +16,51 @@ import {
   PayloadVideo,
 } from "./types";
 
+// --- Sub-Second Mastery: Cache & Request Collapsing ---
+const MEMORY_CACHE = new Map<string, { data: any; timestamp: number }>();
+const PENDING_REQUESTS = new Map<string, Promise<any>>();
+const CACHE_TTL = 30 * 1000; // 30 seconds memory TTL
+
+// Cache disabled in development for faster testing
+const IS_DEV = process.env.NODE_ENV === "development";
+
+/**
+ * Utility to handle request collapsing and in-memory caching
+ */
+async function withCache<T>(key: string, fetcher: () => Promise<T>): Promise<T> {
+  // 1. Check Memory Cache
+  if (!IS_DEV) {
+    const cached = MEMORY_CACHE.get(key);
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+      return cached.data;
+    }
+  }
+
+  // 2. Check Pending Requests (Collapsing)
+  const pending = PENDING_REQUESTS.get(key);
+  if (pending) {
+    return pending;
+  }
+
+  // 3. Execute and store
+  if (!IS_DEV) {
+    const promise = fetcher().then(data => {
+      MEMORY_CACHE.set(key, { data, timestamp: Date.now() });
+      PENDING_REQUESTS.delete(key);
+      return data;
+    }).catch(err => {
+      PENDING_REQUESTS.delete(key);
+      throw err;
+    });
+
+    PENDING_REQUESTS.set(key, promise);
+    return promise;
+  }
+
+  return fetcher();
+}
+// ------------------------------------------------------
+
 // Get environment variables - only available on server
 // On client or when env vars are missing (e.g. Vercel build/runtime before env is set), return null
 // so pages can render with empty/fallback content instead of 500.
@@ -58,6 +103,7 @@ interface FetchParams {
   page?: number;
   where?: Record<string, any>;
   depth?: number;
+  collections?: Array<"gundem" | "hikayeler" | "alaraai" | "collabs" | "stories">;
 }
 
 /**
@@ -81,9 +127,10 @@ function buildQueryString(params: FetchParams): string {
     queryParams.append("where[layoutPosition][equals]", params.layoutPosition);
   }
 
-  if (params.sort) {
-    queryParams.append("sort", params.sort);
-  }
+  // DEFAULT SORT: Always sort by publishedAt descending unless specified otherwise
+  // This ensures we get the latest content when hitting limits
+  const sort = params.sort || "-publishedAt";
+  queryParams.append("sort", sort);
   if (params.limit) {
     queryParams.append("limit", String(params.limit));
   }
@@ -138,6 +185,13 @@ function buildQueryString(params: FetchParams): string {
 export async function fetchArticles(
   params: FetchParams = {},
 ): Promise<Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory>> {
+  const cacheKey = `articles:${JSON.stringify(params)}`;
+  return withCache(cacheKey, () => fetchArticlesInternal(params));
+}
+
+async function fetchArticlesInternal(
+  params: FetchParams = {},
+): Promise<Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory>> {
   try {
     const config = getPayloadConfig();
     if (!config) {
@@ -146,159 +200,65 @@ export async function fetchArticles(
     }
 
     const queryString = buildQueryString(params);
-    const cacheBuster = `cb=${Date.now()}`;
-    const sep = queryString ? "&" : "";
-    const fullQuery = `${queryString}${sep}${cacheBuster}`;
+    const fullQuery = queryString;
 
     // Revalidation strategy: 30 seconds for articles (faster new article discovery)
     // Navigation and site settings use longer revalidation (1 hour) as they change less frequently
-    // Use Promise.allSettled to handle failures gracefully without breaking the page
-    const [gundemResult, hikayelerResult, alaraaiResult, collabsResult, storiesResult] = await Promise.allSettled([
-      fetch(`${config.url}/gundem?${fullQuery}`, {
-        headers: config.headers,
-        next: { revalidate: 30 },
-      }),
-      fetch(`${config.url}/hikayeler?${fullQuery}`, {
-        headers: config.headers,
-        next: { revalidate: 30 },
-      }),
-      fetch(`${config.url}/alaraai?${fullQuery}`, {
-        headers: config.headers,
-        next: { revalidate: 30 },
-      }),
-      fetch(`${config.url}/collabs?${fullQuery}`, {
-        headers: config.headers,
-        next: { revalidate: 30 },
-      }),
-      fetch(`${config.url}/stories?${fullQuery}`, {
-        headers: config.headers,
-        next: { revalidate: 30 },
-      }),
-    ]);
+    const targetCollections = params.collections || ["gundem", "hikayeler", "alaraai", "collabs", "stories"];
 
-    // Extract responses, handling both fulfilled and rejected promises
-    const gundemRes = gundemResult.status === "fulfilled" ? gundemResult.value : { ok: false, status: 500, statusText: "Network Error" };
-    const hikayelerRes = hikayelerResult.status === "fulfilled" ? hikayelerResult.value : { ok: false, status: 500, statusText: "Network Error" };
-    const alaraaiRes = alaraaiResult.status === "fulfilled" ? alaraaiResult.value : { ok: false, status: 500, statusText: "Network Error" };
-    const collabsRes = collabsResult.status === "fulfilled" ? collabsResult.value : { ok: false, status: 500, statusText: "Network Error" };
-    const storiesRes = storiesResult.status === "fulfilled" ? storiesResult.value : { ok: false, status: 500, statusText: "Network Error" };
+    const fetchPromises = targetCollections.map(collection =>
+      fetch(`${config.url}/${collection}?${fullQuery}`, {
+        headers: config.headers,
+        next: { revalidate: 30 },
+      })
+    );
 
-    // Log errors if any
-    if (gundemResult.status === "rejected") console.warn("Failed to fetch Gündem:", gundemResult.reason);
-    if (hikayelerResult.status === "rejected") console.warn("Failed to fetch Hikayeler:", hikayelerResult.reason);
-    if (alaraaiResult.status === "rejected") console.warn("Failed to fetch Alara AI:", alaraaiResult.reason);
-    if (collabsResult.status === "rejected") console.warn("Failed to fetch Collabs:", collabsResult.reason);
-    if (storiesResult.status === "rejected") console.warn("Failed to fetch Stories:", storiesResult.reason);
-
-    // Handle partial failures gracefully - return what we can get
+    const settledResults = await Promise.allSettled(fetchPromises);
     const results: Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory> = [];
+    let anySuccess = false;
 
-    if (gundemRes.ok) {
-      try {
-        const gundem = await (gundemRes as Response).json();
-        // Handle wrapped response format: { success: true, data: [...] }
-        let docs = [];
-        if (gundem.success && Array.isArray(gundem.data)) {
-          docs = gundem.data;
-        } else if (Array.isArray(gundem?.docs)) {
-          docs = gundem.docs;
+    for (let i = 0; i < targetCollections.length; i++) {
+      const collection = targetCollections[i];
+      const result = settledResults[i];
+
+      if (result.status === "fulfilled" && result.value.ok) {
+        try {
+          const data = await result.value.json();
+          let docs = [];
+          if (data.success && Array.isArray(data.data)) {
+            docs = data.data;
+          } else if (Array.isArray(data?.docs)) {
+            docs = data.docs;
+          }
+
+          const sourceMap: Record<string, string> = {
+            gundem: "Gündem",
+            hikayeler: "Hikayeler",
+            alaraai: "Alara AI",
+            collabs: "Collabs",
+            stories: "Stories"
+          };
+
+          const withSource = docs.map((doc: any) => ({
+            ...doc,
+            source: (sourceMap[collection] || collection) as any,
+            collection: collection as any,
+          }));
+          results.push(...withSource);
+          anySuccess = true;
+        } catch (error) {
+          console.error(`Error parsing ${collection} response:`, error);
         }
-
-        const gundemWithSource = docs.map((doc: any) => ({
-          ...doc,
-          source: "Gündem" as const,
-          collection: "gundem" as const,
-        }));
-        results.push(...gundemWithSource);
-      } catch (error) {
-        console.error("Error parsing Gündem response:", error);
+      } else if (result.status === "rejected") {
+        console.warn(`Failed to fetch ${collection}:`, result.reason);
+      } else if (result.status === "fulfilled") {
+        console.warn(`Failed to fetch ${collection}: ${result.value.status} ${result.value.statusText}`);
       }
-    } else {
-      console.warn(
-        `Failed to fetch Gündem: ${gundemRes.status} ${gundemRes.statusText}`,
-      );
     }
 
-    if (hikayelerRes.ok) {
-      try {
-        const hikayeler = await (hikayelerRes as Response).json();
-        // Handle wrapped response format: { success: true, data: [...] }
-        let docs = [];
-        if (hikayeler.success && Array.isArray(hikayeler.data)) {
-          docs = hikayeler.data;
-        } else if (Array.isArray(hikayeler?.docs)) {
-          docs = hikayeler.docs;
-        }
-
-        const hikayelerWithSource = docs.map((doc: any) => ({
-          ...doc,
-          source: "Hikayeler" as const,
-          collection: "hikayeler" as const,
-        }));
-        results.push(...hikayelerWithSource);
-      } catch (error) {
-        console.error("Error parsing Hikayeler response:", error);
-      }
-    } else {
-      console.warn(
-        `Failed to fetch Hikayeler: ${hikayelerRes.status} ${hikayelerRes.statusText}`,
-      );
-    }
-
-    if (alaraaiRes.ok) {
-      try {
-        const alaraai = await (alaraaiRes as Response).json();
-        let docs = alaraai.success && Array.isArray(alaraai.data) ? alaraai.data : (Array.isArray(alaraai?.docs) ? alaraai.docs : []);
-        const alaraaiWithSource = docs.map((doc: any) => ({
-          ...doc,
-          source: "Alara AI" as const,
-          collection: "alaraai" as const,
-        }));
-        results.push(...alaraaiWithSource);
-      } catch (error) {
-        console.error("Error parsing Alara AI response:", error);
-      }
-    } else {
-      console.warn(`Failed to fetch Alara AI: ${(alaraaiRes as Response).status}`);
-    }
-
-    if (collabsRes.ok) {
-      try {
-        const collabs = await (collabsRes as Response).json();
-        let docs = collabs.success && Array.isArray(collabs.data) ? collabs.data : (Array.isArray(collabs?.docs) ? collabs.docs : []);
-        const collabsWithSource = docs.map((doc: any) => ({
-          ...doc,
-          source: "Collabs" as const,
-          collection: "collabs" as const,
-        }));
-        results.push(...collabsWithSource);
-      } catch (error) {
-        console.error("Error parsing Collabs response:", error);
-      }
-    } else {
-      console.warn(`Failed to fetch Collabs: ${(collabsRes as Response).status}`);
-    }
-
-    if (storiesRes.ok) {
-      try {
-        const stories = await (storiesRes as Response).json();
-        let docs = stories.success && Array.isArray(stories.data) ? stories.data : (Array.isArray(stories?.docs) ? stories.docs : []);
-        const storiesWithSource = docs.map((doc: any) => ({
-          ...doc,
-          source: "Stories" as const,
-          collection: "stories" as const,
-        }));
-        results.push(...storiesWithSource);
-      } catch (error) {
-        console.error("Error parsing Stories response:", error);
-      }
-    } else {
-      console.warn(`Failed to fetch Stories: ${(storiesRes as Response).status}`);
-    }
-
-    // If all failed, throw error
-    if (results.length === 0 && (!gundemRes.ok || !hikayelerRes.ok || !alaraaiRes.ok || !collabsRes.ok || !storiesRes.ok)) {
-      console.warn("Payload CMS unavailable: All collections failed to load");
+    // If all failed and we had target collections, log it
+    if (!anySuccess && targetCollections.length > 0) {
+      console.warn("Payload CMS unavailable: All requested collections failed to load");
       return [];
     }
 
@@ -407,6 +367,15 @@ function emptyPayloadResponse<T>(): PayloadResponse<T> {
 }
 
 export async function fetchPayload<T>(
+  collection: string,
+  query?: FetchParams,
+  retries = 2,
+): Promise<PayloadResponse<T>> {
+  const cacheKey = `payload:${collection}:${JSON.stringify(query)}`;
+  return withCache(cacheKey, () => fetchPayloadInternal<T>(collection, query, retries));
+}
+
+async function fetchPayloadInternal<T>(
   collection: string,
   query?: FetchParams,
   retries = 2,
@@ -587,7 +556,7 @@ export async function getFeaturedArticles(): Promise<
     where: { isFeatured: { equals: true } },
     sort: "-ordering,-publishedAt",
     limit: 6,
-    depth: 2,
+    depth: 1,
   });
 }
 
@@ -598,7 +567,7 @@ export async function getArticlesByCategory(categorySlug: string) {
       "category.slug": { equals: categorySlug },
     },
     sort: "-publishedAt",
-    depth: 2,
+    depth: 1,
   });
 }
 
@@ -613,7 +582,7 @@ export async function getAllGundemArticles(
     const response = await fetchPayload<PayloadGundem>("gundem", {
       sort: "-publishedAt",
       limit,
-      depth: 2,
+      depth: 1,
     });
     return response.docs;
   } catch (error) {
@@ -626,7 +595,7 @@ export async function getRecentArticles(limit = 10) {
   return fetchArticles({
     sort: "-publishedAt",
     limit,
-    depth: 2,
+    depth: 1,
   });
 }
 
@@ -641,7 +610,7 @@ export async function getArticlesByAuthorId(
     where: { author: { equals: authorId } },
     sort: "-publishedAt",
     limit,
-    depth: 2,
+    depth: 1,
   });
 }
 
@@ -720,53 +689,63 @@ export async function getTags() {
 
 // Globals
 export async function getSiteSettings(): Promise<PayloadSiteSettings | null> {
+  const fallbackSettings: PayloadSiteSettings = {
+    id: "fallback-settings",
+    siteName: "Scrolli",
+    siteDescription: "Yeni nesil dijital yayın.",
+    defaultLanguage: "tr",
+    socialLinks: {},
+    defaultSEO: {
+      title: "Scrolli",
+      description: "Yeni nesil dijital yayın.",
+    },
+    features: {
+      enableComments: true,
+      enableSharing: true,
+      enableBookmarks: true,
+      enablePodcasts: true,
+      enableAIContent: true,
+      maintenanceMode: false,
+    },
+    globalType: "settings",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
   try {
     const config = getPayloadConfig();
     if (!config) {
-      return null;
+      return fallbackSettings;
     }
 
-    // Try fetching with "site-settings" slug first (correct one based on schema)
-    // If that fails, we could try "settings", but site-settings is the one with the fields we need
     const response = await fetch(`${config.url}/globals/site-settings?locale=tr`, {
       headers: config.headers,
       next: { revalidate: 3600 }, // Cache for 1 hour
-    }).catch((error) => {
-      console.warn("Failed to fetch site settings from Payload CMS:", error);
-      // Return null instead of throwing - allows page to render without settings
-      return null;
-    });
+      signal: AbortSignal.timeout(3000), // 3s timeout
+    }).catch(() => null);
 
-    if (!response) {
-      return null;
-    }
+    if (!response) return fallbackSettings;
 
     if (!response.ok) {
-      console.error(
-        `Failed to fetch site settings: ${response.status} ${response.statusText}`,
-      );
-      // Try fallback to "settings" if "site-settings" fails (backward compatibility)
+      // Direct retry with legacy slug if 404
       if (response.status === 404) {
-        console.log("Retrying with legacy 'settings' slug...");
         const fallbackResponse = await fetch(`${config.url}/globals/settings?locale=tr`, {
           headers: config.headers,
           next: { revalidate: 3600 },
-        });
-        if (fallbackResponse.ok) {
+        }).catch(() => null);
+
+        if (fallbackResponse?.ok) {
           return fallbackResponse.json();
         }
       }
-      return null; // Return null instead of throwing for graceful degradation
+      return fallbackSettings;
     }
 
     const data = await response.json();
-    if (data.success && data.data) {
-      return data.data;
-    }
-    return data;
+    return (data.success && data.data) ? data.data : data;
   } catch (error) {
     console.error("Error fetching site settings:", error);
-    return null; // Return null to allow fallback to defaults
+    return fallbackSettings;
   }
 }
 
@@ -774,19 +753,17 @@ export async function getNavigation(): Promise<PayloadNavigation | null> {
   try {
     const config = getPayloadConfig();
     if (!config) {
-      return null;
+      return getFallbackNavigation();
     }
 
     const response = await fetch(`${config.url}/globals/navigation?locale=tr`, {
       headers: config.headers,
       next: { revalidate: 3600 }, // Cache for 1 hour
-    });
+      signal: AbortSignal.timeout(3000), // 3s timeout for navigation
+    }).catch(() => null);
 
-    if (!response.ok) {
-      console.error(
-        `Failed to fetch navigation: ${response.status} ${response.statusText}`,
-      );
-      return null; // Return null instead of throwing for graceful degradation
+    if (!response || !response.ok) {
+      return getFallbackNavigation();
     }
 
     const data = await response.json();
@@ -796,8 +773,20 @@ export async function getNavigation(): Promise<PayloadNavigation | null> {
     return data;
   } catch (error) {
     console.error("Error fetching navigation:", error);
-    return null; // Return null to allow fallback to static navigation
+    return getFallbackNavigation();
   }
+}
+
+function getFallbackNavigation(): PayloadNavigation {
+  return {
+    mainMenu: [
+      { id: "1", label: "Gelecek", type: "internal", path: "/gelecek" },
+      { id: "2", label: "Finans", type: "internal", path: "/finans" },
+      { id: "3", label: "Eksen", type: "internal", path: "/eksen" },
+      { id: "4", label: "Zest", type: "internal", path: "/zest" },
+    ],
+    footerMenu: [],
+  };
 }
 
 // Additional Content Types
@@ -807,7 +796,7 @@ export async function fetchPodcasts(
   return fetchPayload<PayloadPodcast>("podcasts", {
     ...params,
     sort: params.sort || "-publishedAt",
-    depth: params.depth || 2,
+    depth: params.depth || 1,
   });
 }
 
@@ -817,7 +806,7 @@ export async function fetchDailyBriefings(
   return fetchPayload<PayloadDailyBriefing>("daily-briefings", {
     ...params,
     sort: params.sort || "-briefingDate",
-    depth: params.depth || 2,
+    depth: params.depth || 1,
   });
 }
 
@@ -827,7 +816,7 @@ export async function fetchCurations(
   return fetchPayload<PayloadCuration>("curations", {
     ...params,
     sort: params.sort || "-publishedAt",
-    depth: params.depth || 2,
+    depth: params.depth || 1,
   });
 }
 

@@ -65,15 +65,17 @@ export async function getHomepageContent(): Promise<HomepageContent> {
   try {
     const ENABLE_LAYOUT_POSITION = process.env.ENABLE_LAYOUT_POSITION === "true";
 
+    let result: HomepageContent;
+
     if (ENABLE_LAYOUT_POSITION) {
       // Step 1: Parallelize all initial data fetching
       const [dailyBriefingRes, allHikayeler, pinnedHero, pinnedEditorsPicks, allRecentArticles, gundemSection3Res] = await Promise.all([
         fetchDailyBriefings({ limit: 1, sort: "-briefingDate" }),
-        fetchHikayeler({ limit: 12, depth: 2 }),
-        fetchArticles({ layoutPosition: "hero", limit: 1, depth: 2 }),
-        fetchArticles({ layoutPosition: "editors-picks", limit: 3, depth: 2 }),
-        fetchArticles({ sort: "-publishedAt", limit: 50, depth: 2 }),
-        fetchPayload<PayloadGundem>("gundem", { sort: "-publishedAt", limit: 50, depth: 2 }),
+        fetchHikayeler({ limit: 12, depth: 1 }),
+        fetchArticles({ layoutPosition: "hero", limit: 1, depth: 1 }),
+        fetchArticles({ layoutPosition: "editors-picks", limit: 3, depth: 1 }),
+        fetchArticles({ sort: "-publishedAt", limit: 50, depth: 1 }),
+        fetchPayload<PayloadGundem>("gundem", { sort: "-publishedAt", limit: 50, depth: 1 }),
       ]).then(res => [
         res[0],
         res[1].filter(isValidArticle),
@@ -125,38 +127,35 @@ export async function getHomepageContent(): Promise<HomepageContent> {
 
       const hikayeler = allHikayeler.filter((a: { slug: string }) => !usedSlugs.includes(a.slug)).slice(0, 8);
 
-      return { hero, editorsPicks, verticalList, articleList, hikayeler, dailyBriefing, gundemSection3Articles };
+      result = { hero, editorsPicks, verticalList, articleList, hikayeler, dailyBriefing, gundemSection3Articles };
     } else {
       // ============================================
-      // FALLBACK MODE (parallelized)
+      // FALLBACK MODE (Aggressively Optimized)
       // ============================================
 
-      // Step 1: Fire all fetches at once
-      const [dailyBriefingRes, curationsRes, allHikayeler, featuredArticles, allRecentArticles, gundemSection3Res] = await Promise.all([
+      // Step 1: Fire consolidated fetches
+      const [dailyBriefingRes, curationsRes, allHikayeler, mainPool, gundemPool] = await Promise.all([
         fetchDailyBriefings({ limit: 1, sort: "-briefingDate" }),
         fetchCurations({ limit: 3, sort: "-publishedAt" }),
-        fetchHikayeler({ limit: 12, depth: 2 }),
-        fetchArticles({
-          where: { isFeatured: { equals: true } },
-          sort: "-ordering,-publishedAt",
-          limit: 10,
-          depth: 2,
-        }),
-        fetchArticles({ sort: "-publishedAt", limit: 50, depth: 2 }),
-        fetchPayload<PayloadGundem>("gundem", { sort: "-publishedAt", limit: 50, depth: 2 }),
+        fetchArticles({ limit: 12, depth: 1, collections: ["hikayeler", "stories"] }),
+        fetchArticles({ limit: 30, depth: 1 }), // Mix of all for hero/picks
+        fetchArticles({ limit: 50, depth: 1, collections: ["gundem"] }), // Targeted for section 3
       ]).then(res => [
         res[0],
         res[1],
         res[2].filter(isValidArticle),
         res[3].filter(isValidArticle),
         res[4].filter(isValidArticle),
-        { ...res[5], docs: res[5].docs.filter(isValidArticle) }
       ]) as any;
 
       const dailyBriefing = dailyBriefingRes.docs[0] || null;
       const curations = curationsRes.docs || [];
       const topHikayeler = allHikayeler.slice(0, 4);
-      const gundemSection3Articles = gundemSection3Res.docs || [];
+
+      // Featured articles for Hero and Editors Picks (from main pool)
+      const featuredArticles = mainPool.filter((a: any) => a.isFeatured).slice(0, 10);
+      const allRecentArticles = mainPool;
+      const gundemSection3Articles = gundemPool;
 
       // Hero: First Hikaye, or first featured, or first recent
       const hero = topHikayeler[0] || featuredArticles[0] || allRecentArticles[0] || null;
@@ -211,8 +210,10 @@ export async function getHomepageContent(): Promise<HomepageContent> {
 
       const hikayeler = allHikayeler.filter((a: { slug: string }) => !usedSlugsAfterEditorsPicks.includes(a.slug)).slice(0, 8);
 
-      return { hero, editorsPicks, verticalList, articleList, hikayeler, dailyBriefing, gundemSection3Articles };
+      result = { hero, editorsPicks, verticalList, articleList, hikayeler, dailyBriefing, gundemSection3Articles };
     }
+
+    return result;
   } catch (error) {
     console.error("Error fetching homepage content:", error);
     return {

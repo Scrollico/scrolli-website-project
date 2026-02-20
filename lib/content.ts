@@ -174,7 +174,7 @@ export async function getAllArticles(limit = 24): Promise<Article[]> {
     const payloadArticles = await fetchArticles({
       sort: "-publishedAt",
       limit,
-      depth: 2,
+      depth: 1,
     });
 
     // Map Payload articles to Article interface using correct mapper per source
@@ -220,7 +220,7 @@ export async function getArticlesByAuthor(author: string): Promise<Article[]> {
     const payloadArticles = await fetchArticles({
       sort: "-publishedAt",
       limit: 24,
-      depth: 2,
+      depth: 1,
     });
 
     // Content is already HTML string when using locale=tr, handled in mapping functions
@@ -247,34 +247,34 @@ export async function getArticlesByAuthor(author: string): Promise<Article[]> {
  */
 export async function getRelatedArticles(
   currentArticle: Article,
-  limit: number = 6
+  limit: number = 6,
+  payloadArticle?: any
 ): Promise<Article[]> {
   try {
-    // First, try to get the original Payload article to access relationships
-    const { getArticleBySlug } = await import("@/lib/payload/client");
-    const payloadArticle = await getArticleBySlug(currentArticle.id);
+    // Use provided payloadArticle or fetch it
+    const articleData = payloadArticle || await getArticleBySlug(currentArticle.id);
 
     const seenIds = new Set<string>([currentArticle.id]);
     const result: Article[] = [];
 
     // Step 1: Use explicit relationships from Payload if available
-    if (payloadArticle) {
+    if (articleData) {
       let relatedItems: Array<any> = [];
 
-      if (payloadArticle.source === "Gündem" && payloadArticle.relatedArticles) {
+      if (articleData.source === "Gündem" && articleData.relatedArticles) {
         // Gündem has polymorphic relatedArticles (can be gundem or hikayeler)
-        relatedItems = payloadArticle.relatedArticles
-          .map(rel => {
+        relatedItems = articleData.relatedArticles
+          .map((rel: { value: any; }) => {
             if (typeof rel.value === "string") {
               return null;
             }
             return rel.value;
           })
           .filter(Boolean);
-      } else if (payloadArticle.source === "Collabs" && payloadArticle.relatedArticles) {
+      } else if (articleData.source === "Collabs" && articleData.relatedArticles) {
         // Collabs has polymorphic relatedArticles
-        relatedItems = payloadArticle.relatedArticles
-          .map(rel => {
+        relatedItems = articleData.relatedArticles
+          .map((rel: { value: any; }) => {
             if (typeof rel.value === "string") {
               return null;
             }
@@ -282,11 +282,11 @@ export async function getRelatedArticles(
           })
           .filter(Boolean);
       } else if (
-        (payloadArticle.source === "Hikayeler" && payloadArticle.relatedStories) ||
-        (payloadArticle.source === "Stories" && (payloadArticle as any).relatedStories)
+        (articleData.source === "Hikayeler" && articleData.relatedStories) ||
+        (articleData.source === "Stories" && (articleData as any).relatedStories)
       ) {
         // Hikayeler and Stories have relatedStories
-        const stories = payloadArticle.relatedStories || (payloadArticle as any).relatedStories;
+        const stories = articleData.relatedStories || (articleData as any).relatedStories;
         relatedItems = (stories || [])
           .map((rel: any) => {
             if (typeof rel.value === "string") {

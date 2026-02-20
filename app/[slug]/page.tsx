@@ -78,7 +78,10 @@ export default async function ArticlePage({ params, searchParams }: ArticlePageP
     notFound();
   }
 
-  const payloadArticle = await getArticleBySlug(slug);
+  const [payloadArticle, navigation] = await Promise.all([
+    getArticleBySlug(slug),
+    getNavigation(),
+  ]);
 
   if (!payloadArticle) {
     notFound();
@@ -96,10 +99,9 @@ export default async function ArticlePage({ params, searchParams }: ArticlePageP
   const hasScript = !!paywalledArticle.inlineScriptHtml && paywalledArticle.inlineScriptHtml.trim().length > 0;
   const isHikayelerWithScript = hasScript;
 
-  const [relatedArticles, navigation] = await Promise.all([
-    isHikayelerWithScript ? Promise.resolve([]) : getRelatedArticles(paywalledArticle, 6),
-    getNavigation(),
-  ]);
+  const relatedArticles = isHikayelerWithScript
+    ? []
+    : await getRelatedArticles(paywalledArticle, 6, payloadArticle);
 
   const articleStructuredData = generateArticleStructuredData(paywalledArticle, {
     publishedTime: formatDateForSEO(paywalledArticle.date),
