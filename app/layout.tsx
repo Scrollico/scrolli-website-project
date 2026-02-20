@@ -30,16 +30,13 @@ import { getSiteSettings } from "@/lib/payload/client"
 import { validateEnvVars } from "@/lib/env-validation"
 
 // Validate environment variables on server startup
-// This will throw an error if critical variables are missing
+// Log an error if critical variables are missing, but don't crash in production
+// to allow the app to degrade gracefully with fallbacks.
 if (typeof window === 'undefined') {
   try {
     validateEnvVars();
   } catch (error) {
     console.error('❌ Environment variable validation failed:', error);
-    // In production, we might want to fail fast, but for now just log
-    if (process.env.NODE_ENV === 'production') {
-      throw error;
-    }
   }
 }
 
