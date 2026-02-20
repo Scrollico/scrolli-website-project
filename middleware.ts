@@ -31,39 +31,55 @@ export async function middleware(request: NextRequest) {
     },
   });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            request.cookies.set(name, value)
-          );
-          response = NextResponse.next({
-            request,
-          });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
-          );
-        },
-      },
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  let supabase: any = null;
+  let user = null;
+
+  if (supabaseUrl && supabaseAnonKey) {
+    try {
+      supabase = createServerClient(
+        supabaseUrl,
+        supabaseAnonKey,
+        {
+          cookies: {
+            getAll() {
+              return request.cookies.getAll();
+            },
+            setAll(cookiesToSet) {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                request.cookies.set(name, value)
+              );
+              response = NextResponse.next({
+                request,
+              });
+              cookiesToSet.forEach(({ name, value, options }) =>
+                response.cookies.set(name, value, options)
+              );
+            },
+          },
+        }
+      );
+
+      // Refresh session if expired - required for Server Components
+      const {
+        data,
+      } = await supabase.auth.getUser();
+      user = data.user;
+    } catch (error) {
+      console.error('[Middleware] Supabase client error:', error);
     }
-  );
-
-  // Refresh session if expired - required for Server Components
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (request.nextUrl.pathname === '/sign-in') {
-    console.log(`[Middleware] Visiting /sign-in. User session present: ${!!user}`);
+  } else {
+    // Only log once per cold start to avoid log spam, or use debug level
+    console.error('[Middleware] Missing Supabase configuration - auth features disabled');
   }
 
   const pathname = request.nextUrl.pathname;
+
+  if (pathname === '/sign-in') {
+    console.log(`[Middleware] Visiting /sign-in. User session present: ${!!user}`);
+  }
 
   // Define public routes (always accessible)
   const publicPaths = [
@@ -92,7 +108,7 @@ export async function middleware(request: NextRequest) {
   const isPublicRoute = pathname === '/' || publicPaths.some((path) => pathname.startsWith(path));
 
   // Auth routes (sign-in) - redirect if already authenticated
-  if (pathname === '/sign-in' && user) {
+  if (pathname === '/sign-in' && user && supabase) {
     // Check onboarding status
     const { data: profile } = await supabase
       .from('profiles')
@@ -120,21 +136,23 @@ export async function middleware(request: NextRequest) {
     }
 
     // Check if onboarding is already completed
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('onboarding_completed')
-      .eq('id', user.id)
-      .maybeSingle();
+    if (supabase) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('onboarding_completed')
+        .eq('id', user.id)
+        .maybeSingle();
 
-    if (profile?.onboarding_completed) {
-      // Already completed, redirect to homepage
-      return NextResponse.redirect(new URL('/', request.url));
+      if (profile?.onboarding_completed) {
+        // Already completed, redirect to homepage
+        return NextResponse.redirect(new URL('/', request.url));
+      }
     }
   }
 
   // For authenticated users accessing non-public routes
   // Check onboarding completion (except for onboarding page itself)
-  if (user && !isPublicRoute && pathname !== '/onboarding') {
+  if (user && !isPublicRoute && pathname !== '/onboarding' && supabase) {
     const { data: profile } = await supabase
       .from('profiles')
       .select('onboarding_completed')
