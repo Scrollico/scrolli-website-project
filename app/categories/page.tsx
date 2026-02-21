@@ -7,6 +7,8 @@ import { Metadata } from "next";
 import { cookies } from "next/headers";
 import { NEXT_LOCALE_COOKIE } from "@/lib/locale-config";
 
+export const runtime = 'edge';
+
 // export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(

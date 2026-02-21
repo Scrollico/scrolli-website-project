@@ -1,4 +1,4 @@
-// export const runtime = "edge";
+export const runtime = "edge";
 
 import Layout from "@/components/layout/Layout";
 import Link from "next/link";
