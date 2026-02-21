@@ -65,7 +65,7 @@ export function generateImageUrl(imagePath?: string): string {
  */
 export function generateArticleMetadata(
   article: Article,
-  additionalData?: Partial<ArticleMetadata>
+  additionalData?: Partial<ArticleMetadata> & { locale?: string }
 ): {
   title: string;
   description: string;
@@ -120,7 +120,7 @@ export function generateArticleMetadata(
           alt: article.title,
         },
       ],
-      locale: SITE_CONFIG.locale,
+      locale: additionalData?.locale === "en" ? "en_US" : "tr_TR",
       type: "article",
       publishedTime: additionalData?.publishedTime,
       modifiedTime: additionalData?.modifiedTime,
@@ -144,7 +144,7 @@ export function generateArticleMetadata(
  * Generate default site metadata
  * Optionally accepts Payload Site Settings to override defaults
  */
-export function generateSiteMetadata(siteSettings?: PayloadSiteSettings): Metadata {
+export function generateSiteMetadata(siteSettings?: PayloadSiteSettings, locale: string = "tr"): Metadata {
   // Use Payload settings if available, otherwise use defaults
   const siteName = siteSettings?.siteName || SITE_CONFIG.name;
   const siteDescription = siteSettings?.siteDescription || SITE_CONFIG.description;
@@ -168,7 +168,7 @@ export function generateSiteMetadata(siteSettings?: PayloadSiteSettings): Metada
     creator: siteName,
     openGraph: {
       type: "website",
-      locale: SITE_CONFIG.locale,
+      locale: locale === "en" ? "en_US" : "tr_TR",
       url: siteUrl,
       siteName,
       title: siteName,

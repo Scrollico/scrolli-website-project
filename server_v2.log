@@ -1,0 +1,31 @@
+
+> scrolli-nextjs@1.0.0 start
+> next start
+
+   ▲ Next.js 15.5.12
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.0.227:3000
+
+ ✓ Starting...
+ ⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/FAU1MU/package-lock.json as the root directory.
+ To silence this warning, set `outputFileTracingRoot` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/output#caveats for more information.
+ Detected additional lockfiles: 
+   * /Users/FAU1MU/development/Vscode Projects/Scrolli/scrolli-website-project/package-lock.json
+
+ ✓ Ready in 667ms
+[Middleware] Missing Supabase configuration - auth features disabled
+❌ Payload CMS Configuration Missing: { hasUrl: false, hasKey: false, nodeEnv: 'production', urlLength: 0 }
+❌ Payload CMS Configuration Missing: { hasUrl: false, hasKey: false, nodeEnv: 'production', urlLength: 0 }
+❌ Payload CMS Configuration Missing: { hasUrl: false, hasKey: false, nodeEnv: 'production', urlLength: 0 }
+Payload CMS not configured, returning empty array
+❌ Payload CMS Configuration Missing: { hasUrl: false, hasKey: false, nodeEnv: 'production', urlLength: 0 }
+Payload CMS not configured, returning empty array
+❌ Payload CMS Configuration Missing: { hasUrl: false, hasKey: false, nodeEnv: 'production', urlLength: 0 }
+Payload CMS not configured, returning empty array
+❌ Payload CMS Configuration Missing: { hasUrl: false, hasKey: false, nodeEnv: 'production', urlLength: 0 }
+❌ Payload CMS Configuration Missing: { hasUrl: false, hasKey: false, nodeEnv: 'production', urlLength: 0 }
+Payload CMS not configured, returning empty array
+❌ Payload CMS Configuration Missing: { hasUrl: false, hasKey: false, nodeEnv: 'production', urlLength: 0 }
+❌ Missing Supabase environment variables

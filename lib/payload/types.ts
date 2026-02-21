@@ -55,6 +55,7 @@ export interface PayloadNavigationItem {
   label: string;
   type: "internal" | "external";
   path: string;
+  url?: string;
   openInNewTab?: boolean;
   children?: PayloadNavigationItem[];
 }
@@ -70,6 +71,7 @@ export interface PayloadNavigation {
       label: string;
       type: "internal" | "external";
       path: string;
+      url?: string;
     }>;
   }>;
 }
@@ -191,6 +193,11 @@ export interface PayloadSiteSettings {
   siteName: string;
   siteDescription: string;
   defaultLanguage: string;
+  contactInfo?: {
+    email?: string;
+    phone?: string;
+    address?: string;
+  };
   socialLinks: {
     twitter?: string;
     facebook?: string;
@@ -226,6 +233,29 @@ export interface PayloadSiteSettings {
     freeArticleLimit: number;
   };
   globalType: "settings";
+  createdAt: string;
+  updatedAt: string;
+}
+
+// UI Strings global
+export interface PayloadUIString {
+  key: string;
+  value: string;
+}
+
+// Pages collection
+export interface PayloadPage {
+  id: string;
+  title: string;
+  slug: string;
+  content: any; // RichText
+  meta?: {
+    title?: string;
+    description?: string;
+    keywords?: string;
+    image?: PayloadMedia | string;
+  };
+  publishedAt: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -442,10 +472,14 @@ export function getResponsiveImageUrl(post: PayloadGundem | PayloadHikayeler | P
 }
 
 // Helper function to extract author name
-function getAuthorName(author: PayloadAuthor | string | undefined): string {
+function getAuthorName(author: PayloadAuthor | string | null | undefined): string {
   if (!author) return "Scrolli";
   if (typeof author === "string") return author;
-  return author.name;
+  // Payload relationship may be an object with name
+  if (typeof author === "object" && "name" in author && author.name) {
+    return author.name;
+  }
+  return "Scrolli";
 }
 
 // Helper function to extract category slug
@@ -501,7 +535,7 @@ function cleanMessyContent(contentObj: any): any | undefined {
 }
 
 // Map Payload Gündem to existing Article interface
-export function mapGundemToArticle(post: PayloadGundem | PayloadAlaraai): Article {
+export function mapGundemToArticle(post: PayloadGundem | PayloadAlaraai, locale: string = "tr"): Article {
   const desktopImage = getMediaUrl(post.featuredImage || post.thumbnail);
   const mobileImage = getMediaUrl(post.mobileImage);
 
@@ -592,7 +626,7 @@ export function mapGundemToArticle(post: PayloadGundem | PayloadAlaraai): Articl
     subtitle: post.subtitle, // Subtitle from Payload CMS
     author: getAuthorName(post.author),
     category: getCategorySlug(post.category),
-    date: new Date(post.publishedAt).toLocaleDateString("tr-TR", {
+    date: new Date(post.publishedAt).toLocaleDateString(locale === "tr" ? "tr-TR" : "en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -613,7 +647,7 @@ export function mapGundemToArticle(post: PayloadGundem | PayloadAlaraai): Articl
 }
 
 // Map Payload Hikayeler to existing Article interface
-export function mapHikayelerToArticle(post: PayloadHikayeler): Article {
+export function mapHikayelerToArticle(post: PayloadHikayeler, locale: string = "tr"): Article {
   const desktopImage = getMediaUrl(post.featuredImage || post.thumbnail);
   const mobileImage = getMediaUrl(post.verticalImage); // Hikayeler uses verticalImage
 
@@ -757,7 +791,7 @@ export function mapHikayelerToArticle(post: PayloadHikayeler): Article {
     subtitle: post.subtitle, // Subtitle from Payload CMS
     author: getAuthorName(post.author),
     category: "hikayeler", // Stories category
-    date: new Date(post.publishedAt).toLocaleDateString("tr-TR", {
+    date: new Date(post.publishedAt).toLocaleDateString(locale === "tr" ? "tr-TR" : "en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -774,7 +808,7 @@ export function mapHikayelerToArticle(post: PayloadHikayeler): Article {
 }
 
 // Map Payload Curation to Article
-export function mapCurationToArticle(curation: PayloadCuration): Article {
+export function mapCurationToArticle(curation: PayloadCuration, locale: string = "tr"): Article {
   const image = getMediaUrl(curation.mainImageLandscape);
 
   // Process content similar to Gundem if needed, but for now assuming it might be string or simple
@@ -799,7 +833,7 @@ export function mapCurationToArticle(curation: PayloadCuration): Article {
     author: "Editor", // Curations are usually by the editor/platform
     category: "Curation",
     date: curation.publishedAt
-      ? new Date(curation.publishedAt).toLocaleDateString("tr-TR", {
+      ? new Date(curation.publishedAt).toLocaleDateString(locale === "tr" ? "tr-TR" : "en-US", {
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -815,10 +849,10 @@ export function mapCurationToArticle(curation: PayloadCuration): Article {
 }
 
 // Map Payload Collab to Article
-export function mapCollabToArticle(post: PayloadCollab): Article {
+export function mapCollabToArticle(post: PayloadCollab, locale: string = "tr"): Article {
   // Reuse Hikayeler logic as Collabs structure is similar
   // Cast to Hikayeler to reuse the function, but override source/category
-  const article = mapHikayelerToArticle(post as unknown as PayloadHikayeler);
+  const article = mapHikayelerToArticle(post as unknown as PayloadHikayeler, locale);
 
   return {
     ...article,
@@ -828,9 +862,9 @@ export function mapCollabToArticle(post: PayloadCollab): Article {
 }
 
 // Map Payload Story to Article
-export function mapStoryToArticle(post: PayloadStory): Article {
+export function mapStoryToArticle(post: PayloadStory, locale: string = "tr"): Article {
   // Reuse Hikayeler logic as Stories structure is identical (with inlineScript)
-  const article = mapHikayelerToArticle(post as unknown as PayloadHikayeler);
+  const article = mapHikayelerToArticle(post as unknown as PayloadHikayeler, locale);
 
   return {
     ...article,
@@ -838,9 +872,12 @@ export function mapStoryToArticle(post: PayloadStory): Article {
   };
 }
 
-// Map Payload DailyBriefing to Article
+/**
+ * Map Payload DailyBriefing to Article
+ */
 export function mapDailyBriefingToArticle(
-  briefing: PayloadDailyBriefing
+  briefing: PayloadDailyBriefing,
+  locale: string = "tr"
 ): Article {
   let content: string | undefined;
   if (briefing.content) {
@@ -861,7 +898,7 @@ export function mapDailyBriefingToArticle(
     subtitle: briefing.subtitle,
     author: "Scrolli Daily",
     category: "Daily Briefing",
-    date: new Date(briefing.briefingDate).toLocaleDateString("tr-TR", {
+    date: new Date(briefing.briefingDate).toLocaleDateString(locale === "tr" ? "tr-TR" : "en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",

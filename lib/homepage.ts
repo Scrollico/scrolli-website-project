@@ -61,7 +61,7 @@ export function isValidArticle(article: any): boolean {
   return true;
 }
 
-export async function getHomepageContent(): Promise<HomepageContent> {
+export async function getHomepageContent(locale: string = "tr"): Promise<HomepageContent> {
   try {
     const ENABLE_LAYOUT_POSITION = process.env.ENABLE_LAYOUT_POSITION === "true";
 
@@ -70,12 +70,12 @@ export async function getHomepageContent(): Promise<HomepageContent> {
     if (ENABLE_LAYOUT_POSITION) {
       // Step 1: Parallelize all initial data fetching
       const [dailyBriefingRes, allHikayeler, pinnedHero, pinnedEditorsPicks, allRecentArticles, gundemSection3Res] = await Promise.all([
-        fetchDailyBriefings({ limit: 1, sort: "-briefingDate" }),
-        fetchHikayeler({ limit: 12, depth: 1 }),
-        fetchArticles({ layoutPosition: "hero", limit: 1, depth: 1 }),
-        fetchArticles({ layoutPosition: "editors-picks", limit: 3, depth: 1 }),
-        fetchArticles({ sort: "-publishedAt", limit: 50, depth: 1 }),
-        fetchPayload<PayloadGundem>("gundem", { sort: "-publishedAt", limit: 50, depth: 1 }),
+        fetchDailyBriefings({ limit: 1, sort: "-briefingDate", locale }),
+        fetchHikayeler({ limit: 12, depth: 1, locale }),
+        fetchArticles({ layoutPosition: "hero", limit: 1, depth: 1, locale }),
+        fetchArticles({ layoutPosition: "editors-picks", limit: 3, depth: 1, locale }),
+        fetchArticles({ sort: "-publishedAt", limit: 50, depth: 1, locale }),
+        fetchPayload<PayloadGundem>("gundem", { sort: "-publishedAt", limit: 50, depth: 1, locale }),
       ]).then(res => [
         res[0],
         res[1].filter(isValidArticle),
@@ -135,11 +135,11 @@ export async function getHomepageContent(): Promise<HomepageContent> {
 
       // Step 1: Fire consolidated fetches
       const [dailyBriefingRes, curationsRes, allHikayeler, mainPool, gundemPool] = await Promise.all([
-        fetchDailyBriefings({ limit: 1, sort: "-briefingDate" }),
-        fetchCurations({ limit: 3, sort: "-publishedAt" }),
-        fetchArticles({ limit: 12, depth: 1, collections: ["hikayeler", "stories"] }),
-        fetchArticles({ limit: 30, depth: 1 }), // Mix of all for hero/picks
-        fetchArticles({ limit: 50, depth: 1, collections: ["gundem"] }), // Targeted for section 3
+        fetchDailyBriefings({ limit: 1, sort: "-briefingDate", locale }),
+        fetchCurations({ limit: 3, sort: "-publishedAt", locale }),
+        fetchArticles({ limit: 12, depth: 1, collections: ["hikayeler", "stories"], locale }),
+        fetchArticles({ limit: 30, depth: 1, locale }), // Mix of all for hero/picks
+        fetchArticles({ limit: 50, depth: 1, collections: ["gundem"], locale }), // Targeted for section 3
       ]).then(res => [
         res[0],
         res[1],

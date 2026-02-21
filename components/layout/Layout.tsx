@@ -88,7 +88,7 @@ export default function Layout({ classList, children, navigation }: LayoutProps)
 
           {/* Site Footer */}
           <footer role="contentinfo">
-            <Footer />
+            <Footer navigation={navigation} />
           </footer>
 
           {/* Back to top utility */}

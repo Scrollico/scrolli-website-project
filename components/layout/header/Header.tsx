@@ -9,12 +9,19 @@ import MobileSidebar from "./MobileSidebar";
 import { getCategoriesFromBlog } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 import { colors, borderRadius } from "@/lib/design-tokens";
-import { PayloadNavigation } from "@/lib/payload/types";
+import { PayloadNavigation, PayloadNavigationItem } from "@/lib/payload/types";
 import { NavbarUsageMeter } from "@/components/paywall";
 
 interface HeaderProps {
   navigation?: PayloadNavigation | null;
 }
+
+// Default menu colors to cycle through
+const MENU_COLORS = [
+  { bgColor: "#0D0716", textColor: "#fff" },
+  { bgColor: "#170D27", textColor: "#fff" },
+  { bgColor: "#271E37", textColor: "#fff" }
+];
 
 export default function Header({ navigation }: HeaderProps) {
   const [isSearch, setIsSearch] = useState<number | null>(null);
@@ -38,38 +45,57 @@ export default function Header({ navigation }: HeaderProps) {
     handleSearch
   };
   // CardNav menu items configuration
-  const cardNavItems = [
-    {
-      label: "Discover",
-      bgColor: "#0D0716",
-      textColor: "#fff",
-      links: [
-        { label: "Explore Content", ariaLabel: "Discover new content" },
-        { label: "Latest Articles", ariaLabel: "Read latest articles" },
-        { label: "Trending Topics", ariaLabel: "See trending topics" }
-      ]
-    },
-    {
-      label: "Alara AI",
-      bgColor: "#170D27",
-      textColor: "#fff",
-      links: [
-        { label: "AI Features", ariaLabel: "Explore AI capabilities" },
-        { label: "Smart Assistant", ariaLabel: "Meet our AI assistant" },
-        { label: "Integration", ariaLabel: "API integration" }
-      ]
-    },
-    {
-      label: "Business",
-      bgColor: "#271E37",
-      textColor: "#fff",
-      links: [
-        { label: "Solutions", ariaLabel: "Business solutions" },
-        { label: "Enterprise", ariaLabel: "Enterprise services" },
-        { label: "Contact Sales", ariaLabel: "Get in touch with sales" }
-      ]
+  const cardNavItems = useMemo(() => {
+    if (navigation?.mainMenu && navigation.mainMenu.length > 0) {
+      return navigation.mainMenu.map((item, index) => {
+        const colorTheme = MENU_COLORS[index % MENU_COLORS.length];
+        return {
+          label: item.label,
+          href: item.path || item.url || '#',
+          bgColor: colorTheme.bgColor,
+          textColor: colorTheme.textColor,
+          links: item.children?.map((child) => ({
+            label: child.label,
+            ariaLabel: child.label,
+          })) || [],
+        };
+      });
     }
-  ];
+
+    // Fallback to hardcoded items
+    return [
+      {
+        label: "Discover",
+        bgColor: "#0D0716",
+        textColor: "#fff",
+        links: [
+          { label: "Explore Content", ariaLabel: "Discover new content" },
+          { label: "Latest Articles", ariaLabel: "Read latest articles" },
+          { label: "Trending Topics", ariaLabel: "See trending topics" },
+        ],
+      },
+      {
+        label: "Alara AI",
+        bgColor: "#170D27",
+        textColor: "#fff",
+        links: [
+          { label: "AI Features", ariaLabel: "Explore AI capabilities" },
+          { label: "Smart Assistant", ariaLabel: "Meet our AI assistant" },
+          { label: "Integration", ariaLabel: "API integration" },
+        ],
+      },
+      {
+        label: "Business",
+        bgColor: "#271E37",
+        textColor: "#fff",
+        links: [
+          { label: "Solutions", ariaLabel: "Business solutions" },
+          { label: "Enterprise", ariaLabel: "Enterprise services" },
+          { label: "Contact Sales", ariaLabel: "Get in touch with sales" },
+        ],
+      },
+    ];
+  }, [navigation]);
 
   // Use Payload navigation if available, otherwise fallback to static categories
   const categories = useMemo(() => {
@@ -78,7 +104,7 @@ export default function Header({ navigation }: HeaderProps) {
     if (navigation?.mainMenu) {
       // Convert Payload navigation items to category format
       result = navigation.mainMenu
-        .filter(item => item.path !== "/") // Exclude home
+        .filter(item => item.path && item.path !== "/") // Exclude home and items without path
         .map(item => ({
           slug: item.path.replace(/^\//, ""), // Remove leading slash
           displayName: item.label,

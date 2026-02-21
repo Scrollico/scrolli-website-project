@@ -142,13 +142,26 @@ export const EnglishFlagIcon: React.FC<FlagIconProps> = ({ size = 24, className,
     className={cn("transition-all duration-200", className)}
     {...props}
   >
-    {/* Circular navy background */}
-    <circle cx="12" cy="12" r="11" fill="#012169" />
-    {/* White cross */}
-    <path d="M7 11H17V13H7V11Z" fill="#ffffff" />
-    <path d="M11 7H13V17H11V7Z" fill="#ffffff" />
-    {/* Red cross */}
-    <path d="M8.5 11.5H15.5V12.5H8.5V11.5Z" fill="#C8102E" />
-    <path d="M11.5 8.5H12.5V15.5H11.5V8.5Z" fill="#C8102E" />
+    <defs>
+      <clipPath id="english-flag-round">
+        <circle cx="12" cy="12" r="11" />
+      </clipPath>
+    </defs>
+    <g clipPath="url(#english-flag-round)">
+      {/* Navy background */}
+      <rect x="0" y="0" width="24" height="24" fill="#012169" />
+
+      {/* White diagonal cross */}
+      <path d="M0 0L24 24M24 0L0 24" stroke="#ffffff" strokeWidth="4" />
+
+      {/* Red diagonal cross (thinner) */}
+      <path d="M0 0L24 24M24 0L0 24" stroke="#C8102E" strokeWidth="2" />
+
+      {/* White cross */}
+      <path d="M12 0V24M0 12H24" stroke="#ffffff" strokeWidth="6" />
+
+      {/* Red cross */}
+      <path d="M12 0V24M0 12H24" stroke="#C8102E" strokeWidth="4" />
+    </g>
   </svg>
 );

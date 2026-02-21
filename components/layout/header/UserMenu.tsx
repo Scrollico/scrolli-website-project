@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/providers/auth-provider";
+import { useTranslation } from "@/components/providers/translation-provider";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
@@ -26,6 +27,7 @@ import { useTheme } from "next-themes";
 
 export function UserMenu() {
   const { user, profile, isPremium, loading, signOut } = useAuth();
+  const { t } = useTranslation();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const { theme, setTheme, resolvedTheme } = useTheme();
@@ -63,10 +65,10 @@ export function UserMenu() {
     return (
       <div className="flex items-center gap-2">
         <Button asChild variant="ghost" size="sm" className="hidden sm:flex">
-          <Link href="/sign-in">Sign in</Link>
+          <Link href="/sign-in">{t('signIn', 'Sign in')}</Link>
         </Button>
         <Button asChild variant="default" size="sm">
-          <Link href="/pricing">Subscribe</Link>
+          <Link href="/pricing">{t('subscribe', 'Subscribe')}</Link>
         </Button>
       </div>
     );

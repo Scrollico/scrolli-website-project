@@ -16,17 +16,20 @@ const CRITICAL_CSS = [
   "/assets/css/responsive.css",
 ]
 import type { Metadata } from "next"
-export const runtime = 'edge';
+// export const runtime = 'edge';
 
 import { cookies } from "next/headers"
 import NextTopLoaderClient from "@/components/providers/NextTopLoaderClient"
 import { generateSiteMetadata } from "@/lib/seo"
+import { getSiteSettings, getUIStrings } from "@/lib/payload/client";
+import { TranslationProvider } from "@/components/providers/translation-provider"
 import Script from "next/script"
 import { generateOrganizationStructuredData, generateWebsiteStructuredData } from "@/lib/structured-data"
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import { AuthProvider } from "@/components/providers/auth-provider"
 import { RevenueCatProvider } from "@/components/providers/revenuecat-provider"
-import { getSiteSettings } from "@/lib/payload/client"
+import { LocaleProvider } from "@/components/providers/locale-provider"
+import { NEXT_LOCALE_COOKIE } from "@/lib/locale-config"
 
 // Configure Newsreader font for display text (headings)
 const newsreader = Newsreader({
@@ -110,10 +113,13 @@ const themeInitScript = `
 // getSiteSettings() now returns null on error instead of throwing
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    const siteSettings = await getSiteSettings();
+    const cookieStore = await cookies();
+    const localeCookie = cookieStore.get(NEXT_LOCALE_COOKIE)?.value;
+    const locale = localeCookie || "tr";
+    const siteSettings = await getSiteSettings(locale);
 
     return {
-      ...generateSiteMetadata(siteSettings || undefined),
+      ...generateSiteMetadata(siteSettings || undefined, locale),
       icons: {
         icon: [
           { url: '/assets/images/Standart/primary-icon.png', sizes: 'any' },
@@ -148,14 +154,24 @@ export default async function RootLayout({
 }>) {
   const cookieStore = await cookies()
   const themeCookie = cookieStore.get(THEME_COOKIE_KEY)?.value
+  const localeCookie = cookieStore.get(NEXT_LOCALE_COOKIE)?.value
+  const locale = (localeCookie === 'en' ? 'en' : 'tr') as 'tr' | 'en'
   const initialIsDark = themeCookie === 'dark'
   const initialHtmlClass = initialIsDark ? 'dark dark-mode' : themeCookie === 'light' ? 'light' : ''
   const initialBodyClass = initialIsDark ? 'home dark-mode' : 'home'
   const organizationData = generateOrganizationStructuredData()
   const websiteData = generateWebsiteStructuredData()
 
+  // Fetch global site settings and UI strings
+  const siteSettings = await getSiteSettings(locale)
+  const uiStrings = await getUIStrings(locale)
+
+  // Log to verify data fetching (server-side)
+  console.log('[Layout] Site Settings fetched:', siteSettings?.siteName)
+  console.log('[Layout] UI Strings fetched:', Object.keys(uiStrings).length)
+
   return (
-    <html lang="tr" suppressHydrationWarning className={`${newsreader.variable} ${instrumentSans.variable} ${initialHtmlClass}`}>
+    <html lang={locale} suppressHydrationWarning className={`${newsreader.variable} ${instrumentSans.variable} ${initialHtmlClass}`}>
       <head>
         <style
           id="theme-prepaint-guard"
@@ -232,12 +248,16 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AuthProvider>
-            <RevenueCatProvider>
-              <NextTopLoaderClient />
-              {children}
-            </RevenueCatProvider>
-          </AuthProvider>
+          <LocaleProvider initialLocale={locale}>
+            <TranslationProvider initialStrings={uiStrings}>
+              <AuthProvider>
+                <RevenueCatProvider>
+                  <NextTopLoaderClient />
+                  {children}
+                </RevenueCatProvider>
+              </AuthProvider>
+            </TranslationProvider>
+          </LocaleProvider>
         </ThemeProvider>
       </body>
     </html>

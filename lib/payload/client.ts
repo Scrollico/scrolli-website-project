@@ -14,11 +14,23 @@ import {
   PayloadCuration,
   PayloadAlaraai,
   PayloadVideo,
+  PayloadUIString,
+  PayloadPage,
 } from "./types";
 
 // --- Sub-Second Mastery: Cache & Request Collapsing ---
 const MEMORY_CACHE = new Map<string, { data: any; timestamp: number }>();
 const PENDING_REQUESTS = new Map<string, Promise<any>>();
+
+// Helper for AbortSignal.timeout compatibility in Edge environments
+function getTimeoutSignal(ms: number): AbortSignal {
+  if (typeof AbortSignal.timeout === 'function') {
+    return AbortSignal.timeout(ms);
+  }
+  const controller = new AbortController();
+  setTimeout(() => controller.abort(), ms);
+  return controller.signal;
+}
 const CACHE_TTL = 30 * 1000; // 30 seconds memory TTL
 
 // Cache disabled in development for faster testing
@@ -103,6 +115,7 @@ interface FetchParams {
   page?: number;
   where?: Record<string, any>;
   depth?: number;
+  locale?: string;
   collections?: Array<"gundem" | "hikayeler" | "alaraai" | "collabs" | "stories">;
 }
 
@@ -112,8 +125,8 @@ interface FetchParams {
 function buildQueryString(params: FetchParams): string {
   const queryParams = new URLSearchParams();
 
-  // CRITICAL: Always add Turkish locale for Turkish content (can be overridden by env var)
-  const locale = process.env.PAYLOAD_LOCALE || "tr";
+  // Dynamic locale support (defaults to Turkish)
+  const locale = params.locale || process.env.PAYLOAD_LOCALE || "tr";
   queryParams.append("locale", locale);
 
   // Exclude drafts by default, but allow enabling for preview/test purposes
@@ -467,6 +480,7 @@ function stripArticleTimestamp(slug: string): string {
 // Primary function - fetch from all collections
 export async function getArticleBySlug(
   slug: string,
+  locale: string = "tr"
 ): Promise<PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory | null> {
   try {
     // 1. Try exact match first
@@ -474,6 +488,7 @@ export async function getArticleBySlug(
       where: { slug: { equals: slug } },
       limit: 1,
       depth: 2,
+      locale,
     });
 
     if (articles[0]) return articles[0];
@@ -485,6 +500,7 @@ export async function getArticleBySlug(
         where: { slug: { equals: strippedSlug } },
         limit: 1,
         depth: 2,
+        locale,
       });
       return fallbackArticles[0] || null;
     }
@@ -503,6 +519,7 @@ export async function getArticleBySlug(
 export async function getArticleById(
   collection: "gundem" | "hikayeler" | "alaraai" | "collabs" | "stories",
   id: string,
+  locale: string = "tr"
 ): Promise<PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory | null> {
   try {
     const config = getPayloadConfig();
@@ -510,7 +527,6 @@ export async function getArticleById(
       return null;
     }
 
-    const locale = process.env.PAYLOAD_LOCALE || "tr";
     const fetchDrafts = process.env.PAYLOAD_FETCH_DRAFTS === "true";
 
     const queryString = new URLSearchParams({
@@ -550,7 +566,7 @@ export async function getArticleById(
   }
 }
 
-export async function getFeaturedArticles(): Promise<
+export async function getFeaturedArticles(locale: string = "tr"): Promise<
   Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory>
 > {
   return fetchArticles({
@@ -558,10 +574,11 @@ export async function getFeaturedArticles(): Promise<
     sort: "-ordering,-publishedAt",
     limit: 6,
     depth: 1,
+    locale,
   });
 }
 
-export async function getArticlesByCategory(categorySlug: string) {
+export async function getArticlesByCategory(categorySlug: string, locale: string = "tr") {
   // Categories are only on gundem collection
   return fetchPayload<PayloadGundem>("gundem", {
     where: {
@@ -569,6 +586,7 @@ export async function getArticlesByCategory(categorySlug: string) {
     },
     sort: "-publishedAt",
     depth: 1,
+    locale,
   });
 }
 
@@ -578,12 +596,14 @@ export async function getArticlesByCategory(categorySlug: string) {
  */
 export async function getAllGundemArticles(
   limit: number = 24,
+  locale: string = "tr"
 ): Promise<PayloadGundem[]> {
   try {
     const response = await fetchPayload<PayloadGundem>("gundem", {
       sort: "-publishedAt",
       limit,
       depth: 1,
+      locale,
     });
     return response.docs;
   } catch (error) {
@@ -592,11 +612,12 @@ export async function getAllGundemArticles(
   }
 }
 
-export async function getRecentArticles(limit = 10) {
+export async function getRecentArticles(limit = 10, locale: string = "tr") {
   return fetchArticles({
     sort: "-publishedAt",
     limit,
     depth: 1,
+    locale,
   });
 }
 
@@ -606,64 +627,72 @@ export async function getRecentArticles(limit = 10) {
 export async function getArticlesByAuthorId(
   authorId: string,
   limit = 50,
+  locale: string = "tr"
 ): Promise<Array<PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory>> {
   return fetchArticles({
     where: { author: { equals: authorId } },
     sort: "-publishedAt",
     limit,
     depth: 1,
+    locale,
   });
 }
 
 // Collection-specific functions (if needed)
-export async function getGundemBySlug(slug: string) {
+export async function getGundemBySlug(slug: string, locale: string = "tr") {
   const response = await fetchPayload<PayloadGundem>("gundem", {
     where: { slug: { equals: slug } },
     limit: 1,
     depth: 2,
+    locale,
   });
   return response.docs[0] || null;
 }
 
-export async function getHikayelerBySlug(slug: string) {
+export async function getHikayelerBySlug(slug: string, locale: string = "tr") {
   const response = await fetchPayload<PayloadHikayeler>("hikayeler", {
     where: { slug: { equals: slug } },
     limit: 1,
     depth: 2,
+    locale,
   });
   return response.docs[0] || null;
 }
 
-export async function getCollabBySlug(slug: string) {
+export async function getCollabBySlug(slug: string, locale: string = "tr") {
   const response = await fetchPayload<PayloadCollab>("collabs", {
     where: { slug: { equals: slug } },
     limit: 1,
     depth: 2,
+    locale,
   });
   return response.docs[0] || null;
 }
 
-export async function getStoryBySlug(slug: string) {
+export async function getStoryBySlug(slug: string, locale: string = "tr") {
   const response = await fetchPayload<PayloadStory>("stories", {
     where: { slug: { equals: slug } },
     limit: 1,
     depth: 2,
+    locale,
   });
   return response.docs[0] || null;
 }
 
 // Supporting Collections
-export async function getCategories() {
+export async function getCategories(locale: string = "tr") {
   return fetchPayload<PayloadCategory>("categories", {
     sort: "name",
     depth: 0,
+    locale,
   });
 }
 
-export async function getAuthors() {
+export async function getAuthors(locale: string = "tr") {
   return fetchPayload<PayloadAuthor>("authors", {
     sort: "name",
     depth: 1, // Include avatar
+    locale,
   });
 }
 
@@ -672,29 +701,99 @@ export async function getAuthors() {
  */
 export async function getAuthorBySlug(
   slug: string,
+  locale: string = "tr"
 ): Promise<PayloadAuthor | null> {
   const res = await fetchPayload<PayloadAuthor>("authors", {
     where: { slug: { equals: slug } },
     limit: 1,
     depth: 1,
+    locale,
   });
   return res.docs[0] || null;
 }
 
-export async function getTags() {
+export async function getTags(locale: string = "tr") {
   return fetchPayload<PayloadTag>("tags", {
     sort: "name",
     depth: 0,
+    locale,
   });
 }
 
+export async function getUIStrings(locale: string = "tr"): Promise<Record<string, string>> {
+  try {
+    const config = getPayloadConfig();
+    if (!config) {
+      return {};
+    }
+
+    const response = await fetch(`${config.url}/globals/ui-strings?locale=${locale}`, {
+      headers: config.headers,
+      next: { revalidate: 3600 }, // Cache for 1 hour
+      signal: getTimeoutSignal(3000),
+    }).catch(() => null);
+
+    if (!response || !response.ok) {
+      return {};
+    }
+
+    const data = await response.json();
+    const stringsData = (data.success && data.data) ? data.data : data;
+
+    // Check for docs (collection style)
+    if (data.docs && Array.isArray(data.docs)) {
+      return data.docs.reduce((acc: Record<string, string>, item: PayloadUIString) => {
+        if (item.key && item.value) {
+          acc[item.key] = item.value;
+        }
+        return acc;
+      }, {});
+    }
+
+    // Check if it has a 'strings' array property (common pattern for globals with lists)
+    if (stringsData && Array.isArray(stringsData.strings)) {
+      return stringsData.strings.reduce((acc: Record<string, string>, item: PayloadUIString) => {
+        if (item.key && item.value) {
+          acc[item.key] = item.value;
+        }
+        return acc;
+      }, {});
+    }
+
+    // Fallback if it returns a direct array of strings
+    if (Array.isArray(stringsData)) {
+      return stringsData.reduce((acc: Record<string, string>, item: PayloadUIString) => {
+        if (item.key && item.value) {
+          acc[item.key] = item.value;
+        }
+        return acc;
+      }, {});
+    }
+
+    return {};
+  } catch (error) {
+    console.error("Error fetching UI strings:", error);
+    return {};
+  }
+}
+
+export async function getPage(slug: string, locale: string = "tr"): Promise<PayloadPage | null> {
+  const response = await fetchPayload<PayloadPage>("pages", {
+    where: { slug: { equals: slug } },
+    limit: 1,
+    depth: 1,
+    locale,
+  });
+  return response.docs[0] || null;
+}
+
 // Globals
-export async function getSiteSettings(): Promise<PayloadSiteSettings | null> {
+export async function getSiteSettings(locale: string = "tr"): Promise<PayloadSiteSettings | null> {
   const fallbackSettings: PayloadSiteSettings = {
     id: "fallback-settings",
     siteName: "Scrolli",
     siteDescription: "Yeni nesil dijital yayın.",
-    defaultLanguage: "tr",
+    defaultLanguage: locale,
     socialLinks: {},
     defaultSEO: {
       title: "Scrolli",
@@ -719,10 +818,10 @@ export async function getSiteSettings(): Promise<PayloadSiteSettings | null> {
       return fallbackSettings;
     }
 
-    const response = await fetch(`${config.url}/globals/site-settings?locale=tr`, {
+    const response = await fetch(`${config.url}/globals/site-settings?locale=${locale}`, {
       headers: config.headers,
       next: { revalidate: 3600 }, // Cache for 1 hour
-      signal: AbortSignal.timeout(3000), // 3s timeout
+      signal: getTimeoutSignal(3000), // 3s timeout
     }).catch(() => null);
 
     if (!response) return fallbackSettings;
@@ -730,7 +829,7 @@ export async function getSiteSettings(): Promise<PayloadSiteSettings | null> {
     if (!response.ok) {
       // Direct retry with legacy slug if 404
       if (response.status === 404) {
-        const fallbackResponse = await fetch(`${config.url}/globals/settings?locale=tr`, {
+        const fallbackResponse = await fetch(`${config.url}/globals/settings?locale=${locale}`, {
           headers: config.headers,
           next: { revalidate: 3600 },
         }).catch(() => null);
@@ -750,17 +849,17 @@ export async function getSiteSettings(): Promise<PayloadSiteSettings | null> {
   }
 }
 
-export async function getNavigation(): Promise<PayloadNavigation | null> {
+export async function getNavigation(locale: string = "tr"): Promise<PayloadNavigation | null> {
   try {
     const config = getPayloadConfig();
     if (!config) {
       return getFallbackNavigation();
     }
 
-    const response = await fetch(`${config.url}/globals/navigation?locale=tr`, {
+    const response = await fetch(`${config.url}/globals/navigation?locale=${locale}`, {
       headers: config.headers,
       next: { revalidate: 3600 }, // Cache for 1 hour
-      signal: AbortSignal.timeout(3000), // 3s timeout for navigation
+      signal: getTimeoutSignal(3000), // 3s timeout for navigation
     }).catch(() => null);
 
     if (!response || !response.ok) {

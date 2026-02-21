@@ -1,5 +1,4 @@
 import { fetchArticles } from "./client";
-import { PayloadGundem, PayloadHikayeler } from "./types";
 import { getMediaUrl } from "./types";
 
 export interface AuthorWithLatestArticle {
@@ -17,7 +16,8 @@ export interface AuthorWithLatestArticle {
  * Returns up to 5 authors, each with their most recent article
  */
 export async function getAuthorsWithLatestArticles(
-  limit: number = 5
+  limit: number = 5,
+  locale: string = "tr"
 ): Promise<AuthorWithLatestArticle[]> {
   try {
     // Fetch recent articles to get authors
@@ -25,6 +25,7 @@ export async function getAuthorsWithLatestArticles(
       sort: "-publishedAt",
       limit: 24, // Fetch enough to get diverse authors
       depth: 2, // Include author relationship
+      locale,
     });
 
     // Map to track unique authors and their latest article
@@ -36,9 +37,9 @@ export async function getAuthorsWithLatestArticles(
       let authorSlug: string | undefined;
       let authorAvatar: string | undefined;
 
-      if (typeof article.author === "object" && article.author !== null) {
+      if (article.author && typeof article.author === "object") {
         authorName = article.author.name;
-        authorSlug = article.author.slug || article.author.name?.toLowerCase().replace(/\s+/g, "-");
+        authorSlug = article.author.slug || authorName?.toLowerCase().replace(/\s+/g, "-");
         if (article.author.avatar) {
           authorAvatar = getMediaUrl(article.author.avatar);
         }
@@ -48,7 +49,7 @@ export async function getAuthorsWithLatestArticles(
       }
 
       // Skip if no author name or empty string
-      if (!authorName || authorName.trim() === "") continue;
+      if (!authorName || typeof authorName !== "string" || authorName.trim() === "") continue;
 
       // If we haven't seen this author yet, add them with their latest article
       if (!authorMap.has(authorName)) {

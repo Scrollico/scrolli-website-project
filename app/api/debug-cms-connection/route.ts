@@ -5,6 +5,16 @@ import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
+// Helper for AbortSignal.timeout compatibility
+function getTimeoutSignal(ms: number): AbortSignal {
+    if (typeof AbortSignal.timeout === 'function') {
+        return AbortSignal.timeout(ms);
+    }
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), ms);
+    return controller.signal;
+}
+
 export async function GET() {
     const PAYLOAD_API_URL = process.env.PAYLOAD_API_URL;
     const PAYLOAD_API_KEY = process.env.PAYLOAD_API_KEY;
@@ -43,7 +53,7 @@ export async function GET() {
                 'Authorization': `Bearer ${PAYLOAD_API_KEY}`,
                 'Content-Type': 'application/json',
             },
-            signal: AbortSignal.timeout(10000),
+            signal: getTimeoutSignal(10000),
         });
         const duration = Date.now() - start;
 

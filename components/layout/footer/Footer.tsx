@@ -11,10 +11,17 @@ import {
   gap,
   typography
 } from '@/lib/design-tokens';
+import { PayloadNavigation } from '@/lib/payload/types';
+import { useTranslation } from '@/components/providers/translation-provider';
 
-export default function Footer() {
+interface FooterProps {
+  navigation?: PayloadNavigation | null;
+}
+
+export default function Footer({ navigation }: FooterProps) {
   const [mounted, setMounted] = useState(false);
   const { theme, resolvedTheme } = useTheme();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setMounted(true);
@@ -29,20 +36,39 @@ export default function Footer() {
     : "/assets/images/Standart/Primary-alternative.svg";
 
   // Navigation Links
-  const categories = [
-    { label: 'Archive', href: '/archive' },
-    { label: 'Categories', href: '/categories' },
-    { label: 'About Us', href: '/about-us' },
-    { label: 'Author', href: '/author' },
+  const fallbackColumns = [
+    {
+      groupTitle: t('categories', 'CATEGORIES'),
+      links: [
+        { label: t('archive', 'Archive'), href: '/archive' },
+        { label: t('categories', 'Categories'), href: '/categories' },
+        { label: t('aboutUs', 'About Us'), href: '/about-us' },
+        { label: t('author', 'Author'), href: '/author' },
+      ]
+    },
+    {
+      groupTitle: t('info', 'INFO'),
+      links: [
+        { label: t('contact', 'Contact'), href: '/contact' },
+        { label: t('termsOfUse', 'Terms of Use'), href: '/kullanim-kosullari' },
+        { label: t('imprint', 'Imprint'), href: '/kunye' },
+        { label: t('signIn', 'Sign in'), href: '/sign-in' },
+        { label: t('subscribe', 'Subscribe'), href: '/pricing', highlight: true },
+      ]
+    }
   ];
 
-  const info = [
-    { label: 'Contact', href: '/contact' },
-    { label: 'Terms of Use', href: '/kullanim-kosullari' },
-    { label: 'Imprint', href: '/kunye' },
-    { label: 'Sign in', href: '/sign-in' },
-    { label: 'Subscribe', href: '/pricing', highlight: true },
-  ];
+  // Use dynamic navigation if available, otherwise fallback
+  const footerColumns = navigation?.footerMenu?.length
+    ? navigation.footerMenu.map((col) => ({
+      groupTitle: col.groupTitle,
+      links: col.links.map((link) => ({
+        label: link.label,
+        href: link.path || link.url || '#',
+        highlight: false // Dynamic links don't support highlight yet
+      }))
+    }))
+    : fallbackColumns;
 
   return (
     <footer
@@ -73,7 +99,7 @@ export default function Footer() {
               />
             </Link>
             <p className={cn(typography.bodySmall, colors.foreground.muted)}>
-              In-depth media experience
+              {t('inDepthMediaExperience', 'In-depth media experience')}
             </p>
 
             <div className="relative inline-block mt-2 group">
@@ -103,53 +129,36 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Middle Section - Categories */}
-          <div className="flex flex-col gap-4">
-            <h4 className={cn("text-xs font-bold tracking-widest", colors.foreground.muted)}>CATEGORIES</h4>
-            <ul className="flex flex-col gap-3 p-0 m-0 list-none">
-              {categories.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className={cn(
-                      "text-[0.95rem] transition-colors duration-300 decoration-0",
-                      colors.foreground.primary,
-                      "hover:text-green-600 dark:hover:text-green-500"
-                    )}
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Right Section - Info */}
-          <div className="flex flex-col gap-4">
-            <h4 className={cn("text-xs font-bold tracking-widest", colors.foreground.muted)}>INFO</h4>
-            <ul className="flex flex-col gap-3 p-0 m-0 list-none">
-              {info.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className={cn(
-                      "text-[0.95rem] transition-colors duration-300 decoration-0",
-                      link.highlight ? "text-amber-500 font-medium hover:text-amber-600" : colors.foreground.primary,
-                      !link.highlight && "hover:text-green-600 dark:hover:text-green-500"
-                    )}
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Dynamic Footer Columns */}
+          {footerColumns.map((col, index) => (
+            <div key={col.groupTitle || index} className="flex flex-col gap-4">
+              <h4 className={cn("text-xs font-bold tracking-widest uppercase", colors.foreground.muted)}>
+                {col.groupTitle}
+              </h4>
+              <ul className="flex flex-col gap-3 p-0 m-0 list-none">
+                {col.links.map((link) => (
+                  <li key={link.href + link.label}>
+                    <Link
+                      href={link.href}
+                      className={cn(
+                        "text-[0.95rem] transition-colors duration-300 decoration-0",
+                        link.highlight ? "text-amber-500 font-medium hover:text-amber-600" : colors.foreground.primary,
+                        !link.highlight && "hover:text-green-600 dark:hover:text-green-500"
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
         {/* Bottom Copyright */}
         <div className={cn("pt-8 border-t border-white/10 dark:border-white/10 text-center md:text-left")}>
           <p className={cn("text-sm", colors.foreground.muted)}>
-            ©2025 Scrolli. All Rights Reserved. Scrolli Media Inc.
+            {t('copyright', '©2025 Scrolli. All Rights Reserved. Scrolli Media Inc.')}
           </p>
         </div>
       </div>

@@ -9,6 +9,7 @@ import CityClockRow from './CityClockRow';
 import CinematicThemeSwitcher from '@/components/ui/cinematic-theme-switcher';
 import { UserMenu } from './UserMenu';
 import { NavbarUsageMeter } from '@/components/paywall';
+import { useLocale } from '@/components/providers/locale-provider';
 
 interface MenuLink {
   label: string;
@@ -17,6 +18,7 @@ interface MenuLink {
 
 interface MenuItem {
   label: string;
+  href?: string;
   bgColor: string;
   textColor: string;
   links: MenuLink[];
@@ -41,7 +43,7 @@ export default function CardNav({
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [currentLanguage, setCurrentLanguage] = useState<'tr' | 'en'>('tr');
+  const { locale, setLocale } = useLocale();
   const { theme, resolvedTheme } = useTheme();
 
   useEffect(() => {
@@ -66,8 +68,7 @@ export default function CardNav({
   };
 
   const toggleLanguage = () => {
-    setCurrentLanguage(currentLanguage === 'tr' ? 'en' : 'tr');
-    // TODO: Implement actual language switching logic
+    setLocale(locale === 'tr' ? 'en' : 'tr');
   };
 
   return (
@@ -246,10 +247,10 @@ export default function CardNav({
           <div className="card-nav-menu">
             {items.map((item) => {
               // Custom URLs for specific items
-              let href = `/${item.label.toLowerCase().replace(' ', '-')}`;
-              if (item.label === 'Business') {
+              let href = item.href || `/${item.label.toLowerCase().replace(' ', '-')}`;
+              if (item.label === 'Business' && !item.href) {
                 href = 'https://business.scrolli.co/';
-              } else if (item.label === 'Alara AI') {
+              } else if (item.label === 'Alara AI' && !item.href) {
                 href = 'https://alara.scrolli.co/';
               }
 
@@ -326,7 +327,7 @@ export default function CardNav({
               <motion.button
                 className="relative ml-2 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full p-0 transition-all duration-300 focus:outline-none"
                 onClick={toggleLanguage}
-                aria-label={`Switch to ${currentLanguage === 'tr' ? 'English' : 'Turkish'}`}
+                aria-label={`Switch to ${locale === 'tr' ? 'English' : 'Turkish'}`}
                 whileTap={{ scale: 0.95 }}
                 style={{
                   background: isDark
@@ -386,7 +387,7 @@ export default function CardNav({
                 />
 
                 {/* Flag Icon - Show the opposite flag */}
-                {currentLanguage === 'tr' ? (
+                {locale === 'tr' ? (
                   <EnglishFlagIcon size={24} className="relative z-10" />
                 ) : (
                   <TurkishFlagIcon size={24} className="relative z-10" />

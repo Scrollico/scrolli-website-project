@@ -316,7 +316,7 @@ export function ArticleGateWrapper({ articleId, children }: ArticleGateWrapperPr
  * NavbarUsageMeter - Export for use in the navbar
  * DISABLED: Component removed per user request
  */
-export function NavbarUsageMeter() {
+export function NavbarUsageMeter({ className }: { className?: string }) {
     // Component disabled - always return null
     return null;
 }

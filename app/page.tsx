@@ -1,4 +1,4 @@
-export const runtime = "edge";
+// export const runtime = "edge";
 
 import Layout from "@/components/layout/Layout";
 import Link from "next/link";
@@ -25,14 +25,32 @@ import {
 } from "@/lib/payload/types";
 import { Article } from "@/types/content";
 import DailyBriefingSection from "@/components/sections/home/DailyBriefingSection";
+import { cookies } from "next/headers";
+import { NEXT_LOCALE_COOKIE } from "@/lib/locale-config";
+import { generateSiteMetadata } from "@/lib/seo";
+import { getSiteSettings } from "@/lib/payload/client";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const cookieStore = await cookies();
+  const locale = cookieStore.get(NEXT_LOCALE_COOKIE)?.value || "tr";
+  const siteSettings = await getSiteSettings(locale);
+
+  return {
+    ...generateSiteMetadata(siteSettings || undefined, locale),
+  };
+}
 
 export default async function Home() {
   try {
+    const cookieStore = await cookies();
+    const locale = cookieStore.get(NEXT_LOCALE_COOKIE)?.value || "tr";
+
     // Fetch navigation, homepage content, and authors from Payload CMS
     const [homepageContent, navigation, authors] = await Promise.allSettled([
-      getHomepageContent(),
-      getNavigation(),
-      getAuthorsWithLatestArticles(5),
+      getHomepageContent(locale),
+      getNavigation(locale),
+      getAuthorsWithLatestArticles(5, locale),
     ]).then((results) => [
       results[0].status === "fulfilled"
         ? (results[0] as PromiseFulfilledResult<HomepageContent>).value
@@ -60,14 +78,14 @@ export default async function Home() {
     // Map Payload articles to Article interface for components
     const heroArticle: Article | null = homepageContent.hero
       ? homepageContent.hero.source === "Gündem"
-        ? mapGundemToArticle(homepageContent.hero)
+        ? mapGundemToArticle(homepageContent.hero, locale)
         : homepageContent.hero.source === "Alara AI"
-          ? mapGundemToArticle(homepageContent.hero)
+          ? mapGundemToArticle(homepageContent.hero, locale)
           : homepageContent.hero.source === "Collabs"
-            ? mapCollabToArticle(homepageContent.hero)
+            ? mapCollabToArticle(homepageContent.hero, locale)
             : homepageContent.hero.source === "Stories"
-              ? mapStoryToArticle(homepageContent.hero)
-              : mapHikayelerToArticle(homepageContent.hero)
+              ? mapStoryToArticle(homepageContent.hero, locale)
+              : mapHikayelerToArticle(homepageContent.hero, locale)
       : null;
 
     const editorsPicksArticles: Article[] = homepageContent.editorsPicks.map(
@@ -75,20 +93,20 @@ export default async function Home() {
         if ("source" in article) {
           switch (article.source) {
             case "Gündem":
-              return mapGundemToArticle(article);
+              return mapGundemToArticle(article, locale);
             case "Alara AI":
-              return mapGundemToArticle(article);
+              return mapGundemToArticle(article, locale);
             case "Collabs":
-              return mapCollabToArticle(article);
+              return mapCollabToArticle(article, locale);
             case "Stories":
-              return mapStoryToArticle(article);
+              return mapStoryToArticle(article, locale);
             case "Hikayeler":
             default:
               // @ts-ignore - Handle fallback safely
-              return mapHikayelerToArticle(article as any);
+              return mapHikayelerToArticle(article as any, locale);
           }
         } else {
-          return mapCurationToArticle(article);
+          return mapCurationToArticle(article, locale);
         }
       }
     );
@@ -97,17 +115,17 @@ export default async function Home() {
       (article) => {
         switch (article.source) {
           case "Gündem":
-            return mapGundemToArticle(article);
+            return mapGundemToArticle(article, locale);
           case "Alara AI":
-            return mapGundemToArticle(article);
+            return mapGundemToArticle(article, locale);
           case "Collabs":
-            return mapCollabToArticle(article);
+            return mapCollabToArticle(article, locale);
           case "Stories":
-            return mapStoryToArticle(article);
+            return mapStoryToArticle(article, locale);
           case "Hikayeler":
           default:
             // @ts-ignore
-            return mapHikayelerToArticle(article as any);
+            return mapHikayelerToArticle(article as any, locale);
         }
       }
     );
@@ -116,27 +134,27 @@ export default async function Home() {
       (article) => {
         switch (article.source) {
           case "Gündem":
-            return mapGundemToArticle(article);
+            return mapGundemToArticle(article, locale);
           case "Alara AI":
-            return mapGundemToArticle(article);
+            return mapGundemToArticle(article, locale);
           case "Collabs":
-            return mapCollabToArticle(article);
+            return mapCollabToArticle(article, locale);
           case "Stories":
-            return mapStoryToArticle(article);
+            return mapStoryToArticle(article, locale);
           case "Hikayeler":
           default:
             // @ts-ignore
-            return mapHikayelerToArticle(article as any);
+            return mapHikayelerToArticle(article as any, locale);
         }
       }
     );
 
     const hikayelerArticles: Article[] = (homepageContent.hikayeler || []).map(
-      mapHikayelerToArticle
+      (a) => mapHikayelerToArticle(a, locale)
     );
 
     const dailyBriefingArticle: Article | null = homepageContent.dailyBriefing
-      ? mapDailyBriefingToArticle(homepageContent.dailyBriefing)
+      ? mapDailyBriefingToArticle(homepageContent.dailyBriefing, locale)
       : null;
 
     return (

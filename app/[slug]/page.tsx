@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import Script from "next/script";
 import Layout from "@/components/layout/Layout";
 import Section1 from "@/components/sections/single/Section1";
-import { getArticleBySlug, getNavigation } from "@/lib/payload/client";
+import { getArticleBySlug, getNavigation, getPage } from "@/lib/payload/client";
 import {
   PayloadGundem,
   PayloadHikayeler,
@@ -17,8 +17,11 @@ import {
   mapCollabToArticle,
   mapStoryToArticle
 } from "@/lib/payload/types";
+import { serializeRichText } from "@/lib/payload/serialize";
 import { generateArticleMetadata, formatDateForSEO } from "@/lib/seo";
 import { getRelatedArticles } from "@/lib/content";
+import { cookies } from "next/headers";
+import { NEXT_LOCALE_COOKIE } from "@/lib/locale-config";
 import {
   generateArticleStructuredData,
   generateBreadcrumbStructuredData,
@@ -33,22 +36,23 @@ interface ArticlePageProps {
 }
 
 function mapPayloadToArticle(
-  payloadArticle: PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory
+  payloadArticle: PayloadGundem | PayloadHikayeler | PayloadAlaraai | PayloadCollab | PayloadStory,
+  locale: string = "tr"
 ): Article {
   const collection = (payloadArticle as any).collection;
   const source = (payloadArticle as any).source;
 
   if (collection === 'collabs' || source === 'Collabs') {
-    return mapCollabToArticle(payloadArticle as PayloadCollab);
+    return mapCollabToArticle(payloadArticle as PayloadCollab, locale);
   }
   if (collection === 'stories' || source === 'Stories') {
-    return mapStoryToArticle(payloadArticle as PayloadStory);
+    return mapStoryToArticle(payloadArticle as PayloadStory, locale);
   }
   if (collection === 'hikayeler' || source === 'Hikayeler') {
-    return mapHikayelerToArticle(payloadArticle as PayloadHikayeler);
+    return mapHikayelerToArticle(payloadArticle as PayloadHikayeler, locale);
   }
   // Default to Gundem (includes AlaraAI)
-  return mapGundemToArticle(payloadArticle as PayloadGundem | PayloadAlaraai);
+  return mapGundemToArticle(payloadArticle as PayloadGundem | PayloadAlaraai, locale);
 }
 
 // Generate metadata for SEO
@@ -56,22 +60,40 @@ export async function generateMetadata({
   params,
 }: ArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const payloadArticle = await getArticleBySlug(slug);
+  const cookieStore = await cookies();
+  const locale = cookieStore.get(NEXT_LOCALE_COOKIE)?.value || "tr";
 
-  if (!payloadArticle) {
+  // 1. Try to fetch as Article
+  const payloadArticle = await getArticleBySlug(slug, locale);
+
+  if (payloadArticle) {
+    const article = mapPayloadToArticle(payloadArticle, locale);
+    return generateArticleMetadata(article, { locale });
+  }
+
+  // 2. Try to fetch as generic Page
+  const page = await getPage(slug, locale);
+  if (page) {
     return {
-      title: "Article Not Found",
-      description: "The article you're looking for doesn't exist.",
+      title: page.meta?.title || page.title,
+      description: page.meta?.description || `Page for ${page.title}`,
+      openGraph: {
+        title: page.meta?.title || page.title,
+        description: page.meta?.description,
+      }
     };
   }
 
-  const article = mapPayloadToArticle(payloadArticle);
-
-  return generateArticleMetadata(article);
+  return {
+    title: "Page Not Found",
+    description: "The content you're looking for doesn't exist.",
+  };
 }
 
 export default async function ArticlePage({ params, searchParams }: ArticlePageProps) {
   const { slug } = await params;
+  const cookieStore = await cookies();
+  const locale = cookieStore.get(NEXT_LOCALE_COOKIE)?.value || "tr";
 
   // Safety: If for some reason an /api route reaches here, skip it
   if (slug === "api" || slug.startsWith("api/")) {
@@ -79,58 +101,82 @@ export default async function ArticlePage({ params, searchParams }: ArticlePageP
   }
 
   const [payloadArticle, navigation] = await Promise.all([
-    getArticleBySlug(slug),
-    getNavigation(),
+    getArticleBySlug(slug, locale),
+    getNavigation(locale),
   ]);
 
-  if (!payloadArticle) {
-    notFound();
+  // Case 1: Article Found
+  if (payloadArticle) {
+    const article = mapPayloadToArticle(payloadArticle, locale);
+
+    const search = searchParams ? await searchParams : undefined;
+    const giftToken = search?.gift
+      ? (Array.isArray(search.gift) ? search.gift[0] : search.gift)
+      : null;
+    const redeemed = search?.redeemed === "true";
+    const { article: paywalledArticle, isPaywalled } = await getPaywalledArticle(article, giftToken ?? undefined, redeemed);
+
+    const hasScript = !!paywalledArticle.inlineScriptHtml && paywalledArticle.inlineScriptHtml.trim().length > 0;
+    const isHikayelerWithScript = hasScript;
+
+    const relatedArticles = isHikayelerWithScript
+      ? []
+      : await getRelatedArticles(paywalledArticle, 6, payloadArticle);
+
+    const articleStructuredData = generateArticleStructuredData(paywalledArticle, {
+      publishedTime: formatDateForSEO(paywalledArticle.date),
+    });
+    const breadcrumbData = generateBreadcrumbStructuredData(
+      generateArticleBreadcrumbs(paywalledArticle)
+    );
+
+    return (
+      <>
+        <Script
+          id="article-structured-data"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(articleStructuredData),
+          }}
+        />
+        <Script
+          id="breadcrumb-structured-data"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(breadcrumbData),
+          }}
+        />
+        <Layout classList="single" navigation={navigation}>
+          <Section1 article={paywalledArticle} relatedArticles={relatedArticles} isPaywalled={isPaywalled} />
+        </Layout>
+      </>
+    );
   }
 
-  const article = mapPayloadToArticle(payloadArticle);
+  // Case 2: Generic Page Found
+  const page = await getPage(slug, locale);
 
-  const search = searchParams ? await searchParams : undefined;
-  const giftToken = search?.gift
-    ? (Array.isArray(search.gift) ? search.gift[0] : search.gift)
-    : null;
-  const redeemed = search?.redeemed === "true";
-  const { article: paywalledArticle, isPaywalled } = await getPaywalledArticle(article, giftToken ?? undefined, redeemed);
+  if (page) {
+    return (
+      <Layout classList="page-generic" navigation={navigation}>
+        <div className="container mx-auto px-4 py-12 max-w-4xl">
+          <header className="mb-8">
+            <h1 className="text-3xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
+              {page.title}
+            </h1>
+          </header>
 
-  const hasScript = !!paywalledArticle.inlineScriptHtml && paywalledArticle.inlineScriptHtml.trim().length > 0;
-  const isHikayelerWithScript = hasScript;
-
-  const relatedArticles = isHikayelerWithScript
-    ? []
-    : await getRelatedArticles(paywalledArticle, 6, payloadArticle);
-
-  const articleStructuredData = generateArticleStructuredData(paywalledArticle, {
-    publishedTime: formatDateForSEO(paywalledArticle.date),
-  });
-  const breadcrumbData = generateBreadcrumbStructuredData(
-    generateArticleBreadcrumbs(paywalledArticle)
-  );
-
-  return (
-    <>
-      <Script
-        id="article-structured-data"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(articleStructuredData),
-        }}
-      />
-      <Script
-        id="breadcrumb-structured-data"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(breadcrumbData),
-        }}
-      />
-      <Layout classList="single" navigation={navigation}>
-        <Section1 article={paywalledArticle} relatedArticles={relatedArticles} isPaywalled={isPaywalled} />
+          <div
+            className="prose dark:prose-invert max-w-none text-lg leading-relaxed text-gray-800 dark:text-gray-200"
+            dangerouslySetInnerHTML={{ __html: serializeRichText(page.content) }}
+          />
+        </div>
       </Layout>
-    </>
-  );
+    );
+  }
+
+  // Case 3: Nothing Found
+  notFound();
 }
 
 // Generate static paths for all articles (optional, for ISR)
