@@ -5,6 +5,7 @@
  * Following Arc Publishing principles for content discoverability
  */
 
+import { Metadata } from "next";
 import { Article, ArticleMetadata } from "@/types/content";
 import { PayloadSiteSettings } from "@/lib/payload/types";
 
@@ -143,52 +144,15 @@ export function generateArticleMetadata(
  * Generate default site metadata
  * Optionally accepts Payload Site Settings to override defaults
  */
-export function generateSiteMetadata(siteSettings?: PayloadSiteSettings): {
-  metadataBase: URL;
-  title: {
-    default: string;
-    template: string;
-  };
-  description: string;
-  keywords: string[];
-  authors: Array<{ name: string }>;
-  creator: string;
-  openGraph: {
-    type: string;
-    locale: string;
-    url: string;
-    siteName: string;
-    title: string;
-    description: string;
-    images: Array<{ url: string }>;
-  };
-  twitter: {
-    card: string;
-    title: string;
-    description: string;
-    creator: string;
-    images: string[];
-  };
-  robots: {
-    index: boolean;
-    follow: boolean;
-    googleBot: {
-      index: boolean;
-      follow: boolean;
-      "max-video-preview": number;
-      "max-image-preview": string;
-      "max-snippet": number;
-    };
-  };
-} {
+export function generateSiteMetadata(siteSettings?: PayloadSiteSettings): Metadata {
   // Use Payload settings if available, otherwise use defaults
   const siteName = siteSettings?.siteName || SITE_CONFIG.name;
   const siteDescription = siteSettings?.siteDescription || SITE_CONFIG.description;
   const siteUrl = SITE_CONFIG.url;
-  const twitterHandle = siteSettings?.socialLinks?.twitter 
+  const twitterHandle = siteSettings?.socialLinks?.twitter
     ? `@${siteSettings.socialLinks.twitter.split('/').pop() || 'scrolli'}`
     : SITE_CONFIG.twitterHandle;
-  const keywords = siteSettings?.defaultSEO?.keywords 
+  const keywords = siteSettings?.defaultSEO?.keywords
     ? siteSettings.defaultSEO.keywords.split(',').map(k => k.trim())
     : ["news", "blog", "magazine", "articles", "content"];
 

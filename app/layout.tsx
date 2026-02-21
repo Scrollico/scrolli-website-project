@@ -121,20 +121,36 @@ const themeInitScript = `
 
 // getSiteSettings() now returns null on error instead of throwing
 export async function generateMetadata(): Promise<Metadata> {
-  const siteSettings = await getSiteSettings();
+  try {
+    const siteSettings = await getSiteSettings();
 
-  return {
-    ...generateSiteMetadata(siteSettings || undefined),
-    icons: {
-      icon: [
-        { url: '/assets/images/Standart/primary-icon.png', sizes: 'any' },
-        { url: '/assets/images/Standart/primary-icon.png', type: 'image/png' },
-      ],
-      apple: [
-        { url: '/assets/images/Standart/primary-icon.png' },
-      ],
-    },
-  };
+    return {
+      ...generateSiteMetadata(siteSettings || undefined),
+      icons: {
+        icon: [
+          { url: '/assets/images/Standart/primary-icon.png', sizes: 'any' },
+          { url: '/assets/images/Standart/primary-icon.png', type: 'image/png' },
+        ],
+        apple: [
+          { url: '/assets/images/Standart/primary-icon.png' },
+        ],
+      },
+    };
+  } catch (error) {
+    console.error('Error generating metadata:', error);
+    return {
+      title: 'Scrolli',
+      description: 'Yeni nesil dijital yayın.',
+      icons: {
+        icon: [
+          { url: '/assets/images/Standart/primary-icon.png', sizes: 'any' },
+        ],
+        apple: [
+          { url: '/assets/images/Standart/primary-icon.png' },
+        ],
+      },
+    };
+  }
 }
 
 export default async function RootLayout({

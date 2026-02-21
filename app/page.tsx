@@ -53,6 +53,10 @@ export default async function Home() {
         : [],
     ]) as [HomepageContent, PayloadNavigation | null, AuthorWithLatestArticle[]];
 
+    if (!homepageContent) {
+      throw new Error("Homepage content is missing");
+    }
+
     // Map Payload articles to Article interface for components
     const heroArticle: Article | null = homepageContent.hero
       ? homepageContent.hero.source === "Gündem"
