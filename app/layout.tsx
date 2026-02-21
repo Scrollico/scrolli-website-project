@@ -27,18 +27,6 @@ import { ThemeProvider } from "@/components/providers/theme-provider"
 import { AuthProvider } from "@/components/providers/auth-provider"
 import { RevenueCatProvider } from "@/components/providers/revenuecat-provider"
 import { getSiteSettings } from "@/lib/payload/client"
-import { validateEnvVars } from "@/lib/env-validation"
-
-// Validate environment variables on server startup
-// Log an error if critical variables are missing, but don't crash in production
-// to allow the app to degrade gracefully with fallbacks.
-if (typeof window === 'undefined') {
-  try {
-    validateEnvVars();
-  } catch (error) {
-    console.error('❌ Environment variable validation failed:', error);
-  }
-}
 
 // Configure Newsreader font for display text (headings)
 const newsreader = Newsreader({
