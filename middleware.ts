@@ -1,4 +1,4 @@
-import { createServerClient } from '@supabase/ssr';
+import { createClient } from '@/lib/supabase/middleware';
 import { NextResponse, type NextRequest } from 'next/server';
 import { addCorsHeaders, handleOptionsRequest, checkRequestSize } from '@/lib/api/middleware';
 import { checkRateLimit, createRateLimitResponse } from '@/lib/api/rate-limit';
@@ -25,54 +25,21 @@ export async function middleware(request: NextRequest) {
       return addCorsHeaders(sizeCheck, request);
     }
   }
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  });
 
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  // Create Supabase client and get initial response
+  // This handles the session refresh if needed
+  const { supabase, response } = createClient(request);
 
-  let supabase: any = null;
   let user = null;
 
-  if (supabaseUrl && supabaseAnonKey) {
-    try {
-      supabase = createServerClient(
-        supabaseUrl,
-        supabaseAnonKey,
-        {
-          cookies: {
-            getAll() {
-              return request.cookies.getAll();
-            },
-            setAll(cookiesToSet) {
-              cookiesToSet.forEach(({ name, value, options }) =>
-                request.cookies.set(name, value)
-              );
-              response = NextResponse.next({
-                request,
-              });
-              cookiesToSet.forEach(({ name, value, options }) =>
-                response.cookies.set(name, value, options)
-              );
-            },
-          },
-        }
-      );
-
-      // Refresh session if expired - required for Server Components
-      const {
-        data,
-      } = await supabase.auth.getUser();
-      user = data.user;
-    } catch (error) {
-      console.error('[Middleware] Supabase client error:', error);
-    }
-  } else {
-    // Only log once per cold start to avoid log spam, or use debug level
-    console.error('[Middleware] Missing Supabase configuration - auth features disabled');
+  try {
+    // Refresh session if expired - required for Server Components
+    const {
+      data,
+    } = await supabase.auth.getUser();
+    user = data.user;
+  } catch (error) {
+    console.error('[Middleware] Supabase client error:', error);
   }
 
   const pathname = request.nextUrl.pathname;
