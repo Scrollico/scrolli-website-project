@@ -444,9 +444,9 @@
     will-change: auto !important;
     margin-top: 0 !important;
     padding-top: 0 !important;
-    /* Match live hero: 70vh above-the-fold layout */
-    height: 70vh !important;
-    min-height: 70vh !important;
+    /* Updated hero height: slightly taller above-the-fold layout */
+    height: 80vh !important;
+    min-height: 80vh !important;
     z-index: 10 !important;
     background-color: #1f2937 !important; /* Dark fallback until image paints; image covers it */
   }
@@ -457,9 +457,9 @@
   section.hero-full-height,
   section[data-hero-section="true"].hero-full-height {
     top: 0 !important;
-    /* Keep consistent 70vh height for hero */
-    height: 70vh !important;
-    min-height: 70vh !important;
+    /* Keep consistent 80vh height for hero */
+    height: 80vh !important;
+    min-height: 80vh !important;
     margin-top: 0 !important;
     padding-top: 0 !important;
   }
@@ -1081,16 +1081,15 @@ button[role="tab"][data-state="active"] {
 }
 
 .hero-bottom-gradient {
-  /* Light mode: white gradient matching dark mode shape */
+  /* Light mode: subtle white gradient - reduced opacity for darker, more refined look */
   background: linear-gradient(
     180deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.3) 15%,
-    rgba(255, 255, 255, 0.6) 30%,
-    rgba(255, 255, 255, 0.9) 50%,
-    rgba(255, 255, 255, 1) 70%,
-    rgba(255, 255, 255, 1) 90%,
-    rgba(255, 255, 255, 1) 100%
+    rgba(255, 255, 255, 0.08) 30%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.25) 70%,
+    rgba(255, 255, 255, 0.3) 85%,
+    rgba(255, 255, 255, 0.3) 100%
   );
 }
 
