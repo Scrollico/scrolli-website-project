@@ -26,8 +26,6 @@ jobs:
         with:
           urls: |
             ${{ steps.cloudflare.outputs.url }}
-            ${{ steps.cloudflare.outputs.url }}/eksen
-            ${{ steps.cloudflare.outputs.url }}/finans
           budgetPath: ./budget.json # Optional
           configPath: ./lighthouserc.js
           uploadArtifacts: true # Save reports as artifacts

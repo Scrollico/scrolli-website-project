@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { fetchArticles } from '@/lib/payload/client';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://scrolli.co';
 
@@ -73,15 +74,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // TODO: Fetch dynamic article pages from CMS
-  // For now, return static pages. In production, add:
-  // const articles = await fetchAllArticles();
-  // const articlePages = articles.map(article => ({
-  //   url: `${SITE_URL}/article/${article.id}`,
-  //   lastModified: article.updatedAt,
-  //   changeFrequency: 'weekly' as const,
-  //   priority: 0.8,
-  // }));
+  // Fetch dynamic article pages from CMS
+  let articlePages: MetadataRoute.Sitemap = [];
+  try {
+    const articles = await fetchArticles({ limit: 1000 });
+    articlePages = articles.map((article) => ({
+      url: `${SITE_URL}/article/${article.slug || article.id}`,
+      lastModified: article.updatedAt ? new Date(article.updatedAt) : new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    }));
+  } catch (error) {
+    console.error('Error fetching articles for sitemap:', error);
+  }
 
-  return [...staticPages];
+  return [...staticPages, ...articlePages];
 }
