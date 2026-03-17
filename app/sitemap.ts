@@ -77,9 +77,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fetch dynamic article pages from CMS
   let articlePages: MetadataRoute.Sitemap = [];
   try {
-    const articles = await fetchArticles({ limit: 5000 });
+    const articles = await fetchArticles({ limit: 1000 });
     articlePages = articles.map((article) => ({
-      url: `${SITE_URL}/${article.slug || article.id}`,
+      url: `${SITE_URL}/article/${article.slug || article.id}`,
       lastModified: article.updatedAt ? new Date(article.updatedAt) : new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.8,
