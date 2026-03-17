@@ -13,6 +13,7 @@ export interface Article {
   title: string;
   subtitle?: string; // Article subtitle (from Payload CMS)
   author: string;
+  authorSlug?: string; // Author slug for linking to author page (from Payload CMS)
   category: string;
   date: string;
   readTime: string;

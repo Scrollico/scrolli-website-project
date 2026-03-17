@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import Image from "next/image";
-import { BookOpen } from "lucide-react";
 import { ArticleListSkeleton } from "@/components/ui/LoadingSkeletons";
 import { ExpandingCards, CardItem } from "@/components/ui/expanding-cards";
 import { Heading, Label } from "@/components/ui/typography";
@@ -26,7 +25,6 @@ function mapArticlesToCardItems(articles: Article[]): CardItem[] {
         article.excerpt?.replace(/<[^>]*>/g, "").trim() ||
         `${getAuthorName(article.author)} • ${article.date}`,
       imgSrc,
-      icon: <BookOpen size={24} />,
       linkHref: `/${article.id}`,
     };
   });

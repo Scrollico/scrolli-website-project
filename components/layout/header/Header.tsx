@@ -9,21 +9,17 @@ import MobileSidebar from "./MobileSidebar";
 import { getCategoriesFromBlog } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 import { colors, borderRadius } from "@/lib/design-tokens";
-import { PayloadNavigation, PayloadNavigationItem } from "@/lib/payload/types";
+import { PayloadNavigation } from "@/lib/payload/types";
 import { NavbarUsageMeter } from "@/components/paywall";
+import type { CategoryPreview } from "./HeaderWrapper";
 
 interface HeaderProps {
   navigation?: PayloadNavigation | null;
+  categoryPreviews?: CategoryPreview[];
 }
 
-// Default menu colors to cycle through
-const MENU_COLORS = [
-  { bgColor: "#0D0716", textColor: "#fff" },
-  { bgColor: "#170D27", textColor: "#fff" },
-  { bgColor: "#271E37", textColor: "#fff" }
-];
 
-export default function Header({ navigation }: HeaderProps) {
+export default function Header({ navigation, categoryPreviews }: HeaderProps) {
   const [isSearch, setIsSearch] = useState<number | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, resolvedTheme } = useTheme();
@@ -45,57 +41,41 @@ export default function Header({ navigation }: HeaderProps) {
     handleSearch
   };
   // CardNav menu items configuration
-  const cardNavItems = useMemo(() => {
-    if (navigation?.mainMenu && navigation.mainMenu.length > 0) {
-      return navigation.mainMenu.map((item, index) => {
-        const colorTheme = MENU_COLORS[index % MENU_COLORS.length];
-        return {
-          label: item.label,
-          href: item.path || item.url || '#',
-          bgColor: colorTheme.bgColor,
-          textColor: colorTheme.textColor,
-          links: item.children?.map((child) => ({
-            label: child.label,
-            ariaLabel: child.label,
-          })) || [],
-        };
-      });
-    }
-
-    // Fallback to hardcoded items
-    return [
-      {
-        label: "Discover",
-        bgColor: "#0D0716",
-        textColor: "#fff",
-        links: [
-          { label: "Explore Content", ariaLabel: "Discover new content" },
-          { label: "Latest Articles", ariaLabel: "Read latest articles" },
-          { label: "Trending Topics", ariaLabel: "See trending topics" },
-        ],
-      },
-      {
-        label: "Alara AI",
-        bgColor: "#170D27",
-        textColor: "#fff",
-        links: [
-          { label: "AI Features", ariaLabel: "Explore AI capabilities" },
-          { label: "Smart Assistant", ariaLabel: "Meet our AI assistant" },
-          { label: "Integration", ariaLabel: "API integration" },
-        ],
-      },
-      {
-        label: "Business",
-        bgColor: "#271E37",
-        textColor: "#fff",
-        links: [
-          { label: "Solutions", ariaLabel: "Business solutions" },
-          { label: "Enterprise", ariaLabel: "Enterprise services" },
-          { label: "Contact Sales", ariaLabel: "Get in touch with sales" },
-        ],
-      },
-    ];
-  }, [navigation]);
+  const cardNavItems = useMemo(() => [
+    {
+      label: "Keşfet",
+      href: "/kesfet",
+      bgColor: "#0D0716",
+      textColor: "#fff",
+      links: [],
+    },
+    {
+      label: "Dosya",
+      href: "/dosya",
+      bgColor: "#170D27",
+      textColor: "#fff",
+      links: [],
+    },
+    {
+      label: "Hikaye",
+      href: "/hikayeler",
+      bgColor: "#271E37",
+      textColor: "#fff",
+      links: [
+        { label: "Zest", ariaLabel: "Zest hikayeleri", href: "/categories?cat=zest" },
+        { label: "Eksen", ariaLabel: "Eksen hikayeleri", href: "/categories?cat=eksen" },
+        { label: "Finans", ariaLabel: "Finans hikayeleri", href: "/categories?cat=finans" },
+      ],
+    },
+    {
+      label: "Business",
+      href: "https://business.scrolli.co/",
+      bgColor: "#1a1a2e",
+      textColor: "#fff",
+      links: [],
+    },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  ], []);
 
   // Use Payload navigation if available, otherwise fallback to static categories
   const categories = useMemo(() => {
@@ -214,6 +194,7 @@ export default function Header({ navigation }: HeaderProps) {
             logo="/assets/images/Standart/Primary-alternative.svg"
             logoAlt="Scrolli Logo"
             items={cardNavItems}
+            categoryPreviews={categoryPreviews}
             {...headerProps}
           />
         </div>
@@ -225,6 +206,7 @@ export default function Header({ navigation }: HeaderProps) {
         onClose={() => setIsMobileMenuOpen(false)}
         categories={categories}
         sidebarLinks={sidebarLinks}
+        navItems={cardNavItems}
       />
     </>
   );

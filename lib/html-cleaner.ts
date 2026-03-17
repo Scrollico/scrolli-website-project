@@ -1,8 +1,9 @@
 /**
  * HTML Cleaner Utility
- * 
- * Cleans HTML content from Payload CMS (especially Alara AI-generated content)
- * to remove nested tags, normalize whitespace, and fix common issues.
+ *
+ * Cleans and sanitizes HTML content from Payload CMS (especially Alara AI-generated
+ * content) to remove nested tags, normalize whitespace, fix common issues,
+ * and prevent XSS. Uses regex-based sanitization compatible with Edge Runtime.
  */
 
 /**
@@ -10,37 +11,21 @@
  * Example: <p><p>content</p></p> becomes <p>content</p>
  */
 function removeNestedParagraphs(html: string): string {
-  if (!html || typeof html !== 'string') return html;
-  
-  // Use regex to find and fix nested <p> tags
-  // Match <p> followed by optional whitespace and another <p>
-  let cleaned = html.replace(/<p[^>]*>\s*<p[^>]*>/gi, '<p>');
-  
-  // Match closing </p> followed by optional whitespace and another </p>
-  cleaned = cleaned.replace(/<\/p>\s*<\/p>/gi, '</p>');
-  
+  if (!html || typeof html !== "string") return html;
+  let cleaned = html.replace(/<p[^>]*>\s*<p[^>]*>/gi, "<p>");
+  cleaned = cleaned.replace(/<\/p>\s*<\/p>/gi, "</p>");
   return cleaned;
 }
 
 /**
  * Normalizes whitespace in HTML
- * Removes excessive spaces, newlines, and tabs while preserving structure
  */
 function normalizeWhitespace(html: string): string {
-  if (!html || typeof html !== 'string') return html;
-  
-  // Replace multiple spaces with single space
-  let cleaned = html.replace(/[ \t]+/g, ' ');
-  
-  // Replace multiple newlines with single newline
-  cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
-  
-  // Remove spaces between tags
-  cleaned = cleaned.replace(/>\s+</g, '><');
-  
-  // Add back single space between tags for readability (optional)
-  cleaned = cleaned.replace(/></g, '> <');
-  
+  if (!html || typeof html !== "string") return html;
+  let cleaned = html.replace(/[ \t]+/g, " ");
+  cleaned = cleaned.replace(/\n{3,}/g, "\n\n");
+  cleaned = cleaned.replace(/>\s+</g, "><");
+  cleaned = cleaned.replace(/></g, "> <");
   return cleaned.trim();
 }
 
@@ -48,21 +33,34 @@ function normalizeWhitespace(html: string): string {
  * Removes empty paragraph tags
  */
 function removeEmptyParagraphs(html: string): string {
-  if (!html || typeof html !== 'string') return html;
-  
-  // Remove <p></p> and <p> </p> and <p>&nbsp;</p>
+  if (!html || typeof html !== "string") return html;
   return html
-    .replace(/<p[^>]*>\s*<\/p>/gi, '')
-    .replace(/<p[^>]*>\s*&nbsp;\s*<\/p>/gi, '');
+    .replace(/<p[^>]*>\s*<\/p>/gi, "")
+    .replace(/<p[^>]*>\s*&nbsp;\s*<\/p>/gi, "");
+}
+
+const DANGEROUS_TAGS = /(<\s*\/?\s*(script|iframe|object|embed|form|input|button|select|textarea|link|meta|style|base|applet|xml)[^>]*>)/gi;
+const EVENT_ATTRS = /\s+on\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]*)/gi;
+const JS_HREF = /(href|src|action)\s*=\s*["']?\s*javascript:/gi;
+
+/**
+ * Edge Runtime-compatible HTML sanitizer.
+ * Strips dangerous tags, event handler attributes, and javascript: URIs.
+ */
+function sanitizeHtml(html: string): string {
+  return html
+    .replace(DANGEROUS_TAGS, "")
+    .replace(EVENT_ATTRS, "")
+    .replace(JS_HREF, '$1="about:blank"');
 }
 
 /**
- * Main function to clean HTML content
- * Applies all cleaning functions in the correct order
- * 
+ * Main function to clean and sanitize HTML content.
+ * Applies structural cleaning then DOMPurify sanitization to prevent XSS.
+ *
  * @param html - Raw HTML string from Payload CMS
  * @param options - Optional configuration
- * @returns Cleaned HTML string
+ * @returns Sanitized, cleaned HTML string
  */
 export function cleanHtmlContent(
   html: string,
@@ -72,28 +70,31 @@ export function cleanHtmlContent(
     removeEmptyTags?: boolean;
   } = {}
 ): string {
-  if (!html || typeof html !== 'string') return html;
-  
+  if (!html || typeof html !== "string") return html;
+
   const {
     removeNestedTags = true,
     normalizeWhitespace: normalize = true,
     removeEmptyTags = true,
   } = options;
-  
+
   let cleaned = html;
-  
-  // Apply cleaning functions in order
+
   if (removeNestedTags) {
     cleaned = removeNestedParagraphs(cleaned);
   }
-  
+
   if (removeEmptyTags) {
     cleaned = removeEmptyParagraphs(cleaned);
   }
-  
+
   if (normalize) {
     cleaned = normalizeWhitespace(cleaned);
   }
-  
+
+  // Sanitize against XSS using edge-compatible regex (no DOM/JSDOM required).
+  // Strips dangerous tags, event handler attributes, and javascript: URIs.
+  cleaned = sanitizeHtml(cleaned);
+
   return cleaned;
 }

@@ -3,7 +3,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
-import { elevation } from "@/lib/design-tokens";
+import { elevation, buttonPairs } from "@/lib/design-tokens";
 
 /**
  * Button component with logical dark mode support using design tokens
@@ -23,12 +23,12 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Primary Action: Beautiful Charcoal Gradient (White Text)
-        default: `bg-gradient-to-t from-[#1F2937] via-[#374152] to-[#6B7280] text-white hover:text-white ${elevation[1]} border-0`,
-        // Primary Action (Light): Beautiful Beige Gradient (Always Dark Text)
-        "brand-beige": `bg-gradient-to-t from-[#D4CFB8] via-[#F8F5E4] to-[#FEFCF7] !text-gray-900 dark:!text-gray-900 hover:!text-gray-900 dark:hover:!text-gray-900 ${elevation[1]} border-0`,
-        // Primary Action (Dark): Alias for Charcoal Gradient (White Text)
-        "brand-charcoal": `bg-gradient-to-t from-[#1F2937] via-[#374152] to-[#6B7280] text-white hover:text-white ${elevation[1]} border-0`,
+        // Primary Action: Flat Charcoal (White Text)
+        default: `${buttonPairs.charcoal.default} ${buttonPairs.charcoal.hover} ${elevation[1]} border-0`,
+        // Primary Action (Light): Flat Beige (Always Dark Text)
+        "brand-beige": `${buttonPairs.beige.default} ${buttonPairs.beige.hover} ${elevation[1]} border-0`,
+        // Primary Action (Dark): Flat Charcoal (White Text)
+        "brand-charcoal": `${buttonPairs.charcoal.default} ${buttonPairs.charcoal.hover} ${elevation[1]} border-0`,
         // Success: Solid Green (White Text)
         success: `bg-success text-white hover:text-white hover:opacity-90 ${elevation[1]} border-0`,
         // Destructive (White Text)

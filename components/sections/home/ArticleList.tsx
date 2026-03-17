@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Heading, Text } from "@/components/ui/typography";
+import { Heading } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 import { colors, gap, interactions } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
@@ -30,18 +30,17 @@ export default function ArticleList({ articles = [], authors = [] }: ArticleList
         <article
           key={article.id || index}
           className={cn(
-            "group flex flex-col sm:flex-row gap-4 pb-4",
-            "border-b",
-            colors.border.light
+            "group",
+            "flex flex-col sm:flex-row sm:gap-4"
           )}
         >
           {/* Article Image */}
           {article.image ? (
             <Link
               href={`/${article.id}`}
-              className="block flex-shrink-0 w-full sm:w-32 h-32 rounded-lg overflow-hidden"
+              className="block flex-shrink-0 w-full sm:w-32 sm:h-32 sm:m-2 sm:rounded-lg overflow-hidden"
             >
-              <figure className="relative w-full h-full m-0">
+              <figure className="relative w-full aspect-[4/3] sm:aspect-auto sm:h-full m-0">
                 <Image
                   src={article.image}
                   alt={article.title}
@@ -52,27 +51,27 @@ export default function ArticleList({ articles = [], authors = [] }: ArticleList
               </figure>
             </Link>
           ) : (
-            <div className="flex-shrink-0 w-full sm:w-32 h-32 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+            <div className="flex-shrink-0 w-full aspect-[4/3] sm:w-32 sm:h-32 sm:m-2 sm:rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
               <span className="text-gray-400 dark:text-gray-500 text-xs">No Image</span>
             </div>
           )}
 
           {/* Article Content */}
-          <div className="flex-1 flex flex-col min-w-0">
-            {/* Category Badge */}
-            {article.category && (
-              <div className="mb-2">
-<Badge className="tracking-wide border-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300">
-                {article.category}
+          <div className="flex-1 flex flex-col min-w-0 p-3 sm:py-2 sm:pr-3 sm:pl-0">
+            {/* Category Badge - always rendered for consistent spacing */}
+            <div className="min-h-[24px] mb-1">
+              {article.category && (
+                <Badge className="tracking-wide border-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300">
+                  {article.category}
                 </Badge>
-              </div>
-            )}
+              )}
+            </div>
 
             {/* Title */}
             <Heading
               level={3}
               variant="h6"
-              className="mb-2 leading-tight line-clamp-2"
+              className="leading-tight line-clamp-2"
             >
               <Link
                 href={`/${article.id}`}
@@ -81,16 +80,6 @@ export default function ArticleList({ articles = [], authors = [] }: ArticleList
                 {article.title}
               </Link>
             </Heading>
-
-            {/* Optional: Excerpt or Date */}
-            {article.excerpt && (
-              <Text
-                variant="bodySmall"
-                className={cn(colors.foreground.secondary, "line-clamp-2 text-sm")}
-              >
-                {article.excerpt}
-              </Text>
-            )}
           </div>
         </article>
       ))}

@@ -212,6 +212,23 @@ function CategoryColumn({
           ))}
         </div>
       )}
+
+      {/* "Tümünü Gör" Button */}
+      <Link
+        href={href}
+        className={cn(
+          "mt-6 pt-4 border-t inline-flex items-center gap-2",
+          colors.border.DEFAULT,
+          "text-sm font-semibold uppercase tracking-wide",
+          "transition-opacity duration-200 hover:opacity-70",
+          colors.foreground.secondary
+        )}
+      >
+        Tümünü Gör
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path d="M2 6h8M8 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </Link>
     </div>
   );
 }

@@ -97,20 +97,20 @@ export default function ScrolliPremiumBanner({
     <div className={cn(
       "grid grid-cols-1 overflow-hidden rounded-2xl border",
       embedded || isSimple ? "gap-0" : "lg:grid-cols-12",
-      colors.background.navbar,
-      "border-gray-200 dark:border-gray-700",
-      "shadow-sm"
+      "border-gray-200/50 dark:border-gray-700/50",
+      "shadow-sm",
+      "bg-gray-100/60 dark:bg-gray-900/60 backdrop-blur-md"
     )}>
 
       {/* Left Column: The Manifesto */}
       <div
         className={cn(
-          "p-8 md:p-10 flex flex-col justify-between relative",
+          "p-6 md:p-8 flex flex-col justify-between relative",
           isSimple ? "col-span-1 items-center text-center" : (embedded ? "col-span-1" : "lg:col-span-7"),
           !isSimple && "border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-gray-700",
           embedded && !isSimple && "border-r-0 border-b",
-          // Use surfacePairs for guaranteed contrast in both light and dark modes
-          "bg-[#F8F5E4] dark:bg-[#374152]"
+          // Transparent background with subtle tint
+          "bg-transparent"
         )}
       >
         {/* 
@@ -130,17 +130,17 @@ export default function ScrolliPremiumBanner({
         <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-transparent dark:from-white/5 pointer-events-none" />
 
         <div className={cn("relative z-10 w-full", isSimple && "max-w-2xl flex flex-col items-center")}>
-          <div className={cn("mb-4", isSimple && "flex justify-center")}>
-            <Image 
-              src={isDark ? "/assets/images/plus/Primary(Plus) 1.svg" : "/assets/images/plus/Primary(Plus) 2.svg"} 
-              alt="Scrolli Plus" 
-              width={120} 
-              height={32} 
-              className="h-8 w-auto opacity-90"
+          <div className={cn("mb-3", isSimple && "flex justify-center")}>
+            <Image
+              src={isDark ? "/assets/images/plus/Primary(Plus) 1.svg" : "/assets/images/plus/Primary(Plus) 2.svg"}
+              alt="Scrolli Plus"
+              width={isSimple ? 56 : 100}
+              height={isSimple ? 16 : 28}
+              className={cn("w-auto opacity-90", isSimple ? "h-4" : "h-7")}
               priority
             />
           </div>
-          <div className={cn("flex items-center gap-3 mb-6", isSimple && "justify-center")}>
+          <div className={cn("flex items-center gap-3 mb-4", isSimple && "justify-center")}>
             <Badge
               variant="default"
               className="text-white"
@@ -154,14 +154,14 @@ export default function ScrolliPremiumBanner({
 
           <Heading
             level={2}
-            variant="h2"
-            className={cn("tracking-tight mb-6 leading-[1.1]", isSimple && "text-3xl md:text-4xl")}
+            variant={isSimple ? "h3" : "h2"}
+            className={cn("tracking-tight mb-4 leading-[1.15]", isSimple && "text-2xl md:text-3xl")}
           >
             Less breaking news. <br />
             <span className="text-gray-500 dark:text-gray-400">More breakthrough stories.</span>
           </Heading>
 
-          <div className={cn("flex flex-wrap gap-3 mb-8", isSimple && "justify-center")}>
+          <div className={cn("flex flex-wrap gap-2 mb-6", isSimple && "justify-center")}>
             <Badge variant="secondary" className="leading-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 border-none pl-1.5 pr-3 py-1.5 h-auto shadow-sm">
               <PremiumContentBadgeIcon size={16} className="text-gray-500 dark:text-gray-400 shrink-0 self-center [&_svg]:block" />
               Premium Articles
@@ -181,30 +181,30 @@ export default function ScrolliPremiumBanner({
           </div>
 
           {/* Journalist Spotlight - Moved & Compacted */}
-          <div className={cn("mb-8 w-full", isSimple && "max-w-md")}>
+          <div className={cn("mb-6 w-full", isSimple && "max-w-md")}>
             <div className={cn(
               "p-4 rounded-xl flex items-center gap-4",
-              // Improved contrast: stronger background opacity for text readability
-              "bg-white/60 dark:bg-gray-800/60",
+              // Improved transparency for glassy effect
+              "bg-white/40 dark:bg-gray-800/40",
               "border border-gray-200/60 dark:border-gray-600/50",
-              "backdrop-blur-sm",
+              "backdrop-blur-md",
               isSimple && "text-left"
             )}>
-              <div className="relative w-14 h-14 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm flex-shrink-0">
+              <div className="relative w-12 h-12 rounded-full overflow-hidden border border-gray-200 dark:border-gray-700 shadow-sm flex-shrink-0">
                 <Image
                   src={currentJournalist.photo}
                   alt={currentJournalist.name}
                   fill
-                  className="object-cover object-top"
-                  sizes="56px"
+                  className="object-cover object-center"
+                  sizes="48px"
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <Text as="div" className="font-serif text-sm italic text-gray-800 dark:text-gray-200 leading-snug mb-1">
+                <Text as="div" className="font-serif text-xs italic text-gray-800 dark:text-gray-200 leading-snug mb-1">
                   "{currentJournalist.quote}"
                 </Text>
                 <div className="flex items-center gap-2">
-                  <Text variant="caption" as="span" className="font-bold text-gray-900 dark:text-gray-100 text-sm">
+                  <Text variant="caption" as="span" className="font-bold text-gray-900 dark:text-gray-100 text-xs">
                     {currentJournalist.name}
                   </Text>
                   <span className="text-gray-300 dark:text-gray-600 text-[10px]">•</span>
@@ -251,8 +251,8 @@ export default function ScrolliPremiumBanner({
               "border-b lg:border-l border-gray-200 dark:border-gray-700",
               "backdrop-blur-sm",
               embedded && "border-l-0",
-              // Proper dark mode handling for the impact section
-              "bg-[#FBF9F2] dark:bg-[#2d3748]"
+              // Transparent background
+              "bg-transparent"
             )}
           >
             <div className="flex items-center justify-between mb-3">
@@ -300,8 +300,8 @@ export default function ScrolliPremiumBanner({
             <div
               className={cn(
                 "h-full p-8 md:p-10 relative overflow-hidden flex flex-col justify-center",
-                "bg-gray-50/50 dark:bg-gray-900/30",
-                "transition-all duration-300 hover:bg-white/80 dark:hover:bg-gray-800/80",
+                "bg-gray-200/40 dark:bg-gray-800/40 backdrop-blur-sm",
+                "transition-all duration-300 hover:bg-gray-200/60 dark:hover:bg-gray-800/60",
                 "border-l border-gray-200 dark:border-gray-700",
                 embedded && "border-l-0"
               )}

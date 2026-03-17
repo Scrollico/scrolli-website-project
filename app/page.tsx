@@ -19,12 +19,10 @@ import {
   mapGundemToArticle,
   mapHikayelerToArticle,
   mapCurationToArticle,
-  mapDailyBriefingToArticle,
   mapCollabToArticle,
   mapStoryToArticle,
 } from "@/lib/payload/types";
 import { Article } from "@/types/content";
-import DailyBriefingSection from "@/components/sections/home/DailyBriefingSection";
 import { cookies } from "next/headers";
 import { NEXT_LOCALE_COOKIE } from "@/lib/locale-config";
 import { generateSiteMetadata } from "@/lib/seo";
@@ -153,16 +151,9 @@ export default async function Home() {
       (a) => mapHikayelerToArticle(a, locale)
     );
 
-    const dailyBriefingArticle: Article | null = homepageContent.dailyBriefing
-      ? mapDailyBriefingToArticle(homepageContent.dailyBriefing, locale)
-      : null;
-
     return (
       <Layout classList="home" navigation={navigation}>
         <HeroSection article={heroArticle} />
-        {dailyBriefingArticle && (
-          <DailyBriefingSection briefing={dailyBriefingArticle} />
-        )}
         <Section1
           title="Editor's Picks"
           articles={editorsPicksArticles}

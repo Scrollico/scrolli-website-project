@@ -6,10 +6,10 @@ import { Container } from "@/components/responsive";
 import { Heading, Text } from "@/components/ui/typography";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   sectionPadding,
   gap,
-  componentPadding,
   colors,
   borderRadius,
   border,
@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils";
 import { Article } from "@/types/content";
 import Pagination from "@/components/elements/Pagination";
 import { useState } from "react";
+import { ArrowRight } from "lucide-react";
 
 const ARTICLES_PER_PAGE = 10;
 const DEFAULT_AVATAR = "/assets/images/author-avata-1.jpg";
@@ -35,12 +36,12 @@ interface AuthorBySlugSectionProps {
 
 export default function AuthorBySlugSection({
   name,
-  slug,
   avatarUrl,
   bio,
   articles,
 }: AuthorBySlugSectionProps) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [showAll, setShowAll] = useState(false);
   const totalPages = Math.max(
     1,
     Math.ceil(articles.length / ARTICLES_PER_PAGE)
@@ -55,14 +56,32 @@ export default function AuthorBySlugSection({
     const scrollPosition = window.scrollY;
     setCurrentPage(page);
     requestAnimationFrame(() => {
-      window.scrollTo({ top: scrollPosition, behavior: "instant" as ScrollBehavior });
+      window.scrollTo({
+        top: scrollPosition,
+        behavior: "instant" as ScrollBehavior,
+      });
     });
   };
+
+  const handleShowAll = () => {
+    setShowAll(true);
+    setCurrentPage(1);
+  };
+
+  const displayedArticles = showAll ? articles : paginatedArticles;
+  const showPagination = !showAll && totalPages > 1;
+  const showViewAllButton = !showAll && articles.length > ARTICLES_PER_PAGE;
 
   return (
     <section className={sectionPadding.md}>
       <Container>
-        <div className={cn("grid grid-cols-1 lg:grid-cols-12", gap.lg)}>
+        <div
+          className={cn(
+            "max-w-3xl mx-auto lg:max-w-none lg:mx-0",
+            "grid grid-cols-1 lg:grid-cols-12",
+            gap.lg
+          )}
+        >
           <div className="lg:col-span-8">
             {/* Author Box */}
             <div
@@ -71,80 +90,102 @@ export default function AuthorBySlugSection({
                 border.thin,
                 colors.background.elevated,
                 elevation[1],
-                componentPadding.lg,
+                "p-5 md:p-8",
                 "mb-8 md:mb-12"
               )}
             >
-              <div className={cn("flex flex-col md:flex-row", gap.md)}>
+              <div
+                className={cn(
+                  "flex flex-col sm:flex-row items-center sm:items-start",
+                  gap.md
+                )}
+              >
                 <div className="flex-shrink-0">
-                  <div className="relative">
+                  <div className="relative w-24 h-24 md:w-28 md:h-28">
                     <Image
                       alt={name}
                       src={avatarUrl || DEFAULT_AVATAR}
                       className={cn(
                         borderRadius.full,
-                        border.thin,
+                        "object-cover",
                         "border-4",
                         colors.border.light
                       )}
-                      width={106}
-                      height={106}
-                      unoptimized={!!avatarUrl && avatarUrl.startsWith("http")}
+                      fill
+                      sizes="(max-width: 768px) 96px, 112px"
+                      unoptimized={
+                        !!avatarUrl && avatarUrl.startsWith("http")
+                      }
                     />
                   </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="mb-4">
-                    <Heading level={5} variant="h5">
-                      <span
-                        className={cn(
-                          colors.foreground.primary
-                        )}
-                        itemProp="name"
-                      >
-                        {name}
-                      </span>
-                    </Heading>
-                  </div>
+                <div className="flex-1 min-w-0 text-center sm:text-left">
+                  <Heading level={3} variant="h3" className="mb-2">
+                    <span
+                      className={cn(colors.foreground.primary)}
+                      itemProp="name"
+                    >
+                      {name}
+                    </span>
+                  </Heading>
                   {bio && (
                     <Text
                       variant="body"
                       color="secondary"
-                      className="hidden md:block mb-4"
+                      className="mb-3"
                     >
                       {bio}
                     </Text>
                   )}
+                  <Text variant="caption" color="muted">
+                    {articles.length} yazı
+                  </Text>
                 </div>
               </div>
             </div>
 
-            <div className="mb-8 md:mb-12">
-              <SectionHeader
-                title="Latest Posts"
-                level={4}
-                variant="h4"
-              />
+            {/* Section Header */}
+            <div className="mb-6 md:mb-8">
+              <SectionHeader title="Son Yazılar" level={4} variant="h4" />
             </div>
 
             {/* Articles List */}
-            <div className={cn("flex flex-col", gap.lg)}>
-              {paginatedArticles.length === 0 ? (
+            <div className={cn("flex flex-col", gap.md)}>
+              {displayedArticles.length === 0 ? (
                 <Text variant="body" color="secondary">
                   Bu yazara ait henüz yayınlanmış içerik yok.
                 </Text>
               ) : (
-                paginatedArticles.map((article, idx) => (
+                displayedArticles.map((article, idx) => (
                   <article
                     key={article.id}
                     className={cn(
-                      "flex flex-col md:flex-row",
+                      "flex flex-col sm:flex-row",
                       gap.md,
-                      "pb-6 md:pb-8",
-                      idx < paginatedArticles.length - 1 && "border-b",
+                      "pb-5 md:pb-6",
+                      idx < displayedArticles.length - 1 && "border-b",
                       colors.border.DEFAULT
                     )}
                   >
+                    {(article.thumbnail ?? article.image) && (
+                      <Link
+                        href={`/${article.id}`}
+                        className={cn(
+                          "w-full sm:w-36 lg:w-44 flex-shrink-0",
+                          "aspect-[16/10] sm:aspect-[4/3]",
+                          borderRadius.md,
+                          "overflow-hidden",
+                          "block"
+                        )}
+                      >
+                        <div
+                          className="w-full h-full bg-cover bg-center transition-transform duration-300 hover:scale-105"
+                          style={{
+                            backgroundImage: `url(${article.thumbnail ?? article.image})`,
+                          }}
+                        />
+                      </Link>
+                    )}
                     <div className="flex-1 min-w-0">
                       <div className={cn("flex flex-col", gap.sm)}>
                         {article.category && (
@@ -152,7 +193,7 @@ export default function AuthorBySlugSection({
                             {article.category}
                           </Badge>
                         )}
-                        <Heading level={3} variant="h3" className="mb-2">
+                        <Heading level={5} variant="h5" className="mb-1">
                           <Link
                             href={`/${article.id}`}
                             className={cn(
@@ -164,7 +205,11 @@ export default function AuthorBySlugSection({
                           </Link>
                         </Heading>
                         {article.excerpt && (
-                          <Text variant="body" color="secondary" className="mb-4">
+                          <Text
+                            variant="body"
+                            color="secondary"
+                            className="line-clamp-2 mb-2"
+                          >
                             {article.excerpt}
                           </Text>
                         )}
@@ -177,32 +222,37 @@ export default function AuthorBySlugSection({
                           )}
                         >
                           <span>{article.date}</span>
-                          <span className="readingTime" title={article.readTime}>
-                            {article.readTime}
-                          </span>
+                          {article.readTime && (
+                            <>
+                              <span>·</span>
+                              <span>{article.readTime}</span>
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>
-                    {(article.thumbnail ?? article.image) && (
-                      <div
-                        className={cn(
-                          "w-full md:w-32 lg:w-40 flex-shrink-0",
-                          "aspect-[4/3] md:aspect-square",
-                          borderRadius.md,
-                          "overflow-hidden",
-                          "bg-cover bg-center"
-                        )}
-                        style={{
-                          backgroundImage: `url(${article.thumbnail ?? article.image})`,
-                        }}
-                      />
-                    )}
                   </article>
                 ))
               )}
             </div>
 
-            {totalPages > 1 && (
+            {/* View All Button */}
+            {showViewAllButton && (
+              <div className="mt-8 flex justify-center">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={handleShowAll}
+                  className="group"
+                >
+                  Tüm Yazıları Gör ({articles.length})
+                  <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </div>
+            )}
+
+            {/* Pagination */}
+            {showPagination && (
               <div className="mt-8 md:mt-12">
                 <Pagination
                   currentPage={currentPage}

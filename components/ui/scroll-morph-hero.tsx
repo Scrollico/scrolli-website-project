@@ -396,14 +396,34 @@ export default function IntroAnimation({ articles = [] }: IntroAnimationProps) {
                     >
                         Hikayelerinizi keşfedin.
                     </motion.h1>
-                    <motion.p
+                    <motion.div
                         initial={{ opacity: 0 }}
-                        animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 0.5 - morphValue } : { opacity: 0 }}
+                        animate={introPhase === "circle" && morphValue < 0.5 ? { opacity: 1 - morphValue } : { opacity: 0 }}
                         transition={{ duration: 1, delay: 0.2 }}
-                        className={cn("mt-4 text-xs font-bold tracking-[0.2em]", colors.foreground.muted)}
+                        className="flex flex-col items-center gap-3 mt-6"
                     >
-                        Keşfetmek için kaydırın
-                    </motion.p>
+                        {/* Animated Scroll Indicator */}
+                        <div className="relative">
+                            {/* Mouse icon */}
+                            <div className="w-6 h-10 rounded-full border-2 border-white/40 flex items-start justify-center p-1">
+                                <motion.div
+                                    animate={{
+                                        y: [0, 12, 0],
+                                        opacity: [1, 0, 1],
+                                    }}
+                                    transition={{
+                                        duration: 1.5,
+                                        repeat: Infinity,
+                                        ease: "easeInOut",
+                                    }}
+                                    className="w-1 h-2 bg-white/60 rounded-full"
+                                />
+                            </div>
+                        </div>
+                        <p className={cn("text-xs font-bold tracking-[0.2em]", colors.foreground.muted)}>
+                            Keşfetmek için kaydırın
+                        </p>
+                    </motion.div>
                 </div>
 
                 {/* Arc Active Content (Fades in) */}

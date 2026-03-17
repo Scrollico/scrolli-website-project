@@ -482,6 +482,16 @@ function getAuthorName(author: PayloadAuthor | string | null | undefined): strin
   return "Scrolli";
 }
 
+// Helper function to extract author slug for URL linking
+function getAuthorSlug(author: PayloadAuthor | string | null | undefined): string | undefined {
+  if (!author) return undefined;
+  if (typeof author === "string") return undefined; // Raw string ID — slug not available
+  if (typeof author === "object" && "slug" in author && author.slug) {
+    return author.slug;
+  }
+  return undefined;
+}
+
 // Helper function to extract category slug
 function getCategorySlug(category?: PayloadCategory | string | null): string {
   if (!category) return "news";
@@ -625,6 +635,7 @@ export function mapGundemToArticle(post: PayloadGundem | PayloadAlaraai, locale:
     title: post.title,
     subtitle: post.subtitle, // Subtitle from Payload CMS
     author: getAuthorName(post.author),
+    authorSlug: getAuthorSlug(post.author),
     category: getCategorySlug(post.category),
     date: new Date(post.publishedAt).toLocaleDateString(locale === "tr" ? "tr-TR" : "en-US", {
       year: "numeric",
@@ -790,6 +801,7 @@ export function mapHikayelerToArticle(post: PayloadHikayeler, locale: string = "
     title: post.title,
     subtitle: post.subtitle, // Subtitle from Payload CMS
     author: getAuthorName(post.author),
+    authorSlug: getAuthorSlug(post.author),
     category: "hikayeler", // Stories category
     date: new Date(post.publishedAt).toLocaleDateString(locale === "tr" ? "tr-TR" : "en-US", {
       year: "numeric",

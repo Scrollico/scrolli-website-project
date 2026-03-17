@@ -328,6 +328,9 @@ export const colors = {
     elevated: "bg-muted",
     onSurface: "text-card-foreground",
     onSurfaceSubtle: "text-muted-foreground",
+    /** Controls on dark backgrounds (navbar, dark sections) - light surface in dark mode so they stay visible */
+    controlOnDark: "bg-gray-200 dark:bg-gray-100",
+    controlOnDarkForeground: "text-gray-800 dark:text-gray-900",
   },
 
   border: {
@@ -337,6 +340,15 @@ export const colors = {
     strong: "border-gray-400 dark:border-gray-400",
     hover: "hover:border-border/80",
   },
+} as const;
+
+/**
+ * Control-on-dark values for inline styles (e.g. CardNav, CinematicThemeSwitcher).
+ * Use when isDark: background = controlOnDarkValues.bg so the control stays visible on dark navbar.
+ */
+export const controlOnDarkValues = {
+  bg: "#f3f4f6",
+  text: "#111827",
 } as const;
 
 // ==========================================================================
@@ -631,17 +643,17 @@ export const buttonPairs = {
     hover: "hover:bg-muted",
     all: "bg-transparent text-foreground hover:bg-muted",
   },
-  /** Beige button - cream bg, dark text (STRICT: NO COLOR CHANGE) */
+  /** Beige button - cream bg, dark text; dark mode uses light surface so button stays visible on dark backgrounds */
   beige: {
-    default: "bg-[#F8F5E4] text-gray-900 dark:bg-gray-600 dark:text-gray-100",
-    hover: "hover:bg-[#F3F0DE] dark:hover:bg-gray-500",
-    all: "bg-[#F8F5E4] text-gray-900 dark:bg-gray-600 dark:text-gray-100 hover:bg-[#F3F0DE] dark:hover:bg-gray-500",
+    default: "bg-[#F8F5E4] text-gray-900 dark:bg-gray-100 dark:text-gray-900",
+    hover: "hover:bg-[#F3F0DE] dark:hover:bg-gray-200",
+    all: "bg-[#F8F5E4] text-gray-900 dark:bg-gray-100 dark:text-gray-900 hover:bg-[#F3F0DE] dark:hover:bg-gray-200",
   },
-  /** Charcoal button - dark bg, light text */
+  /** Charcoal button - dark bg in light mode; dark mode uses light surface so button stays visible on dark backgrounds */
   charcoal: {
-    default: "bg-[#374152] text-white",
-    hover: "hover:bg-[#1F2937]",
-    all: "bg-[#374152] text-white hover:bg-[#1F2937]",
+    default: "bg-[#374152] text-white dark:bg-gray-100 dark:text-gray-900",
+    hover: "hover:bg-[#1F2937] dark:hover:bg-gray-200",
+    all: "bg-[#374152] text-white dark:bg-gray-100 dark:text-gray-900 hover:bg-[#1F2937] dark:hover:bg-gray-200",
   },
   /** Success/green button */
   success: {
@@ -656,6 +668,12 @@ export const buttonPairs = {
     all: "bg-red-600 text-white border-red-600 hover:bg-red-700 hover:text-white",
   },
 } as const;
+
+/**
+ * Badge/pill on dark backgrounds - light surface in dark mode so pills stay visible.
+ */
+export const badgeOnDark =
+  "bg-gray-200/50 dark:bg-gray-100/90 text-gray-700 dark:text-gray-900" as const;
 
 /**
  * PILL/BADGE COLOR PAIRS - For category tags, labels, status badges

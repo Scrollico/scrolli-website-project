@@ -63,7 +63,7 @@ export default function HeroSection({ article }: HeroSectionProps) {
     <section
       ref={sectionRef}
       data-hero-section="true"
-      className="relative w-full min-h-[70vh] md:h-[70vh] flex items-end justify-center overflow-hidden hero-full-height"
+      className="relative w-full min-h-[80vh] md:h-[80vh] flex items-end justify-center overflow-hidden hero-full-height"
       style={{
         position: 'relative',
         top: '0px',
@@ -122,7 +122,7 @@ export default function HeroSection({ article }: HeroSectionProps) {
           ref={gradientRef}
           className={cn(
             "absolute bottom-0 left-0 w-full z-20",
-            "h-[85%] md:h-[90%] lg:h-[95%] xl:h-[100%]",
+            "h-full",
             "hero-bottom-gradient"
           )}
         />

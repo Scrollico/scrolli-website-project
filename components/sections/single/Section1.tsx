@@ -48,6 +48,7 @@ interface Article {
   subtitle?: string; // Article subtitle (from Payload CMS)
   excerpt?: string;
   author: string;
+  authorSlug?: string; // Author slug for linking to author page (from Payload CMS)
   category: string;
   date: string;
   readTime: string;
@@ -186,38 +187,67 @@ export default function Section1({ article, relatedArticles = [], isPaywalled = 
                     </button>
                   </div>
                 </div>
-                {/* Author Meta - After Image, Before Content, Aligned with Article Content */}
-                <div className={cn("entry-meta align-items-center", gap.md, "py-6")} itemProp="author" itemScope itemType="https://schema.org/Person">
-                  <Link className="author-avatar" href={`/author/${article.author.toLowerCase().replace(/\s+/g, "-")}`}>
-                    <Image
-                      src={getAuthorAvatar(article.author) || "/assets/images/author-avata-2.jpg"}
-                      alt={getAuthorName(article.author)}
-                      width={40}
-                      height={40}
-                    />
-                  </Link>
-                  <div className="entry-meta-line line-height-1">
-                    <Link href={`/author/${article.author.toLowerCase().replace(/\s+/g, "-")}`}>{getAuthorName(article.author)}</Link> in <Link href="/archive">
-                      <Badge className="ml-1 cursor-pointer">
-                        {article.category}
-                      </Badge>
+                {/* Author Meta */}
+                <div className="flex items-center gap-3 py-4 border-b border-gray-100 dark:border-gray-800" itemProp="author" itemScope itemType="https://schema.org/Person">
+                  {/* Avatar - hard-constrained wrapper prevents CSS bleed */}
+                  {article.authorSlug ? (
+                    <Link href={`/author/${article.authorSlug}`} className="shrink-0" style={{ display: 'block', width: 36, height: 36 }}>
+                      <div style={{ width: 36, height: 36, borderRadius: '50%', overflow: 'hidden', position: 'relative' }}>
+                        <Image
+                          src={getAuthorAvatar(article.author) || "/assets/images/author-avata-2.jpg"}
+                          alt={getAuthorName(article.author)}
+                          fill
+                          className="object-cover"
+                          sizes="36px"
+                        />
+                      </div>
                     </Link>
-                  </div>
-                  <div className="entry-meta-line">
-                    <span>{article.date}</span>
-                    <span className="middotDivider" />
-                    <span className="readingTime" title={article.readTime}>
-                      {article.readTime}
-                    </span>
+                  ) : (
+                    <div className="shrink-0" style={{ display: 'block', width: 36, height: 36 }}>
+                      <div style={{ width: 36, height: 36, borderRadius: '50%', overflow: 'hidden', position: 'relative' }}>
+                        <Image
+                          src={getAuthorAvatar(article.author) || "/assets/images/author-avata-2.jpg"}
+                          alt={getAuthorName(article.author)}
+                          fill
+                          className="object-cover"
+                          sizes="36px"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Author info */}
+                  <div className="flex flex-col gap-1 min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {article.authorSlug ? (
+                        <Link href={`/author/${article.authorSlug}`} className="text-sm font-semibold text-gray-900 dark:text-gray-100 hover:underline" itemProp="name">
+                          {getAuthorName(article.author)}
+                        </Link>
+                      ) : (
+                        <span className="text-sm font-semibold text-gray-900 dark:text-gray-100" itemProp="name">
+                          {getAuthorName(article.author)}
+                        </span>
+                      )}
+                      <span className="text-xs text-gray-400 dark:text-gray-500">in</span>
+                      <Link href="/archive">
+                        <Badge className="cursor-pointer text-xs px-2 py-0">
+                          {article.category}
+                        </Badge>
+                      </Link>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+                      <span>{article.date}</span>
+                      <span className="text-gray-300 dark:text-gray-600" aria-hidden>·</span>
+                      <span>{article.readTime}</span>
+                    </div>
                   </div>
 
-                  {/* Gift Button - Visible in header */}
-                  <div className="ml-auto md:ml-4">
+                  {/* Gift Button */}
+                  <div className="ml-auto shrink-0">
                     <ArticleGiftButton
                       articleId={article.id}
                       articleTitle={article.title}
                       variant="outline"
-                      className="ml-2"
                     />
                   </div>
                 </div>
@@ -358,13 +388,13 @@ export default function Section1({ article, relatedArticles = [], isPaywalled = 
         }
         
         .entry-main-content.article-content {
-          font-size: 1.125rem;
-          line-height: 1.875;
+          font-size: 1rem;
+          line-height: 1.8;
         }
-        
+
         .entry-main-content.article-content p {
-          font-size: 1.125rem;
-          line-height: 1.875;
+          font-size: 1rem;
+          line-height: 1.8;
           margin-bottom: 1.75rem;
           color: inherit;
           max-width: 46rem; /* Using rem for consistent width regardless of font size */

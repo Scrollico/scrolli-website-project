@@ -68,20 +68,20 @@ export default function Section1({ title = "Editor's Picks", articles, articleLi
 
                 {/* Article Content - Separate below image */}
                 <div className={cn(componentPadding.md, "flex-1 flex flex-col", gap.sm)}>
-                  {/* Category Badge */}
-                  {article.category && (
-                    <div className={cn("flex justify-start")}>
+                  {/* Category Badge - always rendered for consistent spacing */}
+                  <div className={cn("flex justify-start", "min-h-[24px]")}>
+                    {article.category && (
                       <Badge
                         className="tracking-wide border-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300"
                       >
                         {article.category}
                       </Badge>
-                    </div>
-                  )}
+                    )}
+                  </div>
                   <Heading
                     level={3}
                     variant="h5"
-                    className="leading-tight"
+                    className="leading-tight line-clamp-2"
                   >
                     <Link
                       href={`/${article.id}`}

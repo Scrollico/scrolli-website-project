@@ -972,6 +972,14 @@ header .logo-wrapper {
   overflow: hidden;
 }
 
+/* Allow dropdown (e.g. Hikaye) to show when open - stop clipping */
+.card-nav-center-group.dropdown-open {
+  overflow: visible;
+}
+.card-nav-center-group.dropdown-open .card-nav-menu {
+  overflow: visible;
+}
+
 @media (min-width: 1024px) {
   .card-nav-center-group {
     position: absolute;

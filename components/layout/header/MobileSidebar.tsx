@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { createPortal } from "react-dom";
 import NextImage from "next/image";
@@ -21,11 +21,19 @@ interface Category {
     thumbnail?: string;
 }
 
+interface NavItem {
+    label: string;
+    href: string;
+    bgColor?: string;
+    links?: { label: string; href: string }[];
+}
+
 interface MobileSidebarProps {
     isOpen: boolean;
     onClose: () => void;
     categories: Category[];
     sidebarLinks: { label: string; href: string }[];
+    navItems?: NavItem[];
 }
 
 export default function MobileSidebar({
@@ -33,6 +41,7 @@ export default function MobileSidebar({
     onClose,
     categories,
     sidebarLinks,
+    navItems,
 }: MobileSidebarProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [mounted, setMounted] = useState(false);
@@ -63,13 +72,6 @@ export default function MobileSidebar({
         }
     };
 
-    // Category thumbnails - use first letter as fallback
-    const categoryThumbnails = useMemo(() => {
-        return categories.slice(0, 6).map((cat) => ({
-            ...cat,
-            thumbnail: cat.thumbnail || `/assets/images/categories/${cat.slug}.jpg`,
-        }));
-    }, [categories]);
 
 
     if (!mounted) return null;
@@ -197,11 +199,8 @@ export default function MobileSidebar({
                                     onClick={onClose}
                                     className={cn(
                                         "flex-1 flex items-center justify-center gap-2 h-11",
-                                        "bg-gradient-to-t from-[#1F2937] via-[#374152] to-[#6B7280]", // Replaced generic bg-primary with brand charcoal gradient
-                                        "text-white shadow-sm",
-                                        "rounded-xl",
-                                        "hover:opacity-90",
-                                        "transition-opacity"
+                                        "bg-[#374152] text-white shadow-sm rounded-xl",
+                                        "hover:bg-[#1F2937] transition-colors"
                                     )}
                                 >
                                     <Sparkles className="h-4 w-4" />
@@ -210,49 +209,50 @@ export default function MobileSidebar({
                             </div>
 
                             {/* Categories Section */}
-                            <div className="px-4 pb-4">
-                                <div className="flex items-center justify-between mb-3">
-                                    <Text variant="caption" className="tracking-wider font-semibold text-gray-500 dark:text-gray-400">
-                                        Kategoriler
-                                    </Text>
-                                    <Link
-                                        href="/categories"
-                                        onClick={onClose}
-                                        className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 flex items-center gap-0.5"
-                                    >
-                                        Tümü <ChevronRight className="h-3 w-3" />
-                                    </Link>
-                                </div>
-                                <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
-                                    {categoryThumbnails.map((cat) => (
-                                        <Link
-                                            key={cat.slug}
-                                            href={`/categories?cat=${cat.slug}`}
-                                            onClick={onClose}
-                                            className={cn(
-                                                "flex-shrink-0 w-20 group",
-                                                "active:scale-[0.97] transition-transform"
-                                            )}
-                                        >
-                                            <div className={cn(
-                                                "w-20 h-20 rounded-2xl overflow-hidden mb-1.5",
-                                                "bg-gray-200 dark:bg-gray-700",
-                                                "border border-gray-200/50 dark:border-gray-700/50",
-                                                "relative"
-                                            )}>
-                                                <div className="absolute inset-0 flex items-center justify-center">
-                                                    <span className="text-2xl font-bold text-gray-400 dark:text-gray-500">
-                                                        {cat.displayName.charAt(0)}
+                            {navItems && navItems.length > 0 && (
+                                <div className="px-4 pb-4">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <Text variant="caption" className="tracking-wider font-semibold text-gray-500 dark:text-gray-400">
+                                            Kategoriler
+                                        </Text>
+                                    </div>
+                                    <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
+                                        {navItems.map((item) => (
+                                            <Link
+                                                key={item.href}
+                                                href={item.href}
+                                                onClick={onClose}
+                                                className={cn(
+                                                    "flex-shrink-0 w-20 group",
+                                                    "active:scale-[0.97] transition-transform"
+                                                )}
+                                            >
+                                                <div
+                                                    className={cn(
+                                                        "w-20 h-20 rounded-2xl overflow-hidden mb-1.5",
+                                                        "border border-gray-200/20",
+                                                        "relative flex items-center justify-center"
+                                                    )}
+                                                    style={{ backgroundColor: item.bgColor ?? "#374152" }}
+                                                >
+                                                    <span className="text-xl font-bold text-white/80">
+                                                        {item.label.charAt(0)}
                                                     </span>
                                                 </div>
-                                            </div>
-                                            <Text variant="caption" className="text-center text-gray-700 dark:text-gray-300 truncate block text-xs">
-                                                {cat.displayName}
-                                            </Text>
-                                        </Link>
-                                    ))}
+                                                <Text variant="caption" className="text-center text-gray-700 dark:text-gray-300 truncate block text-xs">
+                                                    {item.label}
+                                                </Text>
+                                                {/* Sub-labels shown below (e.g. Zest · Eksen · Finans) */}
+                                                {item.links && item.links.length > 0 && (
+                                                    <Text variant="caption" className="text-center text-gray-400 dark:text-gray-500 truncate block text-[10px] leading-tight">
+                                                        {item.links.map(l => l.label).join(" · ")}
+                                                    </Text>
+                                                )}
+                                            </Link>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
 
                             {/* Divider */}
                             <div className="mx-4 border-t border-gray-200/50 dark:border-gray-700/50" />

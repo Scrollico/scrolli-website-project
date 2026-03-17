@@ -25,38 +25,24 @@ interface Briefing {
 
 const briefings: Briefing[] = [
   {
-    id: "ana-bulten",
-    title: "Ana Bülten",
-    description: "The daily global news briefing you can trust.",
+    id: "derin-bakis",
+    title: "Derin Bakış",
+    description: "Günlük global haberler ve derinlemesine analizler.",
     frequency: "Her Hafta İçi",
-    readItLink: "#",
+    readItLink: "/daily-briefing/derin-bakis",
   },
   {
-    id: "gundem-ozeti",
-    title: "Gündem Özeti",
-    description: "What the White House is reading.",
-    frequency: "Her Hafta İçi Sabahı",
-    readItLink: "#",
-  },
-  {
-    id: "is-dunyasi",
-    title: "İş Dünyası",
-    description: "The stories (& the scoops) from Wall Street.",
-    frequency: "Haftada 2x",
-    readItLink: "#",
-  },
-  {
-    id: "teknoloji",
-    title: "Teknoloji",
-    description: "What's next in the new era of tech.",
-    frequency: "Haftada 2x",
-    readItLink: "#",
+    id: "momentum",
+    title: "Momentum",
+    description: "Teknoloji dünyasındaki son gelişmeler ve trendler.",
+    frequency: "Haftada 3x",
+    readItLink: "/daily-briefing/momentum",
   },
 ];
 
 export default function NewsletterSignup() {
   const [email, setEmail] = useState("");
-  // First two briefings are always selected by default
+  // Both briefings are selected by default
   const [selectedBriefings, setSelectedBriefings] = useState<string[]>([
     briefings[0].id,
     briefings[1].id,
@@ -117,7 +103,15 @@ export default function NewsletterSignup() {
   };
 
   return (
-    <div className={cn("w-full", componentPadding.sm, "flex flex-col", gap.md)}>
+    <div className={cn(
+      "w-full rounded-2xl p-6",
+      "bg-gray-100/80 dark:bg-gray-900/80",
+      "backdrop-blur-md",
+      "border border-gray-200/50 dark:border-gray-800/50",
+      componentPadding.sm,
+      "flex flex-col",
+      gap.md
+    )}>
       {/* Header */}
       <div className="flex items-center gap-2">
         <NewsletterIcon
@@ -132,7 +126,7 @@ export default function NewsletterSignup() {
           variant="h5"
           className={cn(colors.foreground.primary, "font-bold text-lg font-display")}
         >
-          Sign up for our email briefings.
+          E-posta bültenlerimize abone olun.
         </Heading>
       </div>
 
@@ -141,7 +135,7 @@ export default function NewsletterSignup() {
         <div className="flex-1 w-full">
           <Input
             type="email"
-            placeholder="Email address"
+            placeholder="E-posta adresi"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -162,10 +156,10 @@ export default function NewsletterSignup() {
           )}
         >
           {isSubmitting
-            ? "Signing up..."
+            ? "Abone olunuyor..."
             : selectedBriefings.length > 0
-              ? `Sign Up (${selectedBriefings.length})`
-              : "Sign Up"}
+              ? `Abone Ol (${selectedBriefings.length})`
+              : "Abone Ol"}
         </SmartButton>
       </form>
 
@@ -264,7 +258,7 @@ export default function NewsletterSignup() {
                         colors.foreground.secondary
                       )}
                     >
-                      Read it
+                      Oku
                     </Link>
                   </div>
                 </div>

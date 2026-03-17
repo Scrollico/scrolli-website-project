@@ -1,21 +1,22 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import dynamic from "next/dynamic";
 import Footer from "./footer/Footer";
 import Header from "./header/Header";
 import { PayloadNavigation } from "@/lib/payload/types";
 
-const BackToTop = dynamic(
-  () => import("../elements/BackToTop").catch((err) => {
-    console.error("BackToTop load failed", err);
+const StickyNav = dynamic(
+  () => import("./header/StickyNav").catch((err) => {
+    console.error("StickyNav load failed", err);
     const Fallback = () => null;
     return Fallback as any;
   }),
   { ssr: false }
 );
-const StickyNav = dynamic(
-  () => import("./header/StickyNav").catch((err) => {
-    console.error("StickyNav load failed", err);
+
+const BackToTop = dynamic(
+  () => import("../elements/BackToTop").catch((err) => {
+    console.error("BackToTop load failed", err);
     const Fallback = () => null;
     return Fallback as any;
   }),
@@ -30,8 +31,6 @@ interface LayoutProps {
 }
 
 export default function Layout({ classList, children, navigation }: LayoutProps) {
-  const [scroll, setScroll] = useState<boolean>(false);
-
   // Add class to body/html for single article pages to allow scrolling
   useEffect(() => {
     if (classList?.includes('single')) {
@@ -46,29 +45,6 @@ export default function Layout({ classList, children, navigation }: LayoutProps)
     return () => { };
   }, [classList]);
 
-  useEffect(() => {
-    let ticking = false;
-
-    const handleScroll = (): void => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const scrollCheck: boolean = window.scrollY > 100;
-          if (scrollCheck !== scroll) {
-            setScroll(scrollCheck);
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    document.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => {
-      document.removeEventListener("scroll", handleScroll);
-    };
-  }, [scroll, classList]);
-
   return (
     <>
       <div className={classList}>
@@ -81,6 +57,9 @@ export default function Layout({ classList, children, navigation }: LayoutProps)
           {/* Sticky Navbar */}
           <StickyNav />
 
+          {/* Scroll to top button */}
+          <BackToTop />
+
           {/* Main content area */}
           <main id="main-content" role="main" tabIndex={-1}>
             {children}
@@ -91,8 +70,6 @@ export default function Layout({ classList, children, navigation }: LayoutProps)
             <Footer navigation={navigation} />
           </footer>
 
-          {/* Back to top utility */}
-          <BackToTop />
         </div>
       </div>
     </>

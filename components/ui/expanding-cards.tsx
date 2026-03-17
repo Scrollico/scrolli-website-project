@@ -10,7 +10,6 @@ export interface CardItem {
   title: string;
   description: string;
   imgSrc: string;
-  icon: React.ReactNode;
   linkHref: string;
 }
 
@@ -35,6 +34,14 @@ export const ExpandingCards = React.forwardRef<
       .join(" ");
   }, [activeIndex, items.length]);
 
+  // Mobile uses equal rows, desktop uses expanding columns
+  const mobileLayoutPattern = React.useMemo(() => {
+    // On mobile, active row gets more height (e.g., "5fr 1fr 1fr...")
+    return items
+      .map((_, index) => (activeIndex === index ? "5fr" : "1fr"))
+      .join(" ");
+  }, [activeIndex, items.length]);
+
   const handleInteraction = (index: number) => {
     setActiveIndex(index);
   };
@@ -44,17 +51,16 @@ export const ExpandingCards = React.forwardRef<
       className={cn(
         "w-full max-w-6xl gap-2",
         "grid",
-        // Mobile: 1 col, dynamic rows
-        "grid-cols-1 grid-rows-[var(--grid-layout)]",
-        // Desktop: dynamic cols, 1 row
-        "md:grid-cols-[var(--grid-layout)] md:grid-rows-1",
-        "h-[700px] md:h-[600px]",
+        // Mobile: 1 col with rows from --grid-rows var; desktop: columns layout, single row
+        "grid-cols-1 [grid-template-rows:var(--grid-rows)] md:grid-cols-[var(--grid-layout)] md:grid-rows-1",
+        "h-[500px] md:h-[600px]",
         "transition-all duration-500 ease-out",
         className,
       )}
       style={
         {
           "--grid-layout": layoutPattern,
+          "--grid-rows": mobileLayoutPattern,
         } as React.CSSProperties
       }
       ref={ref}
@@ -71,9 +77,9 @@ export const ExpandingCards = React.forwardRef<
               "min-h-0 min-w-0",
               "bg-transparent"
             )}
-            style={{ 
+            style={{
               backgroundColor: 'transparent',
-              isolation: 'isolate' 
+              isolation: 'isolate'
             }}
             onMouseEnter={() => handleInteraction(index)}
             onFocus={() => handleInteraction(index)}
@@ -81,12 +87,6 @@ export const ExpandingCards = React.forwardRef<
             tabIndex={0}
             data-active={isActive}
           >
-            <Link
-              href={item.linkHref}
-              className="absolute inset-0 z-[100] block bg-transparent"
-              aria-label={item.title}
-            />
-
             {/* Background Image Layer */}
             <div
               className={cn(
@@ -113,48 +113,34 @@ export const ExpandingCards = React.forwardRef<
             {/* Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent pointer-events-none z-[11]" />
 
-            <div className="absolute inset-0 z-[12] flex flex-col justify-end gap-2 pt-4 pr-4 pb-4 pl-10 pointer-events-none bg-transparent">
-              {/* Inactive: vertical title on desktop */}
-              <h3
-                className={cn(
-                  "hidden origin-bottom-left rotate-90 text-xl font-semibold leading-tight tracking-wide !text-white/95 transition-all duration-300 ease-out md:block absolute left-4 bottom-0 z-[13] w-[7em] h-[2.25rem] overflow-hidden",
-                  isActive ? "opacity-0" : "opacity-100",
-                )}
-                style={{
-                  WebkitLineClamp: 2,
-                  display: "-webkit-box",
-                  WebkitBoxOrient: "vertical",
-                  lineClamp: 2,
-                }}
-              >
-                {item.title
-                  ? item.title.charAt(0).toLocaleUpperCase("tr") +
-                  item.title.slice(1).toLocaleLowerCase("tr")
-                  : item.title}
-              </h3>
-              {/* Inactive: single-line title on mobile (truncated) */}
-              <h3
-                className={cn(
-                  "md:hidden absolute bottom-4 left-4 right-4 z-[13] truncate text-sm font-semibold !text-white/95 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]",
-                  isActive ? "opacity-0" : "opacity-100",
-                )}
-                title={item.title}
-              >
-                {item.title}
-              </h3>
+            <div className="absolute inset-0 z-[12] flex flex-col justify-end p-4 md:p-0 md:pt-4 md:pr-4 md:pb-4 md:pl-10 pointer-events-auto bg-transparent">
+              {/* Desktop: vertical title (removed - no text shown when inactive) */}
 
-              <div className="relative z-[14] flex min-h-0 flex-col justify-end gap-2">
-                <div
-                  className={cn(
-                    "!text-white/90 transition-all duration-300 delay-75 ease-out",
-                    isActive ? "opacity-100" : "opacity-0",
-                  )}
-                >
-                  {item.icon}
-                </div>
+              {/* Mobile: Show title always, description only when active */}
+              <div className="md:hidden relative z-[14] flex flex-col justify-end gap-2">
                 <h3
                   className={cn(
-                    "text-xl font-bold !text-white transition-all duration-300 delay-150 ease-out drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] line-clamp-2 break-words",
+                    "text-base font-bold !text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] line-clamp-2 break-words",
+                  )}
+                  title={item.title}
+                >
+                  {item.title}
+                </h3>
+                <p
+                  className={cn(
+                    "w-full max-w-xs text-xs !text-white/80 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] line-clamp-2 transition-all duration-300",
+                    isActive ? "opacity-100 max-h-20" : "opacity-0 max-h-0",
+                  )}
+                >
+                  {item.description}
+                </p>
+              </div>
+
+              {/* Desktop: Expanded content (only on active cards) */}
+              <div className="hidden md:block relative z-[14] flex min-h-0 flex-col justify-end gap-2">
+                <h3
+                  className={cn(
+                    "text-lg md:text-xl font-bold !text-white transition-all duration-300 delay-150 ease-out drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] line-clamp-2 break-words",
                     isActive ? "opacity-100" : "opacity-0",
                   )}
                   title={item.title}
@@ -163,13 +149,22 @@ export const ExpandingCards = React.forwardRef<
                 </h3>
                 <p
                   className={cn(
-                    "w-full max-w-xs text-sm !text-white/80 transition-all duration-300 delay-225 ease-out drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] line-clamp-2",
+                    "w-full max-w-xs text-xs md:text-sm !text-white/80 transition-all duration-300 delay-225 ease-out drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] line-clamp-2",
                     isActive ? "opacity-100" : "opacity-0",
                   )}
                 >
                   {item.description}
                 </p>
               </div>
+
+              {/* Clickable overlay for navigation - only when active */}
+              {isActive && (
+                <Link
+                  href={item.linkHref}
+                  className="absolute inset-0 z-[100] block"
+                  aria-label={item.title}
+                />
+              )}
             </div>
           </li>
         );
