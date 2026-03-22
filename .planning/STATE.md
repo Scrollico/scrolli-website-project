@@ -89,6 +89,12 @@ Recent decisions affecting current work:
 
 None yet.
 
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260322-uwb | Page load speed optimization | 2026-03-22 | 4a48071 | [260322-uwb-page-load-speed-optimization](./quick/260322-uwb-page-load-speed-optimization/) |
+
 ### Blockers/Concerns
 
 - Phase 2: `eslint-plugin-scrolli-design.ts` needs jiti or compilation path verified before treating as one-line wiring
