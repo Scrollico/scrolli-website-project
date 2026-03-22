@@ -4,7 +4,7 @@ import React, { useRef, useEffect, useMemo, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn } from "@/lib/utils";
-import { colors, typography } from "@/lib/design-tokens";
+import { colors, typography, sectionPadding } from "@/lib/design-tokens";
 import { Article } from "@/types/content";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -66,6 +66,12 @@ export default function IntroAnimation({ articles = [] }: IntroAnimationProps) {
     return FALLBACK_IMAGES;
   }, [articles]);
 
+  // Detect prefers-reduced-motion at component mount time
+  const prefersReducedMotion = useMemo(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }, []);
+
   // Deterministic pseudo-random scatter positions using golden ratio
   // NOT Math.random() — stable under React StrictMode double-invoke
   const scatterPositions = useMemo(() => {
@@ -83,6 +89,9 @@ export default function IntroAnimation({ articles = [] }: IntroAnimationProps) {
 
   // GSAP ScrollTrigger setup
   useEffect(() => {
+    // Skip GSAP setup for users who prefer reduced motion
+    if (prefersReducedMotion) return;
+
     const section = sectionRef.current;
     const pinContainer = pinContainerRef.current;
     if (!section || !pinContainer) return;
@@ -119,6 +128,7 @@ export default function IntroAnimation({ articles = [] }: IntroAnimationProps) {
         y: -20,
         duration: 0.5,
         ease: "power2.in",
+        force3D: true,
       },
       0
     );
@@ -127,7 +137,7 @@ export default function IntroAnimation({ articles = [] }: IntroAnimationProps) {
     tl.fromTo(
       arcContentRef.current,
       { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
+      { opacity: 1, y: 0, duration: 0.5, ease: "power2.out", force3D: true },
       0.8
     );
 
@@ -146,6 +156,7 @@ export default function IntroAnimation({ articles = [] }: IntroAnimationProps) {
         rotation: scatter.rotationOffset,
         scale: 0.6,
         opacity: 0,
+        force3D: true,
       });
 
       // Animate all cards into circle formation simultaneously
@@ -159,6 +170,7 @@ export default function IntroAnimation({ articles = [] }: IntroAnimationProps) {
           opacity: 1,
           ease: "power2.inOut",
           duration: 1,
+          force3D: true,
         },
         0 // all start at timeline position 0
       );
@@ -194,6 +206,7 @@ export default function IntroAnimation({ articles = [] }: IntroAnimationProps) {
           scale: cardScale,
           ease: "power1.inOut",
           duration: 0.5,
+          force3D: true,
         },
         1 // starts at timeline position 1 (after morph phase)
       );
@@ -207,28 +220,68 @@ export default function IntroAnimation({ articles = [] }: IntroAnimationProps) {
           rotation: cardEndAngle + 90,
           ease: "none",
           duration: 4, // longest part of timeline
+          force3D: true,
         },
         1.5
       );
     });
 
     // --- ScrollTrigger: pin + scrub (per D-01, D-02) ---
-    ScrollTrigger.create({
+    // scrub: 1 provides 1-second smoothing AND inherent bidirectional scroll (no extra config needed)
+    // Automatic unpin when scroll passes end point handles scroll completion handoff (SCROLL-07)
+    const st = ScrollTrigger.create({
       trigger: section,
       pin: pinContainer,
       start: "top top",
       end: `+=${SCROLL_DISTANCE}`,
-      scrub: 1, // 1-second lag for fluid feel
+      scrub: 1, // 1-second lag for fluid feel; bidirectional by default
       animation: tl,
-      // Auto-unpins when scrub reaches end (per D-02)
     });
 
-    // Cleanup on unmount
+    // Refresh ScrollTrigger after setup to recalculate positions for current scroll state
+    ScrollTrigger.refresh();
+
+    // Cleanup: kill only our ScrollTrigger instance, not all page instances
     return () => {
-      ScrollTrigger.getAll().forEach((st) => st.kill());
+      st.kill();
       tl.kill();
     };
-  }, [imageUrls, scatterPositions]);
+  }, [imageUrls, scatterPositions, prefersReducedMotion]);
+
+  // --- Reduced-motion fallback: static CSS grid of article thumbnails ---
+  // Shown instead of animation for users with prefers-reduced-motion: reduce
+  if (prefersReducedMotion) {
+    return (
+      <section className={cn("w-full", colors.background.base, sectionPadding.lg)}>
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="text-center mb-8">
+            <h2 className={cn(typography.h2, "tracking-tight mb-4", colors.foreground.primary)}>
+              Scrolli Hikayeleri
+            </h2>
+            <p className={cn("text-sm md:text-base max-w-lg mx-auto leading-relaxed", colors.foreground.muted)}>
+              Derinlemesine analizler ve ozel hikayeler.
+              En guncel haberlerimizi ve ozel iceriklerimizi kesfedin.
+            </p>
+          </div>
+          <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-3">
+            {imageUrls.slice(0, TOTAL_CARDS).map((src, i) => (
+              <div
+                key={i}
+                className="overflow-hidden rounded-xl shadow-lg aspect-[60/85]"
+              >
+                <img
+                  src={src}
+                  alt={`article-${i}`}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section ref={sectionRef} style={{ height: SCROLL_DISTANCE }}>
@@ -280,7 +333,11 @@ export default function IntroAnimation({ articles = [] }: IntroAnimationProps) {
               key={i}
               ref={(el) => setCardRef(el, i)}
               className="absolute overflow-hidden rounded-xl shadow-lg"
-              style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+              style={{
+                width: CARD_WIDTH,
+                height: CARD_HEIGHT,
+                willChange: "transform",
+              }}
             >
               <img
                 src={src}
