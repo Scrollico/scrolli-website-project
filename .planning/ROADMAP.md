@@ -43,7 +43,7 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — GSAP ScrollTrigger scaffold with pin/scrub, card morph timeline, and text fade animations
+- [x] 02-01-PLAN.md — GSAP ScrollTrigger scaffold with pin/scrub, card morph timeline, and text fade animations
 - [ ] 02-02-PLAN.md — prefers-reduced-motion static fallback, bidirectional scroll verification, and 60fps performance tuning
 - [ ] 02-03-PLAN.md — Integration cleanup and visual verification checkpoint
 
