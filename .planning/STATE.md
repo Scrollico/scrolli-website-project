@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 02-02-PLAN.md
-last_updated: "2026-03-22T19:36:40.779Z"
+status: Phase complete — ready for verification
+stopped_at: "Checkpoint 02-03: awaiting visual verification of orbital animation"
+last_updated: "2026-03-22T19:41:35.980Z"
 progress:
   total_phases: 3
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 12
-  completed_plans: 11
+  completed_plans: 12
 ---
 
 # Project State
@@ -57,6 +57,7 @@ Plan: 3 of 3
 | Phase 01-design-token-enforcement P09 | 8 | 2 tasks | 13 files |
 | Phase 02-orbital-scroll-animation-rebuild P01 | 165 | 2 tasks | 1 files |
 | Phase 02-orbital-scroll-animation-rebuild P02 | 8m | 2 tasks | 1 files |
+| Phase 02-orbital-scroll-animation-rebuild P03 | 5m | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -81,6 +82,8 @@ Recent decisions affecting current work:
 - [Phase 02-orbital-scroll-animation-rebuild]: GSAP ScrollTrigger pin+scrub replaces Framer Motion virtual scroll — native scrollbar engine eliminates page freeze
 - [Phase 02-orbital-scroll-animation-rebuild]: FlipCard component removed — hover flip 3D effects incompatible with GSAP translate-based card positioning
 - [Phase 02-orbital-scroll-animation-rebuild]: st.kill() + tl.kill() scoped cleanup replaces ScrollTrigger.getAll() to avoid killing other page ScrollTrigger instances
+- [Phase 02-orbital-scroll-animation-rebuild]: colors.border.light is the correct token (not .subtle) for semi-transparent borders in pricing page
+- [Phase 02-orbital-scroll-animation-rebuild]: GSAP ScrollTrigger pin+scrub with scrub:1 provides inherently bidirectional scroll — no isAnimationComplete flag needed
 
 ### Pending Todos
 
@@ -94,6 +97,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T19:36:40.777Z
-Stopped at: Completed 02-02-PLAN.md
+Last session: 2026-03-22T19:41:35.978Z
+Stopped at: Checkpoint 02-03: awaiting visual verification of orbital animation
 Resume file: None

@@ -45,7 +45,7 @@ Plans:
 Plans:
 - [x] 02-01-PLAN.md — GSAP ScrollTrigger scaffold with pin/scrub, card morph timeline, and text fade animations
 - [x] 02-02-PLAN.md — prefers-reduced-motion static fallback, bidirectional scroll verification, and 60fps performance tuning
-- [ ] 02-03-PLAN.md — Integration cleanup and visual verification checkpoint
+- [x] 02-03-PLAN.md — Integration cleanup and visual verification checkpoint
 
 **Success Criteria** (what must be TRUE):
   1. Scrolling down on the pricing page animates article cards orbiting in a circular path — no freeze, no stutter
