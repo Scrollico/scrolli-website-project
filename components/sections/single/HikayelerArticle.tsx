@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import { HikayeLoader } from './HikayeLoader';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { sectionPadding, colors } from '@/lib/design-tokens';
 
 const InlineScriptRenderer = dynamic(
     () => import('./InlineScriptRenderer'),
@@ -126,10 +127,11 @@ export default function HikayelerArticle({ article }: HikayelerArticleProps) {
                     />
                 ) : (
                     /* FALLBACK: Regular article body content (only if no script) */
-                    <div className="w-full relative min-h-screen bg-background">
+                    <div className={cn("w-full relative min-h-screen", colors.background.base)}>
                         <div
                             className={cn(
-                                'prose prose-lg max-w-none dark:prose-invert mx-auto px-4 py-10 md:py-14',
+                                'prose prose-lg max-w-none dark:prose-invert mx-auto px-4',
+                                sectionPadding.md,
                                 'text-foreground max-w-3xl'
                             )}
                         >

@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import 'swiper/css';
-import { colors, sectionPadding } from "@/lib/design-tokens";
+import { colors, sectionPadding, gap } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 import { PlayIcon, CloseIcon, ArrowLeftIcon, ArrowRightIcon } from "@/components/icons/scrolli-icons";
 
@@ -444,7 +444,7 @@ function VideoPlayerModal({
 
           {/* Navigation Buttons */}
           <motion.div
-            className="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col gap-4"
+            className={cn("absolute right-8 top-1/2 -translate-y-1/2 flex flex-col", gap.lg)}
             style={{ zIndex: 1000000 }}
             variants={buttonVariants}
             initial="hidden"

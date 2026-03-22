@@ -8,7 +8,7 @@ import { ExpandingCards, CardItem } from "@/components/ui/expanding-cards";
 import { Heading, Label } from "@/components/ui/typography";
 import { Article } from "@/types/content";
 import { getAuthorName } from "@/lib/author-loader";
-import { colors, sectionPadding, containerPadding, marginBottom } from "@/lib/design-tokens";
+import { colors, sectionPadding, containerPadding, marginBottom, gap } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
 const FALLBACK_IMAGE = "/assets/images/thumb/thumb-1240x700.jpg";
@@ -120,7 +120,7 @@ export default function LazySections({ articles, hikayeler, videos }: LazySectio
           {/* Background gradient accent */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-3xl -z-10" />
 
-          <div className="w-full px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl relative z-10">
+          <div className={cn("w-full mx-auto max-w-7xl relative z-10", containerPadding.md)}>
             <div className="mb-6">
               <Heading
                 level={2}
@@ -131,9 +131,9 @@ export default function LazySections({ articles, hikayeler, videos }: LazySectio
               </Heading>
               <div className={cn("h-0.5 w-16 bg-[#8080FF] mt-2")} />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3", gap.xl)}>
               {articles.map((article) => (
-                <div key={article.id} className="flex gap-4">
+                <div key={article.id} className={cn("flex", gap.lg)}>
                   <Link href={`/${article.id}`} className="block relative w-24 h-24 flex-shrink-0 animate-in fade-in zoom-in duration-300">
                     <Image
                       src={article.image || FALLBACK_IMAGE}
@@ -153,7 +153,7 @@ export default function LazySections({ articles, hikayeler, videos }: LazySectio
                         {article.title}
                       </Heading>
                     </Link>
-                    <div className="mt-1 flex items-center gap-2">
+                    <div className={cn("mt-1 flex items-center", gap.sm)}>
                       <Label as="span" color="muted">
                         {getAuthorName(article.author)}
                       </Label>

@@ -8,6 +8,7 @@ import ArticleNewsletterBanner from './ArticleNewsletterBanner';
 import { useAuth } from '@/components/providers/auth-provider';
 import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
+import { colors } from '@/lib/design-tokens';
 
 interface ContentWithButtonProps {
   content: string;
@@ -171,7 +172,7 @@ export default function ContentWithButton({ content, className, isPaywalled = fa
           {/* Top gradient for seamless transition - Covers the end of firstHalf */}
           <div className="absolute -top-[320px] left-0 right-0 h-[320px] bg-gradient-to-t from-background via-background/95 via-background/40 to-transparent z-10 pointer-events-none" />
 
-          <div className="w-full bg-white dark:bg-gray-900/80 backdrop-blur-md border-t border-gray-200/50 dark:border-gray-800/50 relative z-20 flex flex-col items-center justify-center">
+          <div className={cn("w-full backdrop-blur-md border-t border-gray-200/50 dark:border-gray-800/50 relative z-20 flex flex-col items-center justify-center", colors.background.base)}>
             <ScrolliPremiumBanner containerSize="full" variant="simple" />
           </div>
         </div>

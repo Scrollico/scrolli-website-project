@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Heading, Text } from "@/components/ui/typography";
 import { useEffect, useState } from "react";
+import { componentPadding } from "@/lib/design-tokens";
 
 interface HikayeLoaderProps {
     isLoading: boolean;
@@ -36,7 +37,7 @@ export function HikayeLoader({ isLoading, progress }: HikayeLoaderProps) {
                     }}
                     className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#F8F5E4] dark:bg-[#374152]"
                 >
-                    <div className="w-full max-w-xs px-6 flex flex-col items-center">
+                    <div className={`w-full max-w-xs flex flex-col items-center ${componentPadding.md}`}>
                         {/* Logo or Brand Mark (Optional, keeping it minimal) */}
                         <motion.div
                             initial={{ opacity: 0, y: 10 }}

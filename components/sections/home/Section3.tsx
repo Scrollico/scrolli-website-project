@@ -6,7 +6,7 @@ import { Container } from "@/components/responsive";
 import PodcastSection from "./PodcastSection";
 import { Article } from "@/types/content";
 import { cn } from "@/lib/utils";
-import { colors, sectionPadding, interactions } from "@/lib/design-tokens";
+import { colors, sectionPadding, gap, interactions } from "@/lib/design-tokens";
 import { Heading, Text, Caption } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 import { FreeContentBadgeIcon, PremiumContentBadgeIcon } from "@/components/icons/scrolli-icons";
@@ -160,7 +160,7 @@ function CategoryColumn({
             >
               <Link
                 href={`/${article.id}`}
-                className="group flex gap-4"
+                className={cn("group flex", gap.lg)}
               >
                 {/* Thumbnail */}
                 <figure className="relative w-24 h-16 md:w-32 md:h-20 flex-shrink-0 overflow-hidden rounded-md">

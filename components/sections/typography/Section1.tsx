@@ -1,11 +1,13 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Badge } from '@/components/ui/badge'
+import { sectionPadding, containerPadding, colors } from '@/lib/design-tokens'
+import { cn } from '@/lib/utils'
 
 export default function Section1() {
   return (
     <>
-      <div className="container">
+      <div className={cn("container", sectionPadding.md, containerPadding.md, colors.background.base)}>
         <div className="entry-header">
           <div className="mb-5">
             <h1 className="entry-title m_b_2rem">In 21st-century Korea, shamanism is not only thriving — but evolving</h1>

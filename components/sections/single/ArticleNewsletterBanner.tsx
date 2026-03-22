@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { SmartButton } from "@/components/ui/smart-button";
 import { cn } from "@/lib/utils";
+import { sectionPadding, colors } from "@/lib/design-tokens";
 
 export default function ArticleNewsletterBanner() {
     const [email, setEmail] = useState("");
@@ -103,7 +104,7 @@ export default function ArticleNewsletterBanner() {
                     <div
                         className={cn(
                             "flex items-center rounded-full",
-                            isDark ? "bg-neutral-800 border-neutral-700" : "bg-white border-gray-200",
+                            isDark ? "bg-neutral-800 border-neutral-700" : `${colors.background.base} border-gray-200`,
                             "border",
                             "shadow-sm focus-within:ring-2 focus-within:ring-green-500/20 focus-within:border-green-500"
                         )}

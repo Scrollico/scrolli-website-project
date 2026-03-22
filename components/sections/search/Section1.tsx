@@ -109,7 +109,7 @@ export default function Section1({ searchQuery: initialQuery }: Section1Props) {
                 <div
                   className={cn(
                     "flex items-center rounded-full",
-                    "bg-white dark:bg-gray-800",
+                    colors.background.base,
                     "border border-gray-200 dark:border-gray-700",
                     "shadow-sm hover:shadow-md transition-shadow focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary"
                   )}
