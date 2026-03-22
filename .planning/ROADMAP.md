@@ -40,13 +40,19 @@ Plans:
 **Goal**: The pricing page scroll animation is 60fps, bidirectional, freeze-free, and accessible
 **Depends on**: Phase 1
 **Requirements**: SCROLL-01, SCROLL-02, SCROLL-03, SCROLL-04, SCROLL-05, SCROLL-06, SCROLL-07
+**Plans:** 3 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — GSAP ScrollTrigger scaffold with pin/scrub, card morph timeline, and text fade animations
+- [ ] 02-02-PLAN.md — prefers-reduced-motion static fallback, bidirectional scroll verification, and 60fps performance tuning
+- [ ] 02-03-PLAN.md — Integration cleanup and visual verification checkpoint
+
 **Success Criteria** (what must be TRUE):
   1. Scrolling down on the pricing page animates article cards orbiting in a circular path — no freeze, no stutter
   2. Scrolling back up reverses the orbital animation smoothly, returning cards to their starting positions
   3. When the animation completes, normal page scrolling resumes without a jarring jump or lock
   4. On a device with `prefers-reduced-motion: reduce` set, a static article grid is shown instead of any animation
   5. No `overflow: visible !important` or `pricing-scrollytelling` class mutation appears on `document.documentElement` during any scroll state
-**Plans**: TBD
 
 ### Phase 3: Bento Grid Redesign
 **Goal**: The bento feature grid communicates each feature's value clearly through high-quality visuals and fluid entry animations
@@ -65,5 +71,5 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Design Token Enforcement | 9/9 | Complete   | 2026-03-22 |
-| 2. Orbital Scroll Animation Rebuild | 0/? | Not started | - |
+| 2. Orbital Scroll Animation Rebuild | 0/3 | Planned | - |
 | 3. Bento Grid Redesign | 0/? | Not started | - |
