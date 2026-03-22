@@ -8,11 +8,11 @@
 ### Design Tokens & Spacing
 
 - [x] **TOKEN-01**: Fix `colors.border.subtle` token — currently resolves to `undefined`, bento borders render as nothing
-- [ ] **TOKEN-02**: Audit all 30 components with hardcoded `py-N`/`px-N`/`p-N`/`gap-N` classes and migrate to design token usage
+- [x] **TOKEN-02**: Audit all 30 components with hardcoded `py-N`/`px-N`/`p-N`/`gap-N` classes and migrate to design token usage
 - [x] **TOKEN-03**: Migrate pricing page components (`PricingSkeleton`, `bento-grid.tsx`, `scroll-morph-hero.tsx`) to use design tokens for all spacing
 - [x] **TOKEN-04**: Ensure all button variants use consistent, responsive spacing from `button.padding` tokens
 - [x] **TOKEN-05**: Wire existing ESLint design token plugin (`scripts/eslint-plugin-scrolli-design.ts`) into `next lint` to enforce token usage automatically
-- [ ] **TOKEN-06**: Verify all migrated components render correctly in both light and dark mode
+- [x] **TOKEN-06**: Verify all migrated components render correctly in both light and dark mode
 
 ### Scroll Animation
 
@@ -64,11 +64,11 @@
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | TOKEN-01 | Phase 1 | Complete |
-| TOKEN-02 | Phase 1 | Pending |
+| TOKEN-02 | Phase 1 | Complete |
 | TOKEN-03 | Phase 1 | Complete |
 | TOKEN-04 | Phase 1 | Complete |
 | TOKEN-05 | Phase 1 | Complete |
-| TOKEN-06 | Phase 1 | Pending |
+| TOKEN-06 | Phase 1 | Complete |
 | SCROLL-01 | Phase 2 | Pending |
 | SCROLL-02 | Phase 2 | Pending |
 | SCROLL-03 | Phase 2 | Pending |

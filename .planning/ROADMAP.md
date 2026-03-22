@@ -16,15 +16,15 @@ Three sequential phases connect the existing infrastructure — design tokens, G
 **Goal**: All components use consistent, responsive spacing from a single source of truth — and the token system prevents regressions automatically
 **Depends on**: Nothing (first phase)
 **Requirements**: TOKEN-01, TOKEN-02, TOKEN-03, TOKEN-04, TOKEN-05, TOKEN-06
-**Plans:** 2/9 plans executed
+**Plans:** 4/9 plans executed
 
 Plans:
 - [x] 01-01-PLAN.md — Fix border.subtle token, button token migration, pricing page component migration
 - [x] 01-02-PLAN.md — Wire ESLint design token plugin into next lint
 - [ ] 01-03-PLAN.md — Bulk migration: UI components batch 1 (account-menu through expanding-cards-demo)
-- [ ] 01-04-PLAN.md — Bulk migration: UI components batch 2 (expanding-cards through textarea)
+- [x] 01-04-PLAN.md — Bulk migration: UI components batch 2 (expanding-cards through textarea)
 - [ ] 01-05-PLAN.md — Bulk migration: Layout, elements, and responsive components
-- [ ] 01-06-PLAN.md — Bulk migration: Premium, paywall, and onboarding components
+- [x] 01-06-PLAN.md — Bulk migration: Premium, paywall, and onboarding components
 - [ ] 01-07-PLAN.md — Bulk migration: Home section components
 - [ ] 01-08-PLAN.md — Bulk migration: Non-home section components (single, about-us, archive, etc.)
 - [ ] 01-09-PLAN.md — Bulk migration: App pages + full codebase verification
@@ -64,6 +64,6 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Design Token Enforcement | 2/9 | In Progress|  |
+| 1. Design Token Enforcement | 4/9 | In Progress|  |
 | 2. Orbital Scroll Animation Rebuild | 0/? | Not started | - |
 | 3. Bento Grid Redesign | 0/? | Not started | - |
