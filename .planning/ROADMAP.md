@@ -16,10 +16,10 @@ Three sequential phases connect the existing infrastructure — design tokens, G
 **Goal**: All components use consistent, responsive spacing from a single source of truth — and the token system prevents regressions automatically
 **Depends on**: Nothing (first phase)
 **Requirements**: TOKEN-01, TOKEN-02, TOKEN-03, TOKEN-04, TOKEN-05, TOKEN-06
-**Plans:** 1/9 plans executed
+**Plans:** 2/9 plans executed
 
 Plans:
-- [ ] 01-01-PLAN.md — Fix border.subtle token, button token migration, pricing page component migration
+- [x] 01-01-PLAN.md — Fix border.subtle token, button token migration, pricing page component migration
 - [x] 01-02-PLAN.md — Wire ESLint design token plugin into next lint
 - [ ] 01-03-PLAN.md — Bulk migration: UI components batch 1 (account-menu through expanding-cards-demo)
 - [ ] 01-04-PLAN.md — Bulk migration: UI components batch 2 (expanding-cards through textarea)
@@ -64,6 +64,6 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Design Token Enforcement | 1/9 | In Progress|  |
+| 1. Design Token Enforcement | 2/9 | In Progress|  |
 | 2. Orbital Scroll Animation Rebuild | 0/? | Not started | - |
 | 3. Bento Grid Redesign | 0/? | Not started | - |
