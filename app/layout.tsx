@@ -173,6 +173,17 @@ export default async function RootLayout({
   return (
     <html lang={locale} suppressHydrationWarning className={`${newsreader.variable} ${instrumentSans.variable} ${initialHtmlClass}`}>
       <head>
+        {/* Inline blocking script — must run before first paint to prevent FOUC */}
+        <script
+          id="theme-preload"
+          dangerouslySetInnerHTML={{ __html: themeInitScript }}
+        />
+        {/* Preconnect for critical font resources */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* DNS-prefetch for likely-but-not-guaranteed resources */}
+        <link rel="dns-prefetch" href="https://scrollimedia.blob.core.windows.net" />
+        <link rel="dns-prefetch" href="https://cms.scrolli.co" />
         <style
           id="theme-prepaint-guard"
           dangerouslySetInnerHTML={{
@@ -220,11 +231,6 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `(function(){document.querySelectorAll('link[data-deferred-css]').forEach(function(l){l.media='all';});})();`,
           }}
-        />
-        <Script
-          id="theme-preload"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{ __html: themeInitScript }}
         />
         <Script
           id="organization-structured-data"
