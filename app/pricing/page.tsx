@@ -42,10 +42,11 @@ function PricingSkeleton() {
 }
 
 // Feature-specific visual illustrations for bento grid
-function BentoVisual({ icon: Icon, gradient, accent }: {
+function BentoVisual({ icon: Icon, gradient, accent, badge }: {
   icon: React.ComponentType<{ className?: string }>;
   gradient: string;
   accent: string;
+  badge?: string;
 }) {
   return (
     <div className={cn(
@@ -54,6 +55,11 @@ function BentoVisual({ icon: Icon, gradient, accent }: {
       colors.border.light
     )}>
       <div className={cn("absolute -inset-10", gradient)} />
+      {badge && (
+        <div className="absolute top-3 right-3 z-10 px-2 py-0.5 rounded-full text-[10px] font-semibold tracking-wide uppercase bg-foreground/10 text-foreground/60">
+          {badge}
+        </div>
+      )}
       <div className="relative h-full flex items-center justify-center">
         <div className={cn(
           "h-16 w-16 rounded-2xl flex items-center justify-center",
@@ -92,23 +98,23 @@ const bentoFeatures: BentoFeature[] = [
   {
     id: "feature-4",
     title: "Çevrimdışı Okuma",
-    description: "Makaleleri indirip internet olmadan okuyun",
-    content: <BentoVisual icon={WifiOff} gradient="bg-gradient-to-r from-violet-500/15 via-transparent to-purple-500/20" accent="bg-violet-500/10 border border-violet-500/20" />,
-    className: "md:col-span-3 lg:col-span-3",
+    description: "Makaleleri indirip internet olmadan okuyun — yakında",
+    content: <BentoVisual icon={WifiOff} gradient="bg-gradient-to-r from-violet-500/15 via-transparent to-purple-500/20" accent="bg-violet-500/10 border border-violet-500/20" badge="Yakında" />,
+    className: "md:col-span-2 lg:col-span-2",
   },
   {
     id: "feature-5",
     title: "Öncelikli Destek",
     description: "İhtiyacınız olduğunda hızlı yardım alın",
     content: <BentoVisual icon={Headphones} gradient="bg-gradient-to-l from-rose-500/15 via-transparent to-pink-500/20" accent="bg-rose-500/10 border border-rose-500/20" />,
-    className: "md:col-span-3 lg:col-span-3",
+    className: "md:col-span-2 lg:col-span-2",
   },
   {
     id: "feature-6",
     title: "Özel Etkinlikler",
     description: "Yalnızca üyelere özel etkinliklere ve webinarlara katılın",
     content: <BentoVisual icon={CalendarHeart} gradient="bg-gradient-to-br from-sky-500/15 via-transparent to-cyan-500/20" accent="bg-sky-500/10 border border-sky-500/20" />,
-    className: "md:col-span-6 lg:col-span-6",
+    className: "md:col-span-2 lg:col-span-2",
   },
 ];
 
