@@ -18,11 +18,11 @@
 
 - [x] **SCROLL-01**: Replace competing `wheel` event listener + `virtualScroll` MotionValue architecture with GSAP ScrollTrigger `scrub` for scroll progress
 - [x] **SCROLL-02**: Rebuild card orbital positions using `useTransform` with `style` prop (compositor thread) instead of `animate` prop (JS thread)
-- [ ] **SCROLL-03**: Achieve 60fps scroll-linked animation with fluid bidirectional (up and down) movement
+- [x] **SCROLL-03**: Achieve 60fps scroll-linked animation with fluid bidirectional (up and down) movement
 - [x] **SCROLL-04**: Remove global `document.documentElement` class mutation (`pricing-scrollytelling` / `overflow: visible !important` hack)
-- [ ] **SCROLL-05**: Implement `prefers-reduced-motion` — show static layout instead of animation
+- [x] **SCROLL-05**: Implement `prefers-reduced-motion` — show static layout instead of animation
 - [x] **SCROLL-06**: Cards orbit/rotate in a circular path driven by scroll progress
-- [ ] **SCROLL-07**: Smooth scroll completion handoff — when animation finishes, normal page scroll resumes seamlessly
+- [x] **SCROLL-07**: Smooth scroll completion handoff — when animation finishes, normal page scroll resumes seamlessly
 
 ### Bento Grid
 
@@ -71,11 +71,11 @@
 | TOKEN-06 | Phase 1 | Complete |
 | SCROLL-01 | Phase 2 | Complete |
 | SCROLL-02 | Phase 2 | Complete |
-| SCROLL-03 | Phase 2 | Pending |
+| SCROLL-03 | Phase 2 | Complete |
 | SCROLL-04 | Phase 2 | Complete |
-| SCROLL-05 | Phase 2 | Pending |
+| SCROLL-05 | Phase 2 | Complete |
 | SCROLL-06 | Phase 2 | Complete |
-| SCROLL-07 | Phase 2 | Pending |
+| SCROLL-07 | Phase 2 | Complete |
 | BENTO-01 | Phase 3 | Pending |
 | BENTO-02 | Phase 3 | Pending |
 | BENTO-03 | Phase 3 | Pending |

@@ -40,11 +40,11 @@ Plans:
 **Goal**: The pricing page scroll animation is 60fps, bidirectional, freeze-free, and accessible
 **Depends on**: Phase 1
 **Requirements**: SCROLL-01, SCROLL-02, SCROLL-03, SCROLL-04, SCROLL-05, SCROLL-06, SCROLL-07
-**Plans:** 3 plans
+**Plans:** 2/3 plans executed
 
 Plans:
 - [x] 02-01-PLAN.md — GSAP ScrollTrigger scaffold with pin/scrub, card morph timeline, and text fade animations
-- [ ] 02-02-PLAN.md — prefers-reduced-motion static fallback, bidirectional scroll verification, and 60fps performance tuning
+- [x] 02-02-PLAN.md — prefers-reduced-motion static fallback, bidirectional scroll verification, and 60fps performance tuning
 - [ ] 02-03-PLAN.md — Integration cleanup and visual verification checkpoint
 
 **Success Criteria** (what must be TRUE):
@@ -71,5 +71,5 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Design Token Enforcement | 9/9 | Complete   | 2026-03-22 |
-| 2. Orbital Scroll Animation Rebuild | 0/3 | Planned | - |
+| 2. Orbital Scroll Animation Rebuild | 2/3 | In Progress|  |
 | 3. Bento Grid Redesign | 0/? | Not started | - |
