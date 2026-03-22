@@ -3,7 +3,7 @@
 import { ChevronDown } from "lucide-react"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
-import { colors } from "@/lib/design-tokens"
+import { colors, gap } from "@/lib/design-tokens"
 
 export default function ScrollIndicator() {
   const scrollDown = () => {
@@ -23,7 +23,8 @@ export default function ScrollIndicator() {
       onClick={scrollDown}
       className={cn(
         "scroll-indicator-button",
-        "flex flex-col items-center gap-3",
+        "flex flex-col items-center",
+        gap.md,
         "border-0 bg-transparent",
         "focus:outline-none focus:ring-0",
         "hover:opacity-60 transition-opacity duration-200"

@@ -4,6 +4,7 @@ import * as TabsPrimitive from "@radix-ui/react-tabs";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import { colors } from "@/lib/design-tokens";
 
 const Tabs = TabsPrimitive.Root;
 
@@ -15,6 +16,7 @@ const TabsList = React.forwardRef<
     ref={ref}
     className={cn(
       "inline-flex items-center justify-center p-0.5",
+      colors.background.elevated,
       className,
     )}
     {...props}

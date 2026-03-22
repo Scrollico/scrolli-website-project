@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { Plus, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { colors, gap } from '@/lib/design-tokens';
 
 interface FollowButtonProps {
   topic: string;
@@ -26,11 +27,12 @@ export default function FollowButton({
     <div 
       data-test-id="tf-wrapper"
       className={cn(
-        "w-full flex items-center gap-3 py-3 px-4",
-        "border-t border-b border-gray-200 dark:border-gray-700",
-        "bg-white dark:bg-gray-800",
-        "hover:bg-gray-50 dark:hover:bg-gray-700",
-        "transition-colors duration-200",
+        "w-full flex items-center py-3 px-4",
+        gap.md,
+        "border-t border-b",
+        colors.border.DEFAULT,
+        colors.background.base,
+        "hover:opacity-90 transition-opacity duration-200",
         "cursor-pointer",
         className
       )}
@@ -52,19 +54,19 @@ export default function FollowButton({
         <div className="flex items-center gap-1.5">
           {isFollowing ? (
             <>
-              <span className="font-semibold text-sm text-gray-900 dark:text-white">
+              <span className={cn("font-semibold text-sm", colors.foreground.primary)}>
                 Following
               </span>
-              <span className="text-sm text-gray-900 dark:text-white">
+              <span className={cn("text-sm", colors.foreground.primary)}>
                 {topic}
               </span>
             </>
           ) : (
             <>
-              <span className="font-semibold text-sm text-gray-900 dark:text-white">
+              <span className={cn("font-semibold text-sm", colors.foreground.primary)}>
                 Subscribe
               </span>
-              <span className="text-sm text-gray-900 dark:text-white">
+              <span className={cn("text-sm", colors.foreground.primary)}>
                 {topic}
               </span>
             </>
@@ -75,12 +77,12 @@ export default function FollowButton({
       {/* Follow Icon - Circular with Plus/Check */}
       <div className="flex-shrink-0">
         {isFollowing ? (
-          <div className="w-6 h-6 rounded-full border border-gray-400 dark:border-gray-500 flex items-center justify-center bg-transparent">
-            <Check className="w-3.5 h-3.5 text-gray-600 dark:text-gray-400" />
+          <div className={cn("w-6 h-6 rounded-full border flex items-center justify-center bg-transparent", colors.border.DEFAULT)}>
+            <Check className={cn("w-3.5 h-3.5", colors.foreground.secondary)} />
           </div>
         ) : (
-          <div className="w-6 h-6 rounded-full border border-gray-400 dark:border-gray-500 flex items-center justify-center bg-transparent">
-            <Plus className="w-3.5 h-3.5 text-gray-600 dark:text-gray-400" />
+          <div className={cn("w-6 h-6 rounded-full border flex items-center justify-center bg-transparent", colors.border.DEFAULT)}>
+            <Plus className={cn("w-3.5 h-3.5", colors.foreground.secondary)} />
           </div>
         )}
       </div>

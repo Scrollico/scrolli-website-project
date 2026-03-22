@@ -13,7 +13,7 @@ import {
 import { Container } from "@/components/responsive";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Heading, Text } from "@/components/ui/typography";
-import { sectionPadding } from "@/lib/design-tokens";
+import { sectionPadding, gap, componentPadding } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
 export interface PodcastItem {
@@ -109,7 +109,7 @@ export function PodcastGallery({
                     <div className="absolute inset-0 h-full bg-gradient-to-t from-black/80 via-black/40 to-transparent dark:from-black/90 dark:via-black/50 dark:to-transparent" />
 
                     {/* Text overlay at bottom */}
-                    <div className="absolute inset-x-0 bottom-0 flex flex-col items-start p-6 md:p-8">
+                    <div className={cn("absolute inset-x-0 bottom-0 flex flex-col items-start", componentPadding.lg)}>
                       {/* Host info */}
                       <Text
                         variant="bodySmall"
@@ -144,7 +144,7 @@ export function PodcastGallery({
         </Carousel>
 
         {/* Pagination Dots */}
-        <div className="mt-8 flex justify-center gap-2">
+        <div className={cn("mt-8 flex justify-center", gap.sm)}>
           {items.map((_, index) => (
             <button
               key={index}

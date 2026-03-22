@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { colors } from "@/lib/design-tokens";
+import { colors, marginBottom } from "@/lib/design-tokens";
 
 /* Use your shadcn Tab primitives - adjust import path if your project differs */
 import {
@@ -49,7 +49,7 @@ export default function PillMorphTabs({
   const listRef = React.useRef<HTMLDivElement | null>(null);
   const triggerRefs = React.useRef<Record<string, HTMLButtonElement | null>>({});
 
-  const [indicator, setIndicator] = React.useState<{ left: number; width: number } | null>(null);
+  const [_indicator, setIndicator] = React.useState<{ left: number; width: number } | null>(null);
 
   // measure position & width of active trigger and set indicator
   const measure = React.useCallback(() => {
@@ -88,7 +88,7 @@ export default function PillMorphTabs({
   return (
     <div className={cn("w-full min-w-0", className)}>
       <Tabs value={value} onValueChange={(v) => setValue(v)} className="w-full">
-        <div className="flex justify-center mb-6 md:mb-8">
+        <div className={cn("flex justify-center", marginBottom.sm)}>
           <div
             ref={listRef}
             data-tabs-container="true"

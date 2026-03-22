@@ -180,7 +180,7 @@ export default function PricingSection1() {
   ];
 
   return (
-    <div className={cn("w-full mx-auto relative", containerPadding.md, "pt-10 pb-12")} ref={pricingRef}>
+    <div className={cn("w-full mx-auto relative", containerPadding.md, sectionPadding.lg)} ref={pricingRef}>
       <div className={cn(colors.background.base, sectionPadding.lg, containerPadding.md)}>
         <div
           className="absolute inset-0 z-0 dark:hidden"

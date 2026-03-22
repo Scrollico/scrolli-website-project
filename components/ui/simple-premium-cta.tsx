@@ -2,7 +2,7 @@
 
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { colors, typography } from "@/lib/design-tokens";
+import { colors, typography, sectionPadding, containerPadding } from "@/lib/design-tokens";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
@@ -10,11 +10,11 @@ export function SimplePremiumCTA() {
   const router = useRouter();
   
   return (
-    <div className="relative w-full py-16 sm:py-24 overflow-hidden">
+    <div className={cn("relative w-full overflow-hidden", sectionPadding.xl)}>
       {/* Background accents */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-3xl -z-10" />
       
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className={cn("max-w-4xl mx-auto text-center", containerPadding.md)}>
         <div className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-primary/10 text-primary mb-6">
           Abonelik Avantajları
         </div>

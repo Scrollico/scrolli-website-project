@@ -6,6 +6,7 @@
  */
 
 import { cn } from "@/lib/utils";
+import { sectionPadding, containerPadding, gap, colors } from "@/lib/design-tokens";
 
 /**
  * Base skeleton component
@@ -153,7 +154,7 @@ export function ImageSkeleton({
  */
 export function CardSkeleton() {
   return (
-    <div className="space-y-4 rounded-lg border border-gray-200 dark:border-gray-800 p-4">
+    <div className={cn("space-y-4 rounded-lg border p-4", colors.border.DEFAULT)}>
       <Skeleton className="h-48 w-full rounded-lg" />
       <div className="space-y-2">
         <Skeleton className="h-5 w-3/4" />
@@ -180,7 +181,7 @@ export function ArticleGridSkeleton({
 }) {
   return (
     <div
-      className="grid gap-6"
+      className={cn("grid", gap.xl)}
       style={{
         gridTemplateColumns: `repeat(${columns}, 1fr)`,
       }}
@@ -197,7 +198,7 @@ export function ArticleGridSkeleton({
  */
 export function Section3Skeleton() {
   return (
-    <div className="w-full bg-background px-4 sm:px-6 lg:px-8 py-8 md:py-12 lg:py-16">
+    <div className={cn("w-full bg-background", containerPadding.md, sectionPadding.md)}>
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 mb-8 lg:mb-12">
           {[1, 2].map((i) => (

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { componentPadding } from '@/lib/design-tokens';
 import { useIsMobile } from '@/hooks/use-media-query';
 import {
     Dialog,
@@ -195,7 +196,7 @@ const ModalDescription = ({
 };
 
 const ModalBody = ({ className, ...props }: React.ComponentProps<'div'>) => {
-    return <div className={cn('px-4 py-6', className)} {...props} />;
+    return <div className={cn(componentPadding.md, className)} {...props} />;
 };
 const ModalFooter = ({ className, ...props }: React.ComponentProps<'div'>) => {
     const { isMobile } = useModalContext();

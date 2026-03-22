@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { gap, colors } from "@/lib/design-tokens";
 
 export interface CardItem {
   id: string | number;
@@ -49,7 +50,8 @@ export const ExpandingCards = React.forwardRef<
   return (
     <ul
       className={cn(
-        "w-full max-w-6xl gap-2",
+        "w-full max-w-6xl",
+        gap.sm,
         "grid",
         // Mobile: 1 col with rows from --grid-rows var; desktop: columns layout, single row
         "grid-cols-1 [grid-template-rows:var(--grid-rows)] md:grid-cols-[var(--grid-layout)] md:grid-rows-1",
@@ -105,8 +107,8 @@ export const ExpandingCards = React.forwardRef<
                   priority={index === 0}
                 />
               ) : (
-                <div className="absolute inset-0 bg-neutral-800 flex items-center justify-center pointer-events-none">
-                  <span className="text-white font-bold text-xs">NO IMAGE</span>
+                <div className={cn("absolute inset-0 flex items-center justify-center pointer-events-none", colors.background.elevated)}>
+                  <span className={cn("font-bold text-xs", colors.foreground.primary)}>NO IMAGE</span>
                 </div>
               )}
             </div>

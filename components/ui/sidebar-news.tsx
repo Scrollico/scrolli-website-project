@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useIsMobile } from "@/hooks/use-media-query";
 import { cn, gradientVariants } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
-import { colors } from "@/lib/design-tokens";
+import { colors, sectionPadding, containerPadding, gap, componentPadding } from "@/lib/design-tokens";
 
 export interface NewsArticle {
   href: string;
@@ -48,11 +48,11 @@ export function News({ articles }: { articles: NewsArticle[] }) {
 
   return cards.length || showCompleted ? (
     <div
-      className="group overflow-hidden px-3 pb-3 pt-8
-        sm:px-4 sm:pb-4 sm:pt-10
-        md:px-6 md:pb-6 md:pt-12
-        lg:px-8 lg:pb-8 lg:pt-16
-        max-w-sm mx-auto"
+      className={cn(
+        "group overflow-hidden max-w-sm mx-auto",
+        containerPadding.md,
+        sectionPadding.md,
+      )}
       data-active={cardCount !== 0}
     >
       <div className="relative w-full h-full min-h-[400px] sm:min-h-[450px] md:min-h-[500px]">
@@ -240,7 +240,9 @@ function NewsCard({
     <Card
       ref={ref}
       className={cn(
-        "relative select-none gap-2 p-3 text-[0.8125rem]",
+        "relative select-none text-[0.8125rem]",
+        gap.sm,
+        componentPadding.sm,
         colors.background.base,
         "dark:!bg-[#374152]", // Force dark background - white text needs dark bg
         "translate-x-[calc(var(--dx)*1px)] rotate-[calc(var(--dx)*0.05deg)] opacity-[calc(1-max(var(--dx),-1*var(--dx))/var(--w)/2)]",
@@ -248,8 +250,8 @@ function NewsCard({
         "border",
         // Responsive sizing to prevent overflow
         "w-full max-w-full h-auto",
-        "sm:p-4 sm:text-sm",
-        "md:p-5 md:text-base"
+        "sm:text-sm",
+        "md:text-base"
       )}
       data-dragging={dragging}
       data-active={active}
