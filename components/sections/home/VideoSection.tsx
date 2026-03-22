@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import 'swiper/css';
-import { colors } from "@/lib/design-tokens";
+import { colors, sectionPadding } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 import { PlayIcon, CloseIcon, ArrowLeftIcon, ArrowRightIcon } from "@/components/icons/scrolli-icons";
 
@@ -600,7 +600,7 @@ export default function VideoSection({ videos: cmsVideos }: VideoSectionProps = 
 
   return (
     <>
-      <div className="content-widget pt-8 md:pt-10 lg:pt-12" ref={sectionRef}>
+      <div className={cn("content-widget", sectionPadding.md)} ref={sectionRef}>
         <div className="container">
           <div className="max-w-7xl mx-auto">
             <SectionHeader title="Watch Today's Videos" />

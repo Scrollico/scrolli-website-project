@@ -9,6 +9,7 @@ import {
   colors,
   containerPadding,
   gap,
+  sectionPadding,
   typography
 } from '@/lib/design-tokens';
 import { PayloadNavigation } from '@/lib/payload/types';
@@ -73,7 +74,8 @@ export default function Footer({ navigation }: FooterProps) {
   return (
     <footer
       className={cn(
-        "w-full mt-20 md:mt-32 pt-16 pb-10 border-t",
+        "w-full mt-20 md:mt-32 border-t",
+        sectionPadding.sm,
         colors.navbarBeige.DEFAULT,
         colors.navbarBeige.text,
         colors.border.light,

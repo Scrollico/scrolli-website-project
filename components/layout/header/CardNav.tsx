@@ -11,7 +11,8 @@ import CinematicThemeSwitcher from '@/components/ui/cinematic-theme-switcher';
 import { UserMenu } from './UserMenu';
 import { NavbarUsageMeter } from '@/components/paywall';
 import { useLocale } from '@/components/providers/locale-provider';
-import { controlOnDarkValues } from '@/lib/design-tokens';
+import { controlOnDarkValues, gap, componentPadding } from '@/lib/design-tokens';
+import { cn } from '@/lib/utils';
 import type { CategoryPreview } from './HeaderWrapper';
 
 interface MenuLink {
@@ -172,7 +173,7 @@ export default function CardNav({
         </div>
 
         {/* Cards row — always 4 slots from categoryPreviews */}
-        <div className="flex gap-3 p-4">
+        <div className={cn("flex", gap.md, componentPadding.md)}>
           {(categoryPreviews && categoryPreviews.length > 0
             ? categoryPreviews
             : dropdownItem.links.map((l) => ({ slug: l.label.toLowerCase(), label: l.label, href: l.href || `/${l.label.toLowerCase()}`, article: null }))

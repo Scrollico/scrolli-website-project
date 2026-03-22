@@ -8,7 +8,7 @@ import CardNav from "./CardNav";
 import MobileSidebar from "./MobileSidebar";
 import { getCategoriesFromBlog } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
-import { colors, borderRadius } from "@/lib/design-tokens";
+import { colors, borderRadius, containerPadding, gap } from "@/lib/design-tokens";
 import { PayloadNavigation } from "@/lib/payload/types";
 import { NavbarUsageMeter } from "@/components/paywall";
 import type { CategoryPreview } from "./HeaderWrapper";
@@ -148,7 +148,7 @@ export default function Header({ navigation, categoryPreviews }: HeaderProps) {
           colors.navbarBeige.DEFAULT,
           "backdrop-blur",
           "h-14 min-h-[56px]",
-          "px-4 sm:px-6",
+          containerPadding.sm,
           "border-b border-gray-200/50 dark:border-gray-700/50"
         )}>
           {/* Mobile Logo */}
@@ -165,7 +165,7 @@ export default function Header({ navigation, categoryPreviews }: HeaderProps) {
           </Link>
 
           {/* Mobile Actions */}
-          <div className="flex items-center gap-3 z-10 flex-shrink-0">
+          <div className={cn("flex items-center z-10 flex-shrink-0", gap.md)}>
             <NavbarUsageMeter className="scale-75 origin-right" />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

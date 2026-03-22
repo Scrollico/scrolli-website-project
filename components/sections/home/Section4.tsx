@@ -8,7 +8,7 @@ import { gradientVariants, cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Container } from "@/components/responsive"
 import { Heading, Text } from "@/components/ui/typography"
-import { colors, gap } from "@/lib/design-tokens"
+import { colors, gap, sectionPadding } from "@/lib/design-tokens"
 
 export default function Section4() {
   const { mostRecent } = blogData;
@@ -27,7 +27,7 @@ export default function Section4() {
 
   return (
     <>
-      <div className="content-widget">
+      <div className={cn("content-widget", sectionPadding.md)}>
         <Container>
           <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8 lg:gap-12">
             <div>

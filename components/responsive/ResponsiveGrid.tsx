@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { gap as gapTokens } from "@/lib/design-tokens";
 import { ReactNode } from "react";
 
 interface ResponsiveGridProps {
@@ -18,13 +19,13 @@ interface ResponsiveGridProps {
 
 const gapClasses = {
   none: "gap-0",
-  xs: "gap-2",
-  sm: "gap-4",
-  md: "gap-6",
-  lg: "gap-8",
-  xl: "gap-12",
-  "2xl": "gap-16",
-  "3xl": "gap-20",
+  xs: gapTokens.xs,
+  sm: gapTokens.sm,
+  md: gapTokens.md,
+  lg: gapTokens.lg,
+  xl: gapTokens.xl,
+  "2xl": gapTokens["2xl"],
+  "3xl": "gap-20", // Extended size beyond token system
 };
 
 function getGridCols(columns: ResponsiveGridProps["columns"] = {}) {

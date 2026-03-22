@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { colors, interactions } from "@/lib/design-tokens";
+import { colors, interactions, componentPadding, gap } from "@/lib/design-tokens";
 import { Heading, Text, Caption } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 
@@ -43,8 +43,8 @@ export default function ArticleCard({
     <article
       className={cn(
         "group w-full",
-        isHorizontal && "flex flex-col md:flex-row gap-3 md:gap-6",
-        "py-3 px-2 md:py-6 md:px-4",
+        isHorizontal && cn("flex flex-col md:flex-row", gap.md),
+        componentPadding.md,
         // Premium Styling - background only, no border
         isPremium
           ? "bg-amber-50/40 dark:bg-amber-950/20 rounded-xl transition-colors duration-300"

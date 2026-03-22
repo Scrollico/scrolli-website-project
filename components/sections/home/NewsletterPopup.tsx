@@ -11,7 +11,9 @@ import {
     borderRadius,
     gap,
     fontWeight,
-    button
+    button,
+    componentPadding,
+    containerPadding
 } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
@@ -237,7 +239,7 @@ export default function NewsletterPopup() {
                         }}
                     >
                         <div
-                            className="w-full max-w-2xl mx-auto px-4 py-5 md:px-6 md:py-6"
+                            className={cn("w-full max-w-2xl mx-auto", containerPadding.sm, componentPadding.md)}
                         >
                             <div className="relative space-y-3">
                                 {/* Close Button - Top Right */}
@@ -291,7 +293,7 @@ export default function NewsletterPopup() {
                                     className={cn(
                                         "w-full h-11 px-4 text-base",
                                         "border border-gray-300 dark:border-gray-600",
-                                        "bg-white dark:bg-gray-800",
+                                        colors.background.base,
                                         "focus-visible:ring-2 focus-visible:ring-[#374152] dark:focus-visible:ring-gray-500",
                                         "placeholder:text-gray-400 dark:placeholder:text-gray-500",
                                         colors.foreground.primary

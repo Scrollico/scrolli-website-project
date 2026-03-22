@@ -7,6 +7,7 @@ import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import {
   sectionPadding,
+  componentPadding,
   colors,
 } from "@/lib/design-tokens";
 import { Heading, Text } from "@/components/ui/typography";
@@ -105,7 +106,7 @@ export default function ScrolliPremiumBanner({
       {/* Left Column: The Manifesto */}
       <div
         className={cn(
-          "p-6 md:p-8 flex flex-col justify-between relative",
+          cn(componentPadding.lg, "flex flex-col justify-between relative"),
           isSimple ? "col-span-1 items-center text-center" : (embedded ? "col-span-1" : "lg:col-span-7"),
           !isSimple && "border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-gray-700",
           embedded && !isSimple && "border-r-0 border-b",

@@ -4,11 +4,10 @@ import { cn } from "@/lib/utils";
 import {
     colors,
     borderRadius,
-    border,
-    componentPadding,
     typography,
     transition,
-    button
+    button,
+    gap
 } from "@/lib/design-tokens";
 import { ChevronRight } from "lucide-react";
 import { useRef, useEffect } from "react";
@@ -197,7 +196,8 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
     return (
         <nav aria-label="Pagination">
             <ul className={cn(
-                "flex items-center justify-center gap-2 flex-wrap",
+                "flex items-center justify-center flex-wrap",
+                gap.sm,
                 typography.bodySmall
             )}>
                 {renderPageNumbers()}

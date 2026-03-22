@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Text } from "@/components/ui/typography";
 import { UserMenu } from "./UserMenu";
-import { interactions } from "@/lib/design-tokens";
+import { interactions, containerPadding, gap } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
 // Essential menu items for sticky navbar (3 items)
@@ -66,13 +66,13 @@ export default function StickyNav() {
         }`}
       aria-label="Sticky navigation"
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className={cn("container mx-auto", containerPadding.md)}>
         <div className="flex items-center justify-between h-10 md:h-11">
           {/* Spacer to balance layout */}
           <div className="w-10 hidden md:block" />
 
           {/* Three essential menu items */}
-          <div className="flex items-center gap-4 md:gap-6 lg:gap-8">
+          <div className={cn("flex items-center", gap.lg)}>
             {STICKY_MENU_ITEMS.map((item, index) => (
               <Text
                 key={item.href}

@@ -13,7 +13,7 @@ import { Text } from "@/components/ui/typography";
 import { UserMenu } from "./UserMenu";
 import CinematicThemeSwitcher from "@/components/ui/cinematic-theme-switcher";
 import { NavbarUsageMeter } from "@/components/paywall";
-import { elevation } from "@/lib/design-tokens";
+import { elevation, componentPadding, gap } from "@/lib/design-tokens";
 
 interface Category {
     slug: string;
@@ -109,7 +109,7 @@ export default function MobileSidebar({
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Header with Close Button */}
-                        <div className="flex items-center justify-between p-4 pl-6 border-b border-gray-200/50 dark:border-gray-700/50">
+                        <div className={cn("flex items-center justify-between pl-6 border-b border-gray-200/50 dark:border-gray-700/50", componentPadding.xs)}>
                             <Link href="/" onClick={onClose} className="flex items-center">
                                 {/* Single Logo - Adapts to Dark Mode automatically */}
                                 <NextImage
@@ -174,7 +174,7 @@ export default function MobileSidebar({
                             </div>
 
                             {/* Quick Actions */}
-                            <div className="px-4 pb-4 flex gap-3">
+                            <div className={cn("px-4 pb-4 flex", gap.md)}>
                                 <Link
                                     href="/"
                                     onClick={onClose}
@@ -282,7 +282,7 @@ export default function MobileSidebar({
                         </div>
 
                         {/* Footer - User Section */}
-                        <div className="border-t border-gray-200/50 dark:border-gray-700/50 p-4 space-y-4">
+                        <div className={cn("border-t border-gray-200/50 dark:border-gray-700/50 space-y-4", componentPadding.xs)}>
                             {/* Usage Meter */}
                             <div className="flex items-center justify-center">
                                 <NavbarUsageMeter />

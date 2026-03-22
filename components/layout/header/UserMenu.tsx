@@ -6,7 +6,7 @@ import { useTranslation } from "@/components/providers/translation-provider";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
-import { colors } from "@/lib/design-tokens";
+import { colors, gap, componentPadding } from "@/lib/design-tokens";
 import { User, LogOut, Sun, Moon, Monitor, ChevronDown } from "lucide-react";
 import {
   DropdownMenu,
@@ -63,7 +63,7 @@ export function UserMenu() {
 
   if (!user) {
     return (
-      <div className="flex items-center gap-2">
+      <div className={cn("flex items-center", gap.sm)}>
         <Button asChild variant="ghost" size="sm" className="hidden sm:flex">
           <Link href="/sign-in">{t('signIn', 'Sign in')}</Link>
         </Button>
@@ -169,7 +169,8 @@ export function UserMenu() {
 
       <DropdownMenuContent
         className={cn(
-          "min-w-[240px] p-1",
+          "min-w-[240px]",
+          componentPadding.xs,
           colors.background.elevated,
           colors.border.DEFAULT,
           colors.foreground.primary,
@@ -180,7 +181,7 @@ export function UserMenu() {
       >
         {/* User Info Header - WordPress.com style */}
         <div className={cn("px-3 py-2.5 border-b", colors.border.DEFAULT)}>
-          <div className="flex flex-col gap-0.5">
+          <div className={cn("flex flex-col", gap.xs)}>
             {isPremium && (
               <span
                 className={cn(
@@ -272,7 +273,8 @@ export function UserMenu() {
           </DropdownMenuSubTrigger>
           <DropdownMenuPortal>
             <DropdownMenuSubContent className={cn(
-              "w-44 p-1",
+              "w-44",
+              componentPadding.xs,
               colors.background.elevated,
               colors.border.DEFAULT,
               colors.foreground.primary,

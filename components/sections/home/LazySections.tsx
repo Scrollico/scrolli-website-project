@@ -8,7 +8,7 @@ import { ExpandingCards, CardItem } from "@/components/ui/expanding-cards";
 import { Heading, Label } from "@/components/ui/typography";
 import { Article } from "@/types/content";
 import { getAuthorName } from "@/lib/author-loader";
-import { colors, sectionPadding, marginBottom } from "@/lib/design-tokens";
+import { colors, sectionPadding, containerPadding, marginBottom } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
 const FALLBACK_IMAGE = "/assets/images/thumb/thumb-1240x700.jpg";
@@ -87,7 +87,7 @@ export default function LazySections({ articles, hikayeler, videos }: LazySectio
             "mb-8"
           )}
         >
-          <div className="w-full px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl">
+          <div className={cn("w-full mx-auto max-w-7xl", containerPadding.md)}>
             <div className="mb-6">
               <Link
                 href="/archive"

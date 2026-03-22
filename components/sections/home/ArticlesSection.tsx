@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Heading } from "@/components/ui/typography";
 import { Pagination, Navigation } from 'swiper/modules';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { colors, sectionPadding, marginBottom, borderRadius, elevation, elevationHover, componentPadding, interactions, transition } from "@/lib/design-tokens";
+import { colors, sectionPadding, containerPadding, marginBottom, borderRadius, elevation, elevationHover, componentPadding, interactions, transition } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 import { getAuthorName } from '@/lib/author-loader';
 
@@ -141,7 +141,7 @@ export default function ArticlesSection({ articles, title = "Daha Fazla Hikaye",
 
   return (
     <section className={cn(sectionPadding.md, marginBottom.lg, "overflow-x-hidden", colors.background.base, className)}>
-      <div className="w-full px-4 sm:px-6 lg:px-8 mx-auto max-w-7xl">
+      <div className={cn("w-full mx-auto max-w-7xl", containerPadding.md)}>
         {/* Section Header */}
         <div className="mb-6">
           <Link
