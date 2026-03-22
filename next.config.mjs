@@ -83,7 +83,17 @@ const nextConfig = {
   reactStrictMode: true,
   // Enable experimental features for better performance
   experimental: {
-    optimizePackageImports: ['lucide-react', 'framer-motion', '@radix-ui/react-tabs', '@radix-ui/react-checkbox'],
+    optimizePackageImports: [
+      'lucide-react',
+      'framer-motion',
+      'swiper',
+      'react-syntax-highlighter',
+      '@radix-ui/react-tabs',
+      '@radix-ui/react-checkbox',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-accordion',
+    ],
     // Disable optimizeCss - requires critters package which causes build errors
     // optimizeCss: true,
   },
