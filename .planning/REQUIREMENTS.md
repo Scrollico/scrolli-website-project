@@ -11,7 +11,7 @@
 - [ ] **TOKEN-02**: Audit all 30 components with hardcoded `py-N`/`px-N`/`p-N`/`gap-N` classes and migrate to design token usage
 - [ ] **TOKEN-03**: Migrate pricing page components (`PricingSkeleton`, `bento-grid.tsx`, `scroll-morph-hero.tsx`) to use design tokens for all spacing
 - [ ] **TOKEN-04**: Ensure all button variants use consistent, responsive spacing from `button.padding` tokens
-- [ ] **TOKEN-05**: Wire existing ESLint design token plugin (`scripts/eslint-plugin-scrolli-design.ts`) into `next lint` to enforce token usage automatically
+- [x] **TOKEN-05**: Wire existing ESLint design token plugin (`scripts/eslint-plugin-scrolli-design.ts`) into `next lint` to enforce token usage automatically
 - [ ] **TOKEN-06**: Verify all migrated components render correctly in both light and dark mode
 
 ### Scroll Animation
@@ -67,7 +67,7 @@
 | TOKEN-02 | Phase 1 | Pending |
 | TOKEN-03 | Phase 1 | Pending |
 | TOKEN-04 | Phase 1 | Pending |
-| TOKEN-05 | Phase 1 | Pending |
+| TOKEN-05 | Phase 1 | Complete |
 | TOKEN-06 | Phase 1 | Pending |
 | SCROLL-01 | Phase 2 | Pending |
 | SCROLL-02 | Phase 2 | Pending |
