@@ -4,7 +4,7 @@ import { Suspense } from "react"
 import Layout from "@/components/layout/Layout"
 import RevenueCatPricing from '@/components/premium/RevenueCatPricing'
 import CorporateSubscriptionCTA from '@/components/ui/corporate-subscription-cta'
-import IntroAnimation from '@/components/ui/scroll-morph-hero'
+import { PortfolioGallery } from '@/components/ui/portfolio-gallery'
 import { SimplePremiumCTA } from '@/components/ui/simple-premium-cta'
 import { BentoGridWithFeatures, type BentoFeature } from '@/components/ui/bento-grid'
 import { Container } from '@/components/responsive'
@@ -229,15 +229,12 @@ const bentoFeatures: BentoFeature[] = [
 ];
 
 export default async function Pricing() {
-  // Fetch articles on the server - need 20+ for animation
-  let articles: Article[] = [];
+  // Fetch articles for the gallery component
   let animationArticles: Article[] = [];
   try {
-    articles = await getAllArticles(8);
-    animationArticles = await getAllArticles(25); // Fetch enough for animation
+    animationArticles = await getAllArticles(25);
   } catch (error) {
     console.error("Error fetching articles for pricing page:", error);
-    // Continue with empty array - component will handle gracefully
   }
 
   return (
@@ -250,10 +247,8 @@ export default async function Pricing() {
           </Suspense>
         </section>
 
-        {/* 2. Scrollytelling Second (Pinned) */}
-        <div className="w-full relative">
-          <IntroAnimation articles={animationArticles} />
-        </div>
+        {/* 2. Article Gallery */}
+        <PortfolioGallery articles={animationArticles} />
 
         {/* 2.5. Bento Grid */}
         <section className={cn(colors.background.base, "relative z-50", sectionPadding.xl)}>
