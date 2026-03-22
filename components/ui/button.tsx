@@ -3,7 +3,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
-import { elevation, buttonPairs } from "@/lib/design-tokens";
+import { elevation, buttonPairs, button } from "@/lib/design-tokens";
 
 /**
  * Button component with logical dark mode support using design tokens
@@ -46,10 +46,10 @@ const buttonVariants = cva(
         "periwinkle-subtle": `bg-[#E3E5FF] text-[#4A4AB3] hover:opacity-90 border-0`,
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-12 rounded-md px-8 text-base",
-        icon: "h-10 w-10",
+        default: `${button.height.md} ${button.padding.md}`,
+        sm: `${button.height.sm} rounded-md ${button.padding.sm} text-xs`,
+        lg: `${button.height.lg} rounded-md ${button.padding.lg} text-base`,
+        icon: `${button.height.icon}`,
       },
     },
     defaultVariants: {

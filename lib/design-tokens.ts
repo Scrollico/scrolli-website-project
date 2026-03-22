@@ -336,6 +336,7 @@ export const colors = {
   border: {
     DEFAULT: "border-border",
     light: "border-border/50",
+    subtle: "border-border/30",
     medium: "border-border",
     strong: "border-gray-400 dark:border-gray-400",
     hover: "hover:border-border/80",
@@ -532,6 +533,12 @@ export const button = {
     sm: "px-3 py-1.5",
     md: "px-4 py-2",
     lg: "px-6 py-3",
+  },
+  height: {
+    sm: "h-8",
+    md: "h-10",
+    lg: "h-12",
+    icon: "h-10 w-10",
   },
 } as const;
 
