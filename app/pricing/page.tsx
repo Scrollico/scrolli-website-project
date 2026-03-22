@@ -20,7 +20,7 @@ function PricingSkeleton() {
     <div className={cn(
       "w-full mx-auto relative",
       colors.background.base,
-      containerPadding.md, sectionPadding.md, "min-h-[600px]"
+      containerPadding.md, sectionPadding.md, "min-h-[800px]"
     )}>
       <div className="animate-pulse space-y-8">
         {/* Title skeleton */}
