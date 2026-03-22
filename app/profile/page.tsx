@@ -8,7 +8,7 @@ import { useAuth } from "@/components/providers/auth-provider";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { badge as badgeTokens, colors } from "@/lib/design-tokens";
+import { badge as badgeTokens, colors, sectionPadding, containerPadding, componentPadding, gap as gapTokens } from "@/lib/design-tokens";
 import Link from "next/link";
 
 export default function ProfilePage() {
@@ -57,7 +57,7 @@ export default function ProfilePage() {
                 colors.foreground.primary
             )}>
                 {/* Main Grid Container - WordPress.com style */}
-                <main className="grid max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 gap-4 md:gap-6">
+                <main className={cn("grid max-w-4xl mx-auto", sectionPadding.sm, containerPadding.md, gapTokens.lg)}>
                     {/* Page Header */}
                     <div className="mb-8">
                         <h1 className="text-2xl md:text-3xl font-bold mb-2">Scrolli Hesabım</h1>
@@ -70,7 +70,7 @@ export default function ProfilePage() {
                     </div>
 
                     {/* Account Info Card */}
-                    <div className="antialiased body bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded p-4 md:p-6 lg:p-8">
+                    <div className={cn("antialiased body bg-muted border border-border rounded", componentPadding.md)}>
                         <h2 className="text-lg font-semibold mb-4">Hesap Bilgileri</h2>
                         <div className="space-y-3">
                             <div>
@@ -92,7 +92,7 @@ export default function ProfilePage() {
                     </div>
 
                     {/* Subscription & Billing Card */}
-                    <div className="antialiased body bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded p-4 md:p-6 lg:p-8">
+                    <div className={cn("antialiased body bg-muted border border-border rounded", componentPadding.md)}>
                         <h2 className="text-lg font-semibold mb-4">Abonelik & Faturalama</h2>
 
                         <div className="space-y-4">
@@ -160,7 +160,7 @@ export default function ProfilePage() {
 
                     {/* Benefits Card */}
                     {isPremium && (
-                        <div className="antialiased body bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded p-4 md:p-6 lg:p-8">
+                        <div className={cn("antialiased body bg-muted border border-border rounded", componentPadding.md)}>
                             <h2 className="text-lg font-semibold mb-4">Avantajlarınızı Keşfedin</h2>
                             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                                 Aboneliğiniz size ekstra erişim ve ayrıcalıklar sağlar.

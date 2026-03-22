@@ -6,6 +6,8 @@ import { Container } from "@/components/responsive/Container";
 import ArticleCard from "@/components/sections/archive/ArticleCard";
 import { fetchCollabs, getNavigation } from "@/lib/payload/client";
 import { mapCollabToArticle } from "@/lib/payload/types";
+import { cn } from "@/lib/utils";
+import { colors, gap as gapTokens } from "@/lib/design-tokens";
 
 export const metadata: Metadata = {
     title: "Collaborations | Scrolli",
@@ -25,7 +27,7 @@ export default async function CollabsPage() {
             <Container size="lg" padding="md">
                 <h1 className="text-3xl font-bold mb-8 mt-4">Collaborations</h1>
                 {articles.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3", gapTokens["2xl"])}>
                         {articles.map((article) => (
                             <ArticleCard
                                 key={article.id}
@@ -42,7 +44,7 @@ export default async function CollabsPage() {
                         ))}
                     </div>
                 ) : (
-                    <p className="text-gray-500">No collaborations found.</p>
+                    <p className={colors.foreground.secondary}>No collaborations found.</p>
                 )}
             </Container>
         </Layout>

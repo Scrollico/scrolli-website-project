@@ -1,5 +1,8 @@
 'use client';
 
+import { cn } from '@/lib/utils';
+import { colors, componentPadding } from '@/lib/design-tokens';
+
 export default function GlobalError({
     error,
     reset,
@@ -9,10 +12,10 @@ export default function GlobalError({
 }) {
     return (
         <html>
-            <body className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex items-center justify-center min-h-screen font-sans">
-                <div className="text-center p-8 max-w-md">
+            <body className={cn(colors.background.base, colors.foreground.primary, "flex items-center justify-center min-h-screen font-sans")}>
+                <div className={cn("text-center max-w-md", componentPadding.lg)}>
                     <h1 className="text-4xl font-bold mb-4">Something went wrong</h1>
-                    <p className="mb-8 text-gray-600 dark:text-gray-400">
+                    <p className={cn("mb-8", colors.foreground.secondary)}>
                         We encountered a critical error. Please try again later.
                     </p>
                     <button

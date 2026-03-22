@@ -2,6 +2,8 @@ export const runtime = "edge";
 
 import Layout from "@/components/layout/Layout";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { sectionPadding, containerPadding, colors } from "@/lib/design-tokens";
 import HeroSection from '@/components/sections/home/HeroSection';
 import Section1 from '@/components/sections/home/Section1';
 import ExclusiveStoriesSection from '@/components/sections/home/ExclusiveStoriesSection';
@@ -173,9 +175,9 @@ export default async function Home() {
     // Return fallback UI
     return (
       <Layout classList="home" navigation={null}>
-        <div className="container mx-auto px-4 py-16 text-center">
+        <div className={cn("container mx-auto text-center", sectionPadding.lg, containerPadding.md)}>
           <h1 className="text-2xl font-bold mb-4">Unable to load content</h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-8">
+          <p className={cn(colors.foreground.secondary, "mb-8")}>
             We're having trouble loading the homepage content. Please try again later.
           </p>
           <Link

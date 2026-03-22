@@ -29,6 +29,8 @@ import {
 } from "@/lib/structured-data";
 import { Article } from "@/types/content";
 import { getPaywalledArticle } from "@/lib/paywall-server";
+import { cn } from "@/lib/utils";
+import { sectionPadding, containerPadding, colors } from "@/lib/design-tokens";
 
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;
@@ -159,15 +161,15 @@ export default async function ArticlePage({ params, searchParams }: ArticlePageP
   if (page) {
     return (
       <Layout classList="page-generic" navigation={navigation}>
-        <div className="container mx-auto px-4 py-12 max-w-4xl">
+        <div className={cn("container mx-auto max-w-4xl", sectionPadding.md, containerPadding.md)}>
           <header className="mb-8">
-            <h1 className="text-3xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
+            <h1 className={cn("text-3xl md:text-5xl font-bold mb-4", colors.foreground.primary)}>
               {page.title}
             </h1>
           </header>
 
           <div
-            className="prose dark:prose-invert max-w-none text-lg leading-relaxed text-gray-800 dark:text-gray-200"
+            className={cn("prose dark:prose-invert max-w-none text-lg leading-relaxed", colors.foreground.primary)}
             dangerouslySetInnerHTML={{ __html: serializeRichText(page.content) }}
           />
         </div>

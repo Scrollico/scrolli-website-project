@@ -7,6 +7,8 @@ import { initializeRevenueCat, getOfferings, purchasePackage } from "@/lib/reven
 import { useAuth } from "@/components/providers/auth-provider";
 import { Button } from "@/components/ui/button";
 import { Package } from "@revenuecat/purchases-js";
+import { cn } from "@/lib/utils";
+import { sectionPadding, containerPadding, colors, componentPadding } from "@/lib/design-tokens";
 
 export default function TestPaywallPage() {
     const { user } = useAuth();
@@ -113,13 +115,13 @@ export default function TestPaywallPage() {
     };
 
     return (
-        <div className="container mx-auto py-12 px-4">
+        <div className={cn("container mx-auto", sectionPadding.md, containerPadding.md)}>
             <h1 className="text-3xl font-bold mb-8">RevenueCat Web Paywall Test</h1>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Left Column: Controls & Logs */}
                 <div className="space-y-6">
-                    <div className="p-6 bg-white dark:bg-neutral-900 rounded-xl border shadow-sm">
+                    <div className={cn(componentPadding.md, colors.background.elevated, "rounded-xl border shadow-sm")}>
                         <h2 className="text-xl font-semibold mb-4">Controls</h2>
                         <div className="space-y-4">
                             <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
@@ -160,7 +162,7 @@ export default function TestPaywallPage() {
                         </div>
                     </div>
 
-                    <div className="p-6 bg-gray-50 dark:bg-neutral-900 rounded-xl border shadow-sm">
+                    <div className={cn(componentPadding.md, colors.background.elevated, "rounded-xl border shadow-sm")}>
                         <h2 className="text-xl font-semibold mb-4">Logs</h2>
                         <div className="bg-black text-green-400 p-4 rounded-lg font-mono text-xs h-[300px] overflow-y-auto">
                             {logs.length === 0 && <span className="opacity-50">Waiting for actions...</span>}
@@ -175,7 +177,7 @@ export default function TestPaywallPage() {
 
                 {/* Right Column: Preview Area */}
                 <div className="space-y-6">
-                    <div className="p-6 bg-white dark:bg-neutral-900 rounded-xl border shadow-sm min-h-[600px] flex flex-col items-center">
+                    <div className={cn(componentPadding.md, colors.background.elevated, "rounded-xl border shadow-sm min-h-[600px] flex flex-col items-center")}>
                         <div className="w-full flex justify-between items-center mb-4">
                             <h2 className="text-xl font-semibold">Preview</h2>
                             <span className="text-xs px-2 py-1 bg-gray-100 rounded text-gray-500">

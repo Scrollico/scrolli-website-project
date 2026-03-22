@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { OnboardingForm } from "@/components/onboarding/OnboardingForm";
 import { Container } from "@/components/responsive";
+import { cn } from "@/lib/utils";
+import { sectionPadding, containerPadding } from "@/lib/design-tokens";
 
 export default async function OnboardingPage() {
   const supabase = await createClient();
@@ -31,7 +33,7 @@ export default async function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4">
+    <div className={cn("min-h-screen flex items-center justify-center", sectionPadding.md, containerPadding.sm)}>
       <Container size="sm">
         <OnboardingForm />
       </Container>

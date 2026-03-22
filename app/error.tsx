@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
+import { cn } from '@/lib/utils';
+import { colors, componentPadding } from '@/lib/design-tokens';
 
 export default function Error({
     error,
@@ -15,9 +17,9 @@ export default function Error({
     }, [error]);
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-[60vh] p-4 text-center">
+        <div className={cn("flex flex-col items-center justify-center min-h-[60vh] text-center", componentPadding.md)}>
             <h2 className="text-2xl font-bold mb-4">Something went wrong!</h2>
-            <p className="mb-8 text-gray-600 dark:text-gray-400 max-w-md">
+            <p className={cn("mb-8 max-w-md", colors.foreground.secondary)}>
                 We apologize for the inconvenience. An unexpected error occurred.
             </p>
             <button
