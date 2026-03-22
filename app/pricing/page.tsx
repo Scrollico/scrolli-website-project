@@ -1,32 +1,13 @@
 export const runtime = "edge";
 
 import { Suspense } from "react"
-import dynamic from "next/dynamic"
 import Layout from "@/components/layout/Layout"
 import RevenueCatPricing from '@/components/premium/RevenueCatPricing'
-import type { BentoFeature } from '@/components/ui/bento-grid'
+import CorporateSubscriptionCTA from '@/components/ui/corporate-subscription-cta'
+import { PortfolioGallery } from '@/components/ui/portfolio-gallery'
+import { SimplePremiumCTA } from '@/components/ui/simple-premium-cta'
+import { BentoGridWithFeatures, type BentoFeature } from '@/components/ui/bento-grid'
 import { Container } from '@/components/responsive'
-
-// Below-fold components lazy-loaded to reduce initial JS bundle
-const PortfolioGallery = dynamic(
-  () => import("@/components/ui/portfolio-gallery").then(mod => ({ default: mod.PortfolioGallery })),
-  { ssr: false }
-);
-
-const SimplePremiumCTA = dynamic(
-  () => import("@/components/ui/simple-premium-cta").then(mod => ({ default: mod.SimplePremiumCTA })),
-  { ssr: false }
-);
-
-const CorporateSubscriptionCTA = dynamic(
-  () => import("@/components/ui/corporate-subscription-cta"),
-  { ssr: false }
-);
-
-const BentoGridWithFeatures = dynamic(
-  () => import("@/components/ui/bento-grid").then(mod => ({ default: mod.BentoGridWithFeatures })),
-  { ssr: false }
-);
 
 import { getAllArticles } from "@/lib/content"
 import { Article } from "@/types/content"
