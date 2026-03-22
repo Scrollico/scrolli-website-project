@@ -16,13 +16,20 @@ Three sequential phases connect the existing infrastructure — design tokens, G
 **Goal**: All components use consistent, responsive spacing from a single source of truth — and the token system prevents regressions automatically
 **Depends on**: Nothing (first phase)
 **Requirements**: TOKEN-01, TOKEN-02, TOKEN-03, TOKEN-04, TOKEN-05, TOKEN-06
+**Plans:** 4 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Fix border.subtle token, button token migration, pricing page component migration
+- [ ] 01-02-PLAN.md — Wire ESLint design token plugin into next lint
+- [ ] 01-03-PLAN.md — Bulk migration batch 1: UI, layout, premium, paywall, onboarding components
+- [ ] 01-04-PLAN.md — Bulk migration batch 2: section components and app pages
+
 **Success Criteria** (what must be TRUE):
   1. `colors.border.subtle` resolves to a valid color value — bento card borders are visually rendered in both light and dark mode
   2. Running `npm run lint` (or `next lint`) catches hardcoded `py-N`/`px-N`/`p-N`/`gap-N` violations in all components
   3. All button variants display consistent padding that scales correctly across mobile and desktop breakpoints
   4. All pricing page components (`PricingSkeleton`, `bento-grid.tsx`, `scroll-morph-hero.tsx`) use token-exported class strings for spacing and color
   5. No visual regression — all migrated components render identically to before the token migration in light and dark mode
-**Plans**: TBD
 
 ### Phase 2: Orbital Scroll Animation Rebuild
 **Goal**: The pricing page scroll animation is 60fps, bidirectional, freeze-free, and accessible
@@ -52,6 +59,6 @@ Three sequential phases connect the existing infrastructure — design tokens, G
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Design Token Enforcement | 0/? | Not started | - |
+| 1. Design Token Enforcement | 0/4 | Planned | - |
 | 2. Orbital Scroll Animation Rebuild | 0/? | Not started | - |
 | 3. Bento Grid Redesign | 0/? | Not started | - |
