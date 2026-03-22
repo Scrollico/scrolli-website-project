@@ -222,7 +222,7 @@ async function fetchArticlesInternal(
     const fetchPromises = targetCollections.map(collection =>
       fetch(`${config.url}/${collection}?${fullQuery}`, {
         headers: config.headers,
-        next: { revalidate: 30 },
+        next: { revalidate: 120 },
       })
     );
 
@@ -540,7 +540,7 @@ export async function getArticleById(
       `${config.url}/${collection}/${id}?${queryString}`,
       {
         headers: config.headers,
-        next: { revalidate: 30 },
+        next: { revalidate: 120 },
       },
     );
 
