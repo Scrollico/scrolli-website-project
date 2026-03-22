@@ -27,7 +27,7 @@ import {
     CommunityIcon,
 } from "@/components/icons/scrolli-icons";
 import { cn } from "@/lib/utils";
-import { colors, borderRadius } from "@/lib/design-tokens";
+import { colors, gap, componentPadding } from "@/lib/design-tokens";
 import { Sun, Moon, Monitor, Bell, ChevronDown } from "lucide-react";
 import NextImage from "next/image";
 
@@ -52,11 +52,12 @@ export default function AccountMenu({ className }: AccountMenuProps) {
             <DropdownMenuTrigger asChild>
                 <button
                     className={cn(
-                        "flex items-center gap-2 rounded-xl px-3 py-2 font-medium transition-all duration-200",
-                        "bg-white/80 dark:bg-white/10 backdrop-blur-sm",
-                        "border border-gray-200/50 dark:border-white/10",
-                        "hover:bg-white dark:hover:bg-white/20",
-                        "text-gray-900 dark:text-gray-100",
+                        "flex items-center rounded-xl px-3 py-2 font-medium transition-all duration-200",
+                        gap.sm,
+                        "bg-background/80 dark:bg-white/10 backdrop-blur-sm",
+                        colors.border.light,
+                        "border hover:bg-background dark:hover:bg-white/20",
+                        colors.foreground.primary,
                         "shadow-sm hover:shadow-md",
                         className
                     )}
@@ -95,7 +96,7 @@ export default function AccountMenu({ className }: AccountMenuProps) {
                 align="end"
             >
                 {/* User Info Header */}
-                <div className="flex items-center gap-3 p-3 mb-2 rounded-xl bg-gray-50/50 dark:bg-white/5">
+                <div className={cn("flex items-center mb-2 rounded-xl bg-muted/50 dark:bg-white/5", gap.md, componentPadding.sm)}>
                     <div className="h-10 w-10 rounded-full overflow-hidden ring-2 ring-primary/20 flex-shrink-0">
                         {profile?.avatar_url ? (
                             <NextImage
@@ -112,25 +113,25 @@ export default function AccountMenu({ className }: AccountMenuProps) {
                         )}
                     </div>
                     <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-gray-900 dark:text-gray-100 truncate">
+                        <p className={cn("text-sm font-bold truncate", colors.foreground.primary)}>
                             {displayName}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                        <p className={cn("text-xs truncate", colors.foreground.secondary)}>
                             {user?.email}
                         </p>
                     </div>
                 </div>
 
                 {/* Account Section */}
-                <DropdownMenuLabel className="text-xs font-bold tracking-wider text-gray-500 dark:text-gray-400 px-2">
+                <DropdownMenuLabel className={cn("text-xs font-bold tracking-wider px-2", colors.foreground.secondary)}>
                     Hesap
                 </DropdownMenuLabel>
 
                 <DropdownMenuItem
-                    className="flex items-center gap-3 py-2.5 px-3 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5"
+                    className={cn("flex items-center py-2.5 px-3 rounded-lg cursor-pointer hover:bg-muted/50 dark:hover:bg-white/5", gap.md)}
                     onClick={() => router.push("/profile")}
                 >
-                    <div className="h-8 w-8 rounded-lg bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                    <div className={cn("h-8 w-8 rounded-lg bg-muted dark:bg-white/10 flex items-center justify-center", colors.foreground.secondary)}>
                         <UserIcon size={16} />
                     </div>
                     <span className="flex-1 font-medium">Profilim</span>
@@ -138,10 +139,10 @@ export default function AccountMenu({ className }: AccountMenuProps) {
 
                 {/* Membership */}
                 <DropdownMenuItem
-                    className="flex items-center gap-3 py-2.5 px-3 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5"
+                    className={cn("flex items-center py-2.5 px-3 rounded-lg cursor-pointer hover:bg-muted/50 dark:hover:bg-white/5", gap.md)}
                     onClick={() => router.push("/pricing")}
                 >
-                    <div className="h-8 w-8 rounded-lg bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                    <div className={cn("h-8 w-8 rounded-lg bg-muted dark:bg-white/10 flex items-center justify-center", colors.foreground.secondary)}>
                         <BookmarkIcon size={16} />
                     </div>
                     <span className="flex-1 font-medium">Üyelik Yönetimi</span>
@@ -149,9 +150,9 @@ export default function AccountMenu({ className }: AccountMenuProps) {
 
                 {/* Settings */}
                 <DropdownMenuItem
-                    className="flex items-center gap-3 py-2.5 px-3 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5"
+                    className={cn("flex items-center py-2.5 px-3 rounded-lg cursor-pointer hover:bg-muted/50 dark:hover:bg-white/5", gap.md)}
                 >
-                    <div className="h-8 w-8 rounded-lg bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                    <div className={cn("h-8 w-8 rounded-lg bg-muted dark:bg-white/10 flex items-center justify-center", colors.foreground.secondary)}>
                         <SettingsIcon size={16} />
                     </div>
                     <span className="flex-1 font-medium">Ayarlar</span>
@@ -160,14 +161,14 @@ export default function AccountMenu({ className }: AccountMenuProps) {
                 <DropdownMenuSeparator />
 
                 {/* Preferences Section */}
-                <DropdownMenuLabel className="text-xs font-bold tracking-wider text-gray-500 dark:text-gray-400 px-2">
+                <DropdownMenuLabel className={cn("text-xs font-bold tracking-wider px-2", colors.foreground.secondary)}>
                     Tercihler
                 </DropdownMenuLabel>
 
                 {/* Theme Submenu */}
                 <DropdownMenuSub>
-                    <DropdownMenuSubTrigger className="flex items-center gap-3 py-2.5 px-3 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 outline-none focus:bg-gray-50 dark:focus:bg-white/5 data-[state=open]:bg-gray-50 dark:data-[state=open]:bg-white/5">
-                        <div className="h-8 w-8 rounded-lg bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                    <DropdownMenuSubTrigger className={cn("flex items-center py-2.5 px-3 rounded-lg cursor-pointer hover:bg-muted/50 dark:hover:bg-white/5 outline-none focus:bg-muted/50 dark:focus:bg-white/5 data-[state=open]:bg-muted/50 dark:data-[state=open]:bg-white/5", gap.md)}>
+                        <div className={cn("h-8 w-8 rounded-lg bg-muted dark:bg-white/10 flex items-center justify-center", colors.foreground.secondary)}>
                             {resolvedTheme === "dark" ? (
                                 <Moon size={16} />
                             ) : (
@@ -198,8 +199,8 @@ export default function AccountMenu({ className }: AccountMenuProps) {
 
                 {/* Notifications Submenu */}
                 <DropdownMenuSub>
-                    <DropdownMenuSubTrigger className="flex items-center gap-3 py-2.5 px-3 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 outline-none focus:bg-gray-50 dark:focus:bg-white/5 data-[state=open]:bg-gray-50 dark:data-[state=open]:bg-white/5">
-                        <div className="h-8 w-8 rounded-lg bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                    <DropdownMenuSubTrigger className={cn("flex items-center py-2.5 px-3 rounded-lg cursor-pointer hover:bg-muted/50 dark:hover:bg-white/5 outline-none focus:bg-muted/50 dark:focus:bg-white/5 data-[state=open]:bg-muted/50 dark:data-[state=open]:bg-white/5", gap.md)}>
+                        <div className={cn("h-8 w-8 rounded-lg bg-muted dark:bg-white/10 flex items-center justify-center", colors.foreground.secondary)}>
                             <Bell size={16} />
                         </div>
                         <span className="flex-1 font-medium">Bildirimler</span>

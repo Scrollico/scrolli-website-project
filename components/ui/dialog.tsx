@@ -4,6 +4,7 @@ import * as React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { XIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { componentPadding, gap } from '@/lib/design-tokens';
 
 function Dialog({
     ...props
@@ -71,7 +72,7 @@ function DialogBody({ className, ...props }: React.ComponentProps<'div'>) {
     return (
         <div
             data-slot="dialog-body"
-            className={cn('px-4 py-6', className)}
+            className={cn(componentPadding.md, className)}
             {...props}
         />
     );
@@ -87,7 +88,7 @@ function DialogHeader({
         <div
             data-slot="dialog-header"
             className={cn(
-                'bg-muted/30 flex flex-col gap-2 rounded-t-lg border-b p-4 text-center sm:text-left',
+                cn('bg-muted/30 flex flex-col rounded-t-lg border-b text-center sm:text-left', gap.sm, componentPadding.sm),
                 className,
             )}
             {...props}
@@ -103,12 +104,12 @@ function DialogHeader({
     );
 }
 
-function DialogFooter({ className, ...props }: React.ComponentProps<'div'>) {
+function DialogFooter({ className, children, ...props }: React.ComponentProps<'div'>) {
     return (
         <div
             data-slot="dialog-footer"
             className={cn(
-                'bg-muted/30 flex flex-col gap-2 rounded-b-lg border-t px-4 py-3 sm:flex-row sm:justify-end',
+                cn('bg-muted/30 flex flex-col rounded-b-lg border-t sm:flex-row sm:justify-end', gap.sm, componentPadding.sm),
                 className,
             )}
             {...props}

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { sectionPadding, containerPadding, colors } from '@/lib/design-tokens';
 import { Separator } from '@/components/ui/separator';
 import { AvatarUploader } from './avatar-uploader';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -20,7 +21,7 @@ export function AccountSettings() {
     };
 
     return (
-        <section className="relative min-h-screen w-full px-4 py-10">
+        <section className={cn("relative min-h-screen w-full", containerPadding.sm, sectionPadding.sm)}>
             <div
                 aria-hidden
                 className="absolute inset-0 isolate -z-10 opacity-80 contain-strict"
@@ -109,12 +110,12 @@ function SectionColumns({
     className,
 }: SectionColumnsType) {
     return (
-        <div className="animate-in fade-in grid grid-cols-1 gap-x-10 gap-y-4 py-8 duration-500 md:grid-cols-10">
+        <div className={cn("animate-in fade-in grid grid-cols-1 gap-y-4 py-8 duration-500 md:grid-cols-10", "gap-x-10")}>
             <div className="w-full space-y-1.5 md:col-span-4">
-                <h2 className="font-heading text-lg leading-none font-semibold">
+                <h2 className={cn("font-heading text-lg leading-none font-semibold", colors.foreground.primary)}>
                     {title}
                 </h2>
-                <p className="text-muted-foreground text-sm text-balance">
+                <p className={cn("text-sm text-balance", colors.foreground.secondary)}>
                     {description}
                 </p>
             </div>

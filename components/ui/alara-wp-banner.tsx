@@ -7,6 +7,7 @@ import { X, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
+import { colors, componentPadding } from "@/lib/design-tokens";
 
 interface AlaraWPBannerProps {
     isOpen: boolean;
@@ -47,7 +48,7 @@ export default function AlaraWPBanner({ isOpen, onClose }: AlaraWPBannerProps) {
                         className={cn(
                             "fixed z-[9999] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
                             "w-[90vw] max-w-[400px]",
-                            isDark ? "bg-gray-900 border-gray-800" : "bg-white border-gray-200",
+                            isDark ? "bg-gray-900 border-gray-800" : cn(colors.background.base, colors.border.DEFAULT),
                             "rounded-xl shadow-2xl",
                             "border",
                             "overflow-hidden"
@@ -61,7 +62,7 @@ export default function AlaraWPBanner({ isOpen, onClose }: AlaraWPBannerProps) {
                             <X size={20} />
                         </button>
 
-                        <div className="flex flex-col items-center text-center p-8 pt-10">
+                        <div className={cn("flex flex-col items-center text-center pt-10", componentPadding.lg)}>
                             {/* Profile Image */}
                             <div className="relative w-16 h-16 rounded-full overflow-hidden mb-4 border-2 border-white dark:border-gray-800 shadow-sm">
                                 <Image
@@ -73,12 +74,12 @@ export default function AlaraWPBanner({ isOpen, onClose }: AlaraWPBannerProps) {
                             </div>
 
                             {/* Title */}
-                            <h2 className="text-2xl font-serif font-bold text-gray-900 dark:text-white mb-2">
+                            <h2 className={cn("text-2xl font-serif font-bold mb-2", colors.foreground.primary)}>
                                 Alara AI
                             </h2>
 
                             {/* Description */}
-                            <p className="text-gray-600 dark:text-gray-300 text-[15px] leading-relaxed mb-6">
+                            <p className={cn("text-[15px] leading-relaxed mb-6", colors.foreground.secondary)}>
                                 You'll see more on this topic in your recommendations.
                             </p>
 
@@ -86,10 +87,10 @@ export default function AlaraWPBanner({ isOpen, onClose }: AlaraWPBannerProps) {
                             <button
                                 className={cn(
                                     "flex items-center gap-2 px-6 py-2.5 rounded-full",
-                                    "bg-white dark:bg-gray-800",
-                                    "border border-gray-300 dark:border-gray-600",
-                                    "text-gray-900 dark:text-white font-medium text-sm",
-                                    "hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                    colors.background.base,
+                                    "border", colors.border.DEFAULT,
+                                    colors.foreground.primary, "font-medium text-sm",
+                                    "hover:bg-muted dark:hover:bg-gray-700 transition-colors"
                                 )}
                             >
                                 <span>Following</span>
@@ -99,11 +100,11 @@ export default function AlaraWPBanner({ isOpen, onClose }: AlaraWPBannerProps) {
                             {/* Newsletter Toggle (Optional - mimicking the WP screenshot) */}
                             <div className="w-full mt-8 pt-6 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
                                 <div className="text-left">
-                                    <div className="font-bold text-sm text-gray-900 dark:text-white">The 7: Tracking Alara newsletter</div>
-                                    <div className="text-xs text-gray-500 dark:text-gray-400">Catch up quickly every weeknight</div>
+                                    <div className={cn("font-bold text-sm", colors.foreground.primary)}>The 7: Tracking Alara newsletter</div>
+                                    <div className={cn("text-xs", colors.foreground.secondary)}>Catch up quickly every weeknight</div>
                                 </div>
                                 <div className="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200 dark:bg-gray-700">
-                                    <span className="translate-x-6 inline-block h-4 w-4 transform rounded-full bg-white transition" />
+                                    <span className="translate-x-6 inline-block h-4 w-4 transform rounded-full bg-background transition" />
                                 </div>
                             </div>
                         </div>

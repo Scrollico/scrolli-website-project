@@ -9,6 +9,8 @@ import {
   Landmark,
 } from "lucide-react";
 import { ExpandingCards, CardItem } from "@/components/ui/expanding-cards";
+import { componentPadding, gap, colors } from "@/lib/design-tokens";
+import { cn } from "@/lib/utils";
 
 const architecturalWonders: CardItem[] = [
   {
@@ -85,12 +87,12 @@ const architecturalWonders: CardItem[] = [
 
 export default function ExpandingCardsDemo() {
   return (
-    <div className="flex w-full flex-col items-center justify-center space-y-8 bg-background p-4 md:p-8">
+    <div className={cn("flex w-full flex-col items-center justify-center", gap["2xl"], colors.background.base, componentPadding.md, "md:p-8")}>
       <div className="text-center">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+        <h1 className={cn("text-3xl font-bold tracking-tight sm:text-4xl", colors.foreground.primary)}>
           Architectural Wonders
         </h1>
-        <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
+        <p className={cn("mt-4 max-w-2xl text-lg", colors.foreground.secondary)}>
           Explore humanity&apos;s most ambitious and breathtaking creations.
           Hover or click on a card to unveil its story.
         </p>

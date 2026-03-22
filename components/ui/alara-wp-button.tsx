@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Plus, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { colors, gap } from "@/lib/design-tokens";
 import AlaraWPBanner from "./alara-wp-banner";
 
 interface AlaraWPButtonProps {
@@ -28,10 +29,11 @@ export default function AlaraWPButton({ className }: AlaraWPButtonProps) {
             <button
                 onClick={handleClick}
                 className={cn(
-                    "group flex items-center gap-3 pl-1 pr-4 py-1 rounded-full",
-                    "bg-white dark:bg-gray-800",
-                    "border border-gray-200 dark:border-gray-700",
-                    "hover:bg-gray-50 dark:hover:bg-gray-700",
+                    "group flex items-center pl-1 pr-4 py-1 rounded-full",
+                    gap.md,
+                    colors.background.base,
+                    "border", colors.border.DEFAULT,
+                    "hover:bg-muted dark:hover:bg-gray-700",
                     "transition-all duration-200 shadow-sm",
                     className
                 )}
@@ -46,7 +48,7 @@ export default function AlaraWPButton({ className }: AlaraWPButtonProps) {
                 </div>
 
                 <div className="flex flex-col items-start leading-none">
-                    <span className="text-[13px] text-gray-900 dark:text-gray-100">
+                    <span className={cn("text-[13px]", colors.foreground.primary)}>
                         <span className="font-bold">Subscribe</span> Alara AI
                     </span>
                 </div>

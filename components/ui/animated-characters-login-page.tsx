@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import CinematicThemeSwitcher from "@/components/ui/cinematic-theme-switcher";
 import { cn } from "@/lib/utils";
-import { colors } from "@/lib/design-tokens";
+import { colors, containerPadding, gap } from "@/lib/design-tokens";
 
 // --- New Animation Components ---
 
@@ -435,11 +435,12 @@ export function LoginPage({ mode = "signin" }: { mode?: AuthMode }) {
       {/* Left Content Section */}
       <div
         className={cn(
-          "relative hidden lg:flex flex-col justify-between p-12 overflow-hidden transition-colors duration-300",
+          "relative hidden lg:flex flex-col justify-between overflow-hidden transition-colors duration-300",
+          containerPadding.xl,
           colors.background.base
         )}
       >
-        <div className="relative z-20 flex items-center gap-2">
+        <div className={cn("relative z-20 flex items-center", gap.sm)}>
           <Link href="/" className="flex items-center gap-2">
             <Image
               src={isDark ? "/assets/images/Standart/Primary.svg" : "/assets/images/Standart/Primary-alternative.svg"}
@@ -767,7 +768,9 @@ export function LoginPage({ mode = "signin" }: { mode?: AuthMode }) {
       {/* Right Content Section (Auth Form) */}
       <div
         className={cn(
-          "flex flex-col items-center justify-center p-8 md:p-16 relative",
+          "flex flex-col items-center justify-center relative",
+          containerPadding.md,
+          "md:px-16",
           colors.background.base
         )}
       >

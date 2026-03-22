@@ -4,6 +4,8 @@ import { Sun, Moon } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from 'next-themes';
+import { colors } from '@/lib/design-tokens';
+import { cn } from '@/lib/utils';
 
 interface Particle {
   id: number;
@@ -67,7 +69,7 @@ export default function CinematicThemeSwitcher() {
   if (!mounted) {
     return (
       <div className="relative inline-block">
-        <div className="relative flex h-6 w-12 items-center rounded-full bg-gray-200 p-0.5" />
+        <div className={cn("relative flex h-6 w-12 items-center rounded-full p-0.5", colors.background.elevated)} />
       </div>
     );
   }

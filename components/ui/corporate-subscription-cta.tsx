@@ -3,13 +3,15 @@
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { colors, typography } from "@/lib/design-tokens"
+import { colors, typography, sectionPadding, containerPadding } from "@/lib/design-tokens"
 
 export default function CorporateSubscriptionCTA() {
   return (
     <div
       className={cn(
-        "text-center py-12 px-4",
+        "text-center",
+        sectionPadding.lg,
+        containerPadding.sm,
         "border-t",
         colors.border.DEFAULT,
         colors.background.base

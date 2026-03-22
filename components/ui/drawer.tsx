@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { Drawer as DrawerPrimitive } from 'vaul';
 import { cn } from '@/lib/utils';
+import { componentPadding, gap } from '@/lib/design-tokens';
 
 function Drawer({
     ...props
@@ -77,7 +78,7 @@ function DrawerHeader({ className, ...props }: React.ComponentProps<'div'>) {
         <div
             data-slot="drawer-header"
             className={cn(
-                'flex w-full flex-col gap-1 rounded-t-3xl border-b px-4 py-2 md:mx-auto md:max-w-md',
+                cn('flex w-full flex-col rounded-t-3xl border-b md:mx-auto md:max-w-md', gap.xs, componentPadding.sm),
                 className,
             )}
             {...props}
@@ -89,7 +90,7 @@ function DrawerBody({ className, ...props }: React.ComponentProps<'div'>) {
     return (
         <div
             data-slot="drawer-body"
-            className={cn('w-full px-4 py-6 md:mx-auto md:max-w-md', className)}
+            className={cn('w-full md:mx-auto md:max-w-md', componentPadding.md, className)}
             {...props}
         />
     );
@@ -100,7 +101,7 @@ function DrawerFooter({ className, ...props }: React.ComponentProps<'div'>) {
         <div
             data-slot="drawer-footer"
             className={cn(
-                'mt-auto grid w-full gap-2 border-t px-4 py-3 md:mx-auto md:max-w-md',
+                cn('mt-auto grid w-full border-t md:mx-auto md:max-w-md', gap.sm, componentPadding.sm),
                 className,
             )}
             {...props}
