@@ -2,7 +2,7 @@
 
 import React from "react"
 import { cn } from "@/lib/utils"
-import { colors, borderRadius, border, gap } from "@/lib/design-tokens"
+import { colors, borderRadius, border, componentPadding } from "@/lib/design-tokens"
 
 interface BentoGridProps {
   children: React.ReactNode
@@ -65,7 +65,7 @@ const BentoCard = ({ id, children, className }: BentoCardProps) => {
       id={id}
       className={cn(
         "relative overflow-hidden",
-        "p-4 sm:p-8",
+        componentPadding.lg,
         className
       )}
     >

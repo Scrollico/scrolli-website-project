@@ -11,7 +11,7 @@ import { Container } from '@/components/responsive'
 
 import { getAllArticles } from "@/lib/content"
 import { Article } from "@/types/content"
-import { colors } from "@/lib/design-tokens"
+import { colors, sectionPadding, containerPadding, gap } from "@/lib/design-tokens"
 import { cn } from "@/lib/utils"
 
 // Loading skeleton for RevenueCatPricing
@@ -20,17 +20,17 @@ function PricingSkeleton() {
     <div className={cn(
       "w-full mx-auto relative",
       colors.background.base,
-      "px-4 sm:px-6 lg:px-8 pt-10 pb-12 min-h-[600px]"
+      containerPadding.md, sectionPadding.md, "min-h-[600px]"
     )}>
       <div className="animate-pulse space-y-8">
         {/* Title skeleton */}
         <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-lg w-1/2 mx-auto"></div>
-        
+
         {/* Pricing switch skeleton */}
         <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-full w-64 mx-auto"></div>
-        
+
         {/* Pricing cards skeleton */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className={cn("grid grid-cols-1 md:grid-cols-3", gap.xl)}>
           {[1, 2, 3].map((i) => (
             <div key={i} className="h-96 bg-gray-200 dark:bg-gray-700 rounded-xl"></div>
           ))}
@@ -244,7 +244,7 @@ export default async function Pricing() {
     <Layout classList="single page-pricing">
       <main className="relative min-h-screen scroll-smooth">
         {/* 1. Pricing Component First */}
-        <section className={cn(colors.background.base, "relative z-50 pt-16 pb-8")}>
+        <section className={cn(colors.background.base, "relative z-50", sectionPadding.lg)}>
           <Suspense fallback={<PricingSkeleton />}>
             <RevenueCatPricing />
           </Suspense>
@@ -256,14 +256,14 @@ export default async function Pricing() {
         </div>
 
         {/* 2.5. Bento Grid */}
-        <section className={cn(colors.background.base, "relative z-50 py-16")}>
+        <section className={cn(colors.background.base, "relative z-50", sectionPadding.xl)}>
           <Container size="lg" padding="lg">
             <BentoGridWithFeatures features={bentoFeatures} />
           </Container>
         </section>
 
         {/* 3. Remaining Content */}
-        <section className={cn(colors.background.base, "relative z-50 py-16")}>
+        <section className={cn(colors.background.base, "relative z-50", sectionPadding.xl)}>
           <SimplePremiumCTA />
           <CorporateSubscriptionCTA />
         </section>
