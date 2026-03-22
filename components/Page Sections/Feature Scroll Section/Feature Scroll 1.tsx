@@ -73,7 +73,7 @@ export function FeatureScroll1() {
               Voluptates, quibusdam.
             </p>
             <div className="flex gap-4 w-full">
-              <button className="bg-neutral-100 text-black px-4 py-2 rounded-md w-full">
+              <button className="bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white px-4 py-2 rounded-md w-full">
                 Learn More
               </button>
             </div>
@@ -92,7 +92,7 @@ export function FeatureScroll1() {
               Voluptates, quibusdam.
             </p>
             <div className="flex gap-4">
-              <button className="bg-neutral-100 text-black px-4 py-2 rounded-md">
+              <button className="bg-neutral-100 dark:bg-neutral-800 text-black dark:text-white px-4 py-2 rounded-md">
                 Learn More
               </button>
               <button className="bg-neutral-800 text-white px-4 py-2 rounded-md">

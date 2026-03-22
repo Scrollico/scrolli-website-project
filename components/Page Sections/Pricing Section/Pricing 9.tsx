@@ -120,7 +120,7 @@ export function Component() {
                       className={`w-full ${
                         tier.popular
                           ? "bg-[#374152] text-white hover:bg-[#374152]/90"
-                          : "bg-white text-[#374152] border border-[#374152] hover:bg-[#374152]/10"
+                          : "bg-white dark:bg-background text-[#374152] dark:text-foreground border border-[#374152] hover:bg-[#374152]/10"
                       }`}
                     >
                       {tier.buttonText}

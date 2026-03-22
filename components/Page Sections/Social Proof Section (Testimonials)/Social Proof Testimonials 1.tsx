@@ -39,10 +39,8 @@ export const TestimonialCard = ({
   <div
     className={cn(
       "flex w-72 shrink-0 cursor-pointer snap-center snap-always flex-col justify-between rounded-xl p-4 shadow-xl shadow-black/[0.1] lg:min-w-96",
-      // light styles
-      " border border-neutral-200 bg-white",
-      // dark styles
-      "dark:bg-black dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
+      // light/dark styles
+      " border border-neutral-200 bg-white dark:bg-black dark:[border:1px_solid_rgba(255,255,255,.1)] dark:[box-shadow:0_-20px_80px_-20px_#ffffff1f_inset]",
       className,
     )}
     {...props} // Spread the rest of the props here

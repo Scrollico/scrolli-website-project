@@ -416,7 +416,7 @@ export default function IntroAnimation({ articles = [] }: IntroAnimationProps) {
                                         repeat: Infinity,
                                         ease: "easeInOut",
                                     }}
-                                    className="w-1 h-2 bg-white/60 rounded-full"
+                                    className="w-1 h-2 bg-white/60 dark:bg-white/60 rounded-full"
                                 />
                             </div>
                         </div>

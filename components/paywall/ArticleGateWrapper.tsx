@@ -259,7 +259,7 @@ function ArticleGateWrapperInner({ articleId, children }: ArticleGateWrapperProp
                             </div>
                             <button
                                 onClick={() => setShowGiftBanner(false)}
-                                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-white/10 rounded-full transition-colors"
+                                className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-white/10 dark:hover:bg-white/10 rounded-full transition-colors"
                             >
                                 <CheckCircle2 className="h-5 w-5 text-gray-400 hover:text-white" />
                             </button>

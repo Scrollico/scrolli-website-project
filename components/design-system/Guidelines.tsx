@@ -150,10 +150,10 @@ export default function Guidelines() {
                     • py-4, px-6, gap-8, p-4, m-4 → Use spacing tokens
                   </Text>
                   <Text variant="bodySmall" className="font-mono text-red-600 dark:text-red-400">
-                    • bg-white, bg-gray-100 → Use colors.background.*
+                    • bg&#x2011;white, bg-gray-100 → Use colors.background.*
                   </Text>
                   <Text variant="bodySmall" className="font-mono text-red-600 dark:text-red-400">
-                    • text-black, text-gray-900 → Use Typography components or colors.foreground.*
+                    • text&#x2011;black, text-gray-900 → Use Typography components or colors.foreground.*
                   </Text>
                   <Text variant="bodySmall" className="font-mono text-red-600 dark:text-red-400">
                     • rounded-lg, shadow-xl → Use borderRadius.*, elevation tokens
@@ -169,7 +169,7 @@ export default function Guidelines() {
                     py-8 → sectionPadding.md | px-4 → containerPadding.md
                   </Text>
                   <Text variant="bodySmall" className="font-mono text-green-600 dark:text-green-400">
-                    bg-white → colors.background.base | bg-gray-50 → colors.background.elevated
+                    bg&#x2011;white → colors.background.base | bg-gray-50 → colors.background.elevated
                   </Text>
                   <Text variant="bodySmall" className="font-mono text-green-600 dark:text-green-400">
                     text-gray-900 → {"<Text>"} or colors.foreground.primary

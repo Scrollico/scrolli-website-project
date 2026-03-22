@@ -121,7 +121,7 @@ export function FeatureCard10() {
                   delay: index * 0.04,
                 }}
                 key={card.id}
-                className="flex flex-col items-center gap-y-2 rounded-md border bg-white/5 p-5"
+                className="flex flex-col items-center gap-y-2 rounded-md border bg-white/5 dark:bg-white/5 p-5"
               >
                 <img
                   src={card.image}
