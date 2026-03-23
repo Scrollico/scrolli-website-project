@@ -181,8 +181,8 @@ module.exports = {
 
       // Font families
       fontFamily: {
-        display: ['var(--font-newsreader)', 'serif'], // Newsreader for headings/display text
-        sans: ['var(--font-newsreader)', 'serif'], // Newsreader for body text site-wide (header, footer, navigation, general content)
+        display: ['var(--font-newsreader)', 'serif'], // Newsreader for article headings/display text
+        sans: ['var(--font-instrument-sans)', 'sans-serif'], // Instrument Sans for all non-headline text
       },
     },
   },
