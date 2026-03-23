@@ -142,7 +142,7 @@ export default async function Pricing() {
 
         {/* 2.5. Bento Grid */}
         <section className={cn(colors.background.base, "relative z-50", sectionPadding.xl)}>
-          <Container size="lg" padding="lg">
+          <Container size="xl" padding="lg">
             <BentoGridWithFeatures features={bentoFeatures} />
           </Container>
         </section>
