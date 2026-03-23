@@ -67,7 +67,7 @@ export function UserMenu() {
         <Button asChild variant="ghost" size="sm" className="hidden sm:flex">
           <Link href="/sign-in">{t('signIn', 'Sign in')}</Link>
         </Button>
-        <Button asChild variant="default" size="sm">
+        <Button asChild variant="default" size="sm" className="bg-[#374152] text-white dark:bg-[#F8F5E4] dark:text-gray-900">
           <Link href="/pricing">{t('subscribe', 'Subscribe')}</Link>
         </Button>
       </div>
