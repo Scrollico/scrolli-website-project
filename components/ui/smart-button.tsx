@@ -54,6 +54,24 @@ export const SmartButton = React.forwardRef<HTMLButtonElement, SmartButtonProps>
     const variant = forceVariant ||
       (shouldUseAutoVariant ? (isDark ? "beige" : "dark") : explicitVariant);
 
+    // Compute inline styles for charcoal/beige variants to override legacy CSS
+    // Inline styles have highest specificity, immune to CSS specificity wars
+    const isCharcoalVariant = variant === "dark" || variant === "charcoal" || variant === "brand-charcoal";
+    const isBeigeVariant = variant === "beige" || variant === "brand-beige";
+
+    let brandStyle: React.CSSProperties | undefined;
+    if (isCharcoalVariant) {
+      brandStyle = {
+        backgroundColor: isDark ? "#F8F5E4" : "#374152",
+        color: isDark ? "#111827" : "#ffffff",
+      };
+    } else if (isBeigeVariant) {
+      brandStyle = {
+        backgroundColor: "#F8F5E4",
+        color: "#111827",
+      };
+    }
+
     // If 'as' prop is provided, wrap children in that component and use asChild
     if (as) {
       const { children, ...restProps } = props;
@@ -64,6 +82,7 @@ export const SmartButton = React.forwardRef<HTMLButtonElement, SmartButtonProps>
           ref={ref}
           variant={variant}
           asChild
+          style={brandStyle}
           {...restProps}
         >
           <AsComponent {...(restProps as any)}>
@@ -77,6 +96,7 @@ export const SmartButton = React.forwardRef<HTMLButtonElement, SmartButtonProps>
       <LoginButton
         ref={ref}
         variant={variant}
+        style={brandStyle}
         {...props}
       />
     );
