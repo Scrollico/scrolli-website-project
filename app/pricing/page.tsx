@@ -2,7 +2,7 @@ export const runtime = "edge";
 
 import { Suspense } from "react"
 import Layout from "@/components/layout/Layout"
-import RevenueCatPricing from '@/components/premium/RevenueCatPricing'
+import RevenueCatPricingLazy from '@/components/premium/RevenueCatPricingLazy'
 import CorporateSubscriptionCTA from '@/components/ui/corporate-subscription-cta'
 import { PortfolioGallery } from '@/components/ui/portfolio-gallery'
 import { SimplePremiumCTA } from '@/components/ui/simple-premium-cta'
@@ -133,7 +133,7 @@ export default async function Pricing() {
         {/* 1. Pricing Component First */}
         <section className={cn(colors.background.base, "relative z-50", sectionPadding.lg)}>
           <Suspense fallback={<PricingSkeleton />}>
-            <RevenueCatPricing />
+            <RevenueCatPricingLazy />
           </Suspense>
         </section>
 
