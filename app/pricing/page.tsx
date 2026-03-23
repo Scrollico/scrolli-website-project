@@ -141,10 +141,10 @@ export default async function Pricing() {
         <PortfolioGallery articles={animationArticles} />
 
         {/* 2.5. Bento Grid */}
-        <section className={cn(colors.background.base, "relative z-50", sectionPadding.xl)}>
-          <Container size="xl" padding="lg">
+        <section className={cn(colors.background.base, "relative z-50 px-4", sectionPadding.xl)}>
+          <div className="max-w-7xl mx-auto">
             <BentoGridWithFeatures features={bentoFeatures} />
-          </Container>
+          </div>
         </section>
 
         {/* 3. Remaining Content */}
