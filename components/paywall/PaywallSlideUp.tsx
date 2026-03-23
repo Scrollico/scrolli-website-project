@@ -378,10 +378,9 @@ export function PaywallSlideUp({
                 <button
                     onClick={handleSubscribe}
                     disabled={loading || !!error || purchasing}
-                    style={{ backgroundColor: "#16a34a", color: "#ffffff" }}
                     className={cn(
                         "w-full py-3 rounded-full font-bold text-white text-center transition-all",
-                        "bg-green-600 hover:opacity-90",
+                        "bg-green-600 hover:bg-green-700",
                         "disabled:opacity-50 disabled:cursor-not-allowed",
                         "flex items-center justify-center gap-2"
                     )}
