@@ -144,9 +144,9 @@ function buildQueryString(params: FetchParams): string {
   // This ensures we get the latest content when hitting limits
   const sort = params.sort || "-publishedAt";
   queryParams.append("sort", sort);
-  if (params.limit) {
-    queryParams.append("limit", String(params.limit));
-  }
+  // Default limit to 100 to prevent 1000-row fetches (Payload default)
+  // which cause 5+ second API responses
+  queryParams.append("limit", String(params.limit || 100));
   if (params.page) {
     queryParams.append("page", String(params.page));
   }
@@ -212,15 +212,20 @@ async function fetchArticlesInternal(
       return [];
     }
 
-    const queryString = buildQueryString(params);
-    const fullQuery = queryString;
-
-    // Revalidation strategy: 30 seconds for articles (faster new article discovery)
-    // Navigation and site settings use longer revalidation (1 hour) as they change less frequently
     const targetCollections = params.collections || ["gundem", "hikayeler", "alaraai", "collabs", "stories"];
 
+    // Distribute the limit across collections so we don't fetch N*limit rows total
+    // e.g. limit=50 across 5 collections → fetch 10 per collection instead of 50 each
+    const perCollectionLimit = params.limit
+      ? Math.max(5, Math.ceil(params.limit / targetCollections.length))
+      : undefined;
+    const perCollectionParams = perCollectionLimit
+      ? { ...params, limit: perCollectionLimit }
+      : params;
+    const queryString = buildQueryString(perCollectionParams);
+
     const fetchPromises = targetCollections.map(collection =>
-      fetch(`${config.url}/${collection}?${fullQuery}`, {
+      fetch(`${config.url}/${collection}?${queryString}`, {
         headers: config.headers,
         next: { revalidate: 120 },
       })
