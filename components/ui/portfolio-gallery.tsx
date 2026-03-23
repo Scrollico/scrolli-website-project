@@ -61,11 +61,17 @@ export function PortfolioGallery({
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
   const images = customImages || (articles && articles.length > 0
-    ? articles.map((article) => ({
-        src: article.thumbnail || article.image || FALLBACK_IMAGES[0].src,
-        alt: article.title || "Article",
-      }))
+    ? articles
+        .filter((a) => a.thumbnail || a.image) // skip articles without images
+        .map((article) => ({
+          src: article.thumbnail || article.image || "",
+          alt: article.title || "Article",
+        }))
+        .filter((img) => img.src.startsWith("http")) // only valid URLs
     : FALLBACK_IMAGES)
+
+  // If no valid article images, fall back to defaults
+  const displayImages = images.length > 0 ? images : FALLBACK_IMAGES
 
   return (
     <section
@@ -115,7 +121,7 @@ export function PortfolioGallery({
         {/* Desktop 3D overlapping layout - hidden on mobile */}
         <div className="hidden md:block relative overflow-hidden h-[400px] -mb-[200px]">
           <div className={cn("flex pb-8 pt-40 items-end justify-center", spacing)}>
-            {images.map((image, index) => {
+            {displayImages.map((image, index) => {
               const totalImages = images.length
               const middle = Math.floor(totalImages / 2)
               const distanceFromMiddle = Math.abs(index - middle)
@@ -193,7 +199,7 @@ export function PortfolioGallery({
                     { "group-hover:[animation-play-state:paused]": pauseOnHover }
                   )}
                 >
-                  {images.map((image, index) => (
+                  {displayImages.map((image, index) => (
                     <div
                       key={`${i}-${index}`}
                       className="cursor-pointer flex-shrink-0"
