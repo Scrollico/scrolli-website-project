@@ -3,7 +3,6 @@
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { colors, typography, sectionPadding } from "@/lib/design-tokens"
 import { Article } from "@/types/content"
@@ -88,8 +87,6 @@ export function PortfolioGallery({
   pauseOnHover = true,
   marqueeRepeat = 4,
 }: PortfolioGalleryProps) {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
-
   // Derive images from articles prop if provided
   const images = customImages || (articles && articles.length > 0
     ? articles.map((article) => ({
@@ -152,34 +149,28 @@ export function PortfolioGallery({
               const distanceFromMiddle = Math.abs(index - middle)
               const staggerOffset = maxHeight - distanceFromMiddle * 20
               const zIndex = totalImages - index
-              const isHovered = hoveredIndex === index
-              const isOtherHovered = hoveredIndex !== null && hoveredIndex !== index
-              const yOffset = isHovered ? -120 : isOtherHovered ? 0 : -staggerOffset
 
               return (
                 <motion.div
                   key={index}
-                  className="group cursor-pointer flex-shrink-0"
+                  className="flex-shrink-0 pointer-events-none"
                   style={{ zIndex }}
                   initial={{
                     transform: "perspective(5000px) rotateY(-45deg) translateY(200px)",
                     opacity: 0,
                   }}
                   animate={{
-                    transform: `perspective(5000px) rotateY(-45deg) translateY(${yOffset}px)`,
+                    transform: `perspective(5000px) rotateY(-45deg) translateY(${-staggerOffset}px)`,
                     opacity: 1,
                   }}
                   transition={{
-                    duration: 0.2,
+                    duration: 0.4,
                     delay: index * 0.05,
                     ease: [0.25, 0.1, 0.25, 1],
                   }}
-                  onHoverStart={() => setHoveredIndex(index)}
-                  onHoverEnd={() => setHoveredIndex(null)}
-                  onClick={() => onImageClick?.(index)}
                 >
                   <div
-                    className="relative aspect-video w-64 md:w-80 lg:w-96 rounded-lg overflow-hidden transition-transform duration-300 group-hover:scale-105"
+                    className="relative aspect-video w-64 md:w-80 lg:w-96 rounded-lg overflow-hidden"
                     style={{
                       boxShadow: `
                         rgba(0, 0, 0, 0.01) 0.796192px 0px 0.796192px 0px,
