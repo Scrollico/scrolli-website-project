@@ -94,6 +94,7 @@ None yet.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260322-uwb | Page load speed optimization | 2026-03-22 | 4a48071 | [260322-uwb-page-load-speed-optimization](./quick/260322-uwb-page-load-speed-optimization/) |
+| 260323-wj3 | Standardize subscribe CTA buttons to inline styles | 2026-03-23 | 543aa77 | [260323-wj3-standardize-subscribe-cta-buttons-to-inl](./quick/260323-wj3-standardize-subscribe-cta-buttons-to-inl/) |
 
 ### Blockers/Concerns
 
