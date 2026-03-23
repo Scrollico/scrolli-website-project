@@ -1081,14 +1081,14 @@ button[role="tab"][data-state="active"] {
 }
 
 .hero-bottom-gradient {
-  /* Light mode: strong white fade matching scrolli.co production hero */
+  /* Light mode: subtle bottom-only fade matching scrolli.co production */
   background: linear-gradient(
     180deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.1) 30%,
-    rgba(255, 255, 255, 0.4) 55%,
-    rgba(255, 255, 255, 0.75) 75%,
-    rgba(255, 255, 255, 0.95) 90%,
+    rgba(255, 255, 255, 0) 55%,
+    rgba(255, 255, 255, 0.3) 70%,
+    rgba(255, 255, 255, 0.7) 85%,
+    rgba(255, 255, 255, 0.95) 95%,
     rgba(255, 255, 255, 1) 100%
   );
 }
@@ -1363,88 +1363,23 @@ button[role="tab"][data-state="active"] {
 /* ========================================================================
    OVERRIDE CABIN FONT WITH NEWSREADER - Site-wide body text
    ======================================================================== */
-/* These overrides replace all Cabin font references from style.css with Newsreader */
-/* Instrument Sans is ONLY used in .article-content (article detail pages) */
+/* Font strategy: Instrument Sans everywhere, Newsreader only for headlines */
 
-/* Body element - base font for site-wide text */
+/* Body element - Instrument Sans as base */
 body {
-  font-family: var(--font-newsreader), serif !important;
-}
-
-/* Header elements - use body font (Instrument Sans) */
-.card-nav-link,
-.card-nav-clocks .header-clock__label,
-.navbar-brand,
-header,
-header * {
   font-family: var(--font-instrument-sans), sans-serif !important;
 }
 
-/* Navigation elements - use body font (Instrument Sans) */
-.menu-primary,
-.menu-primary *,
-.mobi-menu nav,
-.mobi-menu nav *,
-.capsSubtle {
-  font-family: var(--font-instrument-sans), sans-serif !important;
-}
-
-/* Entry meta, excerpts, titles - site-wide (article-content has its own rules) */
-.entry-meta,
-.entry-excerpt,
-.entry-title,
-.entry-header,
-.entry-wraper .excerpt,
-.archive-intro,
-.author-section,
-.section-featured h2,
-.heading-font {
-  font-family: var(--font-newsreader), serif !important;
-}
-
-/* Video titles and captions */
-.video-title,
-.video-caption {
-  font-family: var(--font-newsreader), serif !important;
-}
-
-/* Footer elements - use body font (Instrument Sans) */
-footer,
-footer *,
-footer h1,
-footer h2,
-footer h3,
-footer h4,
-footer h5,
-footer h6,
-footer p,
-footer a,
-footer span,
-footer li,
-footer button,
-footer .footer-modern,
-footer .footer-modern *,
-footer .footer-content,
-footer .footer-content *,
-footer .footer-brand,
-footer .footer-brand *,
-footer .footer-column,
-footer .footer-column *,
-footer .footer-links,
-footer .footer-links *,
-footer .footer-tagline,
-footer .footer-language,
-footer .footer-language * {
-  font-family: var(--font-instrument-sans), sans-serif !important;
-}
-
-/* All headings site-wide (article-content headings have their own rules) */
+/* All headings site-wide - Newsreader */
 h1,
 h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+.entry-title,
+.heading-font,
+.section-featured h2 {
   font-family: var(--font-newsreader), serif !important;
 }
 
