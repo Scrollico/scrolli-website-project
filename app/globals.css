@@ -1081,15 +1081,15 @@ button[role="tab"][data-state="active"] {
 }
 
 .hero-bottom-gradient {
-  /* Light mode: subtle white gradient - reduced opacity for darker, more refined look */
+  /* Light mode: strong white fade matching scrolli.co production hero */
   background: linear-gradient(
     180deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.08) 30%,
-    rgba(255, 255, 255, 0.15) 50%,
-    rgba(255, 255, 255, 0.25) 70%,
-    rgba(255, 255, 255, 0.3) 85%,
-    rgba(255, 255, 255, 0.3) 100%
+    rgba(255, 255, 255, 0.1) 30%,
+    rgba(255, 255, 255, 0.4) 55%,
+    rgba(255, 255, 255, 0.75) 75%,
+    rgba(255, 255, 255, 0.95) 90%,
+    rgba(255, 255, 255, 1) 100%
   );
 }
 
