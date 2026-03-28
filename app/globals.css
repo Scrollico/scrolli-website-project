@@ -177,21 +177,17 @@
   }
 
   /* Universal button stability: Stop background color jumps from legacy CSS */
+  /* Excludes Tailwind-styled buttons (bg-* or inline-flex) — they own their own bg via utility classes */
   button:hover:not(.no-hover):not([role="checkbox"]):not(
       [class*="purchases-"]
-    ):not([id*="purchases-"]),
-  a.btn:hover:not([class*="purchases-"]):not([id*="purchases-"]),
-  button:focus:not([class*="purchases-"]):not([id*="purchases-"]),
-  button:active:not([class*="purchases-"]):not([id*="purchases-"]) {
+    ):not([id*="purchases-"]):not([class*="bg-"]):not([class*="inline-flex"]),
+  a.btn:hover:not([class*="purchases-"]):not([id*="purchases-"]):not([class*="bg-"]),
+  button:focus:not([class*="purchases-"]):not([id*="purchases-"]):not([class*="bg-"]):not([class*="inline-flex"]),
+  button:active:not([class*="purchases-"]):not([id*="purchases-"]):not([class*="bg-"]):not([class*="inline-flex"]) {
     filter: brightness(
       0.95
     ); /* Subtle "pale" feedback affecting background & text slightly */
-    background-color: inherit !important; /* Defeat legacy bg jumps */
-  }
-
-  /* Let Tailwind background utility classes win if present, but NEVER text color */
-  button[class*="bg-"]:hover {
-    background-color: unset !important;
+    background-color: inherit !important; /* Defeat legacy bg jumps for non-Tailwind buttons */
   }
 
   /* Only apply scaling to actual buttons, not nav links that shouldn't shrink */
