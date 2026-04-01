@@ -2,9 +2,8 @@
 import Link from "next/link";
 import Image from 'next/image';
 import { Container, ResponsiveGrid } from "@/components/responsive";
-import { Heading } from "@/components/ui/typography";
-import { Badge } from "@/components/ui/badge";
-import { colors, sectionPadding, componentPadding, gap, elevation, elevationHover, transition, borderRadius, marginBottom, marginTop, interactions, link } from "@/lib/design-tokens";
+import { Heading, Caption } from "@/components/ui/typography";
+import { colors, sectionPadding, gap, marginBottom, marginTop, link } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 import { Article } from "@/types/content";
 import ScrolliPremiumBanner from "./ScrolliPremiumBanner";
@@ -40,8 +39,8 @@ export default function Section1({ title = "Editor's Picks", articles, articleLi
           {articles.slice(0, 3).map((article) => {
 
             return (
-              <article key={article.id} className={cn("group", borderRadius.lg, "overflow-hidden", elevation[1], elevationHover[2], transition.normal, "flex flex-col", "bg-[#F4F5FA] dark:bg-muted", "border border-transparent dark:border-gray-800/3")}>
-                {/* Article Image - Separate from text */}
+              <article key={article.id} className="group flex flex-col">
+                {/* Article Image */}
                 <Link href={`/${article.id}`} className="block w-full">
                   <figure
                     className={cn(
@@ -54,34 +53,33 @@ export default function Section1({ title = "Editor's Picks", articles, articleLi
                         src={article.thumbnail ?? article.image ?? ""}
                         alt={article.title}
                         fill
-                        className="object-cover object-center w-full h-full"
+                        className="object-cover object-center w-full h-full transition-transform duration-300 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, (max-width: 1280px) 33vw, 420px"
                         style={{ objectFit: 'cover' }}
                       />
                     ) : (
-                      <div className="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                      <div className="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center rounded-lg">
                         <span className="text-gray-400 dark:text-gray-500 text-sm">No Image</span>
                       </div>
                     )}
                   </figure>
                 </Link>
 
-                {/* Article Content - Separate below image */}
-                <div className={cn(componentPadding.md, "flex-1 flex flex-col", gap.sm)}>
-                  {/* Category Badge - always rendered for consistent spacing */}
-                  <div className={cn("flex justify-start", "min-h-[24px]")}>
-                    {article.category && (
-                      <Badge
-                        className="tracking-wide border-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300"
-                      >
-                        {article.category}
-                      </Badge>
-                    )}
-                  </div>
+                {/* Article Content */}
+                <div className="flex flex-col gap-1.5 pt-3">
+                  {article.date && (
+                    <Caption
+                      as="time"
+                      dateTime={article.date}
+                      color="muted"
+                    >
+                      {article.date}
+                    </Caption>
+                  )}
                   <Heading
                     level={3}
                     variant="h5"
-                    className="leading-tight line-clamp-2"
+                    className="leading-tight"
                   >
                     <Link
                       href={`/${article.id}`}

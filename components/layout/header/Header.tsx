@@ -20,7 +20,6 @@ interface HeaderProps {
 
 
 export default function Header({ navigation, categoryPreviews }: HeaderProps) {
-  const [isSearch, setIsSearch] = useState<number | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -31,15 +30,6 @@ export default function Header({ navigation, categoryPreviews }: HeaderProps) {
 
   const isDark = mounted && (theme === 'dark' || resolvedTheme === 'dark');
 
-  const handleSearch = (key: number | null) => {
-    setIsSearch((prevState) => (prevState === key ? null : key));
-  };
-
-  // Pass these to CardNav
-  const headerProps = {
-    isSearch,
-    handleSearch
-  };
   // CardNav menu items configuration
   const cardNavItems = useMemo(() => [
     {
@@ -51,7 +41,7 @@ export default function Header({ navigation, categoryPreviews }: HeaderProps) {
     },
     {
       label: "Dosya",
-      href: "/dosya",
+      href: "/hikayeler",
       bgColor: "#170D27",
       textColor: "#fff",
       links: [],
@@ -195,7 +185,6 @@ export default function Header({ navigation, categoryPreviews }: HeaderProps) {
             logoAlt="Scrolli Logo"
             items={cardNavItems}
             categoryPreviews={categoryPreviews}
-            {...headerProps}
           />
         </div>
       </header>

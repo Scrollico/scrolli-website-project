@@ -55,11 +55,11 @@ export default function HikayelerListSection({
     <section className={sectionPadding.md}>
       <Container>
         {/* Page Header */}
-        <header className="mb-10 md:mb-14">
+        <header className="mb-10 md:mb-14 text-center">
           <Heading level={1} variant="h1" className="mb-3">
             Hikayeler
           </Heading>
-          <Text variant="body" color="secondary" className="max-w-xl">
+          <Text variant="body" color="secondary" className="max-w-xl mx-auto">
             Scrolli&apos;nin seçkin hikaye koleksiyonu — derinlemesine
             analizler, kişisel perspektifler ve özgün bakış açıları.
           </Text>

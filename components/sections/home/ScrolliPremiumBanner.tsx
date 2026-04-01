@@ -99,7 +99,7 @@ export default function ScrolliPremiumBanner({
       "grid grid-cols-1 overflow-hidden rounded-2xl border",
       embedded || isSimple ? "gap-0" : "lg:grid-cols-12",
       "border-gray-200/50 dark:border-gray-700/50",
-      "shadow-sm",
+      "shadow-2xl",
       "bg-gray-100/60 dark:bg-gray-900/60 backdrop-blur-md"
     )}>
 
@@ -114,40 +114,21 @@ export default function ScrolliPremiumBanner({
           "bg-transparent"
         )}
       >
-        {/* 
-          Replacement for Noise Texture: "Subtle Grain" 
-          Using a radial gradient pattern to create a subtle, paper-like feel without the specific "noise" look.
-        */}
-        <div className="absolute inset-0 opacity-[0.4] pointer-events-none mix-blend-multiply dark:mix-blend-soft-light"
-          style={{
-            backgroundImage: `radial-gradient(#000 0.5px, transparent 0.5px), radial-gradient(#000 0.5px, transparent 0.5px)`,
-            backgroundSize: '20px 20px',
-            backgroundPosition: '0 0, 10px 10px',
-            opacity: 0.03
-          }}
-        />
-
-        {/* Additional depth gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-transparent dark:from-white/5 pointer-events-none" />
+        {/* Single depth gradient — replaces stacked noise + gradient layers */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent dark:from-white/5 pointer-events-none" />
 
         <div className={cn("relative z-10 w-full", isSimple && "max-w-2xl flex flex-col items-center")}>
           <div className={cn("mb-3", isSimple && "flex justify-center")}>
             <Image
               src={isDark ? "/assets/images/plus/Primary(Plus) 1.svg" : "/assets/images/plus/Primary(Plus) 2.svg"}
               alt="Scrolli Plus"
-              width={isSimple ? 56 : 100}
-              height={isSimple ? 16 : 28}
-              className={cn("w-auto opacity-90", isSimple ? "h-4" : "h-7")}
+              width={isSimple ? 44 : 72}
+              height={isSimple ? 12 : 20}
+              className={cn("w-auto opacity-90", isSimple ? "h-3" : "h-5")}
               priority
             />
           </div>
-          <div className={cn("flex items-center gap-3 mb-4", isSimple && "justify-center")}>
-            <Badge
-              variant="default"
-              className="text-white"
-            >
-              Premium
-            </Badge>
+          <div className={cn("mb-6", isSimple && "text-center")}>
             <Text variant="caption" as="span" className="tracking-wider font-medium text-gray-500 dark:text-gray-400 m-0">
               Support Independent Journalism
             </Text>
@@ -156,13 +137,13 @@ export default function ScrolliPremiumBanner({
           <Heading
             level={2}
             variant={isSimple ? "h3" : "h2"}
-            className={cn("tracking-tight mb-4 leading-[1.15]", isSimple && "text-2xl md:text-3xl")}
+            className={cn("tracking-tight mb-6 leading-[1.15]", isSimple && "text-2xl md:text-3xl")}
           >
             Less breaking news. <br />
             <span className="text-gray-500 dark:text-gray-400">More breakthrough stories.</span>
           </Heading>
 
-          <div className={cn("flex flex-wrap gap-2 mb-6", isSimple && "justify-center")}>
+          <div className={cn("flex flex-wrap gap-2 mb-8", isSimple && "justify-center")}>
             <Badge variant="secondary" className="leading-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 border-none pl-1.5 pr-3 py-1.5 h-auto shadow-sm">
               <PremiumContentBadgeIcon size={16} className="text-gray-500 dark:text-gray-400 shrink-0 self-center [&_svg]:block" />
               Premium Articles
@@ -337,7 +318,7 @@ export default function ScrolliPremiumBanner({
                     <SmartButton
                       forceVariant="brand-charcoal"
                       size="sm"
-                      className="rounded-full px-5 py-2.5 shadow-lg flex items-center gap-2 transform scale-105 text-[#F8F5E4] hover:text-[#dcd8c0]"
+                      className="rounded-full px-5 py-2.5 shadow-lg flex items-center gap-2 transform scale-105"
                     >
                       <span>Unlock Story</span> <ArrowRightIcon size={14} />
                     </SmartButton>

@@ -652,15 +652,15 @@ export const buttonPairs = {
   },
   /** Beige button - cream bg, dark text; dark mode uses light surface so button stays visible on dark backgrounds */
   beige: {
-    default: "bg-[#F8F5E4] text-gray-900 dark:bg-gray-100 dark:text-gray-900",
-    hover: "hover:bg-[#F3F0DE] dark:hover:bg-gray-200",
-    all: "bg-[#F8F5E4] text-gray-900 dark:bg-gray-100 dark:text-gray-900 hover:bg-[#F3F0DE] dark:hover:bg-gray-200",
+    default: "bg-[#F8F5E4] text-gray-900 dark:bg-[#F8F5E4] dark:text-gray-900",
+    hover: "hover:bg-[#F3F0DE] dark:hover:bg-[#EDE9D5]",
+    all: "bg-[#F8F5E4] text-gray-900 dark:bg-[#F8F5E4] dark:text-gray-900 hover:bg-[#F3F0DE] dark:hover:bg-[#EDE9D5]",
   },
-  /** Charcoal button - dark bg in light mode; dark mode uses light surface so button stays visible on dark backgrounds */
+  /** Charcoal button - dark bg in light mode; dark mode uses warm beige so button pops on dark backgrounds */
   charcoal: {
-    default: "bg-[#374152] text-white dark:bg-gray-100 dark:text-gray-900",
-    hover: "hover:bg-[#1F2937] dark:hover:bg-gray-200",
-    all: "bg-[#374152] text-white dark:bg-gray-100 dark:text-gray-900 hover:bg-[#1F2937] dark:hover:bg-gray-200",
+    default: "bg-[#374152] text-white dark:bg-[#F8F5E4] dark:text-gray-900",
+    hover: "hover:bg-[#1F2937] dark:hover:bg-[#EDE9D5]",
+    all: "bg-[#374152] text-white dark:bg-[#F8F5E4] dark:text-gray-900 hover:bg-[#1F2937] dark:hover:bg-[#EDE9D5]",
   },
   /** Success/green button */
   success: {
@@ -831,3 +831,56 @@ export function radius(size: BorderRadius): string {
 export function shadow(level: Elevation): string {
   return elevation[level] ?? elevation[1];
 }
+
+// --- Brand Accent Color (periwinkle #8080FF) ---
+// Used for category underlines, checkbox states, and highlight elements.
+// Always pair .primary (light mode) with .primaryDark (dark mode) via isDark ternary.
+export const accentColor = {
+  primary: "text-[#8080FF]",
+  primaryBg: "bg-[#8080FF]",
+  primaryDark: "text-[#9999FF]",
+  primaryBgDark: "bg-[#9999FF]",
+  raw: "#8080FF",
+  rawDark: "#9999FF",
+};
+
+// --- Neumorphic Shadows (CardNav language toggle + UserMenu avatar button) ---
+// Extracted from CardNav.tsx and UserMenu.tsx inline styles — values are identical.
+// Use as: style={{ boxShadow: isDark ? neumorphicShadow.dark : neumorphicShadow.light }}
+export const neumorphicShadow = {
+  light: `
+    inset 5px 5px 12px rgba(148, 163, 184, 0.5),
+    inset -5px -5px 12px rgba(255, 255, 255, 1),
+    inset 8px 8px 16px rgba(100, 116, 139, 0.3),
+    inset -8px -8px 16px rgba(255, 255, 255, 0.9),
+    inset 0 2px 4px rgba(148, 163, 184, 0.4),
+    inset 0 -2px 4px rgba(255, 255, 255, 1),
+    inset 0 0 20px rgba(203, 213, 225, 0.3),
+    0 1px 2px rgba(255, 255, 255, 1),
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 8px 16px rgba(0, 0, 0, 0.08),
+    0 16px 32px rgba(0, 0, 0, 0.06),
+    0 24px 48px rgba(0, 0, 0, 0.04)
+  `,
+  dark: `
+    inset 5px 5px 12px rgba(0, 0, 0, 0.9),
+    inset -5px -5px 12px rgba(71, 85, 105, 0.4),
+    inset 8px 8px 16px rgba(0, 0, 0, 0.7),
+    inset -8px -8px 16px rgba(100, 116, 139, 0.2),
+    inset 0 2px 4px rgba(0, 0, 0, 1),
+    inset 0 -2px 4px rgba(71, 85, 105, 0.4),
+    inset 0 0 20px rgba(0, 0, 0, 0.6),
+    0 1px 1px rgba(255, 255, 255, 0.05),
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    0 8px 16px rgba(0, 0, 0, 0.4),
+    0 16px 32px rgba(0, 0, 0, 0.3),
+    0 24px 48px rgba(0, 0, 0, 0.2)
+  `,
+};
+
+// --- Nav Dropdown Gradients (CardNav category panel placeholder background) ---
+// Used when a category card has no image — indigo gradient fills the image area.
+export const navGradient = {
+  light: "linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)",
+  dark: "linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)",
+};

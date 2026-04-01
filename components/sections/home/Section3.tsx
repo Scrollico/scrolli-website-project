@@ -6,10 +6,9 @@ import { Container } from "@/components/responsive";
 import PodcastSection from "./PodcastSection";
 import { Article } from "@/types/content";
 import { cn } from "@/lib/utils";
-import { colors, sectionPadding, gap, interactions } from "@/lib/design-tokens";
+import { colors, sectionPadding, gap, interactions, accentColor } from "@/lib/design-tokens";
 import { Heading, Text, Caption } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
-import { FreeContentBadgeIcon, PremiumContentBadgeIcon } from "@/components/icons/scrolli-icons";
 
 interface Section3Props {
   articlesByCategory: {
@@ -55,7 +54,7 @@ function CategoryColumn({
             <span className="ml-1">{" >"}</span>
           </Heading>
         </Link>
-        <div className="h-0.5 w-12 bg-[#8080FF] mt-4" />
+        <div className={cn("h-0.5 w-12 mt-4", accentColor.primaryBg)} />
       </div>
 
       {/* Featured Article */}
@@ -82,14 +81,6 @@ function CategoryColumn({
                 </div>
               )}
 
-              {/* Content Badge */}
-              <div className="absolute top-2 left-2 z-10 pointer-events-none">
-                {featuredArticle.isPremium ? (
-                  <PremiumContentBadgeIcon size={24} className="drop-shadow-md" />
-                ) : (
-                  <FreeContentBadgeIcon size={24} className="drop-shadow-md" />
-                )}
-              </div>
             </figure>
 
             {/* Article Meta */}
@@ -219,7 +210,7 @@ function CategoryColumn({
         className={cn(
           "mt-6 pt-4 border-t inline-flex items-center gap-2",
           colors.border.DEFAULT,
-          "text-sm font-semibold uppercase tracking-wide",
+          "text-sm font-semibold tracking-wide",
           "transition-opacity duration-200 hover:opacity-70",
           colors.foreground.secondary
         )}

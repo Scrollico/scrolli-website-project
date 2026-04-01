@@ -1,7 +1,7 @@
 import { getNavigation, fetchPayload } from "@/lib/payload/client";
 import Header from "./Header";
-import { mapHikayelerToArticle } from "@/lib/payload/types";
-import type { PayloadHikayeler } from "@/lib/payload/types";
+import { mapGundemToArticle } from "@/lib/payload/types";
+import type { PayloadGundem } from "@/lib/payload/types";
 import type { Article } from "@/types/content";
 
 export interface CategoryPreview {
@@ -18,28 +18,30 @@ const HIKAYE_CATEGORIES: { slug: string; label: string; href: string }[] = [
   { slug: "gelecek", label: "Gelecek", href: "/hikayeler" },
 ];
 
-/**
- * Server component wrapper for Header
- * Fetches navigation data from Payload CMS and passes it to client Header component
- */
 export default async function HeaderWrapper() {
-  // Hikayeler collection has no category field — fetch the 4 most recent articles
-  // and pair them with the nav category slots by index
-  const [navigation, hikayelerResult] = await Promise.all([
+  const [navigation, gundemResult] = await Promise.all([
     getNavigation(),
-    fetchPayload<PayloadHikayeler>("hikayeler", {
+    fetchPayload<PayloadGundem>("gundem", {
       sort: "-publishedAt",
-      limit: 4,
+      limit: 40,
       depth: 1,
-    }).catch(() => ({ docs: [] as PayloadHikayeler[] })),
+    }).catch(() => ({ docs: [] as PayloadGundem[] })),
   ]);
 
-  const hikayelerDocs = (hikayelerResult as { docs: PayloadHikayeler[] }).docs;
+  const gundemDocs = (gundemResult as { docs: PayloadGundem[] }).docs;
 
-  const categoryPreviews: CategoryPreview[] = HIKAYE_CATEGORIES.map((cat, i) => ({
-    ...cat,
-    article: hikayelerDocs[i] ? mapHikayelerToArticle(hikayelerDocs[i]) : null,
-  }));
+  const categoryPreviews: CategoryPreview[] = HIKAYE_CATEGORIES.map((cat) => {
+    const match = gundemDocs.find((doc) => {
+      const catField = doc.category;
+      if (!catField) return false;
+      if (typeof catField === "string") return catField.toLowerCase() === cat.slug;
+      return catField.slug?.toLowerCase() === cat.slug;
+    });
+    return {
+      ...cat,
+      article: match ? mapGundemToArticle(match) : null,
+    };
+  });
 
   return <Header navigation={navigation} categoryPreviews={categoryPreviews} />;
 }

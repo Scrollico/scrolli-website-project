@@ -17,7 +17,6 @@ import {
 import { cn } from "@/lib/utils";
 import { Heading, Text } from "@/components/ui/typography";
 import { Container } from "@/components/responsive";
-import { FreeContentBadgeIcon, PremiumContentBadgeIcon } from "@/components/icons/scrolli-icons";
 import { Article } from "@/types/content";
 import { ArrowRight } from "lucide-react";
 
@@ -146,13 +145,6 @@ export default function DynamicCategorySection({
                                                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 65vw, 700px"
                                                     priority
                                                 />
-                                                <div className="absolute top-3 right-3 z-10 pointer-events-none">
-                                                    {mainArticle.isPremium ? (
-                                                        <PremiumContentBadgeIcon size={26} className="drop-shadow-md" />
-                                                    ) : (
-                                                        <FreeContentBadgeIcon size={26} className="drop-shadow-md" />
-                                                    )}
-                                                </div>
                                             </div>
                                         </Link>
                                     )}
@@ -290,13 +282,6 @@ export default function DynamicCategorySection({
                                                     )}
                                                     sizes="(max-width: 640px) 100vw, 176px"
                                                 />
-                                                <div className="absolute top-2 right-2 z-10 pointer-events-none">
-                                                    {article.isPremium ? (
-                                                        <PremiumContentBadgeIcon size={20} className="drop-shadow-md" />
-                                                    ) : (
-                                                        <FreeContentBadgeIcon size={20} className="drop-shadow-md" />
-                                                    )}
-                                                </div>
                                             </Link>
                                         )}
                                     </article>

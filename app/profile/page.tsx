@@ -8,8 +8,9 @@ import { useAuth } from "@/components/providers/auth-provider";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { badge as badgeTokens, colors, sectionPadding, containerPadding, componentPadding, gap as gapTokens } from "@/lib/design-tokens";
+import { colors, sectionPadding, containerPadding } from "@/lib/design-tokens";
 import Link from "next/link";
+import { User, Mail, Hash, Crown, CreditCard, Star, Shield, Newspaper, Headphones, CalendarHeart, LogOut } from "lucide-react";
 
 export default function ProfilePage() {
     const { user, profile, isPremium, loading, signOut } = useAuth();
@@ -36,11 +37,10 @@ export default function ProfilePage() {
         );
     }
 
-    // Format account ID (first 8 characters)
     const accountId = user.id.substring(0, 8);
     const userEmail = user.email || "N/A";
+    const displayName = profile?.full_name || userEmail.split("@")[0];
 
-    // Calculate next bill date (30 days from now for demo)
     const nextBillDate = new Date();
     nextBillDate.setDate(nextBillDate.getDate() + 30);
     const formattedDate = nextBillDate.toLocaleDateString("tr-TR", {
@@ -49,181 +49,181 @@ export default function ProfilePage() {
         day: "numeric",
     });
 
+    const benefits = [
+        { icon: Crown, label: "Sınırsız Premium içerik" },
+        { icon: Shield, label: "Reklamsız deneyim" },
+        { icon: Newspaper, label: "Özel bültenler" },
+        { icon: Star, label: "AI analiz araçları" },
+        { icon: Headphones, label: "Öncelikli destek" },
+        { icon: CalendarHeart, label: "Özel etkinliklere erişim" },
+    ];
+
     return (
         <Layout>
             <div className={cn(
-                "min-h-screen transition-colors duration-500",
+                "min-h-screen",
                 colors.background.base,
                 colors.foreground.primary
             )}>
-                {/* Main Grid Container - WordPress.com style */}
-                <main className={cn("grid max-w-4xl mx-auto", sectionPadding.sm, containerPadding.md, gapTokens.lg)}>
-                    {/* Page Header */}
-                    <div className="mb-8">
-                        <h1 className="text-2xl md:text-3xl font-bold mb-2">Scrolli Hesabım</h1>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                            {userEmail}
-                        </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                            Hesap ID: {accountId}
-                        </p>
-                    </div>
+                <main className={cn("max-w-2xl mx-auto", sectionPadding.lg, containerPadding.md)}>
 
-                    {/* Account Info Card */}
-                    <div className={cn("antialiased body bg-muted border border-border rounded", componentPadding.md)}>
-                        <h2 className="text-lg font-semibold mb-4">Hesap Bilgileri</h2>
-                        <div className="space-y-3">
-                            <div>
-                                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">
-                                    E-posta
-                                </p>
-                                <p className="text-sm font-medium">{userEmail}</p>
-                                <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                                    Giriş yapmak için bu e-postayı kullanın. Bildirimler de bu adrese gönderilir.
-                                </p>
+                    {/* Profile Header */}
+                    <div className="flex items-center gap-5 mb-12">
+                        <div className="h-16 w-16 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center flex-shrink-0">
+                            {profile?.avatar_url ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img src={profile.avatar_url} alt="Avatar" className="h-full w-full object-cover rounded-full" />
+                            ) : (
+                                <User className="h-7 w-7 text-gray-400 dark:text-gray-500" />
+                            )}
+                        </div>
+                        <div>
+                            <div className="flex items-center gap-2.5 mb-1">
+                                <h1 className="text-2xl font-bold">{displayName}</h1>
+                                {isPremium && (
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#8080FF]/10 text-[#8080FF] dark:bg-[#8080FF]/20">
+                                        Plus
+                                    </span>
+                                )}
                             </div>
-                            <div className="pt-3 border-t border-gray-200 dark:border-gray-800">
-                                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">
-                                    Hesap ID
-                                </p>
-                                <p className="text-sm font-mono">{accountId}</p>
-                            </div>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{userEmail}</p>
                         </div>
                     </div>
 
-                    {/* Subscription & Billing Card */}
-                    <div className={cn("antialiased body bg-muted border border-border rounded", componentPadding.md)}>
-                        <h2 className="text-lg font-semibold mb-4">Abonelik & Faturalama</h2>
-
-                        <div className="space-y-4">
-                            {/* Current Plan */}
-                            <div>
-                                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-2">
-                                    Erişiminiz
-                                </p>
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <span className={cn(
-                                                "inline-flex items-center gap-1.5 rounded-full text-xs font-bold tracking-wider",
-                                                badgeTokens.padding,
-                                                isPremium
-                                                    ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800"
-                                                    : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600"
-                                            )}>
-                                                {isPremium ? "Premium" : "Standart"}
-                                            </span>
-                                        </div>
-                                        <p className="text-sm font-medium">
-                                            {isPremium ? "Scrolli Premium" : "Scrolli Standart"}
-                                        </p>
-                                    </div>
-                                    {!isPremium && (
-                                        <Link href="/pricing">
-                                            <Button
-                                                size="sm"
-                                                className="h-8 text-xs font-semibold"
-                                            >
-                                                Premium'a Geç
-                                            </Button>
-                                        </Link>
-                                    )}
+                    {/* Account Info */}
+                    <section className="mb-10">
+                        <h2 className="text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-4">
+                            Hesap Bilgileri
+                        </h2>
+                        <div className="rounded-xl border border-gray-200/80 dark:border-gray-700/60 overflow-hidden">
+                            <div className="flex items-center gap-4 px-5 py-4 border-b border-gray-100 dark:border-gray-800/60">
+                                <Mail className="h-4 w-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
+                                <div className="min-w-0">
+                                    <p className="text-[13px] text-gray-500 dark:text-gray-400">E-posta</p>
+                                    <p className="text-sm font-medium truncate">{userEmail}</p>
                                 </div>
                             </div>
+                            <div className="flex items-center gap-4 px-5 py-4">
+                                <Hash className="h-4 w-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
+                                <div className="min-w-0">
+                                    <p className="text-[13px] text-gray-500 dark:text-gray-400">Hesap ID</p>
+                                    <p className="text-sm font-mono font-medium">{accountId}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
 
-                            {/* Next Bill Date (only for premium) */}
+                    {/* Subscription */}
+                    <section className="mb-10">
+                        <h2 className="text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-4">
+                            Abonelik
+                        </h2>
+                        <div className="rounded-xl border border-gray-200/80 dark:border-gray-700/60 overflow-hidden">
+                            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-800/60">
+                                <div className="flex items-center gap-4">
+                                    <Crown className={cn("h-4 w-4 flex-shrink-0", isPremium ? "text-[#8080FF]" : "text-gray-400 dark:text-gray-500")} />
+                                    <div>
+                                        <p className="text-[13px] text-gray-500 dark:text-gray-400">Mevcut Plan</p>
+                                        <p className="text-sm font-medium">
+                                            {isPremium ? "Scrolli Plus" : "Scrolli Standart"}
+                                        </p>
+                                    </div>
+                                </div>
+                                {!isPremium && (
+                                    <Link href="/pricing">
+                                        <Button size="sm" className="h-8 text-xs font-semibold rounded-lg">
+                                            Yükselt
+                                        </Button>
+                                    </Link>
+                                )}
+                            </div>
+
                             {isPremium && (
-                                <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
-                                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 tracking-wide mb-1">
-                                        Sonraki Fatura
-                                    </p>
-                                    <p className="text-sm">
-                                        €{isPremium ? "60" : "0"} - {formattedDate}
-                                    </p>
+                                <div className="flex items-center gap-4 px-5 py-4 border-b border-gray-100 dark:border-gray-800/60">
+                                    <CreditCard className="h-4 w-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
+                                    <div>
+                                        <p className="text-[13px] text-gray-500 dark:text-gray-400">Sonraki Fatura</p>
+                                        <p className="text-sm font-medium">€60 · {formattedDate}</p>
+                                    </div>
                                 </div>
                             )}
 
-                            {/* Manage Subscription */}
-                            <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
+                            <div className="px-5 py-4">
                                 <Link href="/pricing">
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        className="h-8 text-xs font-semibold"
+                                        className="h-8 text-xs font-semibold rounded-lg"
                                     >
-                                        {isPremium ? "Aboneliği Yönet veya İptal Et" : "Paketi Yükselt"}
+                                        {isPremium ? "Aboneliği Yönet" : "Planları Gör"}
                                     </Button>
                                 </Link>
                             </div>
                         </div>
-                    </div>
+                    </section>
 
-                    {/* Benefits Card */}
+                    {/* Benefits (Premium only) */}
                     {isPremium && (
-                        <div className={cn("antialiased body bg-muted border border-border rounded", componentPadding.md)}>
-                            <h2 className="text-lg font-semibold mb-4">Avantajlarınızı Keşfedin</h2>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                Aboneliğiniz size ekstra erişim ve ayrıcalıklar sağlar.
-                            </p>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {[
-                                    "Sınırsız Premium içerik",
-                                    "Reklamsız deneyim",
-                                    "Özel bültenler",
-                                    "AI analiz araçları",
-                                    "Öncelikli destek",
-                                    "Özel etkinliklere erişim",
-                                ].map((benefit, index) => (
-                                    <div key={index} className="flex items-start gap-2">
-                                        <svg
-                                            className="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0"
-                                            fill="none"
-                                            viewBox="0 0 24 24"
-                                            stroke="currentColor"
+                        <section className="mb-10">
+                            <h2 className="text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-4">
+                                Avantajlarınız
+                            </h2>
+                            <div className="rounded-xl border border-gray-200/80 dark:border-gray-700/60 overflow-hidden">
+                                <div className="grid grid-cols-1 sm:grid-cols-2">
+                                    {benefits.map((benefit, index) => (
+                                        <div
+                                            key={index}
+                                            className={cn(
+                                                "flex items-center gap-3 px-5 py-3.5",
+                                                index < benefits.length - (benefits.length % 2 === 0 ? 2 : 1) && "border-b border-gray-100 dark:border-gray-800/60",
+                                                index % 2 === 0 && "sm:border-r sm:border-r-gray-100 sm:dark:border-r-gray-800/60"
+                                            )}
                                         >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M5 13l4 4L19 7"
-                                            />
-                                        </svg>
-                                        <p className="text-sm text-gray-700 dark:text-gray-300">{benefit}</p>
-                                    </div>
-                                ))}
+                                            <benefit.icon className="h-4 w-4 text-[#8080FF] flex-shrink-0" />
+                                            <span className="text-sm">{benefit.label}</span>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        </section>
                     )}
 
-                    {/* Upgrade CTA (for non-premium users) */}
+                    {/* Upgrade CTA (non-premium) */}
                     {!isPremium && (
-                        <div className="antialiased body bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border border-green-200 dark:border-green-800 rounded p-4 md:p-6 lg:p-8">
-                            <h2 className="text-lg font-semibold mb-2">Premium'a Geçin</h2>
-                            <p className="text-sm text-gray-700 dark:text-gray-300 mb-4">
-                                Sınırsız içerik, özel bültenler ve reklamsız deneyim.
-                            </p>
-                            <Link href="/pricing">
-                                <Button
-                                    className="bg-green-600 hover:bg-green-700 text-white"
-                                >
-                                    Hemen Yükselt
-                                </Button>
-                            </Link>
-                        </div>
+                        <section className="mb-10">
+                            <div className="rounded-xl bg-gradient-to-br from-[#8080FF]/5 to-[#8080FF]/10 dark:from-[#8080FF]/10 dark:to-[#8080FF]/5 border border-[#8080FF]/20 p-6">
+                                <div className="flex items-start gap-4">
+                                    <div className="h-10 w-10 rounded-xl bg-[#8080FF]/10 flex items-center justify-center flex-shrink-0">
+                                        <Star className="h-5 w-5 text-[#8080FF]" />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-base font-semibold mb-1">Scrolli Plus&apos;a Geçin</h3>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                                            Sınırsız içerik, özel bültenler ve reklamsız deneyim.
+                                        </p>
+                                        <Link href="/pricing">
+                                            <Button size="sm" className="h-9 text-xs font-semibold rounded-lg">
+                                                Hemen Yükselt
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     )}
 
                     {/* Sign Out */}
-                    <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
-                        <Button
-                            variant="outline"
+                    <div className="pt-6 border-t border-gray-200/60 dark:border-gray-800/60">
+                        <button
                             onClick={async () => {
                                 await signOut();
                                 router.replace("/");
                             }}
-                            className="text-red-600 dark:text-red-400 border-red-200 dark:border-red-800 hover:bg-red-50 dark:hover:bg-red-900/20"
+                            className="flex items-center gap-2.5 text-sm text-red-500 dark:text-red-400 hover:opacity-70 transition-opacity"
                         >
-                            Çıkış Yap
-                        </Button>
+                            <LogOut className="h-4 w-4" />
+                            <span>Çıkış Yap</span>
+                        </button>
                     </div>
                 </main>
             </div>

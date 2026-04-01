@@ -20,7 +20,6 @@ import { Heading, Text } from "@/components/ui/typography";
 import { Container } from "@/components/responsive";
 import { getAuthorName } from '@/lib/author-loader';
 
-import { FreeContentBadgeIcon, PremiumContentBadgeIcon } from "@/components/icons/scrolli-icons";
 
 export default function Section1() {
   const { Culture } = blogData;
@@ -47,13 +46,6 @@ export default function Section1() {
                       className="w-full h-auto object-cover rounded-lg"
                     />
                   </Link>
-                  <div className="absolute top-2 right-2 z-10 pointer-events-none">
-                    {(Culture.mainArticle as any).isPremium ? (
-                      <PremiumContentBadgeIcon size={24} className="drop-shadow-md" />
-                    ) : (
-                      <FreeContentBadgeIcon size={24} className="drop-shadow-md" />
-                    )}
-                  </div>
                 </figure>
                 <Heading level={1} variant="h1" className="mb-4">
                   <Link href={`/${Culture.mainArticle.id}`} className={cn(colors.foreground.interactive, "hover:underline", transition.normal)}>
@@ -151,13 +143,6 @@ export default function Section1() {
                           backgroundImage: `url(${article.image})`,
                         }}
                       />
-                      <div className="absolute top-2 right-2 z-10 pointer-events-none">
-                        {(article as any).isPremium ? (
-                          <PremiumContentBadgeIcon size={20} className="drop-shadow-md" />
-                        ) : (
-                          <FreeContentBadgeIcon size={20} className="drop-shadow-md" />
-                        )}
-                      </div>
                     </div>
                   </article>
                 ))}
@@ -179,13 +164,6 @@ export default function Section1() {
                             sizes="(max-width: 768px) 100vw, 190px"
                           />
                         </Link>
-                        <div className="absolute top-2 right-2 z-10 pointer-events-none">
-                          {(article as any).isPremium ? (
-                            <PremiumContentBadgeIcon size={20} className="drop-shadow-md" />
-                          ) : (
-                            <FreeContentBadgeIcon size={20} className="drop-shadow-md" />
-                          )}
-                        </div>
                       </figure>
                       <div className={cn("flex-1 min-w-0 flex flex-col justify-center")}>
                         <Heading level={5} variant="h6" className="mb-2">

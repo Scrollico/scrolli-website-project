@@ -16,7 +16,6 @@ import {
 } from '@/lib/design-tokens'
 import { cn } from '@/lib/utils'
 
-import { PremiumContentBadgeIcon } from "@/components/icons/scrolli-icons";
 
 interface Section1Props {
   searchQuery: string;
@@ -173,7 +172,6 @@ export default function Section1({ searchQuery: initialQuery }: Section1Props) {
                             {article.isPremium && (
                               <div className="absolute top-3 right-3 z-10">
                                 <span className="flex items-center gap-1.5 bg-gray-900/90 backdrop-blur-sm text-amber-400 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
-                                  <PremiumContentBadgeIcon size={14} />
                                   <span>PREMIUM</span>
                                 </span>
                               </div>

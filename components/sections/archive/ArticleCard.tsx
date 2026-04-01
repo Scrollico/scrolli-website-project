@@ -14,7 +14,6 @@ import {
 } from "@/lib/design-tokens";
 import ArticleMeta from "./ArticleMeta";
 
-import { FreeContentBadgeIcon, PremiumContentBadgeIcon } from "@/components/icons/scrolli-icons";
 
 interface ArticleCardProps {
    id: string;
@@ -58,14 +57,6 @@ export default function ArticleCard({ id, title, excerpt, image, author, categor
                className="object-cover transition-transform duration-500 group-hover:scale-105"
                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
-            {/* Content Badge (Free/Premium) */}
-            <div className="absolute top-2 right-2 z-10 pointer-events-none">
-               {isPremium ? (
-                  <PremiumContentBadgeIcon size={24} className="drop-shadow-md" />
-               ) : (
-                  <FreeContentBadgeIcon size={24} className="drop-shadow-md" />
-               )}
-            </div>
          </Link>
 
          <div className={cn("flex flex-col flex-grow", gap.xs)}>

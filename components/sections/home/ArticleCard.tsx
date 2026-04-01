@@ -7,7 +7,6 @@ import { colors, interactions, componentPadding, gap } from "@/lib/design-tokens
 import { Heading, Text, Caption } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
 
-import { FreeContentBadgeIcon, PremiumContentBadgeIcon } from "@/components/icons/scrolli-icons";
 
 interface Article {
   id: string;
@@ -163,14 +162,6 @@ export default function ArticleCard({
           )}
         </Link>
 
-        {/* Content Badge (Free/Premium) */}
-        <div className="absolute top-2 right-2 z-10 pointer-events-none">
-          {isPremium ? (
-            <PremiumContentBadgeIcon size={24} className="drop-shadow-md" />
-          ) : (
-            <FreeContentBadgeIcon size={24} className="drop-shadow-md" />
-          )}
-        </div>
       </figure>
     </article>
   );

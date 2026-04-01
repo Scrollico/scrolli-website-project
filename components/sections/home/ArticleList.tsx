@@ -59,7 +59,7 @@ export default function ArticleList({ articles = [], authors = [] }: ArticleList
           {/* Article Content */}
           <div className="flex-1 flex flex-col min-w-0 p-3 sm:py-2 sm:pr-3 sm:pl-0">
             {/* Category Badge - always rendered for consistent spacing */}
-            <div className="min-h-[24px] mb-1">
+            <div className="min-h-[24px] mb-2.5">
               {article.category && (
                 <Badge className="tracking-wide border-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300">
                   {article.category}

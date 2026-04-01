@@ -6,7 +6,7 @@ import { useTranslation } from "@/components/providers/translation-provider";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
-import { colors, gap, componentPadding } from "@/lib/design-tokens";
+import { colors, gap, componentPadding, neumorphicShadow } from "@/lib/design-tokens";
 import { User, LogOut, Sun, Moon, Monitor, ChevronDown } from "lucide-react";
 import {
   DropdownMenu,
@@ -67,9 +67,16 @@ export function UserMenu() {
         <Button asChild variant="ghost" size="sm" className="hidden sm:flex">
           <Link href="/sign-in">{t('signIn', 'Sign in')}</Link>
         </Button>
-        <Button asChild variant="default" size="sm" className="bg-[#374152] text-white dark:bg-[#F8F5E4] dark:text-gray-900">
-          <Link href="/pricing">{t('subscribe', 'Subscribe')}</Link>
-        </Button>
+        <Link
+          href="/pricing"
+          className={cn(
+            "inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium h-8 px-3",
+            "no-underline transition-opacity duration-200 hover:opacity-80",
+            isDark ? "bg-[#F8F5E4] text-gray-900" : "bg-gray-700 text-white"
+          )}
+        >
+          {t('subscribe', 'Subscribe')}
+        </Link>
       </div>
     );
   }
@@ -88,35 +95,7 @@ export function UserMenu() {
             background: isDark
               ? 'radial-gradient(ellipse at top left, #1e293b 0%, #0f172a 40%, #020617 100%)'
               : 'radial-gradient(ellipse at top left, #ffffff 0%, #f1f5f9 40%, #cbd5e1 100%)',
-            boxShadow: isDark
-              ? `
-                inset 5px 5px 12px rgba(0, 0, 0, 0.9),
-                inset -5px -5px 12px rgba(71, 85, 105, 0.4),
-                inset 8px 8px 16px rgba(0, 0, 0, 0.7),
-                inset -8px -8px 16px rgba(100, 116, 139, 0.2),
-                inset 0 2px 4px rgba(0, 0, 0, 1),
-                inset 0 -2px 4px rgba(71, 85, 105, 0.4),
-                inset 0 0 20px rgba(0, 0, 0, 0.6),
-                0 1px 1px rgba(255, 255, 255, 0.05),
-                0 2px 4px rgba(0, 0, 0, 0.4),
-                0 8px 16px rgba(0, 0, 0, 0.4),
-                0 16px 32px rgba(0, 0, 0, 0.3),
-                0 24px 48px rgba(0, 0, 0, 0.2)
-              `
-              : `
-                inset 5px 5px 12px rgba(148, 163, 184, 0.5),
-                inset -5px -5px 12px rgba(255, 255, 255, 1),
-                inset 8px 8px 16px rgba(100, 116, 139, 0.3),
-                inset -8px -8px 16px rgba(255, 255, 255, 0.9),
-                inset 0 2px 4px rgba(148, 163, 184, 0.4),
-                inset 0 -2px 4px rgba(255, 255, 255, 1),
-                inset 0 0 20px rgba(203, 213, 225, 0.3),
-                0 1px 2px rgba(255, 255, 255, 1),
-                0 2px 4px rgba(0, 0, 0, 0.1),
-                0 8px 16px rgba(0, 0, 0, 0.08),
-                0 16px 32px rgba(0, 0, 0, 0.06),
-                0 24px 48px rgba(0, 0, 0, 0.04)
-              `,
+            boxShadow: isDark ? neumorphicShadow.dark : neumorphicShadow.light,
             border: isDark
               ? '2px solid rgba(51, 65, 85, 0.6)'
               : '2px solid rgba(203, 213, 225, 0.6)',
@@ -169,177 +148,170 @@ export function UserMenu() {
 
       <DropdownMenuContent
         className={cn(
-          "min-w-[240px]",
-          componentPadding.xs,
+          "min-w-[260px]",
+          "p-2",
           colors.background.elevated,
-          colors.border.DEFAULT,
+          "border border-gray-200/80 dark:border-gray-700/80",
           colors.foreground.primary,
-          "shadow-lg rounded-md"
+          "shadow-xl rounded-xl"
         )}
         align="end"
-        sideOffset={8}
+        sideOffset={10}
       >
-        {/* User Info Header - WordPress.com style */}
-        <div className={cn("px-3 py-2.5 border-b", colors.border.DEFAULT)}>
-          <div className={cn("flex flex-col", gap.xs)}>
-            {isPremium && (
-              <span
-                className={cn(
-                  "inline-flex items-center gap-1 pl-0 pr-2.5 pt-0.5 pb-0 rounded-full text-[10px] font-bold tracking-wider w-fit -mt-0.5",
-                  "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400",
-                  "border border-green-200 dark:border-green-800"
-                )}
+        {/* User Info Header */}
+        <div className="px-3 pt-3 pb-4">
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-2">
+              <Text
+                variant="bodySmall"
+                className={cn("font-semibold truncate block text-[15px]", colors.foreground.primary)}
               >
-                Premium
-              </span>
-            )}
-            <Text
-              variant="bodySmall"
-              className={cn("font-semibold truncate block text-sm", colors.foreground.primary)}
-            >
-              {profile?.full_name || user.email?.split("@")[0]}
-            </Text>
+                {profile?.full_name || user.email?.split("@")[0]}
+              </Text>
+              {isPremium && (
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#8080FF]/10 text-[#8080FF] dark:bg-[#8080FF]/20">
+                  Plus
+                </span>
+              )}
+            </div>
             <Text
               variant="caption"
-              className={cn("truncate block text-xs", colors.foreground.secondary)}
+              className={cn("truncate block text-[13px]", colors.foreground.muted)}
             >
               {user.email}
             </Text>
           </div>
         </div>
 
-        {/* Account Section */}
-        <DropdownMenuLabel className={cn("px-3 py-2 text-xs font-bold tracking-wider", colors.foreground.muted)}>
-          Hesap
-        </DropdownMenuLabel>
+        <DropdownMenuSeparator className="mx-1 bg-gray-200/60 dark:bg-gray-700/60" />
 
-        <DropdownMenuGroup>
+        {/* Account Section */}
+        <div className="py-1.5">
           <DropdownMenuItem asChild>
             <Link
               href="/profile"
               className={cn(
-                "flex items-center gap-2.5 px-3 py-2 cursor-pointer w-full",
-                "text-sm",
+                "flex items-center gap-3 px-3 py-2.5 cursor-pointer w-full",
+                "text-[13px]",
                 colors.foreground.primary,
-                "hover:bg-gray-50 dark:hover:bg-white/5",
-                "transition-colors rounded-sm"
+                "hover:bg-gray-100/80 dark:hover:bg-white/5",
+                "transition-colors rounded-lg"
               )}
             >
-              <User className={cn("h-4 w-4", colors.foreground.secondary)} />
+              <User className="h-4 w-4 text-gray-400 dark:text-gray-500" />
               <span>Profilim</span>
             </Link>
           </DropdownMenuItem>
 
-          <DropdownMenuItem asChild>
-            <Link
-              href="/pricing"
-              className={cn(
-                "flex items-center gap-2.5 px-3 py-2 cursor-pointer w-full",
-                "text-sm",
-                colors.foreground.primary,
-                "hover:bg-gray-50 dark:hover:bg-white/5",
-                "transition-colors rounded-sm"
-              )}
-            >
-              <span>
-                {isPremium ? "Üyelik Yönetimi" : "Premium'a Geç"}
-              </span>
-            </Link>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
+          {!isPremium && (
+            <DropdownMenuItem asChild>
+              <Link
+                href="/pricing"
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2.5 cursor-pointer w-full",
+                  "text-[13px]",
+                  "text-[#8080FF]",
+                  "hover:bg-gray-100/80 dark:hover:bg-white/5",
+                  "transition-colors rounded-lg"
+                )}
+              >
+                <svg className="h-4 w-4" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <span>Premium&apos;a Geç</span>
+              </Link>
+            </DropdownMenuItem>
+          )}
+        </div>
 
-        <DropdownMenuSeparator className="my-1" />
+        <DropdownMenuSeparator className="mx-1 bg-gray-200/60 dark:bg-gray-700/60" />
 
-        {/* Preferences Section */}
-        <DropdownMenuLabel className={cn("px-3 py-2 text-xs font-bold tracking-wider", colors.foreground.muted)}>
-          Tercihler
-        </DropdownMenuLabel>
-
-        {/* Theme Submenu - Simplified */}
-        <DropdownMenuSub>
-          <DropdownMenuSubTrigger className={cn(
-            "flex items-center gap-2.5 px-3 py-2 cursor-pointer",
-            "text-sm",
-            colors.foreground.primary,
-            "hover:bg-gray-50 dark:hover:bg-white/5",
-            "transition-colors rounded-sm outline-none"
-          )}>
-            {isDark ? (
-              <Moon className={cn("h-4 w-4", colors.foreground.secondary)} />
-            ) : (
-              <Sun className={cn("h-4 w-4", colors.foreground.secondary)} />
-            )}
-            <span>Tema</span>
-          </DropdownMenuSubTrigger>
-          <DropdownMenuPortal>
-            <DropdownMenuSubContent className={cn(
-              "w-44",
-              componentPadding.xs,
-              colors.background.elevated,
-              colors.border.DEFAULT,
+        {/* Theme Submenu */}
+        <div className="py-1.5">
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger className={cn(
+              "flex items-center gap-3 px-3 py-2.5 cursor-pointer w-full",
+              "text-[13px]",
               colors.foreground.primary,
-              "shadow-lg rounded-md"
+              "hover:bg-gray-100/80 dark:hover:bg-white/5",
+              "transition-colors rounded-lg outline-none"
             )}>
-              <DropdownMenuRadioGroup value={resolvedTheme} onValueChange={setTheme}>
-                <DropdownMenuRadioItem
-                  value="light"
-                  className={cn(
-                    "flex items-center gap-2 px-3 py-2 cursor-pointer rounded-sm",
-                    "text-sm",
-                    colors.foreground.primary,
-                    "hover:bg-gray-50 dark:hover:bg-white/5"
-                  )}
-                >
-                  <Sun className="h-4 w-4 text-amber-500" />
-                  <span>Aydınlık</span>
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem
-                  value="dark"
-                  className={cn(
-                    "flex items-center gap-2 px-3 py-2 cursor-pointer rounded-sm",
-                    "text-sm",
-                    colors.foreground.primary,
-                    "hover:bg-gray-50 dark:hover:bg-white/5"
-                  )}
-                >
-                  <Moon className="h-4 w-4 text-indigo-500" />
-                  <span>Karanlık</span>
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem
-                  value="system"
-                  className={cn(
-                    "flex items-center gap-2 px-3 py-2 cursor-pointer rounded-sm",
-                    "text-sm",
-                    colors.foreground.primary,
-                    "hover:bg-gray-50 dark:hover:bg-white/5"
-                  )}
-                >
-                  <Monitor className={cn("h-4 w-4", colors.foreground.secondary)} />
-                  <span>Sistem</span>
-                </DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuSubContent>
-          </DropdownMenuPortal>
-        </DropdownMenuSub>
+              {isDark ? (
+                <Moon className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+              ) : (
+                <Sun className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+              )}
+              <span>Tema</span>
+            </DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+              <DropdownMenuSubContent className={cn(
+                "w-44 p-1.5",
+                colors.background.elevated,
+                "border border-gray-200/80 dark:border-gray-700/80",
+                colors.foreground.primary,
+                "shadow-xl rounded-xl"
+              )}>
+                <DropdownMenuRadioGroup value={resolvedTheme} onValueChange={setTheme}>
+                  <DropdownMenuRadioItem
+                    value="light"
+                    className={cn(
+                      "flex items-center gap-2.5 px-3 py-2 cursor-pointer rounded-lg",
+                      "text-[13px]",
+                      colors.foreground.primary,
+                      "hover:bg-gray-100/80 dark:hover:bg-white/5"
+                    )}
+                  >
+                    <Sun className="h-4 w-4 text-amber-500" />
+                    <span>Aydınlık</span>
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem
+                    value="dark"
+                    className={cn(
+                      "flex items-center gap-2.5 px-3 py-2 cursor-pointer rounded-lg",
+                      "text-[13px]",
+                      colors.foreground.primary,
+                      "hover:bg-gray-100/80 dark:hover:bg-white/5"
+                    )}
+                  >
+                    <Moon className="h-4 w-4 text-indigo-500" />
+                    <span>Karanlık</span>
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem
+                    value="system"
+                    className={cn(
+                      "flex items-center gap-2.5 px-3 py-2 cursor-pointer rounded-lg",
+                      "text-[13px]",
+                      colors.foreground.primary,
+                      "hover:bg-gray-100/80 dark:hover:bg-white/5"
+                    )}
+                  >
+                    <Monitor className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+                    <span>Sistem</span>
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+          </DropdownMenuSub>
+        </div>
 
-        <DropdownMenuSeparator className="my-1" />
+        <DropdownMenuSeparator className="mx-1 bg-gray-200/60 dark:bg-gray-700/60" />
 
         {/* Logout */}
-        <DropdownMenuItem
-          onSelect={(e) => {
-            e.preventDefault();
-            handleSignOut();
-          }}
-          className={cn(
-            "flex items-center gap-2.5 px-3 py-2 cursor-pointer",
-            "text-sm text-red-600 dark:text-red-400",
-            "hover:bg-red-50 dark:hover:bg-red-900/20",
-            "transition-colors rounded-sm"
-          )}
-        >
-          <LogOut className="h-4 w-4" />
-          <span>Çıkış Yap</span>
-        </DropdownMenuItem>
+        <div className="py-1.5">
+          <DropdownMenuItem
+            onSelect={(e) => {
+              e.preventDefault();
+              handleSignOut();
+            }}
+            className={cn(
+              "flex items-center gap-3 px-3 py-2.5 cursor-pointer",
+              "text-[13px] text-red-500 dark:text-red-400",
+              "hover:bg-red-50/80 dark:hover:bg-red-900/15",
+              "transition-colors rounded-lg"
+            )}
+          >
+            <LogOut className="h-4 w-4" />
+            <span>Çıkış Yap</span>
+          </DropdownMenuItem>
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );

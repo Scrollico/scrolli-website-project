@@ -12,6 +12,7 @@ import {
   gap,
   componentPadding,
   interactions,
+  accentColor,
 } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
@@ -104,21 +105,21 @@ export default function NewsletterSignup() {
 
   return (
     <div className={cn(
-      "w-full rounded-2xl p-6",
+      "w-full rounded-2xl",
       "bg-gray-100/80 dark:bg-gray-900/80",
       "backdrop-blur-md",
       "border border-gray-200/50 dark:border-gray-800/50",
-      componentPadding.sm,
+      componentPadding.md,
       "flex flex-col",
       gap.md
     )}>
       {/* Header */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-start gap-2">
         <NewsletterIcon
           size={20}
           className={cn(
-            "flex-shrink-0",
-            "text-[#8080FF]"
+            "flex-shrink-0 mt-0.5",
+            accentColor.primary
           )}
         />
         <Heading
@@ -131,29 +132,24 @@ export default function NewsletterSignup() {
       </div>
 
       {/* Email Form */}
-      <form onSubmit={handleSubmit} className={cn("flex flex-col sm:flex-row items-end", gap.sm)}>
-        <div className="flex-1 w-full">
-          <Input
-            type="email"
-            placeholder="E-posta adresi"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className={cn(
-              "w-full h-10",
-              colors.background.base,
-              colors.border.DEFAULT
-            )}
-          />
-        </div>
+      <form onSubmit={handleSubmit} className={cn("flex flex-col", gap.sm)}>
+        <Input
+          type="email"
+          placeholder="E-posta adresi"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className={cn(
+            "w-full h-10",
+            "bg-white dark:bg-gray-800",
+            "border border-gray-300 dark:border-gray-600"
+          )}
+        />
         <SmartButton
           type="submit"
           disabled={isSubmitting || selectedBriefings.length === 0}
           size="default"
-          className={cn(
-            "h-10 whitespace-nowrap w-full sm:w-auto flex-shrink-0",
-            selectedBriefings.length > 0 && "min-w-[100px]"
-          )}
+          className="h-10 w-full"
         >
           {isSubmitting
             ? "Abone olunuyor..."
@@ -168,8 +164,7 @@ export default function NewsletterSignup() {
         className={cn(
           "border-t border-dotted",
           colors.border.light,
-          "border-gray-300 dark:border-gray-700",
-          "mt-2 mb-2"
+          "border-gray-300 dark:border-gray-700"
         )}
       />
 
@@ -191,20 +186,22 @@ export default function NewsletterSignup() {
               )}
 
               {/* Briefing Item */}
-              <div
+              <button
+                type="button"
                 className={cn(
-                  "flex items-start gap-3 cursor-pointer py-2",
+                  "flex items-start gap-3 w-full text-left py-2",
                 )}
                 onClick={() => handleBriefingToggle(briefing.id)}
+                aria-pressed={selectedBriefings.includes(briefing.id)}
               >
                 {/* Checkbox - Bigger with Thick Border on Hover */}
-                <div className="flex-shrink-0 pt-0.5">
+                <div className="flex-shrink-0 pt-1">
                   <Checkbox
                     checked={isSelected}
                     onCheckedChange={() => handleBriefingToggle(briefing.id)}
                     className={cn(
                       "h-5 w-5 [&>svg]:h-4 [&>svg]:w-4 pointer-events-none",
-                      // Custom Periwinkle Styling (#8080FF Selection)
+                      // Accent color: accentColor.raw (#8080FF) — static strings required for Tailwind JIT scanning
                       "data-[state=checked]:!bg-[#8080FF] data-[state=checked]:!border-[#8080FF]",
                       "data-[state=checked]:!text-white",
                       "dark:data-[state=checked]:!bg-[#8080FF] dark:data-[state=checked]:!border-[#8080FF]",
@@ -262,7 +259,7 @@ export default function NewsletterSignup() {
                     </Link>
                   </div>
                 </div>
-              </div>
+              </button>
             </div>
           );
         })}

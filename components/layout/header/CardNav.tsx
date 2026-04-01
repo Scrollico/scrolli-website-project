@@ -3,15 +3,14 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import Link from 'next/link';
-import { SearchIcon, CloseIcon, TurkishFlagIcon, EnglishFlagIcon } from '@/components/icons/scrolli-icons';
+import { TurkishFlagIcon, EnglishFlagIcon } from '@/components/icons/scrolli-icons';
 import { useTheme } from 'next-themes';
-import { motion, AnimatePresence } from 'framer-motion';
-import CityClockRow from './CityClockRow';
+import { motion } from 'framer-motion';
 import CinematicThemeSwitcher from '@/components/ui/cinematic-theme-switcher';
 import { UserMenu } from './UserMenu';
 import { NavbarUsageMeter } from '@/components/paywall';
 import { useLocale } from '@/components/providers/locale-provider';
-import { controlOnDarkValues, gap, componentPadding } from '@/lib/design-tokens';
+import { controlOnDarkValues, gap, componentPadding, neumorphicShadow, navGradient } from '@/lib/design-tokens';
 import { cn } from '@/lib/utils';
 import type { CategoryPreview } from './HeaderWrapper';
 
@@ -34,8 +33,6 @@ interface CardNavProps {
   logoAlt: string;
   logoText?: string;
   items: MenuItem[];
-  isSearch?: number | null;
-  handleSearch?: (key: number | null) => void;
   categoryPreviews?: CategoryPreview[];
 }
 
@@ -44,14 +41,12 @@ export default function CardNav({
   logoAlt,
   logoText,
   items,
-  handleSearch,
   categoryPreviews,
 }: CardNavProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [clickedItem, setClickedItem] = useState<string | null>(null);
   const [dropdownRect, setDropdownRect] = useState<{ top: number; left: number; width: number } | null>(null);
   const [mounted, setMounted] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const hikayeTriggerRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -105,20 +100,6 @@ export default function CardNav({
 
   // Only calculate isDark after hydration to prevent mismatch
   const isDark = mounted && (theme === 'dark' || resolvedTheme === 'dark');
-
-  const toggleSearch = () => {
-    setIsSearchOpen(!isSearchOpen);
-    if (handleSearch) {
-      handleSearch(isSearchOpen ? null : 1);
-    }
-  };
-
-  const closeSearch = () => {
-    setIsSearchOpen(false);
-    if (handleSearch) {
-      handleSearch(null);
-    }
-  };
 
   const toggleLanguage = () => {
     setLocale(locale === 'tr' ? 'en' : 'tr');
@@ -195,7 +176,7 @@ export default function CardNav({
                   className="block"
                   onClick={() => setClickedItem(null)}
                 >
-                  <div className="relative overflow-hidden rounded-xl mb-2.5" style={{ height: '172px' }}>
+                  <div className="relative overflow-hidden rounded-xl mb-2.5 h-[160px] md:h-[172px]">
                     {imgSrc ? (
                       <Image
                         src={imgSrc}
@@ -209,9 +190,7 @@ export default function CardNav({
                       <div
                         className="w-full h-full"
                         style={{
-                          background: isDark
-                            ? 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)'
-                            : 'linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)',
+                          background: isDark ? navGradient.dark : navGradient.light,
                         }}
                       />
                     )}
@@ -271,19 +250,12 @@ export default function CardNav({
                         </div>
                       )}
                     </>
-                  ) : (
-                    <p
-                      className="text-[11px] font-medium mb-2.5"
-                      style={{ color: isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.45)' }}
-                    >
-                      Hikayeleri keşfet
-                    </p>
-                  )}
+                  ) : null}
 
                   {/* Per-category "Tümünü Gör" — no background, plain text link */}
                   <Link
                     href={linkHref}
-                    className="mt-auto flex items-center gap-1 py-1 text-[10px] font-semibold uppercase tracking-wide transition-opacity duration-200 hover:opacity-60"
+                    className="mt-auto flex items-center gap-1 py-1 text-[10px] font-semibold tracking-wide transition-opacity duration-200 hover:opacity-60"
                     style={{ color: isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.40)' }}
                     onClick={() => setClickedItem(null)}
                   >
@@ -305,138 +277,6 @@ export default function CardNav({
     <nav className="card-nav" role="navigation" aria-label="Main navigation">
       {dropdownPanel}
       <div className="card-nav-container">
-        {/* Search - First position on left - Minimal with animation */}
-        {handleSearch && (
-          <div className="card-nav-search">
-            <motion.form
-              action="/search"
-              method="get"
-              className="card-nav-search-form pl-2 gap-2 border-0"
-              initial={false}
-              animate={{
-                width: isSearchOpen ? '280px' : '40px',
-              }}
-              transition={{
-                type: 'spring',
-                stiffness: 300,
-                damping: 30,
-              }}
-            >
-              <motion.button
-                type="button"
-                onClick={toggleSearch}
-                className="relative flex h-6 w-6 items-center justify-center rounded-full p-0.5 transition-all duration-300 focus:outline-none z-10"
-                whileTap={{ scale: 0.95 }}
-                aria-label={isSearchOpen ? 'Close search' : 'Open search'}
-                style={{
-                  background: isDark
-                    ? 'radial-gradient(ellipse at top left, #2d2d5f 0%, #0f172a 40%, #020617 100%)'
-                    : 'radial-gradient(ellipse at top left, #f5f6ff 0%, #f1f5f9 40%, #cbd5e1 100%)',
-                  boxShadow: isDark
-                    ? `
-                      inset 5px 5px 12px rgba(0, 0, 0, 0.9),
-                      inset -5px -5px 12px rgba(71, 85, 105, 0.4),
-                      inset 8px 8px 16px rgba(0, 0, 0, 0.7),
-                      inset -8px -8px 16px rgba(100, 116, 139, 0.2),
-                      inset 0 2px 4px rgba(0, 0, 0, 1),
-                      inset 0 -2px 4px rgba(71, 85, 105, 0.4),
-                      inset 0 0 20px rgba(0, 0, 0, 0.6),
-                      0 1px 1px rgba(255, 255, 255, 0.05),
-                      0 2px 4px rgba(0, 0, 0, 0.4),
-                      0 8px 16px rgba(0, 0, 0, 0.4),
-                      0 16px 32px rgba(0, 0, 0, 0.3),
-                      0 24px 48px rgba(0, 0, 0, 0.2)
-                    `
-                    : `
-                      inset 5px 5px 12px rgba(148, 163, 184, 0.5),
-                      inset -5px -5px 12px rgba(255, 255, 255, 1),
-                      inset 8px 8px 16px rgba(100, 116, 139, 0.3),
-                      inset -8px -8px 16px rgba(255, 255, 255, 0.9),
-                      inset 0 2px 4px rgba(148, 163, 184, 0.4),
-                      inset 0 -2px 4px rgba(255, 255, 255, 1),
-                      inset 0 0 20px rgba(203, 213, 225, 0.3),
-                      0 1px 2px rgba(255, 255, 255, 1),
-                      0 2px 4px rgba(0, 0, 0, 0.1),
-                      0 8px 16px rgba(0, 0, 0, 0.08),
-                      0 16px 32px rgba(0, 0, 0, 0.06),
-                      0 24px 48px rgba(0, 0, 0, 0.04)
-                    `,
-                  border: isDark
-                    ? '2px solid rgba(51, 65, 85, 0.6)'
-                    : '2px solid rgba(203, 213, 225, 0.6)',
-                }}
-              >
-                {/* Inner effects to match the cinematic look */}
-                <div
-                  className="absolute inset-[1px] rounded-full pointer-events-none"
-                  style={{
-                    boxShadow: isDark
-                      ? 'inset 0 2px 6px rgba(0, 0, 0, 0.9), inset 0 -1px 3px rgba(71, 85, 105, 0.3)'
-                      : 'inset 0 2px 6px rgba(100, 116, 139, 0.4), inset 0 -1px 3px rgba(255, 255, 255, 0.8)',
-                  }}
-                />
-                <div
-                  className="absolute inset-0 rounded-full pointer-events-none"
-                  style={{
-                    background: isDark
-                      ? `radial-gradient(ellipse at top, rgba(71, 85, 105, 0.15) 0%, transparent 50%), linear-gradient(to bottom, rgba(71, 85, 105, 0.2) 0%, transparent 30%, transparent 70%, rgba(0, 0, 0, 0.3) 100%)`
-                      : `radial-gradient(ellipse at top, rgba(255, 255, 255, 0.8) 0%, transparent 50%), linear-gradient(to bottom, rgba(255, 255, 255, 0.7) 0%, transparent 30%, transparent 70%, rgba(148, 163, 184, 0.15) 100%)`,
-                    mixBlendMode: 'overlay',
-                  }}
-                />
-
-                <AnimatePresence mode="wait">
-                  {isSearchOpen ? (
-                    <motion.div
-                      key="close"
-                      initial={{ opacity: 0, rotate: -90 }}
-                      animate={{ opacity: 1, rotate: 0 }}
-                      exit={{ opacity: 0, rotate: 90 }}
-                      transition={{ duration: 0.2 }}
-                      className="relative z-10"
-                    >
-                      <CloseIcon size={14} className={isDark ? "text-gray-900" : "text-gray-600"} />
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="search"
-                      initial={{ opacity: 0, rotate: 90 }}
-                      animate={{ opacity: 1, rotate: 0 }}
-                      exit={{ opacity: 0, rotate: -90 }}
-                      transition={{ duration: 0.2 }}
-                      className="relative z-10"
-                    >
-                      <SearchIcon size={14} className={isDark ? "text-gray-900" : "text-gray-600"} />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.button>
-
-              <AnimatePresence>
-                {isSearchOpen && (
-                  <motion.input
-                    type="text"
-                    className="card-nav-search-input"
-                    placeholder="Search..."
-                    name="q"
-                    autoFocus
-                    initial={{ opacity: 0, width: 0 }}
-                    animate={{ opacity: 1, width: 'auto' }}
-                    exit={{ opacity: 0, width: 0 }}
-                    transition={{ duration: 0.2 }}
-                    onBlur={(e) => {
-                      // Only close if clicking outside
-                      if (!e.currentTarget.value) {
-                        setTimeout(() => closeSearch(), 200);
-                      }
-                    }}
-                  />
-                )}
-              </AnimatePresence>
-            </motion.form>
-          </div>
-        )}
-
         {/* Logo - Fixed on Left */}
         <div className="card-nav-logo">
           <Link href="/" prefetch={true}>
@@ -458,23 +298,10 @@ export default function CardNav({
           </Link>
         </div>
 
-        {/* City Clocks - Moved to Left Side */}
-        <div className="card-nav-clocks-left">
-          <CityClockRow />
-        </div>
-
         {/* Menu Items - Centered */}
-        <motion.div
+        <div
           ref={menuRef}
           className={`card-nav-center-group${hoveredItem || clickedItem ? ' dropdown-open' : ''}`}
-          animate={{
-            x: isSearchOpen ? 120 : 0,
-          }}
-          transition={{
-            type: 'spring',
-            stiffness: 300,
-            damping: 30,
-          }}
         >
           <div className="card-nav-menu">
             {items.map((item) => {
@@ -576,7 +403,7 @@ export default function CardNav({
               );
             })}
           </div>
-        </motion.div>
+        </div>
 
         {/* Right Side Actions Group */}
         <div className="card-nav-right-group">
@@ -602,7 +429,7 @@ export default function CardNav({
 
               {/* Language Selector - Flag Toggle */}
               <motion.button
-                className="relative ml-2 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full p-0 transition-all duration-300 focus:outline-none"
+                className="relative ml-2 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full p-0 transition-all duration-300 focus:outline-none"
                 onClick={toggleLanguage}
                 aria-label={`Switch to ${locale === 'tr' ? 'English' : 'Turkish'}`}
                 whileTap={{ scale: 0.95 }}
@@ -610,35 +437,7 @@ export default function CardNav({
                   background: isDark
                     ? controlOnDarkValues.bg
                     : 'radial-gradient(ellipse at top left, #ffffff 0%, #f1f5f9 40%, #cbd5e1 100%)',
-                  boxShadow: isDark
-                    ? `
-                      inset 5px 5px 12px rgba(0, 0, 0, 0.9),
-                      inset -5px -5px 12px rgba(71, 85, 105, 0.4),
-                      inset 8px 8px 16px rgba(0, 0, 0, 0.7),
-                      inset -8px -8px 16px rgba(100, 116, 139, 0.2),
-                      inset 0 2px 4px rgba(0, 0, 0, 1),
-                      inset 0 -2px 4px rgba(71, 85, 105, 0.4),
-                      inset 0 0 20px rgba(0, 0, 0, 0.6),
-                      0 1px 1px rgba(255, 255, 255, 0.05),
-                      0 2px 4px rgba(0, 0, 0, 0.4),
-                      0 8px 16px rgba(0, 0, 0, 0.4),
-                      0 16px 32px rgba(0, 0, 0, 0.3),
-                      0 24px 48px rgba(0, 0, 0, 0.2)
-                    `
-                    : `
-                      inset 5px 5px 12px rgba(148, 163, 184, 0.5),
-                      inset -5px -5px 12px rgba(255, 255, 255, 1),
-                      inset 8px 8px 16px rgba(100, 116, 139, 0.3),
-                      inset -8px -8px 16px rgba(255, 255, 255, 0.9),
-                      inset 0 2px 4px rgba(148, 163, 184, 0.4),
-                      inset 0 -2px 4px rgba(255, 255, 255, 1),
-                      inset 0 0 20px rgba(203, 213, 225, 0.3),
-                      0 1px 2px rgba(255, 255, 255, 1),
-                      0 2px 4px rgba(0, 0, 0, 0.1),
-                      0 8px 16px rgba(0, 0, 0, 0.08),
-                      0 16px 32px rgba(0, 0, 0, 0.06),
-                      0 24px 48px rgba(0, 0, 0, 0.04)
-                    `,
+                  boxShadow: isDark ? neumorphicShadow.dark : neumorphicShadow.light,
                   border: isDark
                     ? '2px solid rgba(51, 65, 85, 0.6)'
                     : '2px solid rgba(203, 213, 225, 0.6)',
