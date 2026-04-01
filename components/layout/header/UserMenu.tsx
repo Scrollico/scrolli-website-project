@@ -6,14 +6,12 @@ import { useTranslation } from "@/components/providers/translation-provider";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/typography";
 import { cn } from "@/lib/utils";
-import { colors, gap, componentPadding, neumorphicShadow } from "@/lib/design-tokens";
+import { colors, gap, neumorphicShadow } from "@/lib/design-tokens";
 import { User, LogOut, Sun, Moon, Monitor, ChevronDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuPortal,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,

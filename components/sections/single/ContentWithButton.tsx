@@ -2,9 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import FollowButton from '@/components/ui/follow-button';
 import ScrolliPremiumBanner from '@/components/sections/home/ScrolliPremiumBanner';
-import ArticleNewsletterBanner from './ArticleNewsletterBanner';
 import { useAuth } from '@/components/providers/auth-provider';
 import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
@@ -20,10 +18,7 @@ interface ContentWithButtonProps {
 export default function ContentWithButton({ content, className, isPaywalled = false, articleId }: ContentWithButtonProps) {
   const [splitContent, setSplitContent] = useState<{ firstHalf: string; secondHalf: string } | null>(null);
   const [isProcessing, setIsProcessing] = useState(true);
-  const [showPremiumBanner, setShowPremiumBanner] = useState(false);
-  const [showPaywall, setShowPaywall] = useState(false);
   const [shouldShowPaywall, setShouldShowPaywall] = useState(false);
-  const [hasRedeemedGift, setHasRedeemedGift] = useState(false);
   const { isPremium, user } = useAuth();
   const supabase = createClient();
   const searchParams = useSearchParams();
@@ -81,13 +76,12 @@ export default function ContentWithButton({ content, className, isPaywalled = fa
           // Check localStorage first (set when gift is redeemed)
           const redeemedGifts = JSON.parse(localStorage.getItem("redeemedGifts") || "[]");
           if (redeemedGifts.includes(articleId)) {
-            setHasRedeemedGift(true);
             setShouldShowPaywall(false);
             return;
           }
 
           // If redeemed=true in URL, also check database for recently redeemed gifts
-          if (redeemed) {
+          if (redeemed && supabase) {
             const { data: redeemedGift } = await supabase
               .from("article_gifts")
               .select("id")
@@ -103,7 +97,6 @@ export default function ContentWithButton({ content, className, isPaywalled = fa
               if (!currentGifts.includes(articleId)) {
                 localStorage.setItem("redeemedGifts", JSON.stringify([...currentGifts, articleId]));
               }
-              setHasRedeemedGift(true);
               setShouldShowPaywall(false);
               return;
             }
@@ -126,7 +119,7 @@ export default function ContentWithButton({ content, className, isPaywalled = fa
           setShouldShowPaywall(true);
           return;
         }
-        const { data: profile } = await supabase
+        const { data: profile } = await supabase!
           .from("profiles")
           .select("is_premium, articles_read_count, usage_limit")
           .eq("id", user.id)

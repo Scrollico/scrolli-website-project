@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Heading } from "@/components/ui/typography";
 import { Badge } from "@/components/ui/badge";
-import { colors, gap, interactions } from "@/lib/design-tokens";
+import { gap, interactions } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 import { Article } from "@/types/content";
 import AuthorArticles from "./AuthorArticles";

@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils";
 import {
   sectionPadding,
   componentPadding,
-  colors,
 } from "@/lib/design-tokens";
 import { Heading, Text } from "@/components/ui/typography";
 import { SmartButton } from "@/components/ui/smart-button";
