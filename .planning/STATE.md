@@ -97,6 +97,7 @@ None yet.
 | 260323-wj3 | Standardize subscribe CTA buttons to inline styles | 2026-03-23 | 543aa77 | [260323-wj3-standardize-subscribe-cta-buttons-to-inl](./quick/260323-wj3-standardize-subscribe-cta-buttons-to-inl/) |
 | 260328-gwt | Fix CTA button contrast — white text on beige/cream background is unreadable | 2026-03-28 | cdf825f | [260328-gwt-fix-cta-button-contrast-white-text-on-be](./quick/260328-gwt-fix-cta-button-contrast-white-text-on-be/) |
 | 260328-gwt | Fix CTA button contrast: scope legacy CSS hover rules to exclude Tailwind-styled buttons | 2026-03-28 | cdf825f | [260328-gwt-fix-cta-button-contrast-white-text-on-be](./quick/260328-gwt-fix-cta-button-contrast-white-text-on-be/) |
+| 260402-hwc | Restrict Newsreader to article headlines: switch fontFamily.heading to font-sans, restore font-display on 21 article title Headings | 2026-04-02 | f84b97a | [260402-hwc-restrict-newsreader-to-article-headlines](./quick/260402-hwc-restrict-newsreader-to-article-headlines/) |
 
 ### Blockers/Concerns
 
@@ -106,6 +107,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-28T00:00:00.000Z
-Stopped at: Completed quick task 260328-gwt (fix CTA button contrast)
+Last session: 2026-04-02T00:00:00.000Z
+Stopped at: Completed quick task 260402-hwc (restrict Newsreader to article headlines)
 Resume file: None
