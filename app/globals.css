@@ -1080,26 +1080,23 @@ button[role="tab"][data-state="active"] {
 }
 
 .hero-bottom-gradient {
-  /* Light mode: subtle bottom-only fade matching scrolli.co production */
+  /* Narrow page-blend: div is only 28% tall, gradient covers its full height.
+     Transparent at top → page bg color at bottom. Stays below the text zone. */
   background: linear-gradient(
     180deg,
     rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0) 55%,
-    rgba(255, 255, 255, 0.5) 70%,
-    rgba(255, 255, 255, 0.85) 85%,
-    rgba(255, 255, 255, 1) 95%,
+    rgba(255, 255, 255, 0.6) 50%,
     rgba(255, 255, 255, 1) 100%
   );
 }
 
-/* Force exact Scrolli dark color (#374152) for the hero bottom gradient */
+/* Dark mode: blend into #374152 page bg */
 .dark .hero-bottom-gradient,
 .dark-mode .hero-bottom-gradient {
   background: linear-gradient(
     180deg,
     rgba(55, 65, 82, 0) 0%,
-    rgba(55, 65, 82, 0.6) 55%,
-    rgba(55, 65, 82, 0.9) 85%,
+    rgba(55, 65, 82, 0.7) 50%,
     rgba(55, 65, 82, 1) 100%
   ) !important;
 }

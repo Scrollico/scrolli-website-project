@@ -116,6 +116,8 @@ export default function HeroSection({ article }: HeroSectionProps) {
         )}
         {/* Dark scrim — bottom-up gradient for headline readability */}
         <div className="absolute inset-0 z-20 hero-gradient-overlay" />
+        {/* White page-blend — narrow bottom edge only, fades hero into page bg */}
+        <div className="absolute bottom-0 left-0 w-full z-20 hero-bottom-gradient" style={{ height: '28%' }} />
       </div>
 
       {/* Content - matches live hero layout (bottom-left, above the fold) */}
