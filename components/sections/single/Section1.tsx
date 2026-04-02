@@ -118,7 +118,7 @@ export default function Section1({ article, relatedArticles = [], isPaywalled = 
                     )}
                   </div>
 
-                  <Heading level={1} variant="h1" className={cn("entry-title max-w-4xl mx-auto", colors.foreground.primary)} itemProp="headline">{article.title}</Heading>
+                  <Heading level={1} variant="h1" className={cn("font-display entry-title max-w-4xl mx-auto", colors.foreground.primary)} itemProp="headline">{article.title}</Heading>
                   {article.subtitle && (
                     <Text className="entry-subtitle text-lg md:text-xl text-gray-600 dark:text-gray-400 mt-2 max-w-3xl mx-auto" itemProp="alternativeHeadline">
                       {article.subtitle}
@@ -363,7 +363,7 @@ export default function Section1({ article, relatedArticles = [], isPaywalled = 
                               </figure>
                             )}
                             <div className="entry-content flex-1">
-                              <Heading level={5} variant="h6" color="primary" className="news-card-headline text-gray-900 dark:text-white">
+                              <Heading level={5} variant="h6" color="primary" className="font-display news-card-headline text-gray-900 dark:text-white">
                                 {post.title}
                               </Heading>
                             </div>

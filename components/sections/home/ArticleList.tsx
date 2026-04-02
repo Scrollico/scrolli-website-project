@@ -71,7 +71,7 @@ export default function ArticleList({ articles = [], authors = [] }: ArticleList
             <Heading
               level={3}
               variant="h6"
-              className="leading-tight line-clamp-2"
+              className="font-display leading-tight line-clamp-2"
             >
               <Link
                 href={`/${article.id}`}

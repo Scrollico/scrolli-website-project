@@ -161,7 +161,7 @@ export default function DynamicCategorySection({
                                     )}
 
                                     {/* Title */}
-                                    <Heading level={2} variant="h2" className="mb-4">
+                                    <Heading level={2} variant="h2" className="font-display mb-4">
                                         <Link
                                             href={`/${mainArticle.id}`}
                                             className={cn(colors.foreground.primary, link.title)}
@@ -222,7 +222,7 @@ export default function DynamicCategorySection({
                                                         </Badge>
                                                     </Link>
                                                 )}
-                                                <Heading level={3} variant="h4" className="mb-1">
+                                                <Heading level={3} variant="h4" className="font-display mb-1">
                                                     <Link
                                                         href={`/${article.id}`}
                                                         className={cn(colors.foreground.primary, link.title, "line-clamp-2")}
@@ -324,7 +324,7 @@ export default function DynamicCategorySection({
                                                     </Link>
                                                 )}
                                                 <div className="flex-1 min-w-0">
-                                                    <Heading level={5} variant="h6" className="mb-1">
+                                                    <Heading level={5} variant="h6" className="font-display mb-1">
                                                         <Link
                                                             href={`/${article.id}`}
                                                             className={cn(colors.foreground.primary, link.title, "line-clamp-2")}
@@ -409,7 +409,7 @@ export default function DynamicCategorySection({
                                                     {/* Content */}
                                                     <div className="flex-1 min-w-0 flex gap-2 items-start">
                                                         <div className="flex-1 min-w-0">
-                                                            <Heading level={6} variant="h6" className="mb-1">
+                                                            <Heading level={6} variant="h6" className="font-display mb-1">
                                                                 <Link
                                                                     href={`/${article.id}`}
                                                                     className={cn(

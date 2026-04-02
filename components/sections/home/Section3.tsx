@@ -107,7 +107,7 @@ function CategoryColumn({
                 level={3}
                 variant="h4"
                 className={cn(
-                  "font-bold text-xl md:text-2xl mb-2 line-clamp-2",
+                  "font-display font-bold text-xl md:text-2xl mb-2 line-clamp-2",
                   colors.foreground.primary,
                   interactions.hover
                 )}
@@ -181,7 +181,7 @@ function CategoryColumn({
                     level={4}
                     variant="h6"
                     className={cn(
-                      "font-semibold text-sm md:text-base mb-1 line-clamp-2",
+                      "font-display font-semibold text-sm md:text-base mb-1 line-clamp-2",
                       colors.foreground.primary,
                       interactions.hover
                     )}

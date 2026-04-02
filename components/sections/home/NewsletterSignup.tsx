@@ -125,7 +125,7 @@ export default function NewsletterSignup() {
         <Heading
           level={3}
           variant="h5"
-          className={cn(colors.foreground.primary, "font-bold text-lg font-display")}
+          className={cn(colors.foreground.primary, "font-bold text-lg")}
         >
           E-posta bültenlerimize abone olun.
         </Heading>
@@ -220,7 +220,7 @@ export default function NewsletterSignup() {
                     variant="h6"
                     className={cn(
                       colors.foreground.primary,
-                      "font-bold mb-1 font-display",
+                      "font-bold mb-1",
                       interactions.hover
                     )}
                   >
@@ -230,7 +230,7 @@ export default function NewsletterSignup() {
                   {/* Description */}
                   <Text
                     variant="bodySmall"
-                    className={cn(colors.foreground.secondary, "mb-1.5 text-xs leading-relaxed font-display")}
+                    className={cn(colors.foreground.secondary, "mb-1.5 text-xs leading-relaxed")}
                   >
                     {briefing.description}
                   </Text>
@@ -239,7 +239,7 @@ export default function NewsletterSignup() {
                   <div className="flex items-center gap-2 flex-wrap">
                     <Text
                       variant="caption"
-                      className={cn(colors.foreground.secondary, "text-xs font-display")}
+                      className={cn(colors.foreground.secondary, "text-xs")}
                     >
                       {briefing.frequency}
                     </Text>
@@ -250,7 +250,7 @@ export default function NewsletterSignup() {
                       href={briefing.readItLink}
                       onClick={(e) => e.stopPropagation()}
                       className={cn(
-                        "text-xs font-medium font-display",
+                        "text-xs font-medium",
                         interactions.hover,
                         colors.foreground.secondary
                       )}
