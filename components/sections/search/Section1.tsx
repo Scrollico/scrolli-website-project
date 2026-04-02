@@ -278,7 +278,7 @@ export default function Section1({ searchQuery: initialQuery }: Section1Props) {
                 {blogData.mostRecent.popular.articles.slice(0, 5).map((article, idx) => (
                   <Link key={idx} href={`/${article.id}`} className="group block">
                     <div className="flex gap-4 items-baseline">
-                      <span className="text-2xl font-display font-bold text-gray-300 dark:text-gray-700 leading-none group-hover:text-primary transition-colors min-w-[1.5rem]">
+                      <span className="text-2xl font-bold text-gray-300 dark:text-gray-700 leading-none group-hover:text-primary transition-colors min-w-[1.5rem]">
                         0{idx + 1}
                       </span>
                       <div className="space-y-1">
