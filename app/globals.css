@@ -1057,22 +1057,25 @@ button[role="tab"][data-state="active"] {
    ======================================================================== */
 
 .hero-gradient-overlay {
-  /* Light mode: gentle darkening from transparent to subtle black for readability */
+  /* Vertical gradient — dark at bottom where headline sits, transparent at top */
   background: linear-gradient(
-    135deg,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 0.15) 35%,
-    rgba(0, 0, 0, 0.45) 100%
+    to top,
+    rgba(0, 0, 0, 0.80) 0%,
+    rgba(0, 0, 0, 0.55) 25%,
+    rgba(0, 0, 0, 0.20) 55%,
+    rgba(0, 0, 0, 0) 100%
   );
 }
 
-/* Dark mode: remove extra black layer – let #374152 hero-bottom-gradient carry the tone */
+/* Dark mode: slightly more intense scrim */
 .dark .hero-gradient-overlay,
 .dark-mode .hero-gradient-overlay {
   background: linear-gradient(
-    135deg,
-    rgba(55, 65, 82, 0) 0%,
-    rgba(55, 65, 82, 0) 100%
+    to top,
+    rgba(0, 0, 0, 0.88) 0%,
+    rgba(0, 0, 0, 0.60) 25%,
+    rgba(0, 0, 0, 0.25) 55%,
+    rgba(0, 0, 0, 0) 100%
   ) !important;
 }
 

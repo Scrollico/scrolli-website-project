@@ -148,12 +148,12 @@ export default function HeroSection({ article }: HeroSectionProps) {
             </Badge>
           </div>
 
-          {/* Headline */}
+          {/* Headline — always white: dark scrim behind makes it readable on any image */}
           <Heading
             level={1}
             variant="h1"
-            className="max-w-full"
-            style={{ textShadow: "0 1px 1px rgba(0, 0, 0, 0.1)" }}
+            className="max-w-full text-white font-display"
+            style={{ textShadow: "0 2px 8px rgba(0, 0, 0, 0.4)" }}
           >
             {article.title}
           </Heading>
@@ -162,11 +162,10 @@ export default function HeroSection({ article }: HeroSectionProps) {
           <Link
             href={`/${article.id}`}
             className={cn(
-              "inline-flex items-center gap-2 no-underline transition-colors duration-300",
-              colors.foreground.primary,
-              colors.foreground.interactive
+              "inline-flex items-center gap-2 no-underline transition-opacity duration-300 hover:opacity-80",
+              "text-white/90"
             )}
-            style={{ textShadow: "0 1px 1px rgba(0, 0, 0, 0.1)" }}
+            style={{ textShadow: "0 1px 4px rgba(0, 0, 0, 0.4)" }}
           >
             Read in-depth
             <svg

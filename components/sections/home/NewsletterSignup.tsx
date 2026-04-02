@@ -185,13 +185,15 @@ export default function NewsletterSignup() {
                 />
               )}
 
-              {/* Briefing Item */}
-              <button
-                type="button"
+              {/* Briefing Item — div, not button, because Checkbox renders as <button> internally */}
+              <div
+                role="button"
+                tabIndex={0}
                 className={cn(
-                  "flex items-start gap-3 w-full text-left py-2",
+                  "flex items-start gap-3 w-full text-left py-2 cursor-pointer",
                 )}
                 onClick={() => handleBriefingToggle(briefing.id)}
+                onKeyDown={(e) => { if (e.key === " " || e.key === "Enter") handleBriefingToggle(briefing.id); }}
                 aria-pressed={selectedBriefings.includes(briefing.id)}
               >
                 {/* Checkbox - Bigger with Thick Border on Hover */}
@@ -259,7 +261,7 @@ export default function NewsletterSignup() {
                     </Link>
                   </div>
                 </div>
-              </button>
+              </div>
             </div>
           );
         })}
