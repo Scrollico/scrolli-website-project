@@ -17,10 +17,9 @@ interface HeroSectionProps {
 export default function HeroSection({ article }: HeroSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const imageContainerRef = useRef<HTMLDivElement>(null);
-  const gradientRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!sectionRef.current || !imageContainerRef.current || !gradientRef.current) return;
+    if (!sectionRef.current || !imageContainerRef.current) return;
 
     // Protect hero section from Instorier scroll-jacking
     const protectHeroSection = () => {
@@ -115,17 +114,8 @@ export default function HeroSection({ article }: HeroSectionProps) {
             )}
           </>
         )}
-        {/* Overlay gradient across entire hero */}
+        {/* Dark scrim — bottom-up gradient for headline readability */}
         <div className="absolute inset-0 z-20 hero-gradient-overlay" />
-        {/* Bottom gradient for above-the-fold text readability (matches live hero) */}
-        <div
-          ref={gradientRef}
-          className={cn(
-            "absolute bottom-0 left-0 w-full z-20",
-            "h-full",
-            "hero-bottom-gradient"
-          )}
-        />
       </div>
 
       {/* Content - matches live hero layout (bottom-left, above the fold) */}
