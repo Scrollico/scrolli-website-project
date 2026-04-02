@@ -123,7 +123,7 @@ export const marginTop = {
  * Font Families
  */
 export const fontFamily = {
-  heading: "font-display", // Newsreader for headings/display text
+  heading: "font-sans", // Instrument Sans for UI/UX headings (Newsreader applied explicitly on article titles)
   body: "font-sans", // Newsreader for body text site-wide (header, footer, navigation, general content)
   mono: "font-mono",
 } as const;
