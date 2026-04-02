@@ -4,9 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/responsive";
 import { Heading } from "@/components/ui/typography";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { gap, colors } from "@/lib/design-tokens";
+import { gap, colors, accentColor } from "@/lib/design-tokens";
 import { Article } from "@/types/content";
 import { useEffect, useRef } from "react";
 
@@ -28,7 +27,6 @@ export default function HeroSection({ article }: HeroSectionProps) {
       const computedStyle = window.getComputedStyle(sectionRef.current);
       const top = computedStyle.top;
 
-      // If Instorier has applied negative positioning, reset it
       if (top && (top.includes('-') || parseFloat(top) < 0)) {
         sectionRef.current.style.setProperty('top', 'auto', 'important');
         sectionRef.current.style.setProperty('position', 'relative', 'important');
@@ -36,10 +34,8 @@ export default function HeroSection({ article }: HeroSectionProps) {
       }
     };
 
-    // Initial protection
     protectHeroSection();
 
-    // Monitor for changes (Instorier might apply changes after initial load)
     const observer = new MutationObserver(() => {
       protectHeroSection();
     });
@@ -77,7 +73,6 @@ export default function HeroSection({ article }: HeroSectionProps) {
           <>
             {article.mobileImage ? (
               <>
-                {/* Mobile image */}
                 <Image
                   src={article.mobileImage}
                   alt={article.title}
@@ -88,7 +83,6 @@ export default function HeroSection({ article }: HeroSectionProps) {
                   sizes="(max-width: 768px) 100vw, 100vw"
                   quality={75}
                 />
-                {/* Desktop image */}
                 <Image
                   src={article.image}
                   alt={article.title}
@@ -114,54 +108,45 @@ export default function HeroSection({ article }: HeroSectionProps) {
             )}
           </>
         )}
-        {/* Dark scrim — bottom-up gradient for headline readability */}
-        <div className="absolute inset-0 z-20 hero-gradient-overlay" />
-        {/* White page-blend — narrow bottom edge only, fades hero into page bg */}
-        <div className="absolute bottom-0 left-0 w-full z-20 hero-bottom-gradient" style={{ height: '28%' }} />
+        {/* White page-blend — image fades into page background from the middle down */}
+        <div className="absolute inset-0 z-20 hero-bottom-gradient" />
       </div>
 
-      {/* Content - matches live hero layout (bottom-left, above the fold) */}
+      {/* Content sits on the white/light lower half — dark text */}
       <Container className={cn("relative z-30 w-full")} padding="lg">
         <div
           className={cn(
             "max-w-2xl",
             "flex flex-col",
-            gap.lg,
+            gap.md,
             "mb-8 md:mb-12 lg:mb-16"
           )}
         >
-          {/* Featured Label */}
-          <div>
-            <Badge
-              variant="subtle"
-              className="tracking-wide backdrop-blur-sm opacity-90 shadow-sm cursor-default border-transparent dark:border-transparent"
-            >
-              Featured
-            </Badge>
-          </div>
+          {/* Category/Featured label — plain text, accent color, no pill */}
+          <span className={cn("text-xs font-semibold tracking-widest uppercase", accentColor.primary)}>
+            {article.category ?? "Öne Çıkan"}
+          </span>
 
-          {/* Headline — always white: dark scrim behind makes it readable on any image */}
+          {/* Headline — dark text, Newsreader serif */}
           <Heading
             level={1}
             variant="h1"
-            className="max-w-full text-white font-display"
-            style={{ textShadow: "0 2px 8px rgba(0, 0, 0, 0.4)" }}
+            className={cn("max-w-full font-display", colors.foreground.primary)}
           >
             {article.title}
           </Heading>
 
-          {/* Read More Link */}
+          {/* Read More Link — dark text with arrow */}
           <Link
             href={`/${article.id}`}
             className={cn(
-              "inline-flex items-center gap-2 no-underline transition-opacity duration-300 hover:opacity-80",
-              "text-white/90"
+              "inline-flex items-center gap-2 no-underline text-sm font-medium",
+              "text-gray-500 dark:text-gray-400 hover:opacity-75 transition-opacity duration-200"
             )}
-            style={{ textShadow: "0 1px 4px rgba(0, 0, 0, 0.4)" }}
           >
-            Read in-depth
+            Derinlemesine oku
             <svg
-              className="h-4 w-4 md:h-5 md:w-5"
+              className="h-4 w-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
