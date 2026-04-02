@@ -81,7 +81,7 @@ export default function Section1({ title = "Editor's Picks", articles, articleLi
                   <Heading
                     level={3}
                     variant="h5"
-                    className="leading-tight line-clamp-2"
+                    className="font-display leading-tight line-clamp-2"
                   >
                     <Link
                       href={`/${article.id}`}

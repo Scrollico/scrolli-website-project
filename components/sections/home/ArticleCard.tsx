@@ -85,7 +85,7 @@ export default function ArticleCard({
         )}
 
         {/* Title */}
-        <Heading level={3} variant="h5" className="mb-2 break-words">
+        <Heading level={3} variant="h5" className="font-display mb-2 break-words">
           <Link
             href={`/${article.id}`}
             prefetch={true}

@@ -55,7 +55,7 @@ export default function Section1() {
                     )}
                   </div>
                 </figure>
-                <Heading level={1} variant="h1" className="mb-4">
+                <Heading level={1} variant="h1" className="font-display mb-4">
                   <Link href={`/${Culture.mainArticle.id}`} className={cn(colors.foreground.interactive, "hover:underline", transition.normal)}>
                     {Culture.mainArticle.title}
                   </Link>
@@ -108,7 +108,7 @@ export default function Section1() {
                             {article.tag}
                           </Text>
                         )}
-                        <Heading level={3} variant="h5" className="mb-2">
+                        <Heading level={3} variant="h5" className="font-display mb-2">
                           <Link href={`/${article.id}`} className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
                             <span className="line-clamp-2 block">{article.title}</span>
                           </Link>
@@ -188,7 +188,7 @@ export default function Section1() {
                         </div>
                       </figure>
                       <div className={cn("flex-1 min-w-0 flex flex-col justify-center")}>
-                        <Heading level={5} variant="h6" className="mb-2">
+                        <Heading level={5} variant="h6" className="font-display mb-2">
                           <Link href={`/${article.id}`} className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
                             <span className="line-clamp-2 block">{article.title}</span>
                           </Link>
@@ -246,7 +246,7 @@ export default function Section1() {
                       01
                     </div>
                     <div className="flex-1 min-w-0">
-                      <Heading level={5} variant="h6" className="mb-2">
+                      <Heading level={5} variant="h6" className="font-display mb-2">
                         <Link href="/president-and-the-emails-who-will-guard-the-guards" className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
                           <span className="line-clamp-2 block">President and the emails. Who will guard the guards?</span>
                         </Link>
@@ -279,7 +279,7 @@ export default function Section1() {
                       02
                     </div>
                     <div className="flex-1 min-w-0">
-                      <Heading level={5} variant="h6" className="mb-2">
+                      <Heading level={5} variant="h6" className="font-display mb-2">
                         <Link href="/how-to-silence-the-persistent-ding-of-modern-life" className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
                           <span className="line-clamp-2 block">How to Silence the Persistent Ding of Modern Life</span>
                         </Link>
@@ -312,7 +312,7 @@ export default function Section1() {
                       03
                     </div>
                     <div className="flex-1 min-w-0">
-                      <Heading level={5} variant="h6" className="mb-2">
+                      <Heading level={5} variant="h6" className="font-display mb-2">
                         <Link href="/why-we-love-to-watch" className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
                           <span className="line-clamp-2 block">Why We Love to Watch</span>
                         </Link>
@@ -345,7 +345,7 @@ export default function Section1() {
                       04
                     </div>
                     <div className="flex-1 min-w-0">
-                      <Heading level={5} variant="h6" className="mb-2">
+                      <Heading level={5} variant="h6" className="font-display mb-2">
                         <Link href="/how-health-apps-let" className={cn(colors.foreground.interactive, "hover:underline", transition.normal, "block overflow-hidden")}>
                           <span className="line-clamp-2 block">How Health Apps Let</span>
                         </Link>

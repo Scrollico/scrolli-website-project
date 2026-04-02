@@ -110,7 +110,7 @@ export default function HikayelerListSection({
                   >
                     Öne Çıkan
                   </Text>
-                  <Heading level={2} variant="h2" className="mb-3">
+                  <Heading level={2} variant="h2" className="font-display mb-3">
                     <span className={cn(colors.foreground.primary, link.title)}>
                       {hero.title}
                     </span>
@@ -185,7 +185,7 @@ export default function HikayelerListSection({
 
                   {/* Content */}
                   <div className="flex flex-col flex-1">
-                    <Heading level={3} variant="h5" className="mb-2">
+                    <Heading level={3} variant="h5" className="font-display mb-2">
                       <Link
                         href={`/${article.id}`}
                         className={cn(colors.foreground.primary, link.title)}

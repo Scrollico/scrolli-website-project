@@ -69,7 +69,7 @@ export default function ArticleCard({ id, title, excerpt, image, author, categor
          </Link>
 
          <div className={cn("flex flex-col flex-grow", gap.xs)}>
-            <Heading level={3} variant="h5" className="line-clamp-2 mb-2">
+            <Heading level={3} variant="h5" className="font-display line-clamp-2 mb-2">
                <Link href={`/${id}`} className={cn(colors.foreground.interactive, "hover:underline")}>
                   {title}
                </Link>
