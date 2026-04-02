@@ -1366,13 +1366,22 @@ body {
   font-family: var(--font-instrument-sans), sans-serif !important;
 }
 
-/* All headings site-wide - Newsreader */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
+/* Headings default to Instrument Sans — Newsreader only when .font-display is present */
+h1:not(.font-display),
+h2:not(.font-display),
+h3:not(.font-display),
+h4:not(.font-display),
+h5:not(.font-display),
+h6:not(.font-display) {
+  font-family: var(--font-instrument-sans), sans-serif !important;
+}
+
+h1.font-display,
+h2.font-display,
+h3.font-display,
+h4.font-display,
+h5.font-display,
+h6.font-display,
 .entry-title,
 .heading-font,
 .section-featured h2 {

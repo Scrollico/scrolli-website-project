@@ -119,7 +119,7 @@ export default function ScrolliPremiumBanner({
         <div className={cn("relative z-10 w-full", isSimple && "max-w-2xl flex flex-col items-center")}>
           <div className={cn("mb-3", isSimple && "flex justify-center")}>
             <Image
-              src={isDark ? "/assets/images/plus/Primary(Plus) 1.svg" : "/assets/images/plus/Primary(Plus) 2.svg"}
+              src={isDark ? "/assets/images/plus/scrolli-plus-dark.svg" : "/assets/images/plus/scrolli-plus-light.svg"}
               alt="Scrolli Plus"
               width={isSimple ? 44 : 72}
               height={isSimple ? 12 : 20}
