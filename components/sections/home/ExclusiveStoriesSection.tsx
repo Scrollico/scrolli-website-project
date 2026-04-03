@@ -25,7 +25,7 @@ function ScrolliPlusLogo({ className }: { className?: string }) {
 
   return (
     <Image
-      src={isDark ? "/assets/images/plus/Primary(Plus) 1.svg" : "/assets/images/plus/Primary(Plus) 2.svg"}
+      src={isDark ? "/assets/images/plus/scrolli-plus-dark.svg" : "/assets/images/plus/scrolli-plus-light.svg"}
       alt="Scrolli Plus"
       width={180}
       height={40}
