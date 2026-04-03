@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -11,7 +11,6 @@ import { Heading, Text } from "@/components/ui/typography";
 import {
   colors,
   gap,
-  interactions,
 } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
@@ -218,7 +217,7 @@ export default function NewsletterSignup() {
                     {briefing.description}
                   </Text>
 
-                  {/* Frequency and Read It Link */}
+                  {/* Frequency */}
                   <div className="flex items-center gap-2 flex-wrap mt-1.5">
                     <Text
                       variant="caption"
@@ -226,20 +225,6 @@ export default function NewsletterSignup() {
                     >
                       {briefing.frequency}
                     </Text>
-                    <span className={cn(colors.foreground.muted, "text-xs")}>
-                      •
-                    </span>
-                    <Link
-                      href={briefing.readItLink}
-                      onClick={(e) => e.stopPropagation()}
-                      className={cn(
-                        "text-xs font-medium",
-                        interactions.hover,
-                        colors.foreground.secondary
-                      )}
-                    >
-                      Oku
-                    </Link>
                   </div>
                 </div>
               </div>
