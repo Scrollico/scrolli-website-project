@@ -4,13 +4,11 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import {
     sectionPadding,
-    componentPadding,
     gap,
     typography,
     colors,
     borderRadius,
     border,
-    elevation,
     transition,
     link,
 } from "@/lib/design-tokens";
@@ -47,7 +45,7 @@ function AuthorInitialAvatar({ name }: { name: string }) {
 export default function DynamicCategorySection({
     categoryName,
     articles,
-    popularArticles = []
+    popularArticles: _popularArticles = [] // kept for caller compat
 }: DynamicCategorySectionProps) {
 
     if (!articles || articles.length === 0) {
@@ -117,9 +115,9 @@ export default function DynamicCategorySection({
                         </div>
                     </div>
 
-                    <div className={cn("grid grid-cols-1 lg:grid-cols-12", gap.xl)}>
+                    <div className={cn("grid grid-cols-1", gap.xl)}>
                         {/* Main Content - 8 columns */}
-                        <div className="lg:col-span-8">
+                        <div>
 
                             {/* Hero Article */}
                             {mainArticle && (
@@ -369,106 +367,7 @@ export default function DynamicCategorySection({
                             )}
                         </div>
 
-                        {/* Sidebar - 4 columns */}
-                        <aside className="lg:col-span-4">
-                            <div className={cn(
-                                "sticky top-20",
-                            )}>
-                                {/* Popular Articles */}
-                                <div className={cn(
-                                    borderRadius.lg,
-                                    border.thin,
-                                    colors.background.elevated,
-                                    elevation[1],
-                                    componentPadding.md
-                                )}>
-                                    <div className="border-b-2 border-primary pb-2 mb-5">
-                                        <Heading level={5} variant="h5">
-                                            En Çok Okunanlar
-                                        </Heading>
-                                    </div>
-                                    <ol className={cn("flex flex-col", gap.md)}>
-                                        {popularArticles.length > 0 ? (
-                                            popularArticles.slice(0, 8).map((article, idx) => (
-                                                <li key={article.id} className={cn(
-                                                    "flex items-start",
-                                                    gap.sm,
-                                                    idx < popularArticles.slice(0, 8).length - 1 && "pb-4 border-b",
-                                                    colors.border.DEFAULT
-                                                )}>
-                                                    {/* Rank number */}
-                                                    <div className={cn(
-                                                        "flex-shrink-0 w-6 h-6",
-                                                        "flex items-center justify-center",
-                                                        "text-xs font-black",
-                                                        colors.foreground.muted
-                                                    )}>
-                                                        {String(idx + 1).padStart(2, '0')}
-                                                    </div>
-
-                                                    {/* Content */}
-                                                    <div className="flex-1 min-w-0 flex gap-2 items-start">
-                                                        <div className="flex-1 min-w-0">
-                                                            <Heading level={6} variant="h6" className="font-display mb-1">
-                                                                <Link
-                                                                    href={`/${article.id}`}
-                                                                    className={cn(
-                                                                        colors.foreground.primary,
-                                                                        link.title,
-                                                                        "line-clamp-2"
-                                                                    )}
-                                                                >
-                                                                    {article.title}
-                                                                </Link>
-                                                            </Heading>
-                                                            <div className={cn(
-                                                                "flex items-center",
-                                                                gap.xs,
-                                                                typography.caption,
-                                                                colors.foreground.muted
-                                                            )}>
-                                                                <Link
-                                                                    href={`/author/${article.authorSlug || article.author.toLowerCase().replace(/\s+/g, "-")}`}
-                                                                    className={colors.foreground.interactive}
-                                                                >
-                                                                    {article.author}
-                                                                </Link>
-                                                                <span>·</span>
-                                                                <span>{article.date}</span>
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Small thumbnail */}
-                                                        {(article.thumbnail || article.image) && (
-                                                            <Link
-                                                                href={`/${article.id}`}
-                                                                className={cn(
-                                                                    "relative flex-shrink-0 w-16 h-14",
-                                                                    borderRadius.md,
-                                                                    "overflow-hidden block"
-                                                                )}
-                                                            >
-                                                                <Image
-                                                                    src={article.thumbnail || article.image || ""}
-                                                                    alt={article.title}
-                                                                    fill
-                                                                    className="object-cover"
-                                                                    sizes="64px"
-                                                                />
-                                                            </Link>
-                                                        )}
-                                                    </div>
-                                                </li>
-                                            ))
-                                        ) : (
-                                            <Text variant="body" color="muted">
-                                                Henüz popüler içerik yok.
-                                            </Text>
-                                        )}
-                                    </ol>
-                                </div>
-                            </div>
-                        </aside>
+                        {/* Sidebar removed per feedback — "En çok okunanlar alanına bence gerek yok" */}
                     </div>
                 </Container>
             </section>
