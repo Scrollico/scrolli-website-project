@@ -203,6 +203,7 @@ export default function ScrolliPremiumBanner({
                 forceVariant="brand-charcoal"
                 size="lg"
                 className="w-full sm:w-auto h-12 px-8 text-base shadow-lg hover:shadow-xl transition-all duration-300"
+                style={{ color: 'white' }}
               >
                 Abone Ol — ₺249/ay
                 <ArrowRightIcon size={18} className="ml-2" />
@@ -318,6 +319,7 @@ export default function ScrolliPremiumBanner({
                       forceVariant="brand-charcoal"
                       size="sm"
                       className="rounded-full px-5 py-2.5 shadow-lg flex items-center gap-2 transform scale-105"
+                      style={{ color: 'white' }}
                     >
                       <span>Hikâyeyi Aç</span> <ArrowRightIcon size={14} />
                     </SmartButton>
