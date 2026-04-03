@@ -16,11 +16,8 @@ import { Container } from "@/components/responsive";
 import {
   ArrowRightIcon,
   CheckIcon,
-  PremiumContentBadgeIcon,
-  AIIcon,
-  PodcastIcon,
-  NewsletterIcon
 } from "@/components/icons/scrolli-icons";
+import { FileText, Sparkles, Headphones, Mail } from "lucide-react";
 
 
 
@@ -143,20 +140,20 @@ export default function ScrolliPremiumBanner({
           </Heading>
 
           <div className={cn("flex flex-wrap gap-2 mb-8", isSimple && "justify-center")}>
-            <Badge variant="secondary" className="leading-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 border-none pl-1.5 pr-3 py-1.5 h-auto shadow-sm">
-              <PremiumContentBadgeIcon size={16} className="text-gray-500 dark:text-gray-400 shrink-0 self-center [&_svg]:block" />
+            <Badge variant="secondary" className="leading-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 border-none pl-2 pr-3 py-1.5 h-auto shadow-sm gap-1.5">
+              <FileText size={14} className="text-gray-500 dark:text-gray-400 shrink-0" />
               Premium Makaleler
             </Badge>
-            <Badge variant="secondary" className="leading-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 border-none pl-1.5 pr-3 py-1.5 h-auto shadow-sm">
-              <AIIcon size={16} className="text-gray-500 dark:text-gray-400 shrink-0 self-center [&_svg]:block" />
+            <Badge variant="secondary" className="leading-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 border-none pl-2 pr-3 py-1.5 h-auto shadow-sm gap-1.5">
+              <Sparkles size={14} className="text-gray-500 dark:text-gray-400 shrink-0" />
               Günlük Bülten
             </Badge>
-            <Badge variant="secondary" className="leading-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 border-none pl-1.5 pr-3 py-1.5 h-auto shadow-sm">
-              <PodcastIcon size={16} className="text-gray-500 dark:text-gray-400 shrink-0 self-center [&_svg]:block" />
+            <Badge variant="secondary" className="leading-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 border-none pl-2 pr-3 py-1.5 h-auto shadow-sm gap-1.5">
+              <Headphones size={14} className="text-gray-500 dark:text-gray-400 shrink-0" />
               AI Podcastler
             </Badge>
-            <Badge variant="secondary" className="leading-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 border-none pl-1.5 pr-3 py-1.5 h-auto shadow-sm">
-              <NewsletterIcon size={16} className="text-gray-500 dark:text-gray-400 shrink-0 self-center [&_svg]:block" />
+            <Badge variant="secondary" className="leading-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 border-none pl-2 pr-3 py-1.5 h-auto shadow-sm gap-1.5">
+              <Mail size={14} className="text-gray-500 dark:text-gray-400 shrink-0" />
               Premium Bültenler
             </Badge>
           </div>
@@ -278,7 +275,7 @@ export default function ScrolliPremiumBanner({
           </div>
 
           {/* Locked Story Preview - Takes remaining height */}
-          <Link href="/pricing" className="block flex-1 group [&_*]:!no-underline [&_*]:!text-gray-900 [&_*]:dark:!text-gray-100 [&_*]:hover:!text-gray-900 [&_*]:dark:hover:!text-gray-100" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link href="/pricing" className="block flex-1 group no-underline text-gray-900 dark:text-gray-100" style={{ textDecoration: 'none' }}>
             <div
               className={cn(
                 "h-full p-8 md:p-10 relative overflow-hidden flex flex-col justify-center",
@@ -290,7 +287,7 @@ export default function ScrolliPremiumBanner({
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
-              <div className="relative z-10 [&_*]:!no-underline [&_*]:!text-gray-900 [&_*]:dark:!text-gray-100 [&_*]:hover:!text-gray-900 [&_*]:dark:hover:!text-gray-100">
+              <div className="relative z-10">
                 <Badge
                   variant="secondary"
                   className="mb-4 bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 border-none"
@@ -298,16 +295,16 @@ export default function ScrolliPremiumBanner({
                   Özel Önizleme
                 </Badge>
 
-                <Heading level={3} className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 group-hover:text-gray-900 dark:group-hover:text-white transition-colors pr-8 !no-underline !text-gray-900 dark:!text-gray-100" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Heading level={3} className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 transition-colors pr-8">
                   {exclusiveStory.title}
                 </Heading>
 
               <div className="relative">
                 <Text as="div" className={cn(
-                  "text-gray-600 dark:text-gray-400 text-base leading-relaxed font-serif !no-underline !text-gray-600 dark:!text-gray-400",
+                  "text-gray-600 dark:text-gray-400 text-base leading-relaxed font-serif",
                   "transition-all duration-500",
                   isHovered ? "blur-[3px] opacity-60" : "blur-[0.5px]"
-                )} style={{ textDecoration: 'none', color: 'inherit' }}>
+                )}>
                   {exclusiveStory.excerpt} ... The investigation uncovers a complex web of shell companies and offshore accounts used to funnel money into local elections.
                 </Text>
 
