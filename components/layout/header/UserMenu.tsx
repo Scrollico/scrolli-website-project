@@ -70,7 +70,7 @@ export function UserMenu() {
           className={cn(
             "inline-flex items-center justify-center whitespace-nowrap rounded-md text-xs font-medium h-8 px-3",
             "no-underline transition-opacity duration-200 hover:opacity-80",
-            isDark ? "bg-[#F8F5E4] text-gray-900" : "bg-gray-700 text-white"
+            isDark ? "bg-[#F8F5E4] !text-gray-900" : "bg-gray-700 text-white"
           )}
         >
           {t('subscribe', 'Subscribe')}

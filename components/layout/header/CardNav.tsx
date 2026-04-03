@@ -429,7 +429,7 @@ export default function CardNav({
 
               {/* Language Selector - Flag Toggle */}
               <motion.button
-                className="relative ml-2 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full p-0 transition-all duration-300 focus:outline-none"
+                className="relative ml-2 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full p-0 transition-all duration-300 focus:outline-none"
                 onClick={toggleLanguage}
                 aria-label={`Switch to ${locale === 'tr' ? 'English' : 'Turkish'}`}
                 whileTap={{ scale: 0.95 }}
@@ -464,9 +464,9 @@ export default function CardNav({
 
                 {/* Flag Icon - Show the opposite flag */}
                 {locale === 'tr' ? (
-                  <EnglishFlagIcon size={24} className="relative z-10" />
+                  <EnglishFlagIcon size={18} className="relative z-10" />
                 ) : (
-                  <TurkishFlagIcon size={24} className="relative z-10" />
+                  <TurkishFlagIcon size={18} className="relative z-10" />
                 )}
               </motion.button>
             </div>
