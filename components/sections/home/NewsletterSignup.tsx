@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { SmartButton } from "@/components/ui/smart-button";
 import { Heading, Text } from "@/components/ui/typography";
@@ -10,7 +11,6 @@ import { Heading, Text } from "@/components/ui/typography";
 import {
   colors,
   gap,
-  componentPadding,
   interactions,
 } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
@@ -104,11 +104,7 @@ export default function NewsletterSignup() {
 
   return (
     <div className={cn(
-      "w-full rounded-2xl",
-      "bg-gray-100/80 dark:bg-gray-900/80",
-      "backdrop-blur-md",
-      "border border-gray-200/50 dark:border-gray-800/50",
-      componentPadding.md,
+      "w-full",
       "flex flex-col",
       gap.md
     )}>
@@ -186,6 +182,20 @@ export default function NewsletterSignup() {
                 onKeyDown={(e) => { if (e.key === " " || e.key === "Enter") handleBriefingToggle(briefing.id); }}
                 aria-pressed={selectedBriefings.includes(briefing.id)}
               >
+                {/* Checkbox */}
+                <div className="flex-shrink-0 pt-1">
+                  <Checkbox
+                    checked={isSelected}
+                    onCheckedChange={() => handleBriefingToggle(briefing.id)}
+                    className={cn(
+                      "h-5 w-5 [&>svg]:h-4 [&>svg]:w-4 pointer-events-none",
+                      "data-[state=checked]:!bg-[#8080FF] data-[state=checked]:!border-[#8080FF]",
+                      "data-[state=checked]:!text-white",
+                      "dark:data-[state=checked]:!bg-[#8080FF] dark:data-[state=checked]:!border-[#8080FF]",
+                      "dark:data-[state=checked]:!text-white"
+                    )}
+                  />
+                </div>
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   {/* Title */}

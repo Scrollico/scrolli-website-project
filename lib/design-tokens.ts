@@ -652,15 +652,15 @@ export const buttonPairs = {
   },
   /** Beige button - cream bg, dark text; dark mode uses light surface so button stays visible on dark backgrounds */
   beige: {
-    default: "bg-[#F8F5E4] text-gray-900 dark:bg-[#F8F5E4] dark:text-gray-900",
+    default: "bg-[#F8F5E4] text-gray-900 dark:bg-[#F8F5E4] dark:!text-gray-900",
     hover: "hover:bg-[#F3F0DE] dark:hover:bg-[#EDE9D5]",
-    all: "bg-[#F8F5E4] text-gray-900 dark:bg-[#F8F5E4] dark:text-gray-900 hover:bg-[#F3F0DE] dark:hover:bg-[#EDE9D5]",
+    all: "bg-[#F8F5E4] text-gray-900 dark:bg-[#F8F5E4] dark:!text-gray-900 hover:bg-[#F3F0DE] dark:hover:bg-[#EDE9D5]",
   },
   /** Charcoal button - dark bg in light mode; dark mode uses warm beige so button pops on dark backgrounds */
   charcoal: {
-    default: "bg-[#374152] text-white dark:bg-[#F8F5E4] dark:text-gray-900",
+    default: "bg-[#374152] text-white dark:bg-[#F8F5E4] dark:!text-gray-900",
     hover: "hover:bg-[#1F2937] dark:hover:bg-[#EDE9D5]",
-    all: "bg-[#374152] text-white dark:bg-[#F8F5E4] dark:text-gray-900 hover:bg-[#1F2937] dark:hover:bg-[#EDE9D5]",
+    all: "bg-[#374152] text-white dark:bg-[#F8F5E4] dark:!text-gray-900 hover:bg-[#1F2937] dark:hover:bg-[#EDE9D5]",
   },
   /** Success/green button */
   success: {
