@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import { Input } from "@/components/ui/input";
 import { SmartButton } from "@/components/ui/smart-button";
 import { Heading, Text } from "@/components/ui/typography";
@@ -175,7 +175,7 @@ export default function NewsletterSignup() {
                 />
               )}
 
-              {/* Briefing Item — div, not button, because Checkbox renders as <button> internally */}
+              {/* Briefing Item */}
               <div
                 role="button"
                 tabIndex={0}
@@ -186,24 +186,6 @@ export default function NewsletterSignup() {
                 onKeyDown={(e) => { if (e.key === " " || e.key === "Enter") handleBriefingToggle(briefing.id); }}
                 aria-pressed={selectedBriefings.includes(briefing.id)}
               >
-                {/* Checkbox - Bigger with Thick Border on Hover */}
-                <div className="flex-shrink-0 pt-1">
-                  <Checkbox
-                    checked={isSelected}
-                    onCheckedChange={() => handleBriefingToggle(briefing.id)}
-                    className={cn(
-                      "h-5 w-5 [&>svg]:h-4 [&>svg]:w-4 pointer-events-none",
-                      // Accent color: accentColor.raw (#8080FF) — static strings required for Tailwind JIT scanning
-                      "data-[state=checked]:!bg-[#8080FF] data-[state=checked]:!border-[#8080FF]",
-                      "data-[state=checked]:!text-white",
-                      "dark:data-[state=checked]:!bg-[#8080FF] dark:data-[state=checked]:!border-[#8080FF]",
-                      "dark:data-[state=checked]:!text-white",
-                      // Clean hover states
-                      "hover:data-[state=checked]:!bg-[#8080FF] hover:data-[state=checked]:!border-[#8080FF]"
-                    )}
-                  />
-                </div>
-
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   {/* Title */}
