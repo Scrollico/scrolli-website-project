@@ -39,22 +39,24 @@ export default function Footer({ navigation }: FooterProps) {
   // Navigation Links
   const fallbackColumns = [
     {
-      groupTitle: t('categories', 'CATEGORIES'),
+      groupTitle: 'KURUMSAL',
       links: [
-        { label: t('archive', 'Archive'), href: '/archive' },
-        { label: t('categories', 'Categories'), href: '/categories' },
-        { label: t('aboutUs', 'About Us'), href: '/about-us' },
-        { label: t('author', 'Author'), href: '/author' },
+        { label: 'Hakkımızda', href: '/about-us' },
+        { label: 'İletişim', href: '/contact' },
+        { label: 'Künye', href: '/kunye' },
+        { label: 'Gizlilik Politikası', href: '/gizlilik-politikasi' },
+        { label: 'KVKK', href: '/kvkk' },
+        { label: 'Kullanım Koşulları', href: '/kullanim-kosullari' },
       ]
     },
     {
-      groupTitle: t('info', 'INFO'),
+      groupTitle: 'SCROLLI',
       links: [
-        { label: t('contact', 'Contact'), href: '/contact' },
-        { label: t('termsOfUse', 'Terms of Use'), href: '/kullanim-kosullari' },
-        { label: t('imprint', 'Imprint'), href: '/kunye' },
-        { label: t('signIn', 'Sign in'), href: '/sign-in' },
-        { label: t('subscribe', 'Subscribe'), href: '/pricing', highlight: true },
+        { label: 'Dosya', href: '/archive' },
+        { label: 'Hikâye', href: '/categories' },
+        { label: 'ScrolliCollabs', href: '/collabs' },
+        { label: 'Business', href: '/pricing' },
+        { label: 'Abone Ol', href: '/pricing', highlight: true },
       ]
     }
   ];
@@ -101,7 +103,7 @@ export default function Footer({ navigation }: FooterProps) {
               />
             </Link>
             <p className={cn(typography.bodySmall, colors.foreground.muted)}>
-              {t('inDepthMediaExperience', 'In-depth media experience')}
+              {t('inDepthMediaExperience', 'Derinlemesine medya deneyimi')}
             </p>
 
             <div className="relative inline-block mt-2 group">
@@ -160,7 +162,7 @@ export default function Footer({ navigation }: FooterProps) {
         {/* Bottom Copyright */}
         <div className={cn("pt-8 border-t border-white/10 dark:border-white/10 text-center md:text-left")}>
           <p className={cn("text-sm", colors.foreground.muted)}>
-            {t('copyright', '©2025 Scrolli. All Rights Reserved. Scrolli Media Inc.')}
+            {t('copyright', '©2026 Scrolli. Tüm hakları saklıdır. Scrolli Media Inc.')}
           </p>
         </div>
       </div>

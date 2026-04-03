@@ -6,13 +6,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { SmartButton } from "@/components/ui/smart-button";
 import { Heading, Text } from "@/components/ui/typography";
-import { NewsletterIcon } from "@/components/icons/scrolli-icons";
+
 import {
   colors,
   gap,
   componentPadding,
   interactions,
-  accentColor,
 } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
@@ -114,22 +113,13 @@ export default function NewsletterSignup() {
       gap.md
     )}>
       {/* Header */}
-      <div className="flex items-start gap-2">
-        <NewsletterIcon
-          size={20}
-          className={cn(
-            "flex-shrink-0 mt-0.5",
-            accentColor.primary
-          )}
-        />
-        <Heading
-          level={3}
-          variant="h5"
-          className={cn(colors.foreground.primary, "font-bold text-lg")}
-        >
-          E-posta bültenlerimize abone olun.
-        </Heading>
-      </div>
+      <Heading
+        level={3}
+        variant="h5"
+        className={cn(colors.foreground.primary, "font-bold text-lg")}
+      >
+        E-posta bültenlerimize abone olun.
+      </Heading>
 
       {/* Email Form */}
       <form onSubmit={handleSubmit} className={cn("flex flex-col", gap.sm)}>
@@ -222,8 +212,7 @@ export default function NewsletterSignup() {
                     variant="h6"
                     className={cn(
                       colors.foreground.primary,
-                      "font-bold mb-1",
-                      interactions.hover
+                      "font-bold mb-1"
                     )}
                   >
                     {briefing.title}
@@ -238,7 +227,7 @@ export default function NewsletterSignup() {
                   </Text>
 
                   {/* Frequency and Read It Link */}
-                  <div className="flex items-center gap-2 flex-wrap">
+                  <div className="flex items-center gap-2 flex-wrap mt-1.5">
                     <Text
                       variant="caption"
                       className={cn(colors.foreground.secondary, "text-xs")}

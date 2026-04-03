@@ -18,7 +18,7 @@ interface Section1Props {
   authors?: AuthorWithLatestArticle[];
 }
 
-export default function Section1({ title = "Editor's Picks", articles, articleListArticles = [], authors = [] }: Section1Props) {
+export default function Section1({ title = "Editörün Seçkisi", articles, articleListArticles = [], authors = [] }: Section1Props) {
 
   return (
     <section className={sectionPadding.lg}>

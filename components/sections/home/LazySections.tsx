@@ -2,13 +2,12 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import Image from "next/image";
 import { ArticleListSkeleton } from "@/components/ui/LoadingSkeletons";
 import { ExpandingCards, CardItem } from "@/components/ui/expanding-cards";
-import { Heading, Label } from "@/components/ui/typography";
+import { Heading } from "@/components/ui/typography";
 import { Article } from "@/types/content";
 import { getAuthorName } from "@/lib/author-loader";
-import { colors, sectionPadding, containerPadding, marginBottom, gap } from "@/lib/design-tokens";
+import { colors, sectionPadding, containerPadding, marginBottom } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
 
 const FALLBACK_IMAGE = "/assets/images/thumb/thumb-1240x700.jpg";
@@ -102,7 +101,7 @@ export default function LazySections({ articles, hikayeler, videos }: LazySectio
                     "group-hover:text-[#8080FF] transition-colors"
                   )}
                 >
-                  Hikayeler
+                  Hikâyeler
                   <span className="ml-1">{" >"}</span>
                 </Heading>
               </Link>
@@ -110,57 +109,6 @@ export default function LazySections({ articles, hikayeler, videos }: LazySectio
             </div>
             <div className="flex w-full justify-center">
               <ExpandingCards items={hikayelerCardItems} defaultActiveIndex={0} />
-            </div>
-          </div>
-        </section>
-      )}
-
-      {articles.length > 0 && (
-        <section className={cn(sectionPadding.md, marginBottom.lg, colors.background.base, "relative overflow-hidden")}>
-          {/* Background gradient accent */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/5 rounded-full blur-3xl -z-10" />
-
-          <div className={cn("w-full mx-auto max-w-7xl relative z-10", containerPadding.md)}>
-            <div className="mb-6">
-              <Heading
-                level={2}
-                variant="h3"
-                className={cn("font-bold text-lg md:text-xl", colors.foreground.primary)}
-              >
-                Daha Fazla Gündem
-              </Heading>
-              <div className={cn("h-0.5 w-16 bg-[#8080FF] mt-2")} />
-            </div>
-            <div className={cn("grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3", gap.xl)}>
-              {articles.map((article) => (
-                <div key={article.id} className={cn("flex", gap.lg)}>
-                  <Link href={`/${article.id}`} className="block relative w-24 h-24 flex-shrink-0 animate-in fade-in zoom-in duration-300">
-                    <Image
-                      src={article.image || FALLBACK_IMAGE}
-                      alt={article.title}
-                      fill
-                      className="object-cover rounded-lg"
-                      sizes="96px"
-                    />
-                  </Link>
-                  <div className="flex-1 min-w-0">
-                    <Link href={`/${article.id}`} className="block group">
-                      <Heading
-                        level={3}
-                        variant="h6"
-                        className={cn("line-clamp-2 leading-tight transition-colors group-hover:text-[#8080FF]", colors.foreground.primary)}
-                      >
-                        {article.title}
-                      </Heading>
-                    </Link>
-                    <div className={cn("mt-1 flex items-center", gap.sm)}>
-                      <Label as="span" color="muted">
-                        {getAuthorName(article.author)}
-                      </Label>
-                    </div>
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         </section>

@@ -98,7 +98,7 @@ export default function ScrolliPremiumBanner({
       "grid grid-cols-1 overflow-hidden rounded-2xl border",
       embedded || isSimple ? "gap-0" : "lg:grid-cols-12",
       "border-gray-200/50 dark:border-gray-700/50",
-      "shadow-2xl",
+      "shadow-2xl hover:shadow-[0_25px_60px_-12px_rgba(0,0,0,0.25)] transition-shadow duration-300",
       "bg-gray-100/60 dark:bg-gray-900/60 backdrop-blur-md"
     )}>
 
@@ -129,7 +129,7 @@ export default function ScrolliPremiumBanner({
           </div>
           <div className={cn("mb-6", isSimple && "text-center")}>
             <Text variant="caption" as="span" className="tracking-wider font-medium text-gray-500 dark:text-gray-400 m-0">
-              Support Independent Journalism
+              Bağımsız Gazeteciliği Destekle
             </Text>
           </div>
 
@@ -138,26 +138,26 @@ export default function ScrolliPremiumBanner({
             variant={isSimple ? "h3" : "h2"}
             className={cn("tracking-tight mb-6 leading-[1.15]", isSimple && "text-2xl md:text-3xl")}
           >
-            Less breaking news. <br />
-            <span className="text-gray-500 dark:text-gray-400">More breakthrough stories.</span>
+            Daha az son dakika. <br />
+            <span className="text-gray-500 dark:text-gray-400">Daha çok çığır açan hikâyeler.</span>
           </Heading>
 
           <div className={cn("flex flex-wrap gap-2 mb-8", isSimple && "justify-center")}>
             <Badge variant="secondary" className="leading-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 border-none pl-1.5 pr-3 py-1.5 h-auto shadow-sm">
               <PremiumContentBadgeIcon size={16} className="text-gray-500 dark:text-gray-400 shrink-0 self-center [&_svg]:block" />
-              Premium Articles
+              Premium Makaleler
             </Badge>
             <Badge variant="secondary" className="leading-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 border-none pl-1.5 pr-3 py-1.5 h-auto shadow-sm">
               <AIIcon size={16} className="text-gray-500 dark:text-gray-400 shrink-0 self-center [&_svg]:block" />
-              Daily Briefing
+              Günlük Bülten
             </Badge>
             <Badge variant="secondary" className="leading-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 border-none pl-1.5 pr-3 py-1.5 h-auto shadow-sm">
               <PodcastIcon size={16} className="text-gray-500 dark:text-gray-400 shrink-0 self-center [&_svg]:block" />
-              AI Podcasts
+              AI Podcastler
             </Badge>
             <Badge variant="secondary" className="leading-none bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 border-none pl-1.5 pr-3 py-1.5 h-auto shadow-sm">
               <NewsletterIcon size={16} className="text-gray-500 dark:text-gray-400 shrink-0 self-center [&_svg]:block" />
-              Premium Newsletters
+              Premium Bültenler
             </Badge>
           </div>
 
@@ -197,14 +197,14 @@ export default function ScrolliPremiumBanner({
             </div>
           </div>
 
-          <div className={cn("relative z-10 flex flex-col sm:flex-row gap-4 items-start sm:items-center mt-auto", isSimple && "items-center justify-center")}>
+          <div className={cn("relative z-10 flex flex-col sm:flex-row gap-4 items-start sm:items-center mt-auto pt-6", isSimple && "items-center justify-center")}>
             <Link href="/pricing" className="w-full sm:w-auto no-underline">
               <SmartButton
                 forceVariant="brand-charcoal"
                 size="lg"
                 className="w-full sm:w-auto h-12 px-8 text-base shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                Join for $9/mo
+                Abone Ol — ₺249/ay
                 <ArrowRightIcon size={18} className="ml-2" />
               </SmartButton>
             </Link>
@@ -212,7 +212,7 @@ export default function ScrolliPremiumBanner({
               <div className="w-5 h-5 rounded-full bg-[#E3E5FF] dark:bg-[#E3E5FF]/20 flex items-center justify-center text-[#8080FF]">
                 <CheckIcon size={12} strokeWidth={3} />
               </div>
-              <span>Cancel anytime</span>
+              <span>İstediğin zaman iptal et</span>
             </div>
           </div>
         </div>
@@ -238,10 +238,10 @@ export default function ScrolliPremiumBanner({
           >
             <div className="flex items-center justify-between mb-3">
               <Text variant="caption" as="span" className="tracking-wider font-bold text-gray-500 dark:text-gray-400 text-[10px]">
-                How your money spent with us
+                Aboneliğiniz nasıl kullanılıyor
               </Text>
               <Badge variant="secondary" className="bg-green-100/50 text-green-700 dark:bg-green-900/20 dark:text-green-300 border-none">
-                Verified
+                Doğrulanmış
               </Badge>
             </div>
 
@@ -257,14 +257,14 @@ export default function ScrolliPremiumBanner({
                   <div className="w-1.5 h-1.5 rounded-full bg-gray-900 dark:bg-gray-100" />
                   <span className="text-sm font-bold text-gray-900 dark:text-gray-100">60%</span>
                 </div>
-                <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium tracking-wide">Journalists</span>
+                <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium tracking-wide">Gazeteciler</span>
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center gap-1.5 mb-0.5">
                   <div className="w-1.5 h-1.5 rounded-full bg-gray-500 dark:bg-gray-500" />
                   <span className="text-sm font-bold text-gray-900 dark:text-gray-100">30%</span>
                 </div>
-                <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium tracking-wide">Investigations</span>
+                <span className="text-[10px] text-gray-500 dark:text-gray-400 font-medium tracking-wide">Soruşturmalar</span>
               </div>
               <div className="flex flex-col">
                 <div className="flex items-center gap-1.5 mb-0.5">
@@ -294,7 +294,7 @@ export default function ScrolliPremiumBanner({
                   variant="secondary"
                   className="mb-4 bg-gray-200/50 text-gray-600 dark:bg-gray-700/50 dark:text-gray-300 border-none"
                 >
-                  Exclusive Preview
+                  Özel Önizleme
                 </Badge>
 
                 <Heading level={3} className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 group-hover:text-gray-900 dark:group-hover:text-white transition-colors pr-8 !no-underline !text-gray-900 dark:!text-gray-100" style={{ textDecoration: 'none', color: 'inherit' }}>
@@ -319,7 +319,7 @@ export default function ScrolliPremiumBanner({
                       size="sm"
                       className="rounded-full px-5 py-2.5 shadow-lg flex items-center gap-2 transform scale-105"
                     >
-                      <span>Unlock Story</span> <ArrowRightIcon size={14} />
+                      <span>Hikâyeyi Aç</span> <ArrowRightIcon size={14} />
                     </SmartButton>
                   </div>
                 </div>
