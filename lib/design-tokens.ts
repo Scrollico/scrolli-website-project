@@ -658,9 +658,9 @@ export const buttonPairs = {
   },
   /** Charcoal button - dark bg in light mode; dark mode uses warm beige so button pops on dark backgrounds */
   charcoal: {
-    default: "bg-[#374152] text-white dark:bg-[#F8F5E4] dark:!text-gray-900",
+    default: "bg-[#374152] !text-white dark:bg-[#F8F5E4] dark:!text-gray-900",
     hover: "hover:bg-[#1F2937] dark:hover:bg-[#EDE9D5]",
-    all: "bg-[#374152] text-white dark:bg-[#F8F5E4] dark:!text-gray-900 hover:bg-[#1F2937] dark:hover:bg-[#EDE9D5]",
+    all: "bg-[#374152] !text-white dark:bg-[#F8F5E4] dark:!text-gray-900 hover:bg-[#1F2937] dark:hover:bg-[#EDE9D5]",
   },
   /** Success/green button */
   success: {
