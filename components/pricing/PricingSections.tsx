@@ -44,7 +44,7 @@ function FadeInOnScroll({ children, className }: { children: ReactNode; classNam
 }
 
 // ---------------------------------------------------------------------------
-// Section 2 -- Editorial Value
+// Section 2 -- Editorial Value (3-column image grid with overlays)
 // ---------------------------------------------------------------------------
 
 function EditorialValue({ articles }: { articles: Article[] }) {
@@ -54,19 +54,19 @@ function EditorialValue({ articles }: { articles: Article[] }) {
     <section className={cn(surfacePairs.brand.beige, sectionPadding.xl)}>
       <div className={cn("max-w-7xl mx-auto", containerPadding.lg)}>
         <FadeInOnScroll>
-          <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold leading-tight tracking-tight text-center mb-4">
-            Gazetecili\u011fin gelece\u011fini birlikte in\u015fa ediyoruz
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight tracking-tight text-center mb-4">
+            Gazeteciliğin geleceğini birlikte inşa ediyoruz
           </h2>
           <p className={cn(colors.foreground.secondary, "text-center max-w-2xl mx-auto text-base md:text-lg leading-relaxed mb-12")}>
-            Ba\u011f\u0131ms\u0131z gazetecilik, okuyucular\u0131n\u0131n deste\u011fiyle ayakta kal\u0131r.
-            Scrolli Premium ile kaliteli habercili\u011fe katk\u0131da bulunun.
+            Bağımsız gazetecilik, okuyucularının desteğiyle ayakta kalır.
+            Scrolli Premium ile kaliteli haberciliğe katkıda bulunun.
           </p>
         </FadeInOnScroll>
 
         <div className={cn("grid grid-cols-1 md:grid-cols-3", gap.xl)}>
           {displayArticles.map((article, i) => (
             <FadeInOnScroll key={article.id ?? i}>
-              <div className="relative aspect-[16/9] rounded-xl overflow-hidden group">
+              <div className="relative aspect-[3/4] rounded-xl overflow-hidden group">
                 {article.thumbnail || article.image ? (
                   <Image
                     src={(article.thumbnail || article.image)!}
@@ -76,17 +76,39 @@ function EditorialValue({ articles }: { articles: Article[] }) {
                     sizes="(max-width: 768px) 100vw, 33vw"
                   />
                 ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#8080FF]/30 to-[#8080FF]/5" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#8080FF]/20 via-[#8080FF]/10 to-[#8080FF]/5" />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-4">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
                   {article.category && (
                     <span className="inline-block px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide bg-white/20 text-white backdrop-blur-sm mb-2">
                       {article.category}
                     </span>
                   )}
-                  <h3 className="font-display text-lg md:text-xl font-semibold text-white leading-tight line-clamp-2">
+                  <h3 className="text-lg md:text-xl font-semibold text-white leading-tight line-clamp-2">
                     {article.title}
+                  </h3>
+                </div>
+              </div>
+            </FadeInOnScroll>
+          ))}
+
+          {/* Fallback cards when no articles */}
+          {displayArticles.length === 0 && [
+            { label: "Araştırma", title: "Bağımsız Araştırmacı Gazetecilik" },
+            { label: "Analiz", title: "Derinlemesine Sektör Analizleri" },
+            { label: "Röportaj", title: "Özel Röportajlar ve Söyleşiler" },
+          ].map((item, i) => (
+            <FadeInOnScroll key={i}>
+              <div className="relative aspect-[3/4] rounded-xl overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#8080FF]/20 via-[#8080FF]/10 to-[#8080FF]/5" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <span className="inline-block px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide bg-white/20 text-white backdrop-blur-sm mb-2">
+                    {item.label}
+                  </span>
+                  <h3 className="text-lg font-semibold text-white leading-tight">
+                    {item.title}
                   </h3>
                 </div>
               </div>
@@ -99,55 +121,102 @@ function EditorialValue({ articles }: { articles: Article[] }) {
 }
 
 // ---------------------------------------------------------------------------
-// Section 3 -- Feature Showcase
+// Section 3 -- Feature Showcase (alternating editorial panels)
 // ---------------------------------------------------------------------------
 
 const features = [
   {
+    num: "01",
     icon: Crown,
     title: "Premium Makaleler",
     description:
-      "Derinlemesine analizler, \u00f6zel r\u00f6portajlar ve sadece \u00fcyelere \u00f6zel i\u00e7erikler.",
-    gradient: "from-[#8080FF]/20 to-[#8080FF]/5",
+      "Derinlemesine analizler, özel röportajlar ve sadece üyelere özel içerikler. Mainstream medyanın görmezden geldiği hikayeleri size getiriyoruz.",
+    accentColor: "#8080FF",
   },
   {
+    num: "02",
     icon: Headphones,
-    title: "G\u00fcnl\u00fck B\u00fclten + AI Podcastler",
+    title: "Günlük Bülten + AI Podcastler",
     description:
-      "Her sabah \u00f6zenle haz\u0131rlanm\u0131\u015f b\u00fclten ve yapay zek\u00e2 destekli podcast \u00f6zetleri.",
-    gradient: "from-[#8080FF]/15 to-[#8080FF]/5",
+      "Her sabah özenle hazırlanmış bülten ve yapay zekâ destekli podcast özetleri. Günü anlamak için ihtiyacınız olan her şey, tek bir yerden.",
+    accentColor: "#8080FF",
   },
   {
+    num: "03",
     icon: CalendarHeart,
-    title: "\u00d6zel Etkinlikler + \u00d6ncelikli Destek",
+    title: "Özel Etkinlikler + Öncelikli Destek",
     description:
-      "Sadece \u00fcyelere \u00f6zel etkinlikler, webinarlar ve \u00f6ncelikli ileti\u015fim hatt\u0131.",
-    gradient: "from-[#8080FF]/10 to-[#8080FF]/5",
+      "Sadece üyelere özel etkinlikler, webinarlar ve öncelikli iletişim hattı. Gazetecilerle doğrudan bağlantı kurma fırsatı.",
+    accentColor: "#8080FF",
   },
 ];
 
-function FeatureShowcase() {
+function FeatureShowcase({ articles }: { articles: Article[] }) {
   return (
     <section className={cn(colors.background.base, sectionPadding["2xl"])}>
       <div className={cn("max-w-7xl mx-auto", containerPadding.lg)}>
-        <div className="flex flex-col gap-16 md:gap-24">
+        <div className="flex flex-col gap-20 md:gap-32">
           {features.map((feature, i) => {
             const Icon = feature.icon;
             const isEven = i % 2 === 1;
+            // Use article images for visual panels if available
+            const article = articles[i];
+            const hasImage = article && (article.thumbnail || article.image);
 
             return (
               <FadeInOnScroll key={feature.title}>
-                <div className={cn("grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center")}>
-                  {/* Image / visual area */}
-                  <div className={cn("relative aspect-[4/3] rounded-2xl overflow-hidden flex items-center justify-center bg-gradient-to-br", feature.gradient, isEven && "md:order-2")}>
-                    <div className="h-20 w-20 rounded-2xl flex items-center justify-center bg-[#8080FF]/10 border border-[#8080FF]/20">
-                      <Icon className={cn("h-10 w-10", colors.foreground.primary)} />
+                <div className={cn("grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-0 rounded-2xl overflow-hidden")}>
+                  {/* Visual panel */}
+                  <div
+                    className={cn(
+                      "relative min-h-[300px] md:min-h-[420px] flex items-end overflow-hidden",
+                      isEven && "md:order-2"
+                    )}
+                  >
+                    {hasImage ? (
+                      <>
+                        <Image
+                          src={(article.thumbnail || article.image)!}
+                          alt={feature.title}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                      </>
+                    ) : (
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          background: `linear-gradient(135deg, #${i === 0 ? "6060CC" : i === 1 ? "374152" : "8080CC"} 0%, #${i === 0 ? "8080FF" : i === 1 ? "4A5568" : "A0A0FF"} 100%)`,
+                        }}
+                      />
+                    )}
+                    {/* Editorial number label */}
+                    <div className="relative z-10 p-8 md:p-12">
+                      <span className="text-[120px] md:text-[160px] font-bold leading-none text-white/10 select-none absolute top-4 left-6 pointer-events-none">
+                        {feature.num}
+                      </span>
+                      <div className="relative">
+                        <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-white/20 backdrop-blur-sm mb-3">
+                          <Icon className="h-6 w-6 text-white" />
+                        </div>
+                        <p className="text-white/80 text-sm font-medium uppercase tracking-widest">
+                          {feature.num} — Premium
+                        </p>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Text area */}
-                  <div className={cn(isEven && "md:order-1")}>
-                    <h3 className="font-display text-3xl md:text-4xl font-bold leading-tight tracking-tight mb-4">
+                  {/* Text panel */}
+                  <div
+                    className={cn(
+                      "flex flex-col justify-center p-8 md:p-12 lg:p-16",
+                      colors.background.elevated,
+                      isEven && "md:order-1"
+                    )}
+                  >
+                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight tracking-tight mb-6">
                       {feature.title}
                     </h3>
                     <p className={cn(colors.foreground.secondary, "text-base md:text-lg leading-relaxed")}>
@@ -174,13 +243,21 @@ function Testimonial() {
       <div className={cn("max-w-4xl mx-auto text-center", containerPadding.lg)}>
         <FadeInOnScroll>
           <blockquote className="font-display italic text-2xl md:text-3xl lg:text-4xl leading-relaxed tracking-tight mb-8">
-            &ldquo;Scrolli, T\u00fcrkiye&rsquo;nin en \u00f6nemli ba\u011f\u0131ms\u0131z gazetecilik platformlar\u0131ndan biri. Premium \u00fcyelik, bu misyonu desteklemenin en iyi yolu.&rdquo;
+            &ldquo;Scrolli, Türkiye&rsquo;nin en önemli bağımsız gazetecilik platformlarından biri. Premium üyelik, bu misyonu desteklemenin en iyi yolu.&rdquo;
           </blockquote>
 
           <div className="flex flex-col items-center gap-3">
-            <div className="h-16 w-16 rounded-full bg-gray-300 dark:bg-gray-600" aria-hidden="true" />
+            <div className="relative h-16 w-16 rounded-full overflow-hidden">
+              <Image
+                src="/assets/images/author-avata-1.jpg"
+                alt="Ayşe Yılmaz"
+                fill
+                className="object-cover object-center"
+                sizes="64px"
+              />
+            </div>
             <div>
-              <p className={cn(fontWeight.semibold, "text-base")}>Ay\u015fe Y\u0131lmaz</p>
+              <p className={cn(fontWeight.semibold, "text-base")}>Ayşe Yılmaz</p>
               <p className={cn(colors.foreground.muted, "text-sm")}>Gazeteci &amp; Yazar</p>
             </div>
           </div>
@@ -197,12 +274,25 @@ function Testimonial() {
 function ArticleGallery({ articles }: { articles: Article[] }) {
   const galleryArticles = articles.length >= 6 ? articles.slice(3, 6) : articles.slice(0, 3);
 
+  const fallbacks = [
+    { title: "Bağımsız Araştırmacı Gazetecilik", img: "/assets/images/author-avata-2.jpg" },
+    { title: "Derinlemesine Sektör Analizleri", img: "/assets/images/author-avata-3.jpg" },
+    { title: "Özel Röportajlar ve Söyleşiler", img: "/assets/images/author-avata-4.jpg" },
+  ];
+
   return (
     <section className={cn(colors.background.base, sectionPadding.xl)}>
       <div className={cn("max-w-7xl mx-auto", containerPadding.lg)}>
         <FadeInOnScroll>
           <div className="flex flex-wrap justify-center gap-12 md:gap-16">
-            {galleryArticles.map((article, i) => (
+            {(galleryArticles.length > 0 ? galleryArticles : fallbacks.map((f, i) => ({
+              id: `fallback-${i}`,
+              title: f.title,
+              thumbnail: f.img,
+              image: f.img,
+              category: undefined,
+              slug: "",
+            } as unknown as Article))).map((article, i) => (
               <div key={article.id ?? i} className="flex flex-col items-center gap-4">
                 <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden">
                   {article.thumbnail || article.image ? (
@@ -217,7 +307,7 @@ function ArticleGallery({ articles }: { articles: Article[] }) {
                     <div className="absolute inset-0 bg-gradient-to-br from-[#8080FF]/20 to-[#8080FF]/5" />
                   )}
                 </div>
-                <p className="font-display text-lg text-center leading-tight max-w-[16rem]">
+                <p className="text-lg font-semibold text-center leading-tight max-w-[16rem]">
                   {article.title}
                 </p>
               </div>
@@ -238,12 +328,12 @@ function FinalCTA() {
     <section className={cn(colors.background.base, sectionPadding["2xl"])}>
       <div className={cn("max-w-3xl mx-auto text-center", containerPadding.lg)}>
         <FadeInOnScroll>
-          <h2 className="font-display text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-4">
-            Ba\u011f\u0131ms\u0131z gazetecili\u011fi destekle
+          <h2 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-4">
+            Bağımsız gazeteciliği destekle
           </h2>
           <p className={cn(colors.foreground.secondary, "text-base md:text-lg leading-relaxed mb-8 max-w-xl mx-auto")}>
-            Scrolli Premium ile kaliteli, ba\u011f\u0131ms\u0131z habercilik ekosistemine destek olun.
-            Her abonelik, \u00f6zg\u00fcr gazetecili\u011fin g\u00fcc\u00fcne g\u00fc\u00e7 katar.
+            Scrolli Premium ile kaliteli, bağımsız habercilik ekosistemine destek olun.
+            Her abonelik, özgür gazeteciliğin gücüne güç katar.
           </p>
           <Link
             href="/subscribe"
@@ -254,7 +344,7 @@ function FinalCTA() {
               "inline-flex items-center gap-2 text-base font-medium transition-colors"
             )}
           >
-            Scrolli Premium&rsquo;a Kat\u0131l
+            Scrolli Premium&rsquo;a Katıl
             <ArrowRight className="h-5 w-5" />
           </Link>
         </FadeInOnScroll>
@@ -270,18 +360,18 @@ function FinalCTA() {
 const businessFeatures = [
   {
     icon: Building2,
-    title: "Kapal\u0131 Analizler",
-    description: "Kurumunuza \u00f6zel, derinlemesine sekt\u00f6rel analiz raporlar\u0131.",
+    title: "Kapalı Analizler",
+    description: "Kurumunuza özel, derinlemesine sektörel analiz raporları.",
   },
   {
     icon: Users,
-    title: "\u00d6zel Bulu\u015fmalar",
-    description: "Sekt\u00f6r liderlerinin kat\u0131ld\u0131\u011f\u0131 \u00f6zel etkinlikler ve webinarlar.",
+    title: "Özel Buluşmalar",
+    description: "Sektör liderlerinin katıldığı özel etkinlikler ve webinarlar.",
   },
   {
     icon: Mail,
-    title: "Kurumsal Eri\u015fim",
-    description: "Ekibiniz i\u00e7in s\u0131n\u0131rs\u0131z premium i\u00e7erik eri\u015fimi.",
+    title: "Kurumsal Erişim",
+    description: "Ekibiniz için sınırsız premium içerik erişimi.",
   },
 ];
 
@@ -290,7 +380,7 @@ function ScrolliBusiness() {
     <section className={cn(surfacePairs.brand.beige, sectionPadding.xl)}>
       <div className={cn("max-w-7xl mx-auto", containerPadding.lg)}>
         <FadeInOnScroll>
-          <h2 className="font-display text-3xl md:text-4xl font-bold leading-tight tracking-tight text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold leading-tight tracking-tight text-center mb-12">
             Scrolli+ Business
           </h2>
 
@@ -321,7 +411,7 @@ function ScrolliBusiness() {
                 "inline-flex items-center gap-2 text-base font-medium transition-colors"
               )}
             >
-              Bize Ula\u015f\u0131n
+              Bize Ulaşın
               <ArrowRight className="h-5 w-5" />
             </a>
           </div>
@@ -340,14 +430,14 @@ function CorporateCTA() {
     <section className={cn(colors.background.base, sectionPadding.lg, "border-t", colors.border.DEFAULT)}>
       <div className={cn("max-w-3xl mx-auto text-center", containerPadding.lg)}>
         <FadeInOnScroll>
-          <h3 className={cn("font-display text-xl md:text-2xl font-semibold leading-tight tracking-tight mb-3")}>
-            Kurumsal abonelik mi ar\u0131yorsunuz?
+          <h3 className={cn("text-xl md:text-2xl font-semibold leading-tight tracking-tight mb-3")}>
+            Kurumsal abonelik mi arıyorsunuz?
           </h3>
           <a
             href="mailto:info@scrolli.co"
             className={cn(colors.foreground.secondary, "inline-flex items-center gap-1.5 text-base hover:opacity-80 transition-opacity")}
           >
-            Bize ula\u015f\u0131n
+            Bize ulaşın
             <ArrowRight className="h-4 w-4" />
           </a>
         </FadeInOnScroll>
@@ -364,7 +454,7 @@ export default function PricingSections({ articles }: { articles: Article[] }) {
   return (
     <>
       <EditorialValue articles={articles} />
-      <FeatureShowcase />
+      <FeatureShowcase articles={articles} />
       <Testimonial />
       <ArticleGallery articles={articles} />
       <FinalCTA />
