@@ -98,6 +98,7 @@ None yet.
 | 260328-gwt | Fix CTA button contrast — white text on beige/cream background is unreadable | 2026-03-28 | cdf825f | [260328-gwt-fix-cta-button-contrast-white-text-on-be](./quick/260328-gwt-fix-cta-button-contrast-white-text-on-be/) |
 | 260328-gwt | Fix CTA button contrast: scope legacy CSS hover rules to exclude Tailwind-styled buttons | 2026-03-28 | cdf825f | [260328-gwt-fix-cta-button-contrast-white-text-on-be](./quick/260328-gwt-fix-cta-button-contrast-white-text-on-be/) |
 | 260402-hwc | Restrict Newsreader to article headlines: switch fontFamily.heading to font-sans, restore font-display on 21 article title Headings | 2026-04-02 | f84b97a | [260402-hwc-restrict-newsreader-to-article-headlines](./quick/260402-hwc-restrict-newsreader-to-article-headlines/) |
+| 260405-k4o | Pricing page redesign — tabloid editorial style with 7 editorial sections | 2026-04-05 | f9b2bf6 | [260405-k4o-pricing-page-redesign-tabloid-editorial-](./quick/260405-k4o-pricing-page-redesign-tabloid-editorial-/) |
 
 ### Blockers/Concerns
 
