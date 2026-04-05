@@ -144,9 +144,9 @@ function EditorialStatement() {
 // Scroll-linked horizontal motion — articles slide left as user scrolls down
 // ---------------------------------------------------------------------------
 
-function HorizontalScrollGallery({ articles }: { articles: Article[] }) {
+// Inner component that uses useScroll — only rendered when we have articles
+function HorizontalScrollInner({ displayArticles }: { displayArticles: Article[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const shouldReduceMotion = useReducedMotion();
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -155,18 +155,113 @@ function HorizontalScrollGallery({ articles }: { articles: Article[] }) {
 
   const rawX = useTransform(scrollYProgress, [0, 1], ["2%", "-55%"]);
   const x = useSpring(rawX, { stiffness: 120, damping: 35, mass: 0.4 });
-
-  // Progress indicator
   const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
-
-  // Scroll hint — fades out after 20% scroll
   const hintOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
+
+  return (
+    <section
+      ref={containerRef}
+      className="relative h-[200vh] md:h-[220vh]"
+      style={{
+        background: `linear-gradient(to bottom, #F8F5E4 0%, var(--background, #ffffff) 12%, var(--background, #ffffff) 88%, #F8F5E4 100%)`,
+      }}
+    >
+      <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
+        <div
+          className={cn(
+            "max-w-7xl mx-auto w-full flex items-baseline justify-between mb-8 md:mb-10",
+            containerPadding.lg
+          )}
+        >
+          <div>
+            <p className="text-sm uppercase tracking-[0.2em] text-[#8080FF] font-medium mb-2">
+              Keşfedin
+            </p>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
+              Hikayelerimiz
+            </h2>
+          </div>
+          <Link
+            href="/"
+            className={cn(
+              "hidden md:inline-flex items-center gap-2 text-sm font-medium",
+              colors.foreground.secondary,
+              "hover:opacity-70 transition-opacity"
+            )}
+          >
+            Tümünü gör
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        <motion.div
+          style={{ x }}
+          className="flex gap-5 md:gap-6 pl-4 md:pl-8 lg:pl-12 xl:pl-16"
+        >
+          {displayArticles.map((article, i) => (
+            <motion.div
+              key={article.id ?? i}
+              className="relative flex-shrink-0 w-[260px] md:w-[320px] lg:w-[360px] aspect-[3/4] rounded-2xl overflow-hidden group cursor-pointer"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+            >
+              <Image
+                src={(article.thumbnail || article.image)!}
+                alt={article.title ?? ""}
+                fill
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                sizes="(max-width: 768px) 260px, (max-width: 1024px) 320px, 360px"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+              <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
+                {article.category && (
+                  <span className="inline-block px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-white/15 text-white backdrop-blur-sm mb-2.5">
+                    {article.category}
+                  </span>
+                )}
+                <h3 className="text-base md:text-lg font-semibold text-white leading-snug line-clamp-2">
+                  {article.title}
+                </h3>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        <div className="max-w-7xl mx-auto w-full mt-8 md:mt-10 px-4 md:px-8 lg:px-12 xl:px-16">
+          <div className="h-[2px] bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+            <motion.div
+              className="h-full bg-[#8080FF] rounded-full origin-left"
+              style={{ scaleX }}
+            />
+          </div>
+          <motion.div
+            className="flex items-center justify-center gap-1.5 mt-4"
+            style={{ opacity: hintOpacity }}
+          >
+            <motion.div
+              animate={{ y: [0, 5, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <ChevronDown className="h-4 w-4 text-muted-foreground/60" />
+            </motion.div>
+            <span className="text-xs text-muted-foreground/60 font-medium tracking-wide">
+              Keşfetmek için kaydırın
+            </span>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HorizontalScrollGallery({ articles }: { articles: Article[] }) {
+  const shouldReduceMotion = useReducedMotion();
 
   const displayArticles = articles
     .filter((a) => a.thumbnail || a.image)
     .slice(0, 10);
 
-  // Mobile fallback: horizontal snap scroll (CSS-only)
+  // Fallback: simple snap scroll (no useScroll hooks = no hydration crash)
   if (shouldReduceMotion || displayArticles.length === 0) {
     return (
       <section className={cn(colors.background.base, "py-16 md:py-24")}>
@@ -225,106 +320,7 @@ function HorizontalScrollGallery({ articles }: { articles: Article[] }) {
     );
   }
 
-  return (
-    <section
-      ref={containerRef}
-      className="relative h-[200vh] md:h-[220vh]"
-      style={{
-        background: `linear-gradient(to bottom, #F8F5E4 0%, var(--background, #ffffff) 12%, var(--background, #ffffff) 88%, #F8F5E4 100%)`,
-      }}
-    >
-      <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
-        {/* Section header */}
-        <div
-          className={cn(
-            "max-w-7xl mx-auto w-full flex items-baseline justify-between mb-8 md:mb-10",
-            containerPadding.lg
-          )}
-        >
-          <div>
-            <p className="text-sm uppercase tracking-[0.2em] text-[#8080FF] font-medium mb-2">
-              Keşfedin
-            </p>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
-              Hikayelerimiz
-            </h2>
-          </div>
-          <Link
-            href="/"
-            className={cn(
-              "hidden md:inline-flex items-center gap-2 text-sm font-medium",
-              colors.foreground.secondary,
-              "hover:opacity-70 transition-opacity"
-            )}
-          >
-            Tümünü gör
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
-
-        {/* Horizontal strip */}
-        <motion.div
-          style={{ x }}
-          className="flex gap-5 md:gap-6 pl-4 md:pl-8 lg:pl-12 xl:pl-16"
-        >
-          {displayArticles.map((article, i) => (
-            <motion.div
-              key={article.id ?? i}
-              className="relative flex-shrink-0 w-[260px] md:w-[320px] lg:w-[360px] aspect-[3/4] rounded-2xl overflow-hidden group cursor-pointer"
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-            >
-              <Image
-                src={(article.thumbnail || article.image)!}
-                alt={article.title ?? ""}
-                fill
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                sizes="(max-width: 768px) 260px, (max-width: 1024px) 320px, 360px"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-
-              <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
-                {article.category && (
-                  <span className="inline-block px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-white/15 text-white backdrop-blur-sm mb-2.5">
-                    {article.category}
-                  </span>
-                )}
-                <h3 className="text-base md:text-lg font-semibold text-white leading-snug line-clamp-2">
-                  {article.title}
-                </h3>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Progress bar + scroll hint */}
-        <div className="max-w-7xl mx-auto w-full mt-8 md:mt-10 px-4 md:px-8 lg:px-12 xl:px-16">
-          <div className="h-[2px] bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-            <motion.div
-              className="h-full bg-[#8080FF] rounded-full origin-left"
-              style={{ scaleX }}
-            />
-          </div>
-
-          {/* Scroll hint */}
-          <motion.div
-            className="flex items-center justify-center gap-1.5 mt-4"
-            style={{ opacity: hintOpacity }}
-          >
-            <motion.div
-              animate={{ y: [0, 5, 0] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <ChevronDown className="h-4 w-4 text-muted-foreground/60" />
-            </motion.div>
-            <span className="text-xs text-muted-foreground/60 font-medium tracking-wide">
-              Keşfetmek için kaydırın
-            </span>
-          </motion.div>
-        </div>
-      </div>
-    </section>
-  );
+  return <HorizontalScrollInner displayArticles={displayArticles} />;
 }
 
 // ---------------------------------------------------------------------------
@@ -369,29 +365,16 @@ function FeaturePanelImage({
   fallbackGradient: string;
   num: string;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const shouldReduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const y = useTransform(scrollYProgress, [0, 1], ["-5%", "5%"]);
-
   return (
-    <div ref={ref} className="relative min-h-[50vh] md:min-h-full overflow-hidden">
+    <FadeIn className="relative min-h-[50vh] md:min-h-full overflow-hidden">
       {src ? (
-        <motion.div
-          className="absolute inset-[-10%] w-[120%] h-[120%]"
-          style={shouldReduceMotion ? {} : { y }}
-        >
-          <Image
-            src={src}
-            alt={alt}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 50vw"
-          />
-        </motion.div>
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
       ) : (
         <div className="absolute inset-0" style={{ background: fallbackGradient }} />
       )}
@@ -407,7 +390,7 @@ function FeaturePanelImage({
       >
         {num}
       </span>
-    </div>
+    </FadeIn>
   );
 }
 
@@ -511,22 +494,12 @@ function FeaturePanels({ articles }: { articles: Article[] }) {
 // ---------------------------------------------------------------------------
 
 function Testimonial() {
-  const ref = useRef<HTMLDivElement>(null);
-  const shouldReduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const y = useTransform(scrollYProgress, [0, 1], [30, -30]);
-
   return (
     <section
-      ref={ref}
       className={cn(surfacePairs.brand.beige, "py-24 md:py-32 lg:py-40")}
     >
-      <motion.div
+      <div
         className={cn("max-w-4xl mx-auto text-center", containerPadding.lg)}
-        style={shouldReduceMotion ? {} : { y }}
       >
         <FadeIn>
           <div className="mb-8">
@@ -569,7 +542,7 @@ function Testimonial() {
             </div>
           </div>
         </FadeIn>
-      </motion.div>
+      </div>
     </section>
   );
 }
