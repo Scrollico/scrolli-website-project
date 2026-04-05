@@ -1,10 +1,24 @@
 "use client";
 
-import { ReactNode } from "react";
+import { useRef, ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
-import { Crown, Headphones, CalendarHeart, ArrowRight, Building2, Mail, Users } from "lucide-react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useReducedMotion,
+} from "framer-motion";
+import {
+  Crown,
+  Headphones,
+  CalendarHeart,
+  ArrowRight,
+  Building2,
+  Mail,
+  Users,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Article } from "@/types/content";
 import {
@@ -20,10 +34,18 @@ import {
 } from "@/lib/design-tokens";
 
 // ---------------------------------------------------------------------------
-// FadeInOnScroll wrapper
+// Shared animation wrapper
 // ---------------------------------------------------------------------------
 
-function FadeInOnScroll({ children, className }: { children: ReactNode; className?: string }) {
+function FadeIn({
+  children,
+  className,
+  delay = 0,
+}: {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+}) {
   const shouldReduceMotion = useReducedMotion();
 
   if (shouldReduceMotion) {
@@ -33,10 +55,10 @@ function FadeInOnScroll({ children, className }: { children: ReactNode; classNam
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1], delay }}
     >
       {children}
     </motion.div>
@@ -44,76 +66,215 @@ function FadeInOnScroll({ children, className }: { children: ReactNode; classNam
 }
 
 // ---------------------------------------------------------------------------
-// Section 2 -- Editorial Value (3-column image grid with overlays)
+// Section 1 — Editorial Statement
+// Large centered headline with staggered word reveal
 // ---------------------------------------------------------------------------
 
-function EditorialValue({ articles }: { articles: Article[] }) {
-  const displayArticles = articles.slice(0, 3);
+function EditorialStatement() {
+  const words = "Gazeteciliğin geleceğini birlikte inşa ediyoruz".split(" ");
 
   return (
-    <section className={cn(surfacePairs.brand.beige, sectionPadding.xl)}>
-      <div className={cn("max-w-7xl mx-auto", containerPadding.lg)}>
-        <FadeInOnScroll>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight tracking-tight text-center mb-4">
-            Gazeteciliğin geleceğini birlikte inşa ediyoruz
-          </h2>
-          <p className={cn(colors.foreground.secondary, "text-center max-w-2xl mx-auto text-base md:text-lg leading-relaxed mb-12")}>
+    <section className={cn(surfacePairs.brand.beige, "py-24 md:py-32 lg:py-40")}>
+      <div className={cn("max-w-5xl mx-auto text-center", containerPadding.lg)}>
+        <FadeIn>
+          <p className="text-sm md:text-base uppercase tracking-[0.2em] text-[#8080FF] font-medium mb-6 md:mb-8">
+            Scrolli Premium
+          </p>
+        </FadeIn>
+
+        <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.05] tracking-tight mb-8">
+          {words.map((word, i) => (
+            <FadeIn
+              key={i}
+              className="inline-block mr-[0.3em]"
+              delay={i * 0.06}
+            >
+              {word}
+            </FadeIn>
+          ))}
+        </h2>
+
+        <FadeIn delay={0.4}>
+          <p
+            className={cn(
+              colors.foreground.secondary,
+              "text-lg md:text-xl leading-relaxed max-w-2xl mx-auto"
+            )}
+          >
             Bağımsız gazetecilik, okuyucularının desteğiyle ayakta kalır.
             Scrolli Premium ile kaliteli haberciliğe katkıda bulunun.
           </p>
-        </FadeInOnScroll>
+        </FadeIn>
+      </div>
+    </section>
+  );
+}
 
-        <div className={cn("grid grid-cols-1 md:grid-cols-3", gap.xl)}>
-          {displayArticles.map((article, i) => (
-            <FadeInOnScroll key={article.id ?? i}>
-              <div className="relative aspect-[3/4] rounded-xl overflow-hidden group">
-                {article.thumbnail || article.image ? (
-                  <Image
-                    src={(article.thumbnail || article.image)!}
-                    alt={article.title ?? ""}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#8080FF]/20 via-[#8080FF]/10 to-[#8080FF]/5" />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+// ---------------------------------------------------------------------------
+// Section 2 — Horizontal Scroll Article Gallery
+// Scroll-linked horizontal motion — articles slide left as user scrolls down
+// ---------------------------------------------------------------------------
+
+function HorizontalScrollGallery({ articles }: { articles: Article[] }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
+  const rawX = useTransform(scrollYProgress, [0, 1], ["2%", "-60%"]);
+  const x = useSpring(rawX, { stiffness: 80, damping: 30, mass: 0.5 });
+
+  // Progress indicator
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+  });
+
+  const displayArticles = articles
+    .filter((a) => a.thumbnail || a.image)
+    .slice(0, 10);
+
+  // Mobile fallback: horizontal snap scroll (CSS-only)
+  if (shouldReduceMotion || displayArticles.length === 0) {
+    return (
+      <section className={cn(colors.background.base, "py-16 md:py-24")}>
+        <div className={cn("max-w-7xl mx-auto", containerPadding.lg)}>
+          <div className="flex items-baseline justify-between mb-8">
+            <div>
+              <p className="text-sm uppercase tracking-[0.2em] text-[#8080FF] font-medium mb-2">
+                Keşfedin
+              </p>
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
+                Hikayelerimiz
+              </h2>
+            </div>
+            <Link
+              href="/"
+              className={cn(
+                "hidden md:inline-flex items-center gap-2 text-sm font-medium",
+                colors.foreground.secondary,
+                "hover:opacity-70 transition-opacity"
+              )}
+            >
+              Tümünü gör
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4 scrollbar-hide">
+            {displayArticles.slice(0, 6).map((article, i) => (
+              <div
+                key={article.id ?? i}
+                className="relative flex-shrink-0 w-[260px] md:w-[300px] aspect-[3/4] rounded-2xl overflow-hidden snap-start"
+              >
+                <Image
+                  src={(article.thumbnail || article.image)!}
+                  alt={article.title ?? ""}
+                  fill
+                  className="object-cover"
+                  sizes="300px"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-5">
                   {article.category && (
-                    <span className="inline-block px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide bg-white/20 text-white backdrop-blur-sm mb-2">
+                    <span className="inline-block px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-white/15 text-white backdrop-blur-sm mb-2">
                       {article.category}
                     </span>
                   )}
-                  <h3 className="text-lg md:text-xl font-semibold text-white leading-tight line-clamp-2">
+                  <h3 className="text-base font-semibold text-white leading-snug line-clamp-2">
                     {article.title}
                   </h3>
                 </div>
               </div>
-            </FadeInOnScroll>
-          ))}
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
-          {/* Fallback cards when no articles */}
-          {displayArticles.length === 0 && [
-            { label: "Araştırma", title: "Bağımsız Araştırmacı Gazetecilik" },
-            { label: "Analiz", title: "Derinlemesine Sektör Analizleri" },
-            { label: "Röportaj", title: "Özel Röportajlar ve Söyleşiler" },
-          ].map((item, i) => (
-            <FadeInOnScroll key={i}>
-              <div className="relative aspect-[3/4] rounded-xl overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#8080FF]/20 via-[#8080FF]/10 to-[#8080FF]/5" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <span className="inline-block px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide bg-white/20 text-white backdrop-blur-sm mb-2">
-                    {item.label}
+  return (
+    <section
+      ref={containerRef}
+      className={cn(colors.background.base, "relative h-[250vh] md:h-[300vh]")}
+    >
+      <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
+        {/* Section header */}
+        <div
+          className={cn(
+            "max-w-7xl mx-auto w-full flex items-baseline justify-between mb-8 md:mb-10",
+            containerPadding.lg
+          )}
+        >
+          <div>
+            <p className="text-sm uppercase tracking-[0.2em] text-[#8080FF] font-medium mb-2">
+              Keşfedin
+            </p>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
+              Hikayelerimiz
+            </h2>
+          </div>
+          <Link
+            href="/"
+            className={cn(
+              "hidden md:inline-flex items-center gap-2 text-sm font-medium",
+              colors.foreground.secondary,
+              "hover:opacity-70 transition-opacity"
+            )}
+          >
+            Tümünü gör
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        {/* Horizontal strip */}
+        <motion.div
+          style={{ x }}
+          className="flex gap-5 md:gap-6 pl-4 md:pl-8 lg:pl-12 xl:pl-16"
+        >
+          {displayArticles.map((article, i) => (
+            <motion.div
+              key={article.id ?? i}
+              className="relative flex-shrink-0 w-[260px] md:w-[320px] lg:w-[360px] aspect-[3/4] rounded-2xl overflow-hidden group cursor-pointer"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+            >
+              <Image
+                src={(article.thumbnail || article.image)!}
+                alt={article.title ?? ""}
+                fill
+                className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                sizes="(max-width: 768px) 260px, (max-width: 1024px) 320px, 360px"
+              />
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+
+              {/* Content */}
+              <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
+                {article.category && (
+                  <span className="inline-block px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-white/15 text-white backdrop-blur-sm mb-2.5">
+                    {article.category}
                   </span>
-                  <h3 className="text-lg font-semibold text-white leading-tight">
-                    {item.title}
-                  </h3>
-                </div>
+                )}
+                <h3 className="text-base md:text-lg font-semibold text-white leading-snug line-clamp-2">
+                  {article.title}
+                </h3>
               </div>
-            </FadeInOnScroll>
+            </motion.div>
           ))}
+        </motion.div>
+
+        {/* Scroll progress indicator */}
+        <div className="max-w-7xl mx-auto w-full mt-8 md:mt-10 px-4 md:px-8 lg:px-12 xl:px-16">
+          <div className="h-[2px] bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+            <motion.div
+              className="h-full bg-[#8080FF] rounded-full origin-left"
+              style={{ scaleX }}
+            />
+          </div>
         </div>
       </div>
     </section>
@@ -121,7 +282,8 @@ function EditorialValue({ articles }: { articles: Article[] }) {
 }
 
 // ---------------------------------------------------------------------------
-// Section 3 -- Feature Showcase (alternating editorial panels)
+// Section 3 — Feature Panels (alternating, full-bleed editorial style)
+// Like Humane Space "More space for exploration / reflection / fulfillment"
 // ---------------------------------------------------------------------------
 
 const features = [
@@ -129,244 +291,268 @@ const features = [
     num: "01",
     icon: Crown,
     title: "Premium Makaleler",
+    subtitle: "Daha derin",
     description:
       "Derinlemesine analizler, özel röportajlar ve sadece üyelere özel içerikler. Mainstream medyanın görmezden geldiği hikayeleri size getiriyoruz.",
-    accentColor: "#8080FF",
   },
   {
     num: "02",
     icon: Headphones,
     title: "Günlük Bülten + AI Podcastler",
+    subtitle: "Daha akıllı",
     description:
       "Her sabah özenle hazırlanmış bülten ve yapay zekâ destekli podcast özetleri. Günü anlamak için ihtiyacınız olan her şey, tek bir yerden.",
-    accentColor: "#8080FF",
   },
   {
     num: "03",
     icon: CalendarHeart,
     title: "Özel Etkinlikler + Öncelikli Destek",
+    subtitle: "Daha yakın",
     description:
       "Sadece üyelere özel etkinlikler, webinarlar ve öncelikli iletişim hattı. Gazetecilerle doğrudan bağlantı kurma fırsatı.",
-    accentColor: "#8080FF",
   },
 ];
 
-function FeatureShowcase({ articles }: { articles: Article[] }) {
+function FeaturePanels({ articles }: { articles: Article[] }) {
   return (
-    <section className={cn(colors.background.base, sectionPadding["2xl"])}>
-      <div className={cn("max-w-7xl mx-auto", containerPadding.lg)}>
-        <div className="flex flex-col gap-20 md:gap-32">
-          {features.map((feature, i) => {
-            const Icon = feature.icon;
-            const isEven = i % 2 === 1;
-            // Use article images for visual panels if available
-            const article = articles[i];
-            const hasImage = article && (article.thumbnail || article.image);
+    <section className="relative">
+      {features.map((feature, i) => {
+        const Icon = feature.icon;
+        const isEven = i % 2 === 1;
+        const article = articles.filter((a) => a.thumbnail || a.image)[i + 3];
+        const hasImage = article && (article.thumbnail || article.image);
+        const isBeige = i % 2 === 0;
 
-            return (
-              <FadeInOnScroll key={feature.title}>
-                <div className={cn("grid grid-cols-1 md:grid-cols-2 gap-0 md:gap-0 rounded-2xl overflow-hidden")}>
-                  {/* Visual panel */}
-                  <div
-                    className={cn(
-                      "relative min-h-[300px] md:min-h-[420px] flex items-end overflow-hidden",
-                      isEven && "md:order-2"
-                    )}
-                  >
-                    {hasImage ? (
-                      <>
-                        <Image
-                          src={(article.thumbnail || article.image)!}
-                          alt={feature.title}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                      </>
-                    ) : (
-                      <div
-                        className="absolute inset-0"
-                        style={{
-                          background: `linear-gradient(135deg, #${i === 0 ? "6060CC" : i === 1 ? "374152" : "8080CC"} 0%, #${i === 0 ? "8080FF" : i === 1 ? "4A5568" : "A0A0FF"} 100%)`,
-                        }}
+        return (
+          <div
+            key={feature.title}
+            className={cn(
+              "relative",
+              isBeige ? surfacePairs.brand.beige : colors.background.base
+            )}
+          >
+            <div className="max-w-[1400px] mx-auto">
+              <div
+                className={cn(
+                  "grid grid-cols-1 md:grid-cols-2 min-h-[70vh] md:min-h-[80vh]"
+                )}
+              >
+                {/* Visual panel */}
+                <FadeIn
+                  className={cn(
+                    "relative min-h-[50vh] md:min-h-full overflow-hidden",
+                    isEven && "md:order-2"
+                  )}
+                >
+                  {hasImage ? (
+                    <>
+                      <Image
+                        src={(article.thumbnail || article.image)!}
+                        alt={feature.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 50vw"
                       />
-                    )}
-                    {/* Editorial number label */}
-                    <div className="relative z-10 p-8 md:p-12">
-                      <span className="text-[120px] md:text-[160px] font-bold leading-none text-white/10 select-none absolute top-4 left-6 pointer-events-none">
-                        {feature.num}
-                      </span>
-                      <div className="relative">
-                        <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-white/20 backdrop-blur-sm mb-3">
-                          <Icon className="h-6 w-6 text-white" />
-                        </div>
-                        <p className="text-white/80 text-sm font-medium uppercase tracking-widest">
-                          {feature.num} — Premium
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-transparent" />
+                    </>
+                  ) : (
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background:
+                          i === 0
+                            ? "linear-gradient(135deg, #5A5ACD 0%, #8080FF 100%)"
+                            : i === 1
+                              ? "linear-gradient(135deg, #374152 0%, #4B5563 100%)"
+                              : "linear-gradient(135deg, #6A6AE0 0%, #9999FF 100%)",
+                      }}
+                    />
+                  )}
 
-                  {/* Text panel */}
-                  <div
-                    className={cn(
-                      "flex flex-col justify-center p-8 md:p-12 lg:p-16",
-                      colors.background.elevated,
-                      isEven && "md:order-1"
-                    )}
+                  {/* Large editorial number watermark */}
+                  <span
+                    className="absolute bottom-6 right-8 md:bottom-10 md:right-12 text-[140px] md:text-[200px] lg:text-[260px] font-bold leading-none select-none pointer-events-none"
+                    style={{ color: "rgba(255,255,255,0.08)" }}
                   >
-                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight tracking-tight mb-6">
+                    {feature.num}
+                  </span>
+                </FadeIn>
+
+                {/* Text panel */}
+                <div
+                  className={cn(
+                    "flex flex-col justify-center px-6 py-16 md:px-12 lg:px-20 xl:px-24",
+                    isEven && "md:order-1"
+                  )}
+                >
+                  <FadeIn delay={0.15}>
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="h-10 w-10 rounded-xl bg-[#8080FF]/10 flex items-center justify-center">
+                        <Icon className="h-5 w-5 text-[#8080FF]" />
+                      </div>
+                      <span className="text-xs uppercase tracking-[0.2em] text-[#8080FF] font-medium">
+                        {feature.num} — {feature.subtitle}
+                      </span>
+                    </div>
+                  </FadeIn>
+
+                  <FadeIn delay={0.25}>
+                    <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-[1.1] tracking-tight mb-6">
                       {feature.title}
                     </h3>
-                    <p className={cn(colors.foreground.secondary, "text-base md:text-lg leading-relaxed")}>
+                  </FadeIn>
+
+                  <FadeIn delay={0.35}>
+                    <p
+                      className={cn(
+                        colors.foreground.secondary,
+                        "text-base md:text-lg leading-relaxed max-w-md"
+                      )}
+                    >
                       {feature.description}
                     </p>
-                  </div>
+                  </FadeIn>
                 </div>
-              </FadeInOnScroll>
-            );
-          })}
-        </div>
-      </div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
     </section>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Section 4 -- Testimonial
+// Section 4 — Testimonial
+// Full-width editorial quote with parallax
 // ---------------------------------------------------------------------------
 
 function Testimonial() {
-  return (
-    <section className={cn(surfacePairs.brand.beige, sectionPadding.xl)}>
-      <div className={cn("max-w-4xl mx-auto text-center", containerPadding.lg)}>
-        <FadeInOnScroll>
-          <blockquote className="font-display italic text-2xl md:text-3xl lg:text-4xl leading-relaxed tracking-tight mb-8">
-            &ldquo;Scrolli, Türkiye&rsquo;nin en önemli bağımsız gazetecilik platformlarından biri. Premium üyelik, bu misyonu desteklemenin en iyi yolu.&rdquo;
-          </blockquote>
+  const ref = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
 
+  return (
+    <section
+      ref={ref}
+      className={cn(surfacePairs.brand.beige, "py-24 md:py-32 lg:py-40")}
+    >
+      <motion.div
+        className={cn("max-w-4xl mx-auto text-center", containerPadding.lg)}
+        style={shouldReduceMotion ? {} : { y }}
+      >
+        <FadeIn>
+          <div className="mb-8">
+            <svg
+              className="mx-auto h-10 w-10 text-[#8080FF]/30"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+            </svg>
+          </div>
+        </FadeIn>
+
+        <FadeIn delay={0.1}>
+          <blockquote className="font-display italic text-2xl md:text-3xl lg:text-4xl leading-relaxed tracking-tight mb-10">
+            Scrolli, Türkiye&rsquo;nin en önemli bağımsız gazetecilik
+            platformlarından biri. Premium üyelik, bu misyonu desteklemenin en
+            iyi yolu.
+          </blockquote>
+        </FadeIn>
+
+        <FadeIn delay={0.2}>
           <div className="flex flex-col items-center gap-3">
-            <div className="relative h-16 w-16 rounded-full overflow-hidden">
+            <div className="relative h-14 w-14 rounded-full overflow-hidden ring-2 ring-[#8080FF]/20 ring-offset-2 ring-offset-[#F8F5E4]">
               <Image
                 src="/assets/images/author-avata-1.jpg"
                 alt="Ayşe Yılmaz"
                 fill
-                className="object-cover object-center"
-                sizes="64px"
+                className="object-cover"
+                sizes="56px"
               />
             </div>
             <div>
-              <p className={cn(fontWeight.semibold, "text-base")}>Ayşe Yılmaz</p>
-              <p className={cn(colors.foreground.muted, "text-sm")}>Gazeteci &amp; Yazar</p>
+              <p className={cn(fontWeight.semibold, "text-base")}>
+                Ayşe Yılmaz
+              </p>
+              <p className={cn(colors.foreground.muted, "text-sm")}>
+                Gazeteci &amp; Yazar
+              </p>
             </div>
           </div>
-        </FadeInOnScroll>
-      </div>
+        </FadeIn>
+      </motion.div>
     </section>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Section 5 -- Article Gallery (circular crops)
-// ---------------------------------------------------------------------------
-
-function ArticleGallery({ articles }: { articles: Article[] }) {
-  const galleryArticles = articles.length >= 6 ? articles.slice(3, 6) : articles.slice(0, 3);
-
-  const fallbacks = [
-    { title: "Bağımsız Araştırmacı Gazetecilik", img: "/assets/images/author-avata-2.jpg" },
-    { title: "Derinlemesine Sektör Analizleri", img: "/assets/images/author-avata-3.jpg" },
-    { title: "Özel Röportajlar ve Söyleşiler", img: "/assets/images/author-avata-4.jpg" },
-  ];
-
-  return (
-    <section className={cn(colors.background.base, sectionPadding.xl)}>
-      <div className={cn("max-w-7xl mx-auto", containerPadding.lg)}>
-        <FadeInOnScroll>
-          <div className="flex flex-wrap justify-center gap-12 md:gap-16">
-            {(galleryArticles.length > 0 ? galleryArticles : fallbacks.map((f, i) => ({
-              id: `fallback-${i}`,
-              title: f.title,
-              thumbnail: f.img,
-              image: f.img,
-              category: undefined,
-              slug: "",
-            } as unknown as Article))).map((article, i) => (
-              <div key={article.id ?? i} className="flex flex-col items-center gap-4">
-                <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden">
-                  {article.thumbnail || article.image ? (
-                    <Image
-                      src={(article.thumbnail || article.image)!}
-                      alt={article.title ?? ""}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 192px, 256px"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#8080FF]/20 to-[#8080FF]/5" />
-                  )}
-                </div>
-                <p className="text-lg font-semibold text-center leading-tight max-w-[16rem]">
-                  {article.title}
-                </p>
-              </div>
-            ))}
-          </div>
-        </FadeInOnScroll>
-      </div>
-    </section>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Section 6 -- Final CTA
+// Section 5 — Final CTA
+// Dramatic closing statement with large typography
 // ---------------------------------------------------------------------------
 
 function FinalCTA() {
   return (
-    <section className={cn(colors.background.base, sectionPadding["2xl"])}>
-      <div className={cn("max-w-3xl mx-auto text-center", containerPadding.lg)}>
-        <FadeInOnScroll>
-          <h2 className="text-4xl md:text-5xl font-bold leading-tight tracking-tight mb-4">
+    <section className={cn(colors.background.base, "py-24 md:py-32 lg:py-40")}>
+      <div className={cn("max-w-4xl mx-auto text-center", containerPadding.lg)}>
+        <FadeIn>
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight mb-6">
             Bağımsız gazeteciliği destekle
           </h2>
-          <p className={cn(colors.foreground.secondary, "text-base md:text-lg leading-relaxed mb-8 max-w-xl mx-auto")}>
-            Scrolli Premium ile kaliteli, bağımsız habercilik ekosistemine destek olun.
-            Her abonelik, özgür gazeteciliğin gücüne güç katar.
+        </FadeIn>
+
+        <FadeIn delay={0.1}>
+          <p
+            className={cn(
+              colors.foreground.secondary,
+              "text-lg md:text-xl leading-relaxed mb-10 max-w-2xl mx-auto"
+            )}
+          >
+            Scrolli Premium ile kaliteli, bağımsız habercilik ekosistemine
+            destek olun. Her abonelik, özgür gazeteciliğin gücüne güç katar.
           </p>
+        </FadeIn>
+
+        <FadeIn delay={0.2}>
           <Link
             href="/subscribe"
             className={cn(
               buttonPairs.charcoal.all,
               borderRadius.full,
-              button.padding.lg,
-              "inline-flex items-center gap-2 text-base font-medium transition-colors"
+              "inline-flex items-center gap-2.5 px-8 py-4 text-base font-medium transition-all duration-200"
             )}
           >
             Scrolli Premium&rsquo;a Katıl
             <ArrowRight className="h-5 w-5" />
           </Link>
-        </FadeInOnScroll>
+        </FadeIn>
       </div>
     </section>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Section 7 -- Scrolli+ Business
+// Section 6 — Scrolli+ Business
+// Clean three-column with icons
 // ---------------------------------------------------------------------------
 
 const businessFeatures = [
   {
     icon: Building2,
     title: "Kapalı Analizler",
-    description: "Kurumunuza özel, derinlemesine sektörel analiz raporları.",
+    description:
+      "Kurumunuza özel, derinlemesine sektörel analiz raporları.",
   },
   {
     icon: Users,
     title: "Özel Buluşmalar",
-    description: "Sektör liderlerinin katıldığı özel etkinlikler ve webinarlar.",
+    description:
+      "Sektör liderlerinin katıldığı özel etkinlikler ve webinarlar.",
   },
   {
     icon: Mail,
@@ -377,70 +563,99 @@ const businessFeatures = [
 
 function ScrolliBusiness() {
   return (
-    <section className={cn(surfacePairs.brand.beige, sectionPadding.xl)}>
+    <section className={cn(surfacePairs.brand.beige, "py-20 md:py-28 lg:py-32")}>
       <div className={cn("max-w-7xl mx-auto", containerPadding.lg)}>
-        <FadeInOnScroll>
-          <h2 className="text-3xl md:text-4xl font-bold leading-tight tracking-tight text-center mb-12">
-            Scrolli+ Business
-          </h2>
+        <FadeIn>
+          <div className="text-center mb-14 md:mb-16">
+            <p className="text-sm uppercase tracking-[0.2em] text-[#8080FF] font-medium mb-3">
+              Kurumsal
+            </p>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight tracking-tight">
+              Scrolli+ Business
+            </h2>
+          </div>
+        </FadeIn>
 
-          <div className={cn("grid grid-cols-1 md:grid-cols-3", gap.xl)}>
-            {businessFeatures.map((feat) => {
-              const Icon = feat.icon;
-              return (
-                <div key={feat.title} className="text-center">
-                  <div className="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-[#8080FF]/10 mb-4">
+        <div className={cn("grid grid-cols-1 md:grid-cols-3", gap.xl)}>
+          {businessFeatures.map((feat, i) => {
+            const Icon = feat.icon;
+            return (
+              <FadeIn key={feat.title} delay={i * 0.1}>
+                <div className="text-center">
+                  <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-[#8080FF]/10 mb-5">
                     <Icon className="h-6 w-6 text-[#8080FF]" />
                   </div>
-                  <h3 className={cn(fontWeight.semibold, "text-lg mb-2")}>{feat.title}</h3>
-                  <p className={cn(colors.foreground.secondary, "text-sm leading-relaxed")}>
+                  <h3
+                    className={cn(
+                      fontWeight.semibold,
+                      "text-xl mb-3"
+                    )}
+                  >
+                    {feat.title}
+                  </h3>
+                  <p
+                    className={cn(
+                      colors.foreground.secondary,
+                      "text-base leading-relaxed max-w-xs mx-auto"
+                    )}
+                  >
                     {feat.description}
                   </p>
                 </div>
-              );
-            })}
-          </div>
+              </FadeIn>
+            );
+          })}
+        </div>
 
-          <div className="text-center mt-10">
+        <FadeIn delay={0.3}>
+          <div className="text-center mt-12">
             <a
               href="mailto:info@scrolli.co"
               className={cn(
-                buttonPairs.primary.all,
+                buttonPairs.charcoal.all,
                 borderRadius.full,
-                button.padding.lg,
-                "inline-flex items-center gap-2 text-base font-medium transition-colors"
+                "inline-flex items-center gap-2.5 px-8 py-4 text-base font-medium transition-all duration-200"
               )}
             >
               Bize Ulaşın
               <ArrowRight className="h-5 w-5" />
             </a>
           </div>
-        </FadeInOnScroll>
+        </FadeIn>
       </div>
     </section>
   );
 }
 
 // ---------------------------------------------------------------------------
-// Section 8 -- Corporate CTA (minimal)
+// Section 7 — Corporate CTA (minimal footer)
 // ---------------------------------------------------------------------------
 
 function CorporateCTA() {
   return (
-    <section className={cn(colors.background.base, sectionPadding.lg, "border-t", colors.border.DEFAULT)}>
+    <section
+      className={cn(
+        colors.background.base,
+        "py-16 md:py-20 border-t",
+        colors.border.light
+      )}
+    >
       <div className={cn("max-w-3xl mx-auto text-center", containerPadding.lg)}>
-        <FadeInOnScroll>
-          <h3 className={cn("text-xl md:text-2xl font-semibold leading-tight tracking-tight mb-3")}>
+        <FadeIn>
+          <h3 className="text-xl md:text-2xl font-semibold leading-tight tracking-tight mb-4">
             Kurumsal abonelik mi arıyorsunuz?
           </h3>
           <a
             href="mailto:info@scrolli.co"
-            className={cn(colors.foreground.secondary, "inline-flex items-center gap-1.5 text-base hover:opacity-80 transition-opacity")}
+            className={cn(
+              colors.foreground.secondary,
+              "inline-flex items-center gap-2 text-base hover:opacity-70 transition-opacity"
+            )}
           >
             Bize ulaşın
             <ArrowRight className="h-4 w-4" />
           </a>
-        </FadeInOnScroll>
+        </FadeIn>
       </div>
     </section>
   );
@@ -450,13 +665,17 @@ function CorporateCTA() {
 // Main export
 // ---------------------------------------------------------------------------
 
-export default function PricingSections({ articles }: { articles: Article[] }) {
+export default function PricingSections({
+  articles,
+}: {
+  articles: Article[];
+}) {
   return (
     <>
-      <EditorialValue articles={articles} />
-      <FeatureShowcase articles={articles} />
+      <EditorialStatement />
+      <HorizontalScrollGallery articles={articles} />
+      <FeaturePanels articles={articles} />
       <Testimonial />
-      <ArticleGallery articles={articles} />
       <FinalCTA />
       <ScrolliBusiness />
       <CorporateCTA />
