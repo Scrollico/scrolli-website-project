@@ -18,6 +18,7 @@ import {
   Building2,
   Mail,
   Users,
+  ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Article } from "@/types/content";
@@ -34,7 +35,7 @@ import {
 } from "@/lib/design-tokens";
 
 // ---------------------------------------------------------------------------
-// Shared animation wrapper
+// Shared animation wrapper — fast trigger, snappy timing
 // ---------------------------------------------------------------------------
 
 function FadeIn({
@@ -55,13 +56,41 @@ function FadeIn({
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 32 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1], delay }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1], delay }}
     >
       {children}
     </motion.div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Section divider — smooth gradient between bg colors
+// ---------------------------------------------------------------------------
+
+const BG_COLORS = {
+  beige: "#F8F5E4",
+  white: "var(--background, #ffffff)",
+} as const;
+
+function SectionDivider({
+  from,
+  to,
+  height = "h-20 md:h-28",
+}: {
+  from: keyof typeof BG_COLORS;
+  to: keyof typeof BG_COLORS;
+  height?: string;
+}) {
+  return (
+    <div
+      className={cn("w-full", height)}
+      style={{
+        background: `linear-gradient(to bottom, ${BG_COLORS[from]}, ${BG_COLORS[to]})`,
+      }}
+    />
   );
 }
 
@@ -87,14 +116,14 @@ function EditorialStatement() {
             <FadeIn
               key={i}
               className="inline-block mr-[0.3em]"
-              delay={i * 0.06}
+              delay={i * 0.05}
             >
               {word}
             </FadeIn>
           ))}
         </h2>
 
-        <FadeIn delay={0.4}>
+        <FadeIn delay={0.3}>
           <p
             className={cn(
               colors.foreground.secondary,
@@ -124,14 +153,14 @@ function HorizontalScrollGallery({ articles }: { articles: Article[] }) {
     offset: ["start start", "end end"],
   });
 
-  const rawX = useTransform(scrollYProgress, [0, 1], ["2%", "-60%"]);
-  const x = useSpring(rawX, { stiffness: 80, damping: 30, mass: 0.5 });
+  const rawX = useTransform(scrollYProgress, [0, 1], ["2%", "-55%"]);
+  const x = useSpring(rawX, { stiffness: 120, damping: 35, mass: 0.4 });
 
   // Progress indicator
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-  });
+  const scaleX = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
+
+  // Scroll hint — fades out after 20% scroll
+  const hintOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
 
   const displayArticles = articles
     .filter((a) => a.thumbnail || a.image)
@@ -199,7 +228,10 @@ function HorizontalScrollGallery({ articles }: { articles: Article[] }) {
   return (
     <section
       ref={containerRef}
-      className={cn(colors.background.base, "relative h-[250vh] md:h-[300vh]")}
+      className="relative h-[200vh] md:h-[220vh]"
+      style={{
+        background: `linear-gradient(to bottom, #F8F5E4 0%, var(--background, #ffffff) 12%, var(--background, #ffffff) 88%, #F8F5E4 100%)`,
+      }}
     >
       <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden">
         {/* Section header */}
@@ -249,10 +281,8 @@ function HorizontalScrollGallery({ articles }: { articles: Article[] }) {
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 sizes="(max-width: 768px) 260px, (max-width: 1024px) 320px, 360px"
               />
-              {/* Gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
 
-              {/* Content */}
               <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
                 {article.category && (
                   <span className="inline-block px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-white/15 text-white backdrop-blur-sm mb-2.5">
@@ -267,7 +297,7 @@ function HorizontalScrollGallery({ articles }: { articles: Article[] }) {
           ))}
         </motion.div>
 
-        {/* Scroll progress indicator */}
+        {/* Progress bar + scroll hint */}
         <div className="max-w-7xl mx-auto w-full mt-8 md:mt-10 px-4 md:px-8 lg:px-12 xl:px-16">
           <div className="h-[2px] bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
             <motion.div
@@ -275,6 +305,22 @@ function HorizontalScrollGallery({ articles }: { articles: Article[] }) {
               style={{ scaleX }}
             />
           </div>
+
+          {/* Scroll hint */}
+          <motion.div
+            className="flex items-center justify-center gap-1.5 mt-4"
+            style={{ opacity: hintOpacity }}
+          >
+            <motion.div
+              animate={{ y: [0, 5, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <ChevronDown className="h-4 w-4 text-muted-foreground/60" />
+            </motion.div>
+            <span className="text-xs text-muted-foreground/60 font-medium tracking-wide">
+              Keşfetmek için kaydırın
+            </span>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -283,7 +329,6 @@ function HorizontalScrollGallery({ articles }: { articles: Article[] }) {
 
 // ---------------------------------------------------------------------------
 // Section 3 — Feature Panels (alternating, full-bleed editorial style)
-// Like Humane Space "More space for exploration / reflection / fulfillment"
 // ---------------------------------------------------------------------------
 
 const features = [
@@ -313,14 +358,75 @@ const features = [
   },
 ];
 
+function FeaturePanelImage({
+  src,
+  alt,
+  fallbackGradient,
+  num,
+}: {
+  src?: string;
+  alt: string;
+  fallbackGradient: string;
+  num: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], ["-5%", "5%"]);
+
+  return (
+    <div ref={ref} className="relative min-h-[50vh] md:min-h-full overflow-hidden">
+      {src ? (
+        <motion.div
+          className="absolute inset-[-10%] w-[120%] h-[120%]"
+          style={shouldReduceMotion ? {} : { y }}
+        >
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+        </motion.div>
+      ) : (
+        <div className="absolute inset-0" style={{ background: fallbackGradient }} />
+      )}
+
+      {src && (
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-transparent" />
+      )}
+
+      {/* Editorial number watermark */}
+      <span
+        className="absolute bottom-6 right-8 md:bottom-10 md:right-12 text-[140px] md:text-[200px] lg:text-[260px] font-bold leading-none select-none pointer-events-none"
+        style={{ color: "rgba(255,255,255,0.08)" }}
+      >
+        {num}
+      </span>
+    </div>
+  );
+}
+
 function FeaturePanels({ articles }: { articles: Article[] }) {
+  const gradients = [
+    "linear-gradient(135deg, #5A5ACD 0%, #8080FF 100%)",
+    "linear-gradient(135deg, #374152 0%, #4B5563 100%)",
+    "linear-gradient(135deg, #6A6AE0 0%, #9999FF 100%)",
+  ];
+
   return (
     <section className="relative">
       {features.map((feature, i) => {
         const Icon = feature.icon;
         const isEven = i % 2 === 1;
         const article = articles.filter((a) => a.thumbnail || a.image)[i + 3];
-        const hasImage = article && (article.thumbnail || article.image);
+        const imageSrc = article
+          ? (article.thumbnail || article.image) ?? undefined
+          : undefined;
         const isBeige = i % 2 === 0;
 
         return (
@@ -332,51 +438,16 @@ function FeaturePanels({ articles }: { articles: Article[] }) {
             )}
           >
             <div className="max-w-[1400px] mx-auto">
-              <div
-                className={cn(
-                  "grid grid-cols-1 md:grid-cols-2 min-h-[70vh] md:min-h-[80vh]"
-                )}
-              >
-                {/* Visual panel */}
-                <FadeIn
-                  className={cn(
-                    "relative min-h-[50vh] md:min-h-full overflow-hidden",
-                    isEven && "md:order-2"
-                  )}
-                >
-                  {hasImage ? (
-                    <>
-                      <Image
-                        src={(article.thumbnail || article.image)!}
-                        alt={feature.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-transparent" />
-                    </>
-                  ) : (
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          i === 0
-                            ? "linear-gradient(135deg, #5A5ACD 0%, #8080FF 100%)"
-                            : i === 1
-                              ? "linear-gradient(135deg, #374152 0%, #4B5563 100%)"
-                              : "linear-gradient(135deg, #6A6AE0 0%, #9999FF 100%)",
-                      }}
-                    />
-                  )}
-
-                  {/* Large editorial number watermark */}
-                  <span
-                    className="absolute bottom-6 right-8 md:bottom-10 md:right-12 text-[140px] md:text-[200px] lg:text-[260px] font-bold leading-none select-none pointer-events-none"
-                    style={{ color: "rgba(255,255,255,0.08)" }}
-                  >
-                    {feature.num}
-                  </span>
-                </FadeIn>
+              <div className="grid grid-cols-1 md:grid-cols-2 min-h-[70vh] md:min-h-[80vh]">
+                {/* Visual panel with parallax */}
+                <div className={cn(isEven && "md:order-2")}>
+                  <FeaturePanelImage
+                    src={imageSrc}
+                    alt={feature.title}
+                    fallbackGradient={gradients[i]}
+                    num={feature.num}
+                  />
+                </div>
 
                 {/* Text panel */}
                 <div
@@ -385,7 +456,7 @@ function FeaturePanels({ articles }: { articles: Article[] }) {
                     isEven && "md:order-1"
                   )}
                 >
-                  <FadeIn delay={0.15}>
+                  <FadeIn delay={0.08}>
                     <div className="flex items-center gap-3 mb-6">
                       <div className="h-10 w-10 rounded-xl bg-[#8080FF]/10 flex items-center justify-center">
                         <Icon className="h-5 w-5 text-[#8080FF]" />
@@ -396,13 +467,13 @@ function FeaturePanels({ articles }: { articles: Article[] }) {
                     </div>
                   </FadeIn>
 
-                  <FadeIn delay={0.25}>
+                  <FadeIn delay={0.16}>
                     <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-[1.1] tracking-tight mb-6">
                       {feature.title}
                     </h3>
                   </FadeIn>
 
-                  <FadeIn delay={0.35}>
+                  <FadeIn delay={0.24}>
                     <p
                       className={cn(
                         colors.foreground.secondary,
@@ -415,6 +486,18 @@ function FeaturePanels({ articles }: { articles: Article[] }) {
                 </div>
               </div>
             </div>
+
+            {/* Smooth transition to next panel if colors differ */}
+            {i < features.length - 1 && (
+              <div
+                className="h-16 md:h-20 w-full"
+                style={{
+                  background: isBeige
+                    ? `linear-gradient(to bottom, #F8F5E4, var(--background, #ffffff))`
+                    : `linear-gradient(to bottom, var(--background, #ffffff), #F8F5E4)`,
+                }}
+              />
+            )}
           </div>
         );
       })}
@@ -434,7 +517,7 @@ function Testimonial() {
     target: ref,
     offset: ["start end", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], [40, -40]);
+  const y = useTransform(scrollYProgress, [0, 1], [30, -30]);
 
   return (
     <section
@@ -457,7 +540,7 @@ function Testimonial() {
           </div>
         </FadeIn>
 
-        <FadeIn delay={0.1}>
+        <FadeIn delay={0.08}>
           <blockquote className="font-display italic text-2xl md:text-3xl lg:text-4xl leading-relaxed tracking-tight mb-10">
             Scrolli, Türkiye&rsquo;nin en önemli bağımsız gazetecilik
             platformlarından biri. Premium üyelik, bu misyonu desteklemenin en
@@ -465,7 +548,7 @@ function Testimonial() {
           </blockquote>
         </FadeIn>
 
-        <FadeIn delay={0.2}>
+        <FadeIn delay={0.16}>
           <div className="flex flex-col items-center gap-3">
             <div className="relative h-14 w-14 rounded-full overflow-hidden ring-2 ring-[#8080FF]/20 ring-offset-2 ring-offset-[#F8F5E4]">
               <Image
@@ -493,7 +576,6 @@ function Testimonial() {
 
 // ---------------------------------------------------------------------------
 // Section 5 — Final CTA
-// Dramatic closing statement with large typography
 // ---------------------------------------------------------------------------
 
 function FinalCTA() {
@@ -506,7 +588,7 @@ function FinalCTA() {
           </h2>
         </FadeIn>
 
-        <FadeIn delay={0.1}>
+        <FadeIn delay={0.08}>
           <p
             className={cn(
               colors.foreground.secondary,
@@ -518,7 +600,7 @@ function FinalCTA() {
           </p>
         </FadeIn>
 
-        <FadeIn delay={0.2}>
+        <FadeIn delay={0.16}>
           <Link
             href="/subscribe"
             className={cn(
@@ -538,21 +620,18 @@ function FinalCTA() {
 
 // ---------------------------------------------------------------------------
 // Section 6 — Scrolli+ Business
-// Clean three-column with icons
 // ---------------------------------------------------------------------------
 
 const businessFeatures = [
   {
     icon: Building2,
     title: "Kapalı Analizler",
-    description:
-      "Kurumunuza özel, derinlemesine sektörel analiz raporları.",
+    description: "Kurumunuza özel, derinlemesine sektörel analiz raporları.",
   },
   {
     icon: Users,
     title: "Özel Buluşmalar",
-    description:
-      "Sektör liderlerinin katıldığı özel etkinlikler ve webinarlar.",
+    description: "Sektör liderlerinin katıldığı özel etkinlikler ve webinarlar.",
   },
   {
     icon: Mail,
@@ -580,17 +659,12 @@ function ScrolliBusiness() {
           {businessFeatures.map((feat, i) => {
             const Icon = feat.icon;
             return (
-              <FadeIn key={feat.title} delay={i * 0.1}>
+              <FadeIn key={feat.title} delay={i * 0.08}>
                 <div className="text-center">
                   <div className="inline-flex items-center justify-center h-14 w-14 rounded-2xl bg-[#8080FF]/10 mb-5">
                     <Icon className="h-6 w-6 text-[#8080FF]" />
                   </div>
-                  <h3
-                    className={cn(
-                      fontWeight.semibold,
-                      "text-xl mb-3"
-                    )}
-                  >
+                  <h3 className={cn(fontWeight.semibold, "text-xl mb-3")}>
                     {feat.title}
                   </h3>
                   <p
@@ -607,7 +681,7 @@ function ScrolliBusiness() {
           })}
         </div>
 
-        <FadeIn delay={0.3}>
+        <FadeIn delay={0.24}>
           <div className="text-center mt-12">
             <a
               href="mailto:info@scrolli.co"
@@ -628,7 +702,7 @@ function ScrolliBusiness() {
 }
 
 // ---------------------------------------------------------------------------
-// Section 7 — Corporate CTA (minimal footer)
+// Section 7 — Corporate CTA (minimal)
 // ---------------------------------------------------------------------------
 
 function CorporateCTA() {
@@ -673,11 +747,16 @@ export default function PricingSections({
   return (
     <>
       <EditorialStatement />
+      <SectionDivider from="beige" to="white" />
       <HorizontalScrollGallery articles={articles} />
       <FeaturePanels articles={articles} />
+      <SectionDivider from="beige" to="white" />
       <Testimonial />
+      <SectionDivider from="beige" to="white" />
       <FinalCTA />
+      <SectionDivider from="white" to="beige" />
       <ScrolliBusiness />
+      <SectionDivider from="beige" to="white" />
       <CorporateCTA />
     </>
   );

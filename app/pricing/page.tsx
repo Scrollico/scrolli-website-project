@@ -9,25 +9,25 @@ import { Article } from "@/types/content"
 import { colors, sectionPadding, containerPadding, gap } from "@/lib/design-tokens"
 import { cn } from "@/lib/utils"
 
-// Loading skeleton for RevenueCatPricing
+// Loading skeleton for RevenueCatPricing — intentional, compact, smooth
 function PricingSkeleton() {
   return (
     <div className={cn(
-      "w-full mx-auto relative",
+      "w-full mx-auto relative flex flex-col items-center justify-center",
       colors.background.base,
-      containerPadding.md, sectionPadding.md, "min-h-[800px]"
+      containerPadding.md, "py-12 md:py-16 min-h-[400px]"
     )}>
-      <div className="animate-pulse space-y-8">
+      <div className="animate-pulse flex flex-col items-center gap-6 w-full max-w-4xl">
         {/* Title skeleton */}
-        <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-lg w-1/2 mx-auto"></div>
+        <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg w-2/5"></div>
 
         {/* Pricing switch skeleton */}
-        <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-full w-64 mx-auto"></div>
+        <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-full w-56"></div>
 
         {/* Pricing cards skeleton */}
-        <div className={cn("grid grid-cols-1 md:grid-cols-3", gap.xl)}>
+        <div className={cn("grid grid-cols-1 md:grid-cols-3 w-full mt-4", gap.xl)}>
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-96 bg-gray-200 dark:bg-gray-700 rounded-xl"></div>
+            <div key={i} className="h-80 bg-gray-200 dark:bg-gray-700 rounded-xl"></div>
           ))}
         </div>
       </div>
@@ -47,8 +47,11 @@ export default async function Pricing() {
   return (
     <Layout classList="single page-pricing">
       <main className="relative min-h-screen scroll-smooth">
-        {/* 1. Pricing Component First */}
-        <section className={cn(colors.background.base, "relative z-50", sectionPadding.lg)}>
+        {/* 1. Pricing Component First — animate-in prevents jarring pop */}
+        <section className={cn(
+          colors.background.base, "relative z-50", sectionPadding.lg,
+          "animate-in fade-in duration-500"
+        )}>
           <Suspense fallback={<PricingSkeleton />}>
             <RevenueCatPricingLazy />
           </Suspense>
