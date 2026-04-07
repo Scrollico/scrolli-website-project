@@ -7,13 +7,10 @@ import { typography, colors, spacing } from "@/lib/design-tokens";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import translations from "@/lib/translations";
-import { cookies } from "next/headers";
-import { NEXT_LOCALE_COOKIE } from "@/lib/locale-config";
 
-export default async function NotFound() {
-    const cookieStore = await cookies();
-    const locale = (cookieStore.get(NEXT_LOCALE_COOKIE)?.value === 'en' ? 'en' : 'tr') as 'tr' | 'en';
-    const dict = translations[locale];
+export default function NotFound() {
+    // not-found is special in Next.js — cannot use cookies() here (Cloudflare Edge limitation)
+    const dict = translations.tr;
 
     // Fetch navigation data for the header/footer
     // const navigation = await getNavigation().catch(() => null);
