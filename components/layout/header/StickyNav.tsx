@@ -6,41 +6,41 @@ import { Text } from "@/components/ui/typography";
 import { UserMenu } from "./UserMenu";
 import { interactions, containerPadding, gap } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
-
-// Essential menu items for sticky navbar (3 items)
-const STICKY_MENU_ITEMS = [
-  { label: 'Business', href: '/categories' },
-  { label: 'World', href: '/archive' },
-  { label: 'Video', href: '/search' },
-];
+import { useTranslation } from "@/components/providers/translation-provider";
 
 export default function StickyNav() {
   const [isVisible, setIsVisible] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { t } = useTranslation();
+
+  const STICKY_MENU_ITEMS = [
+    { label: t('nav.business'), href: '/categories' },
+    { label: t('nav.world'), href: '/archive' },
+    { label: t('nav.video'), href: '/search' },
+  ];
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
     let ticking = false;
+    const scrollDelta = 6;
 
     const updateScrollDirection = () => {
       const scrollY = window.scrollY;
 
-      // Show sticky nav after scrolling down 100px
-      if (scrollY > 100) {
-        setIsScrolled(true);
-
-        // Show/hide based on scroll direction
-        if (scrollY > lastScrollY && scrollY > 200) {
-          // Scrolling down - show sticky nav
-          setIsVisible(true);
-        } else if (scrollY < lastScrollY) {
-          // Scrolling up - hide sticky nav
-          setIsVisible(false);
-        }
-      } else {
-        // Near top - hide sticky nav
+      // Past hero: allow auto-hide bar; near top — never show (main header is enough)
+      if (scrollY <= 100) {
         setIsScrolled(false);
         setIsVisible(false);
+      } else {
+        setIsScrolled(true);
+        const delta = scrollY - lastScrollY;
+        if (delta < -scrollDelta) {
+          // Scrolling up — show slim bar for wayfinding
+          setIsVisible(true);
+        } else if (delta > scrollDelta) {
+          // Scrolling down — hide so it does not cover content (e.g. pricing scrollytelling)
+          setIsVisible(false);
+        }
       }
 
       lastScrollY = scrollY > 0 ? scrollY : 0;
@@ -60,14 +60,15 @@ export default function StickyNav() {
 
   return (
     <nav
-      className={`fixed top-[80px] md:top-[100px] left-0 right-0 z-[60] bg-[#f5f5dc]/95 dark:bg-[#f5f5dc]/95 backdrop-blur-md border-b border-border/50 transition-all duration-300 ease-in-out ${isVisible && isScrolled
+      className={`fixed top-[80px] md:top-[100px] left-0 right-0 z-30 bg-[#f5f5dc]/95 dark:bg-[#f5f5dc]/95 backdrop-blur-md border-b border-border/50 transition-all duration-300 ease-in-out ${isVisible && isScrolled
         ? 'translate-y-0 opacity-100 shadow-md'
         : '-translate-y-full opacity-0 pointer-events-none'
         }`}
-      aria-label="Sticky navigation"
+      aria-label={t('nav.stickyNavLabel')}
     >
-      <div className={cn("container mx-auto", containerPadding.md)}>
-        <div className="flex items-center justify-between h-10 md:h-11">
+      {/* Avoid class "container": legacy style.css applies .single .container { padding-top: 80px }, which ballooned this bar */}
+      <div className={cn("mx-auto w-full max-w-7xl", containerPadding.md)}>
+        <div className="flex items-center justify-between h-9 md:h-10">
           {/* Spacer to balance layout */}
           <div className="w-10 hidden md:block" />
 

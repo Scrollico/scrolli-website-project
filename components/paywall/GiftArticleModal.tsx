@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Text } from "@/components/ui/typography";
 import Image from "next/image";
+import { useTranslation } from "@/components/providers/translation-provider";
 
 interface GiftArticleModalProps {
     articleId: string;
@@ -36,6 +37,7 @@ export function GiftArticleModal({
     onSuccess,
 }: GiftArticleModalProps) {
     const { user } = useAuth();
+    const { t } = useTranslation();
     const [shareMethod, setShareMethod] = useState<ShareMethod>("link");
     const [giftUrl, setGiftUrl] = useState<string | null>(null);
     const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
@@ -198,7 +200,7 @@ export function GiftArticleModal({
                                             "text-[#F8F5E3] font-semibold transition-colors"
                                         )}
                                     >
-                                        QR Kodu İndir
+                                        {t('gift.downloadQr')}
                                     </a>
                                 </div>
                             </div>
@@ -212,7 +214,7 @@ export function GiftArticleModal({
                                     variant="secondary"
                                     onClick={handleCopy}
                                 >
-                                    {copied ? "Kopyalandı!" : "Kopyala"}
+                                    {copied ? t('gift.copied') : t('gift.copy')}
                                 </Button>
                             </div>
                         )}
@@ -222,7 +224,7 @@ export function GiftArticleModal({
                             variant="default"
                             className="w-full"
                         >
-                            Tamam
+                            {t('gift.done')}
                         </Button>
                     </div>
                 ) : (
@@ -235,7 +237,7 @@ export function GiftArticleModal({
                                 colors.border.DEFAULT
                             )}>
                                 <Text variant="caption" className={cn(colors.foreground.muted, "mb-1 block")}>
-                                    Hediye Edilecek Makale
+                                    {t('gift.articleToGift')}
                                 </Text>
                                 <Text variant="bodySmall" className={colors.foreground.primary}>
                                     {articleTitle}
@@ -245,7 +247,7 @@ export function GiftArticleModal({
 
                         {/* Share Method Selection */}
                         <div>
-                            <Label className="mb-2 block">Paylaşım Yöntemi</Label>
+                            <Label className="mb-2 block">{t('gift.shareMethod')}</Label>
                             <div className="grid grid-cols-2 gap-3">
                                 <button
                                     onClick={() => setShareMethod("link")}
@@ -257,7 +259,7 @@ export function GiftArticleModal({
                                     )}
                                 >
                                     <LinkIcon className="h-6 w-6 mx-auto mb-2 text-[#8080FF]" />
-                                    <Text variant="bodySmall" className="font-semibold">Link</Text>
+                                    <Text variant="bodySmall" className="font-semibold">{t('gift.link')}</Text>
                                 </button>
                                 <button
                                     onClick={() => setShareMethod("qr")}
@@ -269,7 +271,7 @@ export function GiftArticleModal({
                                     )}
                                 >
                                     <QrCode className="h-6 w-6 mx-auto mb-2 text-[#8080FF]" />
-                                    <Text variant="bodySmall" className="font-semibold">QR Kod</Text>
+                                    <Text variant="bodySmall" className="font-semibold">{t('gift.qrCode')}</Text>
                                 </button>
                             </div>
                         </div>
@@ -281,7 +283,7 @@ export function GiftArticleModal({
                                 "border border-amber-200 dark:border-amber-800"
                             )}>
                                 <Text variant="caption" className="text-amber-700 dark:text-amber-400">
-                                    Bu ay hediye hakkınız doldu. Ayın 1'inde yenilenecek.
+                                    {t('gift.monthlyLimitReached')}
                                 </Text>
                             </div>
                         ) : (
@@ -292,8 +294,7 @@ export function GiftArticleModal({
                                     "border border-blue-200 dark:border-blue-800"
                                 )}>
                                     <Text variant="bodySmall" className="text-blue-700 dark:text-blue-400">
-                                        ⚠️ <strong>Önemli:</strong> Oluşturduğunuz hediye linki <strong>tek kullanımlıktır</strong>.
-                                        Link kullanıldıktan sonra bir daha açılamaz.
+                                        ⚠️ <strong>{t('gift.important')}</strong> {t('gift.singleUseWarning')}
                                     </Text>
                                 </div>
                                 {error && (
@@ -313,7 +314,7 @@ export function GiftArticleModal({
                                 className="flex-1"
                                 disabled={isSubmitting}
                             >
-                                İptal
+                                {t('gift.cancel')}
                             </Button>
                             <Button
                                 onClick={(e) => handleSubmit(e as any)}
@@ -324,12 +325,12 @@ export function GiftArticleModal({
                                 {isSubmitting ? (
                                     <>
                                         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                                        Oluşturuluyor...
+                                        {t('gift.creating')}
                                     </>
                                 ) : (
                                     <>
                                         <Gift className="mr-2 h-5 w-5" />
-                                        {shareMethod === "qr" ? "QR Kod Oluştur" : "Linki Oluştur"}
+                                        {shareMethod === "qr" ? t('gift.createQr') : t('gift.createLink')}
                                     </>
                                 )}
                             </Button>

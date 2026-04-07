@@ -63,7 +63,7 @@ export function UserMenu() {
     return (
       <div className={cn("flex items-center", gap.sm)}>
         <Button asChild variant="ghost" size="sm" className="hidden sm:flex">
-          <Link href="/sign-in">{t('signIn', 'Sign in')}</Link>
+          <Link href="/sign-in">{t('user.signIn')}</Link>
         </Button>
         <Link
           href="/pricing"
@@ -73,7 +73,7 @@ export function UserMenu() {
             isDark ? "bg-[#F8F5E4] !text-gray-900" : "bg-gray-700 text-white"
           )}
         >
-          {t('subscribe', 'Subscribe')}
+          {t('user.subscribe')}
         </Link>
       </div>
     );
@@ -98,7 +98,7 @@ export function UserMenu() {
               ? '2px solid rgba(51, 65, 85, 0.6)'
               : '2px solid rgba(203, 213, 225, 0.6)',
           }}
-          aria-label="Kullanıcı menüsü"
+          aria-label={t('user.menuAriaLabel')}
         >
           {/* Inner effects to match the cinematic look */}
           <div
@@ -168,7 +168,7 @@ export function UserMenu() {
               </Text>
               {isPremium && (
                 <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#8080FF]/10 text-[#8080FF] dark:bg-[#8080FF]/20">
-                  Plus
+                  {t('user.plusBadge')}
                 </span>
               )}
             </div>
@@ -197,7 +197,7 @@ export function UserMenu() {
               )}
             >
               <User className="h-4 w-4 text-gray-400 dark:text-gray-500" />
-              <span>Profilim</span>
+              <span>{t('user.profile')}</span>
             </Link>
           </DropdownMenuItem>
 
@@ -214,7 +214,7 @@ export function UserMenu() {
                 )}
               >
                 <svg className="h-4 w-4" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                <span>Premium&apos;a Geç</span>
+                <span>{t('user.upgradeToPremium')}</span>
               </Link>
             </DropdownMenuItem>
           )}
@@ -237,7 +237,7 @@ export function UserMenu() {
               ) : (
                 <Sun className="h-4 w-4 text-gray-400 dark:text-gray-500" />
               )}
-              <span>Tema</span>
+              <span>{t('user.theme')}</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
               <DropdownMenuSubContent className={cn(
@@ -258,7 +258,7 @@ export function UserMenu() {
                     )}
                   >
                     <Sun className="h-4 w-4 text-amber-500" />
-                    <span>Aydınlık</span>
+                    <span>{t('user.themeLight')}</span>
                   </DropdownMenuRadioItem>
                   <DropdownMenuRadioItem
                     value="dark"
@@ -270,7 +270,7 @@ export function UserMenu() {
                     )}
                   >
                     <Moon className="h-4 w-4 text-indigo-500" />
-                    <span>Karanlık</span>
+                    <span>{t('user.themeDark')}</span>
                   </DropdownMenuRadioItem>
                   <DropdownMenuRadioItem
                     value="system"
@@ -282,7 +282,7 @@ export function UserMenu() {
                     )}
                   >
                     <Monitor className="h-4 w-4 text-gray-400 dark:text-gray-500" />
-                    <span>Sistem</span>
+                    <span>{t('user.themeSystem')}</span>
                   </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
               </DropdownMenuSubContent>
@@ -307,7 +307,7 @@ export function UserMenu() {
             )}
           >
             <LogOut className="h-4 w-4" />
-            <span>Çıkış Yap</span>
+            <span>{t('user.signOut')}</span>
           </DropdownMenuItem>
         </div>
       </DropdownMenuContent>

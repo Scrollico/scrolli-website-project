@@ -134,7 +134,7 @@ export async function generateMetadata(): Promise<Metadata> {
     console.error('Error generating metadata:', error);
     return {
       title: 'Scrolli',
-      description: 'Yeni nesil dijital yayın.',
+      description: 'Scrolli — Digital publishing platform',
       icons: {
         icon: [
           { url: '/assets/images/Standart/primary-icon.png', sizes: 'any' },
@@ -255,7 +255,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <LocaleProvider initialLocale={locale}>
-            <TranslationProvider initialStrings={uiStrings}>
+            <TranslationProvider initialStrings={uiStrings} locale={locale}>
               <AuthProvider>
                 <RevenueCatProvider>
                   <NextTopLoaderClient />

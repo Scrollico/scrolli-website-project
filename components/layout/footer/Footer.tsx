@@ -14,6 +14,7 @@ import {
 } from '@/lib/design-tokens';
 import { PayloadNavigation } from '@/lib/payload/types';
 import { useTranslation } from '@/components/providers/translation-provider';
+import { useLocale } from '@/components/providers/locale-provider';
 
 interface FooterProps {
   navigation?: PayloadNavigation | null;
@@ -23,6 +24,7 @@ export default function Footer({ navigation }: FooterProps) {
   const [mounted, setMounted] = useState(false);
   const { theme, resolvedTheme } = useTheme();
   const { t } = useTranslation();
+  const { locale, setLocale } = useLocale();
 
   useEffect(() => {
     setMounted(true);
@@ -39,24 +41,24 @@ export default function Footer({ navigation }: FooterProps) {
   // Navigation Links
   const fallbackColumns = [
     {
-      groupTitle: 'KURUMSAL',
+      groupTitle: t('footer.corporate'),
       links: [
-        { label: 'Hakkımızda', href: '/about-us' },
-        { label: 'İletişim', href: '/contact' },
-        { label: 'Künye', href: '/kunye' },
-        { label: 'Gizlilik Politikası', href: '/gizlilik-politikasi' },
-        { label: 'KVKK', href: '/kvkk' },
-        { label: 'Kullanım Koşulları', href: '/kullanim-kosullari' },
+        { label: t('footer.aboutUs'), href: '/about-us' },
+        { label: t('footer.contact'), href: '/contact' },
+        { label: t('footer.masthead'), href: '/kunye' },
+        { label: t('footer.privacyPolicy'), href: '/gizlilik-politikasi' },
+        { label: t('footer.kvkk'), href: '/kvkk' },
+        { label: t('footer.termsOfUse'), href: '/kullanim-kosullari' },
       ]
     },
     {
-      groupTitle: 'SCROLLI',
+      groupTitle: t('footer.scrolli'),
       links: [
-        { label: 'Dosya', href: '/archive' },
-        { label: 'Hikâye', href: '/categories' },
-        { label: 'ScrolliCollabs', href: '/collabs' },
-        { label: 'Business', href: '/pricing' },
-        { label: 'Abone Ol', href: '/pricing', highlight: true },
+        { label: t('footer.archive'), href: '/archive' },
+        { label: t('footer.stories'), href: '/categories' },
+        { label: t('footer.collabs'), href: '/collabs' },
+        { label: t('footer.business'), href: '/pricing' },
+        { label: t('footer.subscribeCta'), href: '/pricing', highlight: true },
       ]
     }
   ];
@@ -103,7 +105,7 @@ export default function Footer({ navigation }: FooterProps) {
               />
             </Link>
             <p className={cn(typography.bodySmall, colors.foreground.muted)}>
-              {t('inDepthMediaExperience', 'Derinlemesine medya deneyimi')}
+              {t('footer.tagline')}
             </p>
 
             <div className="relative inline-block mt-2 group">
@@ -116,18 +118,27 @@ export default function Footer({ navigation }: FooterProps) {
                 colors.surface.base,
                 colors.border.light
               )}>
-                <button className={cn(
-                  "w-full px-4 py-2 text-left text-sm font-medium rounded transition-colors bg-transparent",
-                  colors.foreground.primary,
-                  "hover:bg-black/5 dark:hover:bg-white/5"
-                )}>
-                  tr
+                <button
+                  onClick={() => setLocale('tr')}
+                  className={cn(
+                    "w-full px-4 py-2 text-left text-sm font-medium rounded transition-colors",
+                    locale === 'tr'
+                      ? "bg-green-600/10 text-green-600 font-semibold dark:bg-green-600/20 dark:text-green-500"
+                      : cn("bg-transparent", colors.foreground.primary, "hover:bg-black/5 dark:hover:bg-white/5")
+                  )}
+                >
+                  {t('footer.localeTr')}
                 </button>
-                <button className={cn(
-                  "w-full px-4 py-2 text-left text-sm font-medium rounded transition-colors",
-                  "bg-green-600/10 text-green-600 font-semibold dark:bg-green-600/20 dark:text-green-500"
-                )}>
-                  Global
+                <button
+                  onClick={() => setLocale('en')}
+                  className={cn(
+                    "w-full px-4 py-2 text-left text-sm font-medium rounded transition-colors",
+                    locale === 'en'
+                      ? "bg-green-600/10 text-green-600 font-semibold dark:bg-green-600/20 dark:text-green-500"
+                      : cn("bg-transparent", colors.foreground.primary, "hover:bg-black/5 dark:hover:bg-white/5")
+                  )}
+                >
+                  {t('footer.localeEn')}
                 </button>
               </div>
             </div>
@@ -162,7 +173,7 @@ export default function Footer({ navigation }: FooterProps) {
         {/* Bottom Copyright */}
         <div className={cn("pt-8 border-t border-white/10 dark:border-white/10 text-center md:text-left")}>
           <p className={cn("text-sm", colors.foreground.muted)}>
-            {t('copyright', '©2026 Scrolli. Tüm hakları saklıdır. Scrolli Media Inc.')}
+            {t('footer.copyright')}
           </p>
         </div>
       </div>

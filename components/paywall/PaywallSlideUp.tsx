@@ -13,6 +13,7 @@ import {
     typography,
 } from "@/lib/design-tokens";
 import { Loader2, X } from "lucide-react";
+import { useTranslation } from "@/components/providers/translation-provider";
 
 interface PaywallSlideUpProps {
     onClose?: () => void;
@@ -30,6 +31,7 @@ export function PaywallSlideUp({
     limit = 3
 }: PaywallSlideUpProps) {
     const router = useRouter();
+    const { t } = useTranslation();
     const { user } = useAuth();
     const { isInitialized, refreshCustomerInfo } = useRevenueCat();
     const [selectedPlan, setSelectedPlan] = useState<0 | 1 | 2>(0); // 0=monthly, 1=yearly, 2=lifetime
@@ -388,28 +390,28 @@ export function PaywallSlideUp({
                     {purchasing ? (
                         <>
                             <Loader2 className="h-5 w-5 animate-spin" />
-                            <span>İşleniyor...</span>
+                            <span>{t('paywall.processing')}</span>
                         </>
                     ) : (
-                        "Şimdi Abone Ol"
+                        t('paywall.subscribeNow')
                     )}
                 </button>
 
                 <p className={cn("mt-3 text-center text-xs", colors.foreground.muted)}>
-                    İstediğiniz zaman iptal edebilirsiniz.
+                    {t('paywall.cancelAnytime')}
                 </p>
 
                 {/* What you get */}
                 <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                     <p className={cn("text-sm font-medium mb-3", colors.foreground.secondary)}>
-                        Premium ile neler kazanırsın:
+                        {t('paywall.premiumBenefits')}
                     </p>
                     <ul className="space-y-2">
                         {[
-                            "Sınırsız makale erişimi",
-                            "Reklamsız deneyim",
-                            "Özel içerikler ve analizler",
-                            "Erken erişim ve arşiv",
+                            t('paywall.benefitUnlimited'),
+                            t('paywall.benefitAdFree'),
+                            t('paywall.benefitExclusive'),
+                            t('paywall.benefitEarlyAccess'),
                         ].map((benefit, i) => (
                             <li key={i} className="flex items-center gap-2 text-sm">
                                 <svg className="w-4 h-4 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">

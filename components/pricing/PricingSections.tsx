@@ -1,17 +1,24 @@
 "use client";
 
-import { useRef, ReactNode, useState, useEffect, useCallback } from "react";
+import { useRef, ReactNode, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
   motion,
   useScroll,
   useTransform,
-  useSpring,
   useReducedMotion,
   useInView,
-  useMotionValueEvent,
 } from "framer-motion";
+import {
+  Carousel,
+  CarouselApi,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import { Button } from "@/components/ui/button";
+import { Heading } from "@/components/ui/typography/Heading";
+import { Text } from "@/components/ui/typography/Text";
 import {
   Crown,
   Headphones,
@@ -22,21 +29,28 @@ import {
   Users,
   ChevronDown,
   Sparkles,
-  Smartphone,
   Newspaper,
   Bell,
   Gift,
-  Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/components/providers/translation-provider";
 import { Article } from "@/types/content";
 import {
+  border,
+  borderRadius,
   colors,
-  surfacePairs,
-  buttonPairs,
+  componentPadding,
   containerPadding,
+  elevation,
   fontWeight,
   gap,
+  lineHeight,
+  marginBottom,
+  marginTop,
+  sectionPadding,
+  surfacePairs,
+  typography,
 } from "@/lib/design-tokens";
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -200,6 +214,7 @@ function SectionDivider({
    ═══════════════════════════════════════════════════════════════════════════ */
 
 function EditorialStatement() {
+  const { t } = useTranslation();
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -208,7 +223,7 @@ function EditorialStatement() {
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
   const opacity = useTransform(scrollYProgress, [0.7, 1], [1, 0]);
 
-  const words = "Gazeteciliğin geleceğini birlikte inşa ediyoruz".split(" ");
+  const words = t("pricing.headline").split(" ");
 
   return (
     <motion.section
@@ -236,7 +251,7 @@ function EditorialStatement() {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#8080FF]/10 mb-8 md:mb-10">
             <Sparkles className="h-3.5 w-3.5 text-[#8080FF]" />
             <span className="text-sm uppercase tracking-[0.2em] text-[#8080FF] font-medium">
-              Scrolli Premium
+              {t("pricing.badge")}
             </span>
           </div>
         </FadeIn>
@@ -258,17 +273,16 @@ function EditorialStatement() {
 
         <FadeIn delay={0.5}>
           <p className={cn(colors.foreground.secondary, "text-lg md:text-xl lg:text-2xl leading-relaxed max-w-2xl mx-auto")}>
-            Bağımsız gazetecilik, okuyucularının desteğiyle ayakta kalır.
-            Scrolli Premium ile kaliteli haberciliğe katkıda bulunun.
+            {t("pricing.subheadline")}
           </p>
         </FadeIn>
 
         <FadeIn delay={0.7}>
           <div className="flex items-center justify-center gap-8 md:gap-16 mt-14">
             {[
-              { value: 250, suffix: "+", label: "Premium Makale" },
-              { value: 50, suffix: "K+", label: "Aktif Okuyucu" },
-              { value: 12, suffix: "+", label: "Ödüllü Gazeteci" },
+              { value: 250, suffix: "+", label: t("pricing.statArticles") },
+              { value: 50, suffix: "K+", label: t("pricing.statReaders") },
+              { value: 12, suffix: "+", label: t("pricing.statJournalists") },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
                 <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-[#8080FF]">
@@ -290,7 +304,7 @@ function EditorialStatement() {
           transition={{ delay: 1.2, duration: 0.8 }}
         >
           <span className={cn("text-xs tracking-wider uppercase", colors.foreground.muted)}>
-            Keşfetmeye başlayın
+            {t("pricing.startExploring")}
           </span>
           <motion.div
             animate={{ y: [0, 8, 0] }}
@@ -305,254 +319,62 @@ function EditorialStatement() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Section 2 — Horizontal Scroll Gallery (robust JS-driven pinning)
+   Section 2 — Üç metin mockup paneli (yatay scroll yok, görselsiz)
    ═══════════════════════════════════════════════════════════════════════════ */
 
-const PLACEHOLDER_CARDS = [
-  { title: "Türkiye'nin Enerji Geleceği", category: "Analiz", gradient: "from-blue-600 to-indigo-800" },
-  { title: "Dijital Medyanın Dönüşümü", category: "Teknoloji", gradient: "from-purple-600 to-violet-800" },
-  { title: "Bağımsız Gazeteciliğin Yükselişi", category: "Gazetecilik", gradient: "from-emerald-600 to-teal-800" },
-  { title: "Yapay Zekâ ve Habercilik", category: "AI", gradient: "from-rose-600 to-pink-800" },
-  { title: "Sürdürülebilir Ekonomi Raporu", category: "Ekonomi", gradient: "from-amber-600 to-orange-800" },
-  { title: "Kültür Sanat Dünyasından", category: "Kültür", gradient: "from-cyan-600 to-blue-800" },
-  { title: "Seçim Analizi 2024", category: "Politika", gradient: "from-indigo-600 to-purple-800" },
-  { title: "Startup Ekosistemi", category: "İş Dünyası", gradient: "from-teal-600 to-emerald-800" },
-];
-
-function HorizontalScrollInner({
-  displayArticles,
-  hasRealArticles,
-}: {
-  displayArticles: Article[];
-  hasRealArticles: boolean;
-}) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const shouldReduceMotion = useReducedMotion();
-
-  // Raw scroll listener for buttery pinning (no state lag)
-  const [pinY, setPinY] = useState(0);
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    const section = containerRef.current;
-    if (!section) return;
-
-    let ticking = false;
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => {
-        const rect = section.getBoundingClientRect();
-        const sectionH = section.offsetHeight;
-        const viewH = window.innerHeight;
-        const runway = sectionH - viewH;
-
-        if (runway <= 0) {
-          setPinY(0);
-          setProgress(0);
-          ticking = false;
-          return;
-        }
-
-        // How far into the section we've scrolled (0 = top aligned, runway = bottom aligned)
-        const scrolled = -rect.top;
-        const clamped = Math.max(0, Math.min(scrolled, runway));
-
-        setPinY(clamped);
-        setProgress(clamped / runway);
-        ticking = false;
-      });
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Horizontal translate derived from progress
-  const xPercent = progress * -55;
-  const hintOp = Math.max(0, 1 - progress / 0.12);
-
-  const cards = hasRealArticles
-    ? displayArticles.map((article, i) => (
-        <motion.div
-          key={article.id ?? i}
-          className="relative flex-shrink-0 w-[280px] md:w-[340px] lg:w-[380px] aspect-[3/4] rounded-2xl overflow-hidden group cursor-pointer shadow-lg shadow-black/5"
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: EASE_OUT_EXPO, delay: i * 0.08 }}
-          whileHover={{ scale: 1.03, y: -8 }}
-        >
-          <Image
-            src={(article.thumbnail || article.image)!}
-            alt={article.title ?? ""}
-            fill
-            className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-            sizes="(max-width: 768px) 280px, (max-width: 1024px) 340px, 380px"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
-            {article.category && (
-              <span className="inline-block px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-white/15 text-white backdrop-blur-sm mb-3">
-                {article.category}
-              </span>
-            )}
-            <h3 className="text-base md:text-lg font-semibold text-white leading-snug line-clamp-2">
-              {article.title}
-            </h3>
-          </div>
-        </motion.div>
-      ))
-    : PLACEHOLDER_CARDS.map((card, i) => (
-        <motion.div
-          key={i}
-          className={cn(
-            "relative flex-shrink-0 w-[280px] md:w-[340px] lg:w-[380px] aspect-[3/4] rounded-2xl overflow-hidden group cursor-pointer shadow-lg shadow-black/10 bg-gradient-to-br",
-            card.gradient
-          )}
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, ease: EASE_OUT_EXPO, delay: i * 0.08 }}
-          whileHover={{ scale: 1.03, y: -8 }}
-        >
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-8 right-8 w-32 h-32 border border-white/30 rounded-full" />
-            <div className="absolute bottom-12 left-6 w-20 h-20 border border-white/20 rounded-full" />
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
-            <span className="inline-block px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-white/15 text-white backdrop-blur-sm mb-3">
-              {card.category}
-            </span>
-            <h3 className="text-base md:text-lg font-semibold text-white leading-snug">
-              {card.title}
-            </h3>
-          </div>
-        </motion.div>
-      ));
-
+function StoriesMoreSpaceSection() {
+  const { t } = useTranslation();
+  const panels = [
+    { headline: t("pricing.moreSpaceDiscovery"), body: t("pricing.moreSpaceDiscoveryBody") },
+    { headline: t("pricing.moreSpaceThinking"), body: t("pricing.moreSpaceThinkingBody") },
+    { headline: t("pricing.moreSpaceSatisfaction"), body: t("pricing.moreSpaceSatisfactionBody") },
+  ];
   return (
     <section
-      ref={containerRef}
-      className="relative h-[250vh] md:h-[300vh]"
+      className={cn(sectionPadding.lg, colors.background.base)}
       style={{
-        background: `linear-gradient(to bottom, ${BRAND.beige} 0%, var(--background, #fff) 8%, var(--background, #fff) 92%, ${BRAND.beige} 100%)`,
+        background: `linear-gradient(to bottom, ${BRAND.beige} 0%, var(--background, #fff) 10%, var(--background, #fff) 90%, ${BRAND.beige} 100%)`,
       }}
     >
-      {/* Pinned content — JS-driven translateY */}
-      <div
-        ref={contentRef}
-        className="absolute top-0 left-0 right-0 h-screen flex flex-col justify-center overflow-hidden will-change-transform"
-        style={{
-          transform: `translate3d(0, ${pinY}px, 0)`,
-          background: `var(--background, #ffffff)`,
-        }}
-      >
-        {/* Header */}
-        <div className={cn("max-w-7xl mx-auto w-full flex items-end justify-between mb-8 md:mb-12", containerPadding.lg)}>
-          <FadeIn direction="left">
-            <div>
-              <p className="text-sm uppercase tracking-[0.2em] text-[#8080FF] font-medium mb-2">
-                Keşfedin
+      <div className={cn("grid grid-cols-1 md:grid-cols-3", gap.lg)}>
+        {panels.map((panel, i) => (
+          <FadeIn key={i} direction="up" delay={0.08 * i}>
+            <div
+              className={cn(
+                "flex flex-col min-h-[280px] md:min-h-0 md:aspect-square",
+                borderRadius["2xl"],
+                border.thin,
+                colors.background.elevated,
+                elevation[1],
+                componentPadding.lg
+              )}
+            >
+              <p className={cn(typography.h4, colors.foreground.primary, marginBottom.sm)}>
+                {panel.headline}
               </p>
-              <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-                Hikayelerimiz
-              </h2>
+              <p className={cn(typography.bodySmall, colors.foreground.secondary, lineHeight.relaxed)}>
+                {panel.body}
+              </p>
+              <div className={cn("mt-auto flex flex-col", gap.sm, marginTop.lg)}>
+                <div
+                  className={cn("h-2 w-full", borderRadius.full, colors.background.base, "opacity-60")}
+                  aria-hidden
+                />
+                <div
+                  className={cn("h-2 w-4/5", borderRadius.full, colors.background.base, "opacity-40")}
+                  aria-hidden
+                />
+              </div>
             </div>
           </FadeIn>
-          <FadeIn direction="right" delay={0.2}>
-            <Link
-              href="/"
-              className="hidden md:inline-flex items-center gap-2 text-sm font-medium pb-2 text-[#8080FF] hover:opacity-70 transition-opacity"
-            >
-              Tümünü gör
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </FadeIn>
-        </div>
-
-        {/* Horizontal track — direct style for zero-lag */}
-        <div
-          className="flex gap-5 md:gap-7 pl-4 md:pl-8 lg:pl-12 xl:pl-16 will-change-transform"
-          style={{ transform: `translate3d(${xPercent}%, 0, 0)` }}
-        >
-          {cards}
-        </div>
-
-        {/* Progress bar */}
-        <div className="max-w-7xl mx-auto w-full mt-10 md:mt-14 px-4 md:px-8 lg:px-12 xl:px-16">
-          <div className="h-[2px] bg-gray-200/60 dark:bg-gray-700/60 rounded-full overflow-hidden">
-            <div
-              className="h-full rounded-full origin-left will-change-transform"
-              style={{
-                transform: `scaleX(${progress})`,
-                background: `linear-gradient(90deg, ${BRAND.periwinkle}, #6A6AE0)`,
-              }}
-            />
-          </div>
-          <div
-            className="flex items-center justify-center gap-2 mt-5 transition-opacity duration-300"
-            style={{ opacity: hintOp }}
-          >
-            <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <ChevronDown className="h-4 w-4 text-[#8080FF]/50" />
-            </motion.div>
-            <span className="text-xs text-muted-foreground/50 font-medium tracking-wider uppercase">
-              Kaydırarak keşfedin
-            </span>
-          </div>
-        </div>
+        ))}
       </div>
     </section>
   );
 }
 
-function HorizontalScrollGallery({ articles }: { articles: Article[] }) {
-  const shouldReduceMotion = useReducedMotion();
-  const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => { setIsMounted(true); }, []);
-
-  const displayArticles = articles.filter((a) => a.thumbnail || a.image).slice(0, 10);
-  const hasRealArticles = displayArticles.length > 0;
-
-  if (shouldReduceMotion || !isMounted) {
-    return (
-      <section className={cn(colors.background.base, "py-16 md:py-24")}>
-        <div className={cn("max-w-7xl mx-auto", containerPadding.lg)}>
-          <div className="flex items-baseline justify-between mb-8">
-            <div>
-              <p className="text-sm uppercase tracking-[0.2em] text-[#8080FF] font-medium mb-2">Keşfedin</p>
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight">Hikayelerimiz</h2>
-            </div>
-          </div>
-          <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-4 px-4 scrollbar-hide">
-            {PLACEHOLDER_CARDS.slice(0, 6).map((card, i) => (
-              <div
-                key={i}
-                className={cn("relative flex-shrink-0 w-[260px] md:w-[300px] aspect-[3/4] rounded-2xl overflow-hidden snap-start bg-gradient-to-br", card.gradient)}
-              >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <span className="inline-block px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-white/15 text-white backdrop-blur-sm mb-2">
-                    {card.category}
-                  </span>
-                  <h3 className="text-base font-semibold text-white leading-snug">{card.title}</h3>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
-
-  return <HorizontalScrollInner displayArticles={displayArticles} hasRealArticles={hasRealArticles} />;
+function HorizontalScrollGallery({ articles: _articles }: { articles: Article[] }) {
+  return <StoriesMoreSpaceSection />;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -560,51 +382,24 @@ function HorizontalScrollGallery({ articles }: { articles: Article[] }) {
    Phone stays centered, USP steps appear alternating L/R on scroll
    ═══════════════════════════════════════════════════════════════════════════ */
 
-const PHONE_STEPS = [
-  {
-    icon: Newspaper,
-    title: "Premium İçerik",
-    description: "Derinlemesine analizler, özel röportajlar ve üyelere özel makaleler. Her gün yeni bir bakış açısı.",
-    screen: "article",
-  },
-  {
-    icon: Bell,
-    title: "Akıllı Bildirimler",
-    description: "Günün öne çıkan haberleri, kişiselleştirilmiş bülten ve anlık bildirimlerle her zaman güncel kalın.",
-    screen: "notifications",
-  },
-  {
-    icon: Headphones,
-    title: "AI Podcast Özetleri",
-    description: "Yapay zekâ ile özetlenmiş sesli haberler. Yolda, sporda veya işte — haberleri dinleyin.",
-    screen: "podcast",
-  },
-  {
-    icon: Gift,
-    title: "Özel Etkinlikler",
-    description: "Gazetecilerle buluşmalar, kapalı webinarlar ve sadece üyelere özel deneyimler.",
-    screen: "events",
-  },
-  {
-    icon: Zap,
-    title: "Erken Erişim",
-    description: "Yeni özelliklere, beta araçlara ve özel projelere herkesten önce erişin.",
-    screen: "early",
-  },
-];
+/** Pricing phone scrollytelling: exactly 4 steps, one viewport-height scroll per step */
+
+const PHONE_STEP_GRADIENTS = [
+  "from-[#5A5ACD] to-[#8080FF]",
+  "from-[#374152] to-[#4B5563]",
+  "from-[#6A6AE0] to-[#9999FF]",
+  "from-[#059669] to-[#10B981]",
+] as const;
+
+type PhoneStep = {
+  icon: typeof Newspaper;
+  title: string;
+  description: string;
+  screen: string;
+};
 
 /* Phone screen mockup content */
-function PhoneScreen({ activeStep, progress }: { activeStep: number; progress: number }) {
-  const screenColors = [
-    "from-[#5A5ACD] to-[#8080FF]",
-    "from-[#374152] to-[#4B5563]",
-    "from-[#6A6AE0] to-[#9999FF]",
-    "from-[#059669] to-[#10B981]",
-    "from-[#D97706] to-[#F59E0B]",
-  ];
-
-  const screenIcons = [Newspaper, Bell, Headphones, Gift, Zap];
-
+function PhoneScreen({ activeStep, progress: _progress, steps }: { activeStep: number; progress: number; steps: PhoneStep[] }) {
   return (
     <div className="relative w-[240px] md:w-[280px] lg:w-[300px] aspect-[9/19.5] mx-auto">
       {/* Phone frame */}
@@ -614,7 +409,12 @@ function PhoneScreen({ activeStep, progress }: { activeStep: number; progress: n
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[100px] md:w-[120px] h-[28px] md:h-[32px] bg-[#1a1a1a] rounded-b-2xl z-10" />
 
           {/* Screen content */}
-          <div className={cn("absolute inset-0 bg-gradient-to-br transition-all duration-700", screenColors[activeStep] ?? screenColors[0])}>
+          <div
+            className={cn(
+              "absolute inset-0 bg-gradient-to-br transition-all duration-700",
+              PHONE_STEP_GRADIENTS[activeStep] ?? PHONE_STEP_GRADIENTS[0]
+            )}
+          >
             {/* Status bar */}
             <div className="pt-10 px-5 flex items-center justify-between">
               <span className="text-[10px] text-white/60 font-medium">09:41</span>
@@ -627,39 +427,41 @@ function PhoneScreen({ activeStep, progress }: { activeStep: number; progress: n
 
             {/* Main content */}
             <div className="flex flex-col items-center justify-center h-full pb-20 px-6">
-              {screenIcons.map((Icon, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute flex flex-col items-center gap-4"
-                  initial={false}
-                  animate={{
-                    opacity: activeStep === i ? 1 : 0,
-                    scale: activeStep === i ? 1 : 0.8,
-                    y: activeStep === i ? 0 : 20,
-                  }}
-                  transition={{ duration: 0.5, ease: EASE_OUT_EXPO }}
-                >
-                  <div className="h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center">
-                    <Icon className="h-8 w-8 md:h-10 md:w-10 text-white" />
-                  </div>
-                  <span className="text-white/90 text-sm md:text-base font-semibold text-center">
-                    {PHONE_STEPS[i].title}
-                  </span>
+              {steps.map((step, i) => {
+                const Icon = step.icon;
+                return (
+                  <motion.div
+                    key={step.title}
+                    className="absolute flex flex-col items-center gap-4"
+                    initial={false}
+                    animate={{
+                      opacity: activeStep === i ? 1 : 0,
+                      scale: activeStep === i ? 1 : 0.92,
+                    }}
+                    transition={{ duration: 0.35, ease: EASE_OUT_EXPO }}
+                    style={{ pointerEvents: activeStep === i ? "auto" : "none" }}
+                  >
+                    <div className="h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center">
+                      <Icon className="h-8 w-8 md:h-10 md:w-10 text-white" />
+                    </div>
+                    <span className="text-white/90 text-sm md:text-base font-semibold text-center">
+                      {step.title}
+                    </span>
 
-                  {/* Decorative dots */}
-                  <div className="flex gap-1.5 mt-2">
-                    {PHONE_STEPS.map((_, j) => (
-                      <div
-                        key={j}
-                        className={cn(
-                          "w-1.5 h-1.5 rounded-full transition-all duration-300",
-                          j === activeStep ? "bg-white w-4" : "bg-white/30"
-                        )}
-                      />
-                    ))}
-                  </div>
-                </motion.div>
-              ))}
+                    <div className="flex gap-1.5 mt-2">
+                      {steps.map((_, j) => (
+                        <div
+                          key={j}
+                          className={cn(
+                            "h-1.5 rounded-full transition-all duration-300",
+                            j === activeStep ? "bg-white w-4" : "w-1.5 bg-white/30"
+                          )}
+                        />
+                      ))}
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
 
             {/* Home indicator */}
@@ -671,19 +473,54 @@ function PhoneScreen({ activeStep, progress }: { activeStep: number; progress: n
   );
 }
 
+type PhonePinPhase = "before" | "pinned" | "after";
+
 function PhoneScrollytelling() {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
   const [activeStep, setActiveStep] = useState(0);
-  const [pinY, setPinY] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [pinPhase, setPinPhase] = useState<PhonePinPhase>("before");
 
-  // JS-driven pinning (same robust technique as horizontal scroll)
+  const phoneSteps: PhoneStep[] = [
+    {
+      icon: Newspaper,
+      title: t("pricing.phonePremiumContent"),
+      description: t("pricing.phonePremiumContentDesc"),
+      screen: "article",
+    },
+    {
+      icon: Bell,
+      title: t("pricing.phoneSmartNotifications"),
+      description: t("pricing.phoneSmartNotificationsDesc"),
+      screen: "notifications",
+    },
+    {
+      icon: Headphones,
+      title: t("pricing.phoneAiPodcasts"),
+      description: t("pricing.phoneAiPodcastsDesc"),
+      screen: "podcast",
+    },
+    {
+      icon: Gift,
+      title: t("pricing.phoneExclusiveEvents"),
+      description: t("pricing.phoneExclusiveEventsDesc"),
+      screen: "events",
+    },
+  ];
+
+  /**
+   * One full viewport scroll (~100vh) advances one step. Phone mock stays visually fixed
+   * via position:fixed while the tall section scrolls behind it.
+   */
   useEffect(() => {
     const section = containerRef.current;
     if (!section) return;
 
     let ticking = false;
+    const stepCount = phoneSteps.length;
+
     const onScroll = () => {
       if (ticking) return;
       ticking = true;
@@ -693,27 +530,42 @@ function PhoneScrollytelling() {
         const viewH = window.innerHeight;
         const runway = sectionH - viewH;
 
-        if (runway <= 0) { ticking = false; return; }
+        if (runway <= 0) {
+          ticking = false;
+          return;
+        }
+
+        // Decide whether we're before, inside, or after the pinned runway
+        let nextPhase: PhonePinPhase;
+        if (rect.top > 0) {
+          nextPhase = "before";
+        } else if (rect.bottom <= viewH + 0.5) {
+          nextPhase = "after";
+        } else {
+          nextPhase = "pinned";
+        }
+        setPinPhase((prev) => (prev === nextPhase ? prev : nextPhase));
 
         const scrolled = -rect.top;
         const clamped = Math.max(0, Math.min(scrolled, runway));
         const prog = clamped / runway;
 
-        setPinY(clamped);
-        setProgress(prog);
+        // Discrete steps: each ~1 viewport of travel inside the runway advances 0→1→2→3
+        const step = Math.min(Math.floor(clamped / viewH), stepCount - 1);
 
-        // Determine active step from progress
-        const stepCount = PHONE_STEPS.length;
-        const step = Math.min(Math.floor(prog * stepCount), stepCount - 1);
         setActiveStep(step);
-
+        setProgress(prog);
         ticking = false;
       });
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
     onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   if (shouldReduceMotion) {
@@ -721,10 +573,10 @@ function PhoneScrollytelling() {
       <section className={cn(colors.background.base, "py-16 md:py-24")}>
         <div className={cn("max-w-5xl mx-auto", containerPadding.lg)}>
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Scrolli deneyimi</h2>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{t("pricing.scrolliExperience")}</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {PHONE_STEPS.map((step) => {
+            {phoneSteps.map((step) => {
               const Icon = step.icon;
               return (
                 <div key={step.title} className="flex gap-4">
@@ -744,48 +596,59 @@ function PhoneScrollytelling() {
     );
   }
 
+  const phoneStageBg = `linear-gradient(to bottom, var(--background, #fff) 0%, ${BRAND.beige} 15%, ${BRAND.beige} 85%, var(--background, #fff) 100%)`;
+
   return (
     <section
       ref={containerRef}
-      className="relative"
+      className="relative isolate"
       style={{
-        height: `${(PHONE_STEPS.length + 1) * 100}vh`,
-        background: `linear-gradient(to bottom, var(--background, #fff) 0%, ${BRAND.beige} 15%, ${BRAND.beige} 85%, var(--background, #fff) 100%)`,
+        height: `${(phoneSteps.length + 1) * 100}vh`,
+        background: phoneStageBg,
       }}
     >
-      {/* Pinned viewport */}
       <div
-        className="absolute top-0 left-0 right-0 h-screen overflow-hidden will-change-transform"
-        style={{ transform: `translate3d(0, ${pinY}px, 0)` }}
+        className={cn(
+          "h-screen w-full overflow-hidden",
+          pinPhase === "before" && "relative",
+          pinPhase === "pinned" && "fixed inset-x-0 top-0 z-[35]",
+          pinPhase === "after" && "absolute bottom-0 left-0 right-0"
+        )}
+        style={{ background: phoneStageBg }}
       >
-        <div className={cn("max-w-6xl mx-auto h-full flex items-center relative", containerPadding.lg)}>
-          {/* Phone in center */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-            <PhoneScreen activeStep={activeStep} progress={progress} />
+        <div
+          className={cn(
+            "relative mx-auto h-full max-w-6xl",
+            containerPadding.lg
+          )}
+        >
+          {/* Phone: centered with layout, not FramerMotion y — pixel-stable between steps */}
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+            <div className="relative z-10">
+              <PhoneScreen activeStep={activeStep} progress={progress} steps={phoneSteps} />
+            </div>
           </div>
 
-          {/* Steps: alternating left/right */}
-          {PHONE_STEPS.map((step, i) => {
+          {/* Steps: alternating left/right, only one fully visible at a time */}
+          {phoneSteps.map((step, i) => {
             const Icon = step.icon;
             const isLeft = i % 2 === 0;
             const isActive = i === activeStep;
-            const isPast = i < activeStep;
 
             return (
               <motion.div
                 key={step.title}
                 className={cn(
-                  "absolute w-[42%] md:w-[35%]",
+                  "pointer-events-none absolute top-1/2 w-[42%] md:w-[35%]",
                   isLeft ? "left-0" : "right-0"
                 )}
-                style={{ top: "50%", y: "-50%" }}
                 initial={false}
                 animate={{
-                  opacity: isActive ? 1 : isPast ? 0.15 : 0,
-                  x: isActive ? 0 : isLeft ? -40 : 40,
-                  scale: isActive ? 1 : 0.95,
+                  opacity: isActive ? 1 : 0,
+                  x: isActive ? 0 : isLeft ? -20 : 20,
+                  y: "-50%",
                 }}
-                transition={{ duration: 0.6, ease: EASE_OUT_EXPO }}
+                transition={{ duration: 0.45, ease: EASE_OUT_EXPO }}
               >
                 <div className={cn("p-6 md:p-8 rounded-2xl", isLeft ? "text-right" : "text-left")}>
                   <div className={cn("flex items-center gap-3 mb-4", isLeft ? "justify-end" : "justify-start")}>
@@ -827,7 +690,7 @@ function PhoneScrollytelling() {
 
           {/* Step indicators */}
           <div className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-20">
-            {PHONE_STEPS.map((_, i) => (
+            {phoneSteps.map((_, i) => (
               <div
                 key={i}
                 className={cn(
@@ -847,34 +710,17 @@ function PhoneScrollytelling() {
    Section 4 — Feature Panels (alternating editorial with parallax)
    ═══════════════════════════════════════════════════════════════════════════ */
 
-const features = [
-  {
-    num: "01",
-    icon: Crown,
-    title: "Premium Makaleler",
-    subtitle: "Daha derin",
-    description:
-      "Derinlemesine analizler, özel röportajlar ve sadece üyelere özel içerikler. Mainstream medyanın görmezden geldiği hikayeleri size getiriyoruz.",
-  },
-  {
-    num: "02",
-    icon: Headphones,
-    title: "Günlük Bülten + AI Podcastler",
-    subtitle: "Daha akıllı",
-    description:
-      "Her sabah özenle hazırlanmış bülten ve yapay zekâ destekli podcast özetleri. Günü anlamak için ihtiyacınız olan her şey, tek bir yerden.",
-  },
-  {
-    num: "03",
-    icon: CalendarHeart,
-    title: "Özel Etkinlikler + Öncelikli Destek",
-    subtitle: "Daha yakın",
-    description:
-      "Sadece üyelere özel etkinlikler, webinarlar ve öncelikli iletişim hattı. Gazetecilerle doğrudan bağlantı kurma fırsatı.",
-  },
-];
+/* features array is defined inside FeaturePanels to access t() */
 
-function FeaturePanel({ feature, index, article }: { feature: (typeof features)[number]; index: number; article?: Article }) {
+type FeatureItem = {
+  num: string;
+  icon: typeof Crown;
+  title: string;
+  subtitle: string;
+  description: string;
+};
+
+function FeaturePanel({ feature, index, article, isLast }: { feature: FeatureItem; index: number; article?: Article; isLast?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
@@ -957,7 +803,7 @@ function FeaturePanel({ feature, index, article }: { feature: (typeof features)[
         </div>
       </div>
 
-      {index < features.length - 1 && (
+      {!isLast && (
         <div
           className="h-20 md:h-24 w-full"
           style={{
@@ -972,11 +818,36 @@ function FeaturePanel({ feature, index, article }: { feature: (typeof features)[
 }
 
 function FeaturePanels({ articles }: { articles: Article[] }) {
+  const { t } = useTranslation();
+  const features: FeatureItem[] = [
+    {
+      num: "01",
+      icon: Crown,
+      title: t("pricing.featurePremiumArticles"),
+      subtitle: t("pricing.featurePremiumSubtitle"),
+      description: t("pricing.featurePremiumDesc"),
+    },
+    {
+      num: "02",
+      icon: Headphones,
+      title: t("pricing.featureDailyBulletin"),
+      subtitle: t("pricing.featureDailySubtitle"),
+      description: t("pricing.featureDailyDesc"),
+    },
+    {
+      num: "03",
+      icon: CalendarHeart,
+      title: t("pricing.featureExclusiveEvents"),
+      subtitle: t("pricing.featureExclusiveSubtitle"),
+      description: t("pricing.featureExclusiveDesc"),
+    },
+  ];
+
   return (
     <section className="relative">
       {features.map((feature, i) => {
         const article = articles.filter((a) => a.thumbnail || a.image)[i + 3];
-        return <FeaturePanel key={feature.title} feature={feature} index={i} article={article} />;
+        return <FeaturePanel key={feature.title} feature={feature} index={i} article={article} isLast={i === features.length - 1} />;
       })}
     </section>
   );
@@ -986,50 +857,139 @@ function FeaturePanels({ articles }: { articles: Article[] }) {
    Section 5 — Testimonial
    ═══════════════════════════════════════════════════════════════════════════ */
 
+type TestimonialItem = {
+  quote: string;
+  name: string;
+  role: string;
+  avatar?: string;
+};
+
 function Testimonial() {
+  const { t } = useTranslation();
+  const testimonials: TestimonialItem[] = [
+    {
+      quote: t("pricing.testimonial1Quote"),
+      name: t("pricing.testimonial1Name"),
+      role: t("pricing.testimonial1Role"),
+      avatar: "/assets/images/author-avata-1.jpg",
+    },
+    {
+      quote: t("pricing.testimonial2Quote"),
+      name: t("pricing.testimonial2Name"),
+      role: t("pricing.testimonial2Role"),
+    },
+    {
+      quote: t("pricing.testimonial3Quote"),
+      name: t("pricing.testimonial3Name"),
+      role: t("pricing.testimonial3Role"),
+    },
+    {
+      quote: t("pricing.testimonial4Quote"),
+      name: t("pricing.testimonial4Name"),
+      role: t("pricing.testimonial4Role"),
+    },
+  ];
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const [carouselApi, setCarouselApi] = useState<CarouselApi>();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [slideCount, setSlideCount] = useState(0);
+
+  useEffect(() => {
+    if (!carouselApi) return;
+
+    const update = () => {
+      setActiveIndex(carouselApi.selectedScrollSnap());
+      setSlideCount(carouselApi.scrollSnapList().length);
+    };
+
+    update();
+    carouselApi.on("select", update);
+    carouselApi.on("reInit", update);
+    return () => {
+      carouselApi.off("select", update);
+      carouselApi.off("reInit", update);
+    };
+  }, [carouselApi]);
 
   return (
-    <section ref={ref} className={cn(surfacePairs.brand.beige, "relative py-28 md:py-36 lg:py-48 overflow-hidden")}>
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[300px] md:text-[500px] font-serif leading-none select-none pointer-events-none"
-        style={{ color: `${BRAND.periwinkle}06` }}
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={isInView ? { scale: 1, opacity: 1 } : {}}
-        transition={{ duration: 1.5, ease: EASE_OUT_EXPO }}
-      >
-        &ldquo;
-      </motion.div>
-
-      <div className={cn("max-w-4xl mx-auto text-center relative z-10", containerPadding.lg)}>
-        <motion.div className="mb-8" initial={{ scale: 0, opacity: 0 }} animate={isInView ? { scale: 1, opacity: 1 } : {}} transition={{ duration: 0.6, ease: EASE_OUT_EXPO }}>
-          <div className="mx-auto h-12 w-12 rounded-full bg-[#8080FF]/10 flex items-center justify-center">
-            <svg className="h-5 w-5 text-[#8080FF]" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-            </svg>
-          </div>
-        </motion.div>
-
-        <motion.blockquote
-          className="font-display italic text-2xl md:text-3xl lg:text-4xl xl:text-5xl leading-[1.3] tracking-tight mb-12"
-          initial={{ opacity: 0, y: 30 }}
+    <section ref={ref} className={cn(surfacePairs.brand.beige, sectionPadding["2xl"], "relative overflow-hidden")}>
+      <div className={cn("max-w-7xl mx-auto relative z-10", containerPadding.lg)}>
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: EASE_OUT_EXPO, delay: 0.15 }}
+          transition={{ duration: 0.6, ease: EASE_OUT_EXPO }}
         >
-          Scrolli, Türkiye&rsquo;nin en önemli bağımsız gazetecilik
-          platformlarından biri. Premium üyelik, bu misyonu desteklemenin en
-          iyi yolu.
-        </motion.blockquote>
+          <Carousel
+            setApi={setCarouselApi}
+            opts={{ align: "start", loop: true }}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-6">
+              {testimonials.map((item) => (
+                <CarouselItem
+                  key={item.name}
+                  className="pl-6 md:basis-1/2"
+                >
+                  <article
+                    className={cn(
+                      "h-full",
+                      componentPadding.md
+                    )}
+                  >
+                    <svg
+                      className={cn(
+                        "h-5 w-5 mb-5",
+                        colors.foreground.muted
+                      )}
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden
+                    >
+                      <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                    </svg>
 
-        <motion.div className="flex flex-col items-center gap-4" initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, ease: EASE_OUT_EXPO, delay: 0.3 }}>
-          <div className="relative h-16 w-16 rounded-full overflow-hidden ring-2 ring-[#8080FF]/20 ring-offset-4 ring-offset-[#F8F5E4]">
-            <Image src="/assets/images/author-avata-1.jpg" alt="Ayşe Yılmaz" fill className="object-cover" sizes="64px" />
-          </div>
-          <div>
-            <p className={cn(fontWeight.semibold, "text-base md:text-lg")}>Ayşe Yılmaz</p>
-            <p className={cn(colors.foreground.muted, "text-sm md:text-base")}>Gazeteci &amp; Yazar</p>
-          </div>
+                    <p className={cn(typography.bodyLarge, colors.foreground.primary, lineHeight.relaxed, marginBottom.lg)}>
+                      {item.quote}
+                    </p>
+
+                    <div className={cn("h-px w-full", colors.border.light, marginBottom.sm)} />
+
+                    <div className={cn("flex items-baseline justify-between", gap.sm)}>
+                      <span className={cn(fontWeight.semibold, typography.bodySmall, colors.foreground.primary)}>
+                        {item.name}
+                      </span>
+                      <span className={cn(typography.caption, colors.foreground.muted)}>
+                        {item.role}
+                      </span>
+                    </div>
+                  </article>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+
+          {/* Dots (minimal, common pattern) */}
+          {slideCount > 1 && (
+            <div className={cn("mt-8 flex items-center justify-center", gap.sm)}>
+              {Array.from({ length: slideCount }).map((_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={cn(
+                    "h-2 w-2 transition-opacity",
+                    borderRadius.full,
+                    i === activeIndex ? "opacity-100" : "opacity-30",
+                    "bg-current",
+                    colors.foreground.primary
+                  )}
+                  aria-label={`Yorum ${i + 1}`}
+                  aria-current={i === activeIndex ? "true" : undefined}
+                  onClick={() => carouselApi?.scrollTo(i)}
+                />
+              ))}
+            </div>
+          )}
         </motion.div>
       </div>
     </section>
@@ -1041,41 +1001,51 @@ function Testimonial() {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 function FinalCTA() {
+  const { t } = useTranslation();
   const ref = useRef<HTMLElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section ref={ref} className={cn(colors.background.base, "relative py-28 md:py-36 lg:py-48 overflow-hidden")}>
+    <section ref={ref} className={cn(colors.background.base, sectionPadding["2xl"], "relative overflow-hidden")}>
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] md:w-[800px] md:h-[800px] rounded-full pointer-events-none blur-3xl"
+        className={cn(
+          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none blur-3xl",
+          borderRadius.full
+        )}
         style={{ background: `radial-gradient(circle, ${BRAND.periwinkle}12 0%, transparent 60%)` }}
       />
 
       <div className={cn("max-w-4xl mx-auto text-center relative z-10", containerPadding.lg)}>
-        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={isInView ? { opacity: 1, scale: 1 } : {}} transition={{ duration: 1, ease: EASE_OUT_EXPO }}>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.02] tracking-tight mb-7">
-            Bağımsız gazeteciliği destekle
-          </h2>
-        </motion.div>
-
-        <motion.p
-          className={cn(colors.foreground.secondary, "text-lg md:text-xl lg:text-2xl leading-relaxed mb-12 max-w-2xl mx-auto")}
-          initial={{ opacity: 0, y: 20 }}
+        <motion.div
+          className={cn("mx-auto flex max-w-3xl flex-col items-center", gap.lg)}
+          initial={{ opacity: 0, y: 18 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: EASE_OUT_EXPO, delay: 0.15 }}
+          transition={{ duration: 0.8, ease: EASE_OUT_EXPO }}
         >
-          Scrolli Premium ile kaliteli, bağımsız habercilik ekosistemine
-          destek olun. Her abonelik, özgür gazeteciliğin gücüne güç katar.
-        </motion.p>
+          <Heading level={2} variant="h2" className={cn("text-balance", colors.foreground.primary)}>
+            {t("pricing.ctaHeadline")}
+          </Heading>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, ease: EASE_OUT_EXPO, delay: 0.3 }}>
-          <Link
-            href="/subscribe"
-            className="relative inline-flex items-center gap-3 px-10 py-5 text-lg font-medium rounded-full text-white transition-all duration-300 bg-gradient-to-r from-[#374152] to-[#4B5563] hover:from-[#4B5563] hover:to-[#374152] shadow-lg shadow-black/10 hover:shadow-xl hover:shadow-black/15 hover:-translate-y-0.5"
+          <Text
+            variant="bodyLarge"
+            color="secondary"
+            className={cn("max-w-2xl text-balance", lineHeight.relaxed)}
           >
-            Scrolli Premium&rsquo;a Katıl
-            <ArrowRight className="h-5 w-5" />
-          </Link>
+            {t("pricing.ctaBody")}
+          </Text>
+
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, ease: EASE_OUT_EXPO, delay: 0.12 }}
+          >
+            <Button asChild size="lg" variant="brand-charcoal" className={cn("gap-2", borderRadius.full)}>
+              <Link href="/subscribe">
+                {t("pricing.ctaButton")}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </motion.div>
         </motion.div>
       </div>
     </section>
@@ -1086,13 +1056,13 @@ function FinalCTA() {
    Section 7 — Scrolli+ Business
    ═══════════════════════════════════════════════════════════════════════════ */
 
-const businessFeatures = [
-  { icon: Building2, title: "Kapalı Analizler", description: "Kurumunuza özel, derinlemesine sektörel analiz raporları." },
-  { icon: Users, title: "Özel Buluşmalar", description: "Sektör liderlerinin katıldığı özel etkinlikler ve webinarlar." },
-  { icon: Mail, title: "Kurumsal Erişim", description: "Ekibiniz için sınırsız premium içerik erişimi." },
-];
-
 function ScrolliBusiness() {
+  const { t } = useTranslation();
+  const businessFeatures = [
+    { icon: Building2, title: t("pricing.businessAnalytics"), description: t("pricing.businessAnalyticsDesc") },
+    { icon: Users, title: t("pricing.businessMeetings"), description: t("pricing.businessMeetingsDesc") },
+    { icon: Mail, title: t("pricing.businessAccess"), description: t("pricing.businessAccessDesc") },
+  ];
   return (
     <section className={cn(surfacePairs.brand.beige, "relative py-24 md:py-32 lg:py-40 overflow-hidden")}>
       <FloatingOrb className="top-20 right-[10%]" size={250} delay={1} />
@@ -1102,10 +1072,10 @@ function ScrolliBusiness() {
           <div className="text-center mb-16 md:mb-20">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#8080FF]/10 mb-6">
               <Building2 className="h-3.5 w-3.5 text-[#8080FF]" />
-              <span className="text-sm uppercase tracking-[0.2em] text-[#8080FF] font-medium">Kurumsal</span>
+              <span className="text-sm uppercase tracking-[0.2em] text-[#8080FF] font-medium">{t("pricing.businessBadge")}</span>
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight tracking-tight">
-              Scrolli+ Business
+              {t("pricing.businessTitle")}
             </h2>
           </div>
         </FadeIn>
@@ -1133,7 +1103,7 @@ function ScrolliBusiness() {
               href="mailto:info@scrolli.co"
               className="relative inline-flex items-center gap-3 px-10 py-5 text-lg font-medium rounded-full text-white transition-all duration-300 bg-gradient-to-r from-[#374152] to-[#4B5563] hover:from-[#4B5563] hover:to-[#374152] shadow-lg shadow-black/10 hover:shadow-xl hover:shadow-black/15 hover:-translate-y-0.5"
             >
-              Bize Ulaşın
+              {t("pricing.businessContactUs")}
               <ArrowRight className="h-5 w-5" />
             </a>
           </div>
@@ -1148,15 +1118,16 @@ function ScrolliBusiness() {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 function CorporateCTA() {
+  const { t } = useTranslation();
   return (
     <section className={cn(colors.background.base, "py-16 md:py-20 border-t", colors.border.light)}>
       <div className={cn("max-w-3xl mx-auto text-center", containerPadding.lg)}>
         <FadeIn>
           <h3 className="text-xl md:text-2xl font-semibold leading-tight tracking-tight mb-4">
-            Kurumsal abonelik mi arıyorsunuz?
+            {t("pricing.corporateQuestion")}
           </h3>
           <a href="mailto:info@scrolli.co" className="inline-flex items-center gap-2 text-base text-[#8080FF] hover:opacity-70 transition-opacity font-medium">
-            Bize ulaşın
+            {t("pricing.corporateContactUs")}
             <ArrowRight className="h-4 w-4" />
           </a>
         </FadeIn>

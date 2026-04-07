@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/components/providers/translation-provider";
 import {
   colors,
   typography,
@@ -20,6 +21,7 @@ import {
 } from "@/lib/design-tokens";
 
 export function OnboardingForm() {
+  const { t } = useTranslation();
   const router = useRouter();
   const supabase = createClient();
   const [fullName, setFullName] = useState("");
@@ -33,7 +35,7 @@ export function OnboardingForm() {
     setIsLoading(true);
 
     if (!fullName.trim()) {
-      setError("Lütfen tam adınızı girin.");
+      setError(t('onboarding.errorNameRequired'));
       setIsLoading(false);
       return;
     }
@@ -44,7 +46,7 @@ export function OnboardingForm() {
       } = await supabase.auth.getUser();
 
       if (!user) {
-        setError("Devam etmek için giriş yapmalısınız.");
+        setError(t('onboarding.errorNotAuthenticated'));
         setIsLoading(false);
         router.push("/sign-in");
         return;
@@ -62,7 +64,7 @@ export function OnboardingForm() {
 
       if (updateError) {
         console.error("Error updating profile:", updateError);
-        setError(updateError.message || "Bilgiler kaydedilemedi. Lütfen tekrar deneyin.");
+        setError(updateError.message || t('onboarding.errorSaveFailed'));
         setIsLoading(false);
         return;
       }
@@ -101,7 +103,7 @@ export function OnboardingForm() {
       router.refresh();
     } catch (err) {
       console.error("Onboarding error:", err);
-      setError("Beklenmedik bir hata oluştu.");
+      setError(t('onboarding.errorUnexpected'));
       setIsLoading(false);
     }
   };
@@ -118,22 +120,22 @@ export function OnboardingForm() {
     >
       <div className={cn(marginBottom.lg)}>
         <h1 className={cn(typography.h2, marginBottom.sm, colors.foreground.primary)}>
-          Hoş Geldiniz!
+          {t('onboarding.welcome')}
         </h1>
         <p className={cn(typography.body, colors.foreground.secondary)}>
-          Profilinizi tamamlamak için lütfen birkaç detay paylaşın.
+          {t('onboarding.completeProfile')}
         </p>
       </div>
 
       <div className={cn("flex flex-col", gap.md)}>
         <div className={cn("flex flex-col", gap.sm)}>
           <Label htmlFor="fullName" className={cn(typography.label, colors.foreground.primary)}>
-            Tam Adınız <span className="text-red-500">*</span>
+            {t('onboarding.fullName')} <span className="text-red-500">*</span>
           </Label>
           <Input
             id="fullName"
             type="text"
-            placeholder="Adınız ve soyadınız"
+            placeholder={t('onboarding.fullNamePlaceholder')}
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             disabled={isLoading}
@@ -157,7 +159,7 @@ export function OnboardingForm() {
               colors.foreground.secondary
             )}
           >
-            En son haberler ve özel içerikler için bültenimize abone olun
+            {t('onboarding.newsletterOptIn')}
           </Label>
         </div>
 
@@ -177,7 +179,7 @@ export function OnboardingForm() {
           size="lg"
           className="w-full font-bold h-12"
         >
-          {isLoading ? "Kaydediliyor..." : "Devam Et"}
+          {isLoading ? t('onboarding.saving') : t('onboarding.continue')}
         </SmartButton>
       </div>
     </form>

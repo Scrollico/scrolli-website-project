@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import CinematicThemeSwitcher from "@/components/ui/cinematic-theme-switcher";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/components/providers/translation-provider";
 import { colors, containerPadding, gap } from "@/lib/design-tokens";
 
 // --- New Animation Components ---
@@ -172,6 +173,7 @@ const EyeBall = ({
 type AuthMode = "signin" | "signup";
 
 export function LoginPage({ mode = "signin" }: { mode?: AuthMode }) {
+  const { t } = useTranslation();
   const { theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
@@ -412,19 +414,19 @@ export function LoginPage({ mode = "signin" }: { mode?: AuthMode }) {
   const copy =
     mode === "signin"
       ? {
-        title: "Hoş Geldiniz",
-        subtitle: "Lütfen giriş yapın",
-        primaryCta: "Giriş Yap",
-        switchPrompt: "Hesabınız yok mu?",
-        switchText: "Hemen Abone Ol",
+        title: t('auth.welcomeBack'),
+        subtitle: t('auth.pleaseSignIn'),
+        primaryCta: t('auth.signInCta'),
+        switchPrompt: t('auth.noAccount'),
+        switchText: t('auth.subscribeNow'),
         switchHref: "/subscribe",
       }
       : {
-        title: "Hesap Oluştur",
-        subtitle: "Scrolli'ye katılın",
-        primaryCta: "Kayıt Ol",
-        switchPrompt: "Zaten üye misiniz?",
-        switchText: "Giriş Yap",
+        title: t('auth.createAccount'),
+        subtitle: t('auth.joinScrolli'),
+        primaryCta: t('auth.signUpCta'),
+        switchPrompt: t('auth.alreadyMember'),
+        switchText: t('auth.signInLink'),
         switchHref: "/sign-in",
       };
 

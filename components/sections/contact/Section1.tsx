@@ -20,8 +20,10 @@ import {
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useTranslation } from "@/components/providers/translation-provider";
 
 export default function Section1() {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -78,7 +80,7 @@ export default function Section1() {
 
       setSubmitStatus({
         type: "success",
-        message: "Your message has been sent successfully!",
+        message: t('contact.successMessage'),
       });
 
       // Reset form
@@ -91,7 +93,7 @@ export default function Section1() {
     } catch (error) {
       setSubmitStatus({
         type: "error",
-        message: "Failed to send message. Please try again.",
+        message: t('contact.errorMessage'),
       });
     } finally {
       setIsSubmitting(false);
@@ -133,7 +135,7 @@ export default function Section1() {
               {/* Heading */}
               <div className={cn("flex flex-col", gap.sm)}>
                 <Heading level={1} variant="h1" color="primary">
-                  Contact us
+                  {t('contact.heading')}
                 </Heading>
               </div>
 
@@ -162,13 +164,13 @@ export default function Section1() {
                   {/* Name Field */}
                   <div className={cn("flex flex-col", gap.sm)}>
                     <Label htmlFor="name" className={cn(typography.bodySmall, fontWeight.medium, colors.foreground.primary)}>
-                      Name
+                      {t('contact.name')}
                     </Label>
                     <Input
                       id="name"
                       type="text"
                       name="name"
-                      placeholder="Name"
+                      placeholder={t('contact.namePlaceholder')}
                       value={formData.name}
                       onChange={handleChange}
                       required
@@ -179,13 +181,13 @@ export default function Section1() {
                   {/* Email Field */}
                   <div className={cn("flex flex-col", gap.sm)}>
                     <Label htmlFor="email" className={cn(typography.bodySmall, fontWeight.medium, colors.foreground.primary)}>
-                      Email
+                      {t('contact.email')}
                     </Label>
                     <Input
                       id="email"
                       type="email"
                       name="email"
-                      placeholder="Email"
+                      placeholder={t('contact.emailPlaceholder')}
                       value={formData.email}
                       onChange={handleChange}
                       required
@@ -197,12 +199,12 @@ export default function Section1() {
                 {/* Message Field */}
                 <div className={cn("flex flex-col", gap.sm)}>
                   <Label htmlFor="message" className={cn(typography.bodySmall, fontWeight.medium, colors.foreground.primary)}>
-                    Your message
+                    {t('contact.message')}
                   </Label>
                   <Textarea
                     id="message"
                     name="message"
-                    placeholder="Write your message"
+                    placeholder={t('contact.messagePlaceholder')}
                     value={formData.message}
                     onChange={handleChange}
                     required
@@ -227,7 +229,7 @@ export default function Section1() {
                       "cursor-pointer"
                     )}
                   >
-                    Agree Thank you!
+                    {t('contact.agree')}
                   </Label>
                 </div>
 
@@ -239,7 +241,7 @@ export default function Section1() {
                   size="md"
                   className="w-full md:w-auto"
                 >
-                  {isSubmitting ? "Sending..." : "Submit"}
+                  {isSubmitting ? t('contact.sending') : t('contact.submit')}
                 </SmartButton>
               </form>
             </div>

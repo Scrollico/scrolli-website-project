@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Image from 'next/image';
 import CinematicThemeSwitcher from '@/components/ui/cinematic-theme-switcher';
+import { useTranslation } from "@/components/providers/translation-provider";
 
 interface MobileMenuProps {
   isMobileMenu: boolean;
@@ -14,6 +15,7 @@ interface MobileMenuProps {
 export default function MobileMenu({ isMobileMenu, handleMobileMenu }: MobileMenuProps) {
   const [isAccordion, setIsAccordion] = useState<number | null>(null);
   const pathname = usePathname();
+  const { t } = useTranslation();
 
 
   const handleAccordion = (key: number) => {
@@ -92,41 +94,41 @@ export default function MobileMenu({ isMobileMenu, handleMobileMenu }: MobileMen
             </h1>
           </div>
           <form action="#" method="get" className="menu-search-form d-lg-flex">
-            <input type="text" className="search_field" placeholder="Search..." defaultValue="" name="s" />
+            <input type="text" className="search_field" placeholder={t('nav.searchPlaceholder')} defaultValue="" name="s" />
           </form>
           <nav>
             <ul>
               <li className="current-menu-item">
-                <Link href="/">Home</Link>
+                <Link href="/">{t('nav.home')}</Link>
               </li>
               <li className={`menu-item-has-children ${isAccordion == 1 ? "open-submenu" : ""}`}>
                 <Link href="#" onClick={() => handleAccordion(1)}>
-                  Categories
+                  {t('nav.categories')}
                 </Link>
                 <ul className="sub-menu">
                   <li>
-                    <Link href="/categories">Politics</Link>
+                    <Link href="/categories">{t('nav.politics')}</Link>
                   </li>
                   <li>
-                    <Link href="/archive">Health</Link>
+                    <Link href="/archive">{t('nav.health')}</Link>
                   </li>
                   <li>
-                    <Link href="/categories">Design</Link>
+                    <Link href="/categories">{t('nav.design')}</Link>
                   </li>
                 </ul>
                 <span className="sub-menu-toggle" onClick={() => handleAccordion(1)}></span>
               </li>
               <li>
-                <Link href="/typography">Typography</Link>
+                <Link href="/typography">{t('nav.typography')}</Link>
               </li>
               <li>
-                <Link href="/categories">Politics</Link>
+                <Link href="/categories">{t('nav.politics')}</Link>
               </li>
               <li>
-                <Link href="/categories">Health</Link>
+                <Link href="/categories">{t('nav.health')}</Link>
               </li>
               <li>
-                <Link href="/contact">Contact</Link>
+                <Link href="/contact">{t('nav.contact')}</Link>
               </li>
             </ul>
           </nav>

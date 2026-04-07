@@ -18,6 +18,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { SmartButton } from "@/components/ui/smart-button";
+import { useTranslation } from "@/components/providers/translation-provider";
 
 const STORAGE_KEY = 'newsletter-popup-dismissed';
 const TIME_DELAY_MS = 30000; // 30 seconds
@@ -55,6 +56,7 @@ export default function NewsletterPopup() {
     const [email, setEmail] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { theme, resolvedTheme } = useTheme();
+    const { t } = useTranslation();
     const pageLoadTimeRef = useRef<number | null>(null);
     const hasShownRef = useRef<boolean>(false);
 
@@ -178,7 +180,7 @@ export default function NewsletterPopup() {
             handleDismiss();
         } catch (error) {
             console.error('Newsletter subscription error:', error);
-            alert(error instanceof Error ? error.message : 'Abonelik sırasında bir hata oluştu.');
+            alert(error instanceof Error ? error.message : t('newsletter.errorAlert'));
         } finally {
             setIsSubmitting(false);
         }
@@ -262,7 +264,7 @@ export default function NewsletterPopup() {
                                     colors.foreground.primary,
                                     "font-serif font-bold text-xl"
                                 )}>
-                                    Scrolli Bülteni
+                                    {t('newsletter.title')}
                                 </h2>
 
                                 {/* Description */}
@@ -271,7 +273,7 @@ export default function NewsletterPopup() {
                                     colors.foreground.primary,
                                     "text-sm leading-relaxed"
                                 )}>
-                                    Güvenebileceğiniz günlük haber bülteni. Her hafta içi.
+                                    {t('newsletter.description')}
                                 </p>
 
                                 {/* Email Input Label */}
@@ -280,13 +282,13 @@ export default function NewsletterPopup() {
                                     "bg-yellow-300 dark:bg-yellow-500/30",
                                     colors.foreground.primary
                                 )}>
-                                    E-posta adresi
+                                    {t('newsletter.emailLabel')}
                                 </label>
 
                                 {/* Email Input Field */}
                                 <Input
                                     type="email"
-                                    placeholder="E-posta adresiniz"
+                                    placeholder={t('newsletter.emailPlaceholder')}
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
@@ -309,7 +311,7 @@ export default function NewsletterPopup() {
                                     width="full"
                                     className="mt-2 rounded-md font-semibold"
                                 >
-                                    {isSubmitting ? "Gönderiliyor..." : "I want to subscribe"}
+                                    {isSubmitting ? t('newsletter.submitting') : t('newsletter.submitCta')}
                                 </SmartButton>
 
                                 {/* Take me back to the news */}
@@ -318,7 +320,7 @@ export default function NewsletterPopup() {
                                     data-back-to-news
                                     className="w-full flex items-center justify-center gap-2 mt-3 pt-1 text-sm text-gray-700 dark:text-gray-200 cursor-pointer"
                                 >
-                                    <span>Take me back to the news</span>
+                                    <span>{t('newsletter.backToNews')}</span>
                                     <ArrowRightIcon size={16} strokeWidth={2} />
                                 </button>
                             </div>

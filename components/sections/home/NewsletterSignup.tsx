@@ -13,6 +13,7 @@ import {
   gap,
 } from "@/lib/design-tokens";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/components/providers/translation-provider";
 
 interface Briefing {
   id: string;
@@ -40,6 +41,7 @@ const briefings: Briefing[] = [
 ];
 
 export default function NewsletterSignup() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   // Both briefings are selected by default
   const [selectedBriefings, setSelectedBriefings] = useState<string[]>([
@@ -92,10 +94,10 @@ export default function NewsletterSignup() {
       setSelectedBriefings([briefings[0].id, briefings[1].id]);
 
       // Show success message (you can add a toast notification here)
-      alert('Başarıyla abone oldunuz!');
+      alert(t('newsletter.successAlert'));
     } catch (error) {
       console.error('Newsletter subscription error:', error);
-      alert(error instanceof Error ? error.message : 'Abonelik sırasında bir hata oluştu.');
+      alert(error instanceof Error ? error.message : t('newsletter.errorAlert'));
     } finally {
       setIsSubmitting(false);
     }
@@ -113,14 +115,14 @@ export default function NewsletterSignup() {
         variant="h5"
         className={cn(colors.foreground.primary, "font-bold text-lg")}
       >
-        E-posta bültenlerimize abone olun.
+        {t('newsletter.signupHeading')}
       </Heading>
 
       {/* Email Form */}
       <form onSubmit={handleSubmit} className={cn("flex flex-col", gap.sm)}>
         <Input
           type="email"
-          placeholder="E-posta adresi"
+          placeholder={t('newsletter.signupPlaceholder')}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required

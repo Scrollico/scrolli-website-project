@@ -12,6 +12,7 @@ import {
     elevation,
     gap,
 } from "@/lib/design-tokens";
+import { useTranslation } from "@/components/providers/translation-provider";
 
 interface EmailGateModalProps {
     articleId: string;
@@ -25,6 +26,7 @@ interface EmailGateModalProps {
  */
 export function EmailGateModal({ articleId, onSuccess }: EmailGateModalProps) {
     const { user, isLoading } = useAuth();
+    const { t } = useTranslation();
     const [email, setEmail] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -56,14 +58,14 @@ export function EmailGateModal({ articleId, onSuccess }: EmailGateModalProps) {
                 throw signUpError;
             }
 
-            setSuccessMessage("E-posta kutunuzu kontrol edin! Giriş linkiniz gönderildi.");
+            setSuccessMessage(t('emailGate.successMessage'));
 
             // After successful signup, the user will be redirected via magic link
             // The auth callback will handle setting articles_read_count = 1
 
             onSuccess?.();
         } catch (err: any) {
-            setError(err.message || "Bir hata oluştu. Lütfen tekrar deneyin.");
+            setError(err.message || t('emailGate.errorGeneric'));
         } finally {
             setIsSubmitting(false);
         }
@@ -83,10 +85,10 @@ export function EmailGateModal({ articleId, onSuccess }: EmailGateModalProps) {
                 {/* Header */}
                 <div className="mb-4 text-center">
                     <h2 className={cn(typography.h3, colors.foreground.primary)}>
-                        Bu Yazıyı Okumaya Devam Et
+                        {t('emailGate.title')}
                     </h2>
                     <p className={cn(typography.bodySmall, colors.foreground.muted, "mt-2")}>
-                        E-postanı gir ve bu yazıyı + 2 yazıyı daha ücretsiz oku.
+                        {t('emailGate.subtitle')}
                     </p>
                 </div>
 
@@ -103,14 +105,14 @@ export function EmailGateModal({ articleId, onSuccess }: EmailGateModalProps) {
                         {/* Email Input */}
                         <div>
                             <label htmlFor="email" className="sr-only">
-                                E-posta Adresin
+                                {t('emailGate.emailLabel')}
                             </label>
                             <input
                                 id="email"
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                placeholder="E-posta adresin"
+                                placeholder={t('emailGate.emailPlaceholder')}
                                 required
                                 disabled={isSubmitting}
                                 className={cn(
@@ -141,11 +143,11 @@ export function EmailGateModal({ articleId, onSuccess }: EmailGateModalProps) {
                                 "disabled:opacity-50 disabled:cursor-not-allowed"
                             )}
                         >
-                            {isSubmitting ? "Gönderiliyor..." : "Makaleyi Aç"}
+                            {isSubmitting ? t('emailGate.sending') : t('emailGate.submit')}
                         </button>
 
                         <p className={cn("text-center text-xs", colors.foreground.muted)}>
-                            Ücretsiz. İstediğin zaman iptal edebilirsin.
+                            {t('emailGate.disclaimer')}
                         </p>
                     </form>
                 )}

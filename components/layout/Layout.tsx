@@ -14,16 +14,6 @@ const StickyNav = dynamic(
   { ssr: false }
 );
 
-const BackToTop = dynamic(
-  () => import("../elements/BackToTop").catch((err) => {
-    console.error("BackToTop load failed", err);
-    const Fallback = () => null;
-    return Fallback as any;
-  }),
-  { ssr: false }
-);
-
-
 interface LayoutProps {
   children?: React.ReactNode;
   classList?: string;
@@ -56,9 +46,6 @@ export default function Layout({ classList, children, navigation }: LayoutProps)
 
           {/* Sticky Navbar */}
           <StickyNav />
-
-          {/* Scroll to top button */}
-          <BackToTop />
 
           {/* Main content area */}
           <main id="main-content" role="main" tabIndex={-1}>

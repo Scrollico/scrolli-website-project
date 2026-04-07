@@ -1,14 +1,20 @@
 export const runtime = "edge";
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { getNavigation } from "@/lib/payload/client";
 import { typography, colors, spacing } from "@/lib/design-tokens";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import translations from "@/lib/translations";
+import { cookies } from "next/headers";
+import { NEXT_LOCALE_COOKIE } from "@/lib/locale-config";
 
-export default function NotFound() {
+export default async function NotFound() {
+    const cookieStore = await cookies();
+    const locale = (cookieStore.get(NEXT_LOCALE_COOKIE)?.value === 'en' ? 'en' : 'tr') as 'tr' | 'en';
+    const dict = translations[locale];
+
     // Fetch navigation data for the header/footer
     // const navigation = await getNavigation().catch(() => null);
     const navigation = null;
@@ -29,12 +35,11 @@ export default function NotFound() {
                     </div>
 
                     <h1 className={cn(typography.h1, "mb-4 -mt-10 md:-mt-16", colors.foreground.primary)}>
-                        Aradığınız sayfa bulunamadı.
+                        {dict["notFound.title"]}
                     </h1>
 
                     <p className={cn(typography.bodyLarge, "mb-10 max-w-lg mx-auto", colors.foreground.secondary)}>
-                        Tıkladığınız bağlantı bozulmuş olabilir veya sayfa kaldırılmış olabilir.
-                        En güncel içeriklerimize göz atmak için ana sayfaya dönebilirsiniz.
+                        {dict["notFound.description"]}
                     </p>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -45,7 +50,7 @@ export default function NotFound() {
                             className="rounded-full px-10 text-lg"
                         >
                             <Link href="/">
-                                Ana Sayfaya Dön
+                                {dict["notFound.goHome"]}
                             </Link>
                         </Button>
                         <Button
@@ -55,7 +60,7 @@ export default function NotFound() {
                             className="rounded-full px-10 text-lg"
                         >
                             <Link href="/search">
-                                Arama Yap
+                                {dict["notFound.search"]}
                             </Link>
                         </Button>
                     </div>

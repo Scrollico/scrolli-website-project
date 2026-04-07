@@ -22,32 +22,10 @@ import { useRevenueCat } from "@/components/providers/revenuecat-provider";
 import { getOfferings, purchasePackage, loginUser } from "@/lib/revenuecat/client";
 import { createClient } from "@/lib/supabase/client";
 import { Loader2, CheckCircle2, XCircle, Mail, CreditCard, ArrowRight, ArrowLeft, Lock } from "lucide-react";
+import { useTranslation } from "@/components/providers/translation-provider";
 
 type PlanType = "monthly" | "yearly" | "lifetime";
 type Step = "review" | "email" | "payment" | "success";
-
-const benefits = [
-    {
-        icon: "📰",
-        title: "Unlimited Article Access",
-        description: "Read all articles and access the entire archive",
-    },
-    {
-        icon: "🚫",
-        title: "Ad-Free Experience",
-        description: "Uninterrupted reading without any advertisements",
-    },
-    {
-        icon: "⭐",
-        title: "Exclusive Content",
-        description: "Access to premium analyses and special stories",
-    },
-    {
-        icon: "🔔",
-        title: "Early Access",
-        description: "Be the first to read new content",
-    },
-];
 
 // Email validation function
 const validateEmail = (email: string): boolean => {
@@ -58,6 +36,7 @@ const validateEmail = (email: string): boolean => {
 export function SubscribePageContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const { t } = useTranslation();
     const { user, profile, updateProfileLocal } = useAuth();
     const { isInitialized, isLoading: rcLoading, refreshCustomerInfo } = useRevenueCat();
 
@@ -78,6 +57,19 @@ export function SubscribePageContent() {
 
     // Track where user came from
     const [returnUrl, setReturnUrl] = useState<string | null>(null);
+
+    const benefits = [
+        { icon: "📰", title: t('subscribe.benefitUnlimitedTitle'), description: t('subscribe.benefitUnlimitedDesc') },
+        { icon: "🚫", title: t('subscribe.benefitAdFreeTitle'), description: t('subscribe.benefitAdFreeDesc') },
+        { icon: "⭐", title: t('subscribe.benefitExclusiveTitle'), description: t('subscribe.benefitExclusiveDesc') },
+        { icon: "🔔", title: t('subscribe.benefitEarlyTitle'), description: t('subscribe.benefitEarlyDesc') },
+    ];
+
+    const planNames: Record<string, string> = {
+        monthly: t('subscribe.planMonthly'),
+        yearly: t('subscribe.planYearly'),
+        lifetime: t('subscribe.planLifetime'),
+    };
 
     // Get plan from URL parameter
     const planParam = searchParams.get("plan");
@@ -132,7 +124,7 @@ export function SubscribePageContent() {
                 setOfferings(data);
             } catch (err: any) {
                 console.error("Failed to fetch offerings:", err);
-                setError("Failed to load pricing information. Please try again.");
+                setError(t('subscribe.errorLoadOfferings'));
             } finally {
                 setLoading(false);
             }
@@ -162,7 +154,7 @@ export function SubscribePageContent() {
 
     // Extract price information
     const getPriceInfo = () => {
-        if (!product) return { price: "Loading...", period: "" };
+        if (!product) return { price: t('subscribe.loading'), period: "" };
 
         let price = "N/A";
         if (product.currentPrice?.formattedPrice) {
@@ -174,9 +166,9 @@ export function SubscribePageContent() {
         }
 
         let period = "";
-        if (planType === "monthly") period = "/month";
-        else if (planType === "yearly") period = "/year";
-        else if (planType === "lifetime") period = "one-time";
+        if (planType === "monthly") period = t('subscribe.periodMonth');
+        else if (planType === "yearly") period = t('subscribe.periodYear');
+        else if (planType === "lifetime") period = t('subscribe.periodOneTime');
 
         return { price, period };
     };
@@ -201,12 +193,12 @@ export function SubscribePageContent() {
         setEmailError(null);
 
         if (!email.trim()) {
-            setEmailError("Please enter your email address");
+            setEmailError(t('subscribe.emailRequired'));
             return;
         }
 
         if (!validateEmail(email)) {
-            setEmailError("Please enter a valid email address");
+            setEmailError(t('subscribe.emailInvalid'));
             return;
         }
 
@@ -218,7 +210,7 @@ export function SubscribePageContent() {
     // Handle payment - create/get user account, configure RevenueCat, open checkout
     const handlePayment = async () => {
         if (!selectedPackage) {
-            setError("Selected plan is not available. Please try again or choose a different plan.");
+            setError(t('subscribe.errorPlanUnavailable'));
             return;
         }
 
@@ -426,14 +418,14 @@ export function SubscribePageContent() {
             }
 
             // Provide helpful error messages
-            let errorMessage = err?.message || "Purchase failed. Please try again.";
+            let errorMessage = err?.message || t('subscribe.errorPurchaseFailed');
 
             if (err?.message?.includes('not configured') || err?.message?.includes('not initialized')) {
-                errorMessage = "Payment system is not ready. Please refresh the page and try again.";
+                errorMessage = t('subscribe.errorPaymentNotReady');
             } else if (err?.message?.includes('user') && err?.message?.includes('not found')) {
-                errorMessage = "Account setup failed. Please try again.";
+                errorMessage = t('subscribe.errorAccountFailed');
             } else if (err?.message?.includes('credentials') || err?.errorCode === 'CREDENTIALS_ERROR') {
-                errorMessage = "Payment configuration error. Please contact support if this persists.";
+                errorMessage = t('subscribe.errorCredentials');
             }
 
             setError(errorMessage);
@@ -450,15 +442,15 @@ export function SubscribePageContent() {
                 <div className="max-w-4xl mx-auto text-center">
                     <Loader2 className="h-8 w-8 animate-spin mx-auto text-gray-400 mb-4" />
                     <Text variant="body" className={colors.foreground.muted}>
-                        Loading subscription details...
+                        {t('subscribe.loading')}
                     </Text>
                 </div>
             </section>
         );
     }
 
-    // Capitalize plan name for display
-    const planName = planType.charAt(0).toUpperCase() + planType.slice(1);
+    // Get translated plan name for display
+    const planName = planNames[planType || ''] || (planType ? planType.charAt(0).toUpperCase() + planType.slice(1) : '');
 
     return (
         <section className={cn(sectionPadding.lg, containerPadding.lg, colors.background.base)}>
@@ -481,7 +473,7 @@ export function SubscribePageContent() {
                             )}>
                                 {currentStep === "review" ? "1" : <CheckCircle2 className="h-5 w-5" />}
                             </div>
-                            <Text variant="bodySmall" className="font-medium hidden sm:inline">Review</Text>
+                            <Text variant="bodySmall" className="font-medium hidden sm:inline">{t('subscribe.stepReview')}</Text>
                         </div>
 
                         <div className={cn(
@@ -508,7 +500,7 @@ export function SubscribePageContent() {
                                     )}>
                                         {currentStep === "email" ? "2" : <CheckCircle2 className="h-5 w-5" />}
                                     </div>
-                                    <Text variant="bodySmall" className="font-medium hidden sm:inline">Email</Text>
+                                    <Text variant="bodySmall" className="font-medium hidden sm:inline">{t('subscribe.stepEmail')}</Text>
                                 </div>
 
                                 <div className={cn(
@@ -535,7 +527,7 @@ export function SubscribePageContent() {
                             )}>
                                 {currentStep === "payment" ? (user ? "2" : "3") : currentStep === "success" ? <CheckCircle2 className="h-5 w-5" /> : (user ? "2" : "3")}
                             </div>
-                            <Text variant="bodySmall" className="font-medium hidden sm:inline">Payment</Text>
+                            <Text variant="bodySmall" className="font-medium hidden sm:inline">{t('subscribe.stepPayment')}</Text>
                         </div>
                     </div>
                 </div>
@@ -551,13 +543,13 @@ export function SubscribePageContent() {
                         <div className="flex items-center justify-center gap-2 mb-6">
                             <Lock className="h-4 w-4 text-green-600" />
                             <Text variant="caption" className={cn(colors.foreground.muted, "tracking-wider")}>
-                                Secure & Encrypted
+                                {t('subscribe.secureEncrypted')}
                             </Text>
                         </div>
 
                         <div className="mb-6">
                             <Heading level={2} variant="h2" className="mb-4 text-center">
-                                Review Your Subscription
+                                {t('subscribe.reviewTitle')}
                             </Heading>
 
                             {/* Plan Details Card */}
@@ -569,10 +561,10 @@ export function SubscribePageContent() {
                                 <div className="flex items-center justify-between mb-4">
                                     <div>
                                         <Text variant="caption" className={cn(colors.foreground.muted, "tracking-wider mb-1")}>
-                                            Plan
+                                            {t('subscribe.plan')}
                                         </Text>
                                         <Heading level={3} variant="h4">
-                                            {planName} Plan
+                                            {planName} {t('subscribe.planSuffix')}
                                         </Heading>
                                     </div>
                                     <div className="text-right">
@@ -585,7 +577,7 @@ export function SubscribePageContent() {
                                     </div>
                                 </div>
                                 <Text variant="bodySmall" className={colors.foreground.secondary}>
-                                    Pricing subject to change. Cancel anytime.
+                                    {t('subscribe.pricingNote')}
                                 </Text>
                             </div>
                         </div>
@@ -596,7 +588,7 @@ export function SubscribePageContent() {
                             width="full"
                             className="mt-6"
                         >
-                            Continue
+                            {t('subscribe.continue')}
                             <ArrowRight className="ml-2 h-5 w-5" />
                         </SmartButton>
                     </div>
@@ -615,16 +607,16 @@ export function SubscribePageContent() {
                                 <Mail className="h-8 w-8 text-green-600" />
                             </div>
                             <Heading level={2} variant="h2" className="mb-2">
-                                Enter Your Email
+                                {t('subscribe.enterEmail')}
                             </Heading>
                             <Text variant="body" className={colors.foreground.secondary}>
-                                We'll use this email for your account and subscription updates
+                                {t('subscribe.emailNote')}
                             </Text>
                         </div>
 
                         <form onSubmit={handleEmailSubmit} className="space-y-4">
                             <div>
-                                <Label htmlFor="email">Email Address</Label>
+                                <Label htmlFor="email">{t('subscribe.emailLabel')}</Label>
                                 <Input
                                     id="email"
                                     type="email"
@@ -653,7 +645,7 @@ export function SubscribePageContent() {
                                 width="full"
                                 className="mt-6"
                             >
-                                Continue
+                                {t('subscribe.continue')}
                                 <ArrowRight className="ml-2 h-5 w-5" />
                             </SmartButton>
                         </form>
@@ -673,10 +665,10 @@ export function SubscribePageContent() {
                                 <CreditCard className="h-8 w-8 text-green-600" />
                             </div>
                             <Heading level={2} variant="h2" className="mb-2">
-                                Choose Your Payment Method
+                                {t('subscribe.choosePayment')}
                             </Heading>
                             <Text variant="body" className={colors.foreground.secondary}>
-                                Complete your subscription with a secure payment
+                                {t('subscribe.securePayment')}
                             </Text>
                         </div>
 
@@ -697,10 +689,10 @@ export function SubscribePageContent() {
                             <div className="flex items-center justify-between mb-2">
                                 <div>
                                     <Text variant="caption" className={cn(colors.foreground.muted, "tracking-wider mb-1")}>
-                                        Selected Plan
+                                        {t('subscribe.selectedPlan')}
                                     </Text>
                                     <Heading level={3} variant="h4">
-                                        {planName} Plan
+                                        {planName} {t('subscribe.planSuffix')}
                                     </Heading>
                                 </div>
                                 <div className="text-right">
@@ -742,7 +734,7 @@ export function SubscribePageContent() {
                                 disabled={purchasing}
                             >
                                 <ArrowLeft className="mr-2 h-5 w-5" />
-                                Back
+                                {t('subscribe.back')}
                             </SmartButton>
                             <SmartButton
                                 onClick={handlePayment}
@@ -753,11 +745,11 @@ export function SubscribePageContent() {
                                 {purchasing ? (
                                     <>
                                         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                                        Processing...
+                                        {t('subscribe.processing')}
                                     </>
                                 ) : (
                                     <>
-                                        Subscribe Now - {price}
+                                        {t('subscribe.subscribeNow')} - {price}
                                         <ArrowRight className="ml-2 h-5 w-5" />
                                     </>
                                 )}
@@ -765,7 +757,7 @@ export function SubscribePageContent() {
                         </div>
 
                         <Text variant="caption" className={cn(colors.foreground.muted, "text-center mt-4 block")}>
-                            Cancel anytime. No hidden fees.
+                            {t('subscribe.cancelAnytime')}
                         </Text>
                     </div>
                 )}
@@ -781,18 +773,18 @@ export function SubscribePageContent() {
                     )}>
                         <CheckCircle2 className="h-16 w-16 text-green-600 mx-auto mb-4" />
                         <Heading level={2} variant="h2" className="mb-2">
-                            Subscription Successful!
+                            {t('subscribe.successTitle')}
                         </Heading>
                         {!user && email && (
                             <Text variant="body" className={cn(colors.foreground.secondary, "mb-4")}>
-                                Check your email ({email}) to verify your account and access your subscription.
+                                {t('subscribe.successCheckEmail').replace('{email}', email)}
                             </Text>
                         )}
                         <Text variant="bodyLarge" className={cn(colors.foreground.secondary, "mb-2")}>
-                            {user ? "Your premium access is now active." : "Your subscription is active."} Redirecting you{returnUrl ? " back to the article" : " to the homepage"}...
+                            {user ? t('subscribe.successActive') : t('subscribe.successActiveGeneric')} {returnUrl ? t('subscribe.successRedirectArticle') : t('subscribe.successRedirectHome')}...
                         </Text>
                         <Text variant="body" className={cn(colors.foreground.muted, "mb-6")}>
-                            If you don&apos;t see premium access yet, it may take a few seconds.
+                            {t('subscribe.successDelay')}
                         </Text>
                         <Loader2 className="h-6 w-6 animate-spin mx-auto text-gray-400" aria-hidden="true" />
                     </div>
@@ -802,7 +794,7 @@ export function SubscribePageContent() {
                 {currentStep === "review" && (
                     <div className="mt-12">
                         <Heading level={3} variant="h3" className="text-center mb-8">
-                            What You'll Get
+                            {t('subscribe.whatYouGet')}
                         </Heading>
                         <div className={cn("grid sm:grid-cols-2 gap-6", gap.lg)}>
                             {benefits.map((benefit, i) => (

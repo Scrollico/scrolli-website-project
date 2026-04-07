@@ -8,11 +8,13 @@ import { useAuth } from "@/components/providers/auth-provider";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/components/providers/translation-provider";
 import { colors, sectionPadding, containerPadding } from "@/lib/design-tokens";
 import Link from "next/link";
 import { User, Mail, Hash, Crown, CreditCard, Star, Shield, Newspaper, Headphones, CalendarHeart, LogOut } from "lucide-react";
 
 export default function ProfilePage() {
+    const { t } = useTranslation();
     const { user, profile, isPremium, loading, signOut } = useAuth();
     const router = useRouter();
     const [mounted, setMounted] = useState(false);
@@ -50,12 +52,12 @@ export default function ProfilePage() {
     });
 
     const benefits = [
-        { icon: Crown, label: "Sınırsız Premium içerik" },
-        { icon: Shield, label: "Reklamsız deneyim" },
-        { icon: Newspaper, label: "Özel bültenler" },
-        { icon: Star, label: "AI analiz araçları" },
-        { icon: Headphones, label: "Öncelikli destek" },
-        { icon: CalendarHeart, label: "Özel etkinliklere erişim" },
+        { icon: Crown, label: t('profile.benefitUnlimited') },
+        { icon: Shield, label: t('profile.benefitAdFree') },
+        { icon: Newspaper, label: t('profile.benefitNewsletters') },
+        { icon: Star, label: t('profile.benefitAiTools') },
+        { icon: Headphones, label: t('profile.benefitSupport') },
+        { icon: CalendarHeart, label: t('profile.benefitEvents') },
     ];
 
     return (
@@ -82,7 +84,7 @@ export default function ProfilePage() {
                                 <h1 className="text-2xl font-bold">{displayName}</h1>
                                 {isPremium && (
                                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-[#8080FF]/10 text-[#8080FF] dark:bg-[#8080FF]/20">
-                                        Plus
+                                        {t('user.plusBadge')}
                                     </span>
                                 )}
                             </div>
@@ -93,20 +95,20 @@ export default function ProfilePage() {
                     {/* Account Info */}
                     <section className="mb-10">
                         <h2 className="text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-4">
-                            Hesap Bilgileri
+                            {t('profile.accountInfo')}
                         </h2>
                         <div className="rounded-xl border border-gray-200/80 dark:border-gray-700/60 overflow-hidden">
                             <div className="flex items-center gap-4 px-5 py-4 border-b border-gray-100 dark:border-gray-800/60">
                                 <Mail className="h-4 w-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                                 <div className="min-w-0">
-                                    <p className="text-[13px] text-gray-500 dark:text-gray-400">E-posta</p>
+                                    <p className="text-[13px] text-gray-500 dark:text-gray-400">{t('profile.email')}</p>
                                     <p className="text-sm font-medium truncate">{userEmail}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4 px-5 py-4">
                                 <Hash className="h-4 w-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                                 <div className="min-w-0">
-                                    <p className="text-[13px] text-gray-500 dark:text-gray-400">Hesap ID</p>
+                                    <p className="text-[13px] text-gray-500 dark:text-gray-400">{t('profile.accountId')}</p>
                                     <p className="text-sm font-mono font-medium">{accountId}</p>
                                 </div>
                             </div>
@@ -116,23 +118,23 @@ export default function ProfilePage() {
                     {/* Subscription */}
                     <section className="mb-10">
                         <h2 className="text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-4">
-                            Abonelik
+                            {t('profile.subscription')}
                         </h2>
                         <div className="rounded-xl border border-gray-200/80 dark:border-gray-700/60 overflow-hidden">
                             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-800/60">
                                 <div className="flex items-center gap-4">
                                     <Crown className={cn("h-4 w-4 flex-shrink-0", isPremium ? "text-[#8080FF]" : "text-gray-400 dark:text-gray-500")} />
                                     <div>
-                                        <p className="text-[13px] text-gray-500 dark:text-gray-400">Mevcut Plan</p>
+                                        <p className="text-[13px] text-gray-500 dark:text-gray-400">{t('profile.currentPlan')}</p>
                                         <p className="text-sm font-medium">
-                                            {isPremium ? "Scrolli Plus" : "Scrolli Standart"}
+                                            {isPremium ? t('profile.scrolliPlus') : t('profile.scrolliStandard')}
                                         </p>
                                     </div>
                                 </div>
                                 {!isPremium && (
                                     <Link href="/pricing">
                                         <Button size="sm" className="h-8 text-xs font-semibold rounded-lg">
-                                            Yükselt
+                                            {t('profile.upgrade')}
                                         </Button>
                                     </Link>
                                 )}
@@ -142,7 +144,7 @@ export default function ProfilePage() {
                                 <div className="flex items-center gap-4 px-5 py-4 border-b border-gray-100 dark:border-gray-800/60">
                                     <CreditCard className="h-4 w-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                                     <div>
-                                        <p className="text-[13px] text-gray-500 dark:text-gray-400">Sonraki Fatura</p>
+                                        <p className="text-[13px] text-gray-500 dark:text-gray-400">{t('profile.nextBilling')}</p>
                                         <p className="text-sm font-medium">€60 · {formattedDate}</p>
                                     </div>
                                 </div>
@@ -155,7 +157,7 @@ export default function ProfilePage() {
                                         size="sm"
                                         className="h-8 text-xs font-semibold rounded-lg"
                                     >
-                                        {isPremium ? "Aboneliği Yönet" : "Planları Gör"}
+                                        {isPremium ? t('profile.manageSubscription') : t('profile.viewPlans')}
                                     </Button>
                                 </Link>
                             </div>
@@ -166,7 +168,7 @@ export default function ProfilePage() {
                     {isPremium && (
                         <section className="mb-10">
                             <h2 className="text-xs font-semibold tracking-widest uppercase text-gray-400 dark:text-gray-500 mb-4">
-                                Avantajlarınız
+                                {t('profile.benefits')}
                             </h2>
                             <div className="rounded-xl border border-gray-200/80 dark:border-gray-700/60 overflow-hidden">
                                 <div className="grid grid-cols-1 sm:grid-cols-2">
@@ -197,13 +199,13 @@ export default function ProfilePage() {
                                         <Star className="h-5 w-5 text-[#8080FF]" />
                                     </div>
                                     <div>
-                                        <h3 className="text-base font-semibold mb-1">Scrolli Plus&apos;a Geçin</h3>
+                                        <h3 className="text-base font-semibold mb-1">{t('profile.upgradeToPlusCta')}</h3>
                                         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                                            Sınırsız içerik, özel bültenler ve reklamsız deneyim.
+                                            {t('profile.upgradeDescription')}
                                         </p>
                                         <Link href="/pricing">
                                             <Button size="sm" className="h-9 text-xs font-semibold rounded-lg">
-                                                Hemen Yükselt
+                                                {t('profile.upgradeNow')}
                                             </Button>
                                         </Link>
                                     </div>
@@ -222,7 +224,7 @@ export default function ProfilePage() {
                             className="flex items-center gap-2.5 text-sm text-red-500 dark:text-red-400 hover:opacity-70 transition-opacity"
                         >
                             <LogOut className="h-4 w-4" />
-                            <span>Çıkış Yap</span>
+                            <span>{t('profile.signOut')}</span>
                         </button>
                     </div>
                 </main>
