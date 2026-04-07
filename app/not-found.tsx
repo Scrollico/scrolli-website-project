@@ -1,5 +1,4 @@
 export const runtime = "edge";
-export const dynamic = "force-dynamic";
 
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
