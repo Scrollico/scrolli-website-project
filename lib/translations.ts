@@ -180,6 +180,24 @@ const translations: Record<Locale, Record<string, string>> = {
     "pricing.corporateQuestion": "Kurumsal abonelik mi arıyorsunuz?",
     "pricing.corporateContactUs": "Bize ulaşın",
 
+    // ── Banner / Premium ──────────────────────────────────────
+    "banner.supportJournalism": "Bağımsız Gazeteciliği Destekle",
+    "banner.headline1": "Daha az son dakika.",
+    "banner.headline2": "Daha çok çığır açan hikâyeler.",
+    "banner.featurePremiumArticles": "Premium Makaleler",
+    "banner.featureDailyNewsletter": "Günlük Bülten",
+    "banner.featureAiPodcasts": "AI Podcastler",
+    "banner.featurePremiumNewsletters": "Premium Bültenler",
+    "banner.subscribeMonthly": "Abone Ol — ₺249/ay",
+    "banner.cancelAnytime": "İstediğin zaman iptal et",
+    "banner.howSubscriptionWorks": "Aboneliğiniz nasıl kullanılıyor",
+    "banner.verified": "Doğrulanmış",
+    "banner.journalists": "Gazeteciler",
+    "banner.investigations": "Soruşturmalar",
+    "banner.platform": "Platform",
+    "banner.exclusivePreview": "Özel Önizleme",
+    "banner.openStory": "Hikâyeyi Aç",
+
     // ── Error / 404 ──────────────────────────────────────────
     "error.somethingWentWrong": "Bir şeyler yanlış gitti!",
     "error.apology": "Oluşan hatadan dolayı özür dileriz. Beklenmedik bir hata meydana geldi.",
@@ -487,6 +505,24 @@ const translations: Record<Locale, Record<string, string>> = {
     // ── Pricing — Corporate CTA ──────────────────────────────
     "pricing.corporateQuestion": "Looking for a corporate subscription?",
     "pricing.corporateContactUs": "Contact us",
+
+    // ── Banner / Premium ──────────────────────────────────────
+    "banner.supportJournalism": "Support Independent Journalism",
+    "banner.headline1": "Fewer breaking news.",
+    "banner.headline2": "More groundbreaking stories.",
+    "banner.featurePremiumArticles": "Premium Articles",
+    "banner.featureDailyNewsletter": "Daily Newsletter",
+    "banner.featureAiPodcasts": "AI Podcasts",
+    "banner.featurePremiumNewsletters": "Premium Newsletters",
+    "banner.subscribeMonthly": "Subscribe — ₺249/month",
+    "banner.cancelAnytime": "Cancel anytime",
+    "banner.howSubscriptionWorks": "How your subscription is used",
+    "banner.verified": "Verified",
+    "banner.journalists": "Journalists",
+    "banner.investigations": "Investigations",
+    "banner.platform": "Platform",
+    "banner.exclusivePreview": "Exclusive Preview",
+    "banner.openStory": "Open Story",
 
     // ── Error / 404 ──────────────────────────────────────────
     "error.somethingWentWrong": "Something went wrong!",
