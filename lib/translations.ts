@@ -198,6 +198,13 @@ const translations: Record<Locale, Record<string, string>> = {
     "banner.exclusivePreview": "Özel Önizleme",
     "banner.openStory": "Hikâyeyi Aç",
 
+    // ── Stories / Hero Sections ──────────────────────────────
+    "stories.title": "Scrolli Hikayeleri",
+    "stories.subtitle": "Derinlemesine analizler ve özel hikayeler.",
+    "stories.description": "En güncel haberlerimizi ve özel içeriklerimizi keşfedin.",
+    "stories.discover": "Hikayelerinizi keşfedin.",
+    "stories.scrollCta": "Keşfetmek için kaydırın",
+
     // ── Error / 404 ──────────────────────────────────────────
     "error.somethingWentWrong": "Bir şeyler yanlış gitti!",
     "error.apology": "Oluşan hatadan dolayı özür dileriz. Beklenmedik bir hata meydana geldi.",
@@ -523,6 +530,13 @@ const translations: Record<Locale, Record<string, string>> = {
     "banner.platform": "Platform",
     "banner.exclusivePreview": "Exclusive Preview",
     "banner.openStory": "Open Story",
+
+    // ── Stories / Hero Sections ──────────────────────────────
+    "stories.title": "Scrolli Stories",
+    "stories.subtitle": "In-depth analyses and exclusive stories.",
+    "stories.description": "Discover our latest news and exclusive content.",
+    "stories.discover": "Discover your stories.",
+    "stories.scrollCta": "Scroll to discover",
 
     // ── Error / 404 ──────────────────────────────────────────
     "error.somethingWentWrong": "Something went wrong!",
