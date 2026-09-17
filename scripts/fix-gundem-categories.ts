@@ -4,11 +4,18 @@ import path from 'path';
 // Load environment variables
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 
-const WEBFLOW_API_TOKEN = '04b4731ca59a23946ca04d813c65957e53247522281533f9d50c7456ad22273b';
+const WEBFLOW_API_TOKEN = process.env.WEBFLOW_API_TOKEN;
 const WEBFLOW_COLLECTION_ID = '65aadb64f9689b1f1999ae75'; // Gündem
 const PAYLOAD_API_URL = 'https://cms.scrolli.co/api';
 // Use the EXACT key from .env.local
 const PAYLOAD_API_KEY = process.env.PAYLOAD_API_KEY;
+
+if (!WEBFLOW_API_TOKEN) {
+    throw new Error('Missing required environment variable: WEBFLOW_API_TOKEN');
+}
+if (!PAYLOAD_API_KEY) {
+    throw new Error('Missing required environment variable: PAYLOAD_API_KEY');
+}
 
 // Mapping: Webflow Category ID -> Payload Category ID
 const CATEGORY_MAP: Record<string, string> = {
